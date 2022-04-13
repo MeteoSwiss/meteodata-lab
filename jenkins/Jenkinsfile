@@ -1,6 +1,6 @@
 pipeline {
     environment {
-       PATH =$WORKSPACE/miniconda/bin:$PATH
+       PATH = "$WORKSPACE/miniconda/bin:$PATH"
     }
     agent {
         label 'tsa'

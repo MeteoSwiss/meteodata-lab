@@ -36,7 +36,7 @@ def test_thetav():
     executable = "/project/s83c/fieldextra/tsa/bin/fieldextra_gnu_opt_omp"
 
     # create the tmp dir
-    shutil.rmtree(tmpdir)
+    shutil.rmtree(tmpdir, ignore_errors=True)
     os.mkdir(tmpdir)
 
     templateLoader = jinja2.FileSystemLoader(

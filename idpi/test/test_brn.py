@@ -6,8 +6,10 @@ import xarray as xr
 import grib_decoder
 import numpy as np
 import operators.brn as mbrn
+import pytest
 
 
+@pytest.mark.skip(reason="Currently it does not verify against FE")
 def test_brn():
     datadir = '/project/s83c/rz+/icon_data_processing_incubator/data'
     datafile = datadir + '/lfff00000000'

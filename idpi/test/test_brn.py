@@ -62,7 +62,7 @@ def test_brn():
         {"x_1": "x", "y_1": "y", "z_1": "generalVerticalLayer"}
     )
 
-    assert np.allclose(brn_ref, brn, rtol=1e-2, atol=1e-2, equal_nan=True)
+    assert np.allclose(brn_ref, brn, rtol=3e-3, atol=5e-2, equal_nan=True)
 
 
 if __name__ == "__main__":

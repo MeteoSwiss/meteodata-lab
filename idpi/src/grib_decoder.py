@@ -10,9 +10,7 @@ def load_data(outds, fields, datafile, chunk_size=10):
 
     dss = cfgrib.open_datasets(
         datafile,
-        backend_kwargs={
-            "read_keys": ["typeOfLevel", "gridType"]
-        },
+        backend_kwargs={"read_keys": ["typeOfLevel", "gridType"]},
         encode_cf=("time", "geography", "vertical"),
         **chunk_arg,
     )
@@ -22,7 +20,12 @@ def load_data(outds, fields, datafile, chunk_size=10):
                 outds[field] = ds[field]
                 if "generalVertical" in ds[field].dims:
                     outds[field] = outds[field].rename(
-                        {"generalVertical": "generalVerticalLayer"})
+                        {"generalVertical": "generalVerticalLayer"}
+                    )
+                if field == "HHL":
+                    outds[field] = outds[field].interpolate_na(
+                        dim="generalVerticalLayer"
+                    )
 
     if any(field not in outds for field in fields):
         raise RuntimeError("Not all fields found in datafile", fields)

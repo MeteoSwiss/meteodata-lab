@@ -34,9 +34,7 @@ def test_brn():
     tmpdir = testdir + "/tmp"
     cwd = os.getcwd()
 
-    executable = (
-        "/project/s83c/fieldextra/tsa/bin/fieldextra_gnu_opt_omp"
-    )
+    executable = "/project/s83c/fieldextra/tsa/bin/fieldextra_gnu_opt_omp"
 
     # create the tmp dir
     shutil.rmtree(tmpdir, ignore_errors=True)

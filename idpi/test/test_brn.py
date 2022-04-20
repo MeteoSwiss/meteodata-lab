@@ -35,7 +35,7 @@ def test_brn():
     cwd = os.getcwd()
 
     executable = (
-        "/scratch/cosuna/fieldextra_tests/fieldextra/bin/fieldextra_gnu_opt_omp"
+        "/project/s83c/fieldextra/tsa/bin/fieldextra_gnu_opt_omp"
     )
 
     # create the tmp dir

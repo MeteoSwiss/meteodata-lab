@@ -129,9 +129,5 @@
 &Process in_field="U", regrid=.t., levmin=1, levmax=80 /
 &Process in_field="V", regrid=.t., levmin=1, levmax=80 /
 &Process in_field="QV", levmin=1, levmax=80 /
-&Process tmp1_field="HFL",levmin=1,levmax=80/
-&Process tmp1_field="HSURF"/
-&Process tmp1_field="P",levmin=1,levmax=80/
-&Process tmp1_field="T",levmin=1,levmax=80/
 &Process tmp1_field="BRN", levmin=1,levmax=80 /
 &Process out_field="BRN", levmin=1, levmax=80 /

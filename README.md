@@ -3,8 +3,8 @@ Prototype for data processing framework
 
 ## How to install the conda environment and run the tests
 ```
-conda create -n idpi -c conda-forge --file requirements.txt
-conda activate idpi
+conda env create --file environment_dev.yml
+conda activate idpi_env
 
 cd idpi/test
 source setup.sh

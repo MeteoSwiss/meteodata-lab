@@ -19,7 +19,7 @@ pipeline {
                 sh 'bash miniconda.sh -b -p $WORKSPACE/miniconda'
                 sh 'conda config --set always_yes yes --set changeps1 no'
                 sh 'conda config --add channels conda-forge'
-                sh 'conda create -n idpi --file requirements.txt'
+                sh 'conda env create -f environment.yml'
                 sh 'rm miniconda.sh'
             }        
         }

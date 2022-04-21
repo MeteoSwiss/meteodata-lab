@@ -1,4 +1,4 @@
-name: idpi_test
+name: idpi
 channels:
 - conda-forge
 dependencies:

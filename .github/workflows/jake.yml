@@ -1,0 +1,21 @@
+name: Jake Github Action
+
+on: 
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  build:
+    runs-on: python:3.8-slim-buster
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Run Jake
+      uses: sonatype-nexus-community/jake-github-action@main
+      with:
+        packagesListFile: environment_dev.yml

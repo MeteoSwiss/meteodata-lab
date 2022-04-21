@@ -13,7 +13,7 @@ pipeline {
             admin('cosunae')
             orgWhitelist('MeteoSwiss-APN')
             cron('H/5 * * * *')
-            triggerPhrase('OK to test')
+            triggerPhrase('launch jenkins')
             onlyTriggerPhrase()
             useGitHubHooks()
             permitAll()

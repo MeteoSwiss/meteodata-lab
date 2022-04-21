@@ -1,0 +1,73 @@
+pipeline {
+    scm {
+        git {
+            remote {
+                github('git@github.com:MeteoSwiss-APN/icon_data_processing_incubator.git')
+                refspec('+refs/pull/*:refs/remotes/origin/pr/*')
+            }
+            branch('${sha1}')
+        }
+    }
+    triggers {
+        githubPullRequest {
+            admin('cosunae')
+            orgWhitelist('MeteoSwiss-APN')
+            cron('H/5 * * * *')
+            triggerPhrase('OK to test')
+            onlyTriggerPhrase()
+            useGitHubHooks()
+            permitAll()
+            allowMembersOfWhitelistedOrgsAsAdmin()
+            extensions {
+                commitStatus {
+                    context('deploy to staging site')
+                    triggeredStatus('starting deployment to staging site...')
+                    startedStatus('deploying to staging site...')
+                    statusUrl('http://mystatussite.com/prs')
+                    completedStatus('SUCCESS', 'All is well')
+                    completedStatus('FAILURE', 'Something went wrong. Investigate!')
+                    completedStatus('PENDING', 'still in progress...')
+                    completedStatus('ERROR', 'Something went really wrong. Investigate!')
+                }
+            }
+        }
+    }
+
+    environment {
+       PATH = "$WORKSPACE/miniconda/bin:$PATH"
+    }
+    agent {
+        label 'tsa'
+    }
+
+    post {
+        always{
+            echo 'Cleaning up workspace'
+            deleteDir()
+        }
+    }
+    stages {
+        stage('setup miniconda') {
+            steps {
+                sh 'wget -O ${WORKSPACE}/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh'
+                sh 'bash miniconda.sh -b -p $WORKSPACE/miniconda'
+                sh 'conda config --set always_yes yes --set changeps1 no'
+                sh 'conda config --add channels conda-forge'
+                sh 'conda env create -f environment.yml'
+                sh 'rm miniconda.sh'
+            }        
+        }
+        stage('test') {
+            steps {
+                sh '''#!/usr/bin/env bash
+                source $WORKSPACE/miniconda/etc/profile.d/conda.sh
+                conda activate idpi
+                cd idpi/test
+                source setup.sh
+                export PYTHONPATH=$WORKSPACE/idpi/src
+                pytest -s
+                '''
+            }
+        }
+    }
+}

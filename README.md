@@ -11,3 +11,7 @@ source setup.sh
 pytest -s
 ```
 
+## Pre-commit hooks for formatting and linting
+```
+pre-commit run --all-files
+```

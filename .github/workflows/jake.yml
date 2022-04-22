@@ -15,6 +15,11 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v2
 
+    - name: get dependencies
+      run: |
+        conda env create --file environment_dev.yml
+        conda activate idpi_env
+        conda list > packages.list
     - name: Run Jake
       uses: sonatype-nexus-community/jake-github-action@main
       with:

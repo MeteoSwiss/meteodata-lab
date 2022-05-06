@@ -28,7 +28,7 @@ def test_brn():
         "output": "<HH>_BRN.nc",
     }
     out_file = "00_BRN.nc"
-    prodfiles = ["fieldextra.diagnostic", "fieldextra.product", "fieldextra.rmode"]
+    prodfiles = ["fieldextra.diagnostic"]
 
     testdir = os.path.dirname(os.path.realpath(__file__))
     tmpdir = testdir + "/tmp"

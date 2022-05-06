@@ -28,7 +28,7 @@ def test_destagger():
         "output": "<HH>_destagger.nc",
     }
     out_file = "00_destagger.nc"
-    prodfiles = ["fieldextra.diagnostic", "fieldextra.product", "fieldextra.rmode"]
+    prodfiles = ["fieldextra.diagnostic"]
 
     testdir = os.path.dirname(os.path.realpath(__file__))
     tmpdir = testdir + "/tmp"

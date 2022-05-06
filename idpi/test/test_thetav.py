@@ -24,7 +24,7 @@ def test_thetav():
         "output": "<HH>_THETAV.nc",
     }
     out_file = "00_THETAV.nc"
-    prodfiles = ["fieldextra.diagnostic", "fieldextra.product", "fieldextra.rmode"]
+    prodfiles = ["fieldextra.diagnostic"]
 
     testdir = os.path.dirname(os.path.realpath(__file__))
     tmpdir = testdir + "/tmp"

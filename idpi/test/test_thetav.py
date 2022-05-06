@@ -10,10 +10,8 @@ import xarray as xr
 
 
 def test_thetav():
-    datadir = "/project/s83c/rz+/icon_data_processing_incubator/data"
-    datafile = datadir + "/lfff00000000"
-    datadir = "/project/s83c/rz+/icon_data_processing_incubator/data"
-    datafile = datadir + "/lfff00000000"
+    datadir = "/project/s83c/rz+/icon_data_processing_incubator/data/SWISS"
+    datafile = datadir + "/lfff00000000.ch"
 
     ds = {}
     grib_decoder.load_data(ds, ["P", "T", "QV"], datafile, chunk_size=None)
@@ -21,8 +19,8 @@ def test_thetav():
     thetav = mthetav.fthetav(ds["P"], ds["T"], ds["QV"])
 
     conf_files = {
-        "inputi": "/scratch/cosuna/fieldextra_tests/lfff<DDHH>0000",
-        "inputc": "/scratch/cosuna/fieldextra_tests/lfff00000000c",
+        "inputi": datadir + "/lfff<DDHH>0000.ch",
+        "inputc": datadir + "/lfff00000000c.ch",
         "output": "<HH>_THETAV.nc",
     }
     out_file = "00_THETAV.nc"

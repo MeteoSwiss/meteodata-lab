@@ -10,9 +10,9 @@ import xarray as xr
 
 
 def test_brn():
-    datadir = "/project/s83c/rz+/icon_data_processing_incubator/data"
-    datafile = datadir + "/lfff00000000"
-    cdatafile = datadir + "/lfff00000000c"
+    datadir = "/project/s83c/rz+/icon_data_processing_incubator/data/SWISS"
+    datafile = datadir + "/lfff00000000.ch"
+    cdatafile = datadir + "/lfff00000000c.ch"
 
     ds = {}
     grib_decoder.load_data(ds, ["P", "T", "QV", "U", "V"], datafile, chunk_size=None)
@@ -23,8 +23,8 @@ def test_brn():
     )
 
     conf_files = {
-        "inputi": "/scratch/cosuna/fieldextra_tests/lfff<DDHH>0000",
-        "inputc": "/scratch/cosuna/fieldextra_tests/lfff00000000c",
+        "inputi": datadir + "/lfff<DDHH>0000.ch",
+        "inputc": datadir + "/lfff00000000c.ch",
         "output": "<HH>_BRN.nc",
     }
     out_file = "00_BRN.nc"

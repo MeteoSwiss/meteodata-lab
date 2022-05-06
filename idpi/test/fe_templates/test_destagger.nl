@@ -87,11 +87,7 @@
 &Process
   in_file="{{ file.inputc }}"
   out_type="INCORE" /
-&Process in_field="FR_LAND" /
-&Process in_field="FR_LAKE" /
-&Process in_field="SOILTYP" /
 &Process in_field="HSURF", tag='GRID' /
-&Process in_field="FIS" /
 &Process in_field="HEIGHT", tag="hhl_c1e", levmin=1, levmax=81, level_class="k_half" /
 
 &Process
@@ -110,7 +106,6 @@
 &Process in_field="HSURF", use_tag="GRID", tag="hsurf" /
 &Process in_field="HEIGHT", use_tag="hhl_c1e", tag="HHL", level_class="k_half", levmin=1, levmax=81 /
 &Process in_field="HEIGHT", use_tag="hhl_c1e", tag="HFL", level_class="k_full", levmin=1, levmax=80 /
-&Process in_field="SOILTYP" /
 
 &Process
   in_file="{{ file.inputi }}"
@@ -124,10 +119,12 @@
   in_size_field=1072
   tstart=0, tstop=0, tincr=1
 /
-&Process in_field="P", levmin=1, levmax=80 /
-&Process in_field="T", levmin=1, levmax=80 /
 &Process in_field="U", regrid=.t., levmin=1, levmax=80 /
 &Process in_field="V", regrid=.t., levmin=1, levmax=80 /
-&Process in_field="QV", levmin=1, levmax=80 /
-&Process tmp1_field="BRN", levmin=1,levmax=80 /
-&Process out_field="BRN", levmin=1, levmax=80 /
+&Process tmp1_field="U", levmin=1,levmax=80 /
+&Process tmp1_field="V", levmin=1, levmax=80 /
+&Process tmp1_field="HFL", levmin=1, levmax=80 /
+&Process out_field="U", levmin=1, levmax=80 /
+&Process out_field="V", levmin=1, levmax=80 /
+&Process out_field="HFL", levmin=1, levmax=80 /
+

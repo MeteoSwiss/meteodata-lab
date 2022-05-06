@@ -22,17 +22,17 @@
  out_cost_expensive=1000
 /
 &GlobalResource
- dictionary="/oprusers/osm/opr/config/resources/dictionary_cosmo.txt"
- grib_definition_path="/oprusers/osm/opr/config/resources/eccodes_definitions_cosmo", 
-                        "/oprusers/osm/opr/config/resources/eccodes_definitions_vendor"
- grib2_sample="/oprusers/osm/opr/config/resources/eccodes_samples/COSMO_GRIB2_default.tmpl"
- location_list="/oprusers/osm/opr/config/resources/location_list.txt" 
- slice_list="/oprusers/osm/opr/config/resources/slice_list.txt"
+ dictionary="/project/s83c/fieldextra/tsa/resources/dictionary_cosmo.txt"
+ grib_definition_path="/project/s83c/fieldextra/tsa/resources/eccodes_definitions_cosmo", 
+                        "/project/s83c/fieldextra/tsa/resources/eccodes_definitions_vendor"
+ grib2_sample="/project/s83c/fieldextra/tsa/resources/eccodes_samples/COSMO_GRIB2_default.tmpl"
+ location_list="/project/s83c/fieldextra/tsa/resources/location_list.txt" 
+ slice_list="/project/s83c/fieldextra/tsa/resources/slice_list.txt"
  location_list_additional="/opr/osm/rh7.9/wd/21101512_407/coeff_2021101512_cosmo-1e_kal_T_2M",
                             "/opr/osm/rh7.9/wd/21101512_407/coeff_2021101512_cosmo-1e_kal_TD_2M",
                             "/opr/osm/rh7.9/wd/21101512_407/coeff_2021101512_cosmo-1e_kal_FF_10M"
- region_list="/oprusers/osm/opr/config/resources/region_list.txt"
- rttov_coefs_path="/oprusers/osm/opr/config/resources/rttov_coefficients"
+ region_list="/project/s83c/fieldextra/tsa/resources/region_list.txt"
+ rttov_coefs_path="/project/s83c/fieldextra/tsa/resources/rttov_coefficients"
 /
 &GlobalSettings
  default_model_name="cosmo-1e"

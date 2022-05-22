@@ -7,7 +7,6 @@ import jinja2
 import numpy as np
 import xarray as xr
 from operators.hzerocl import fhzerocl
-from operators.destagger import destagger
 
 
 def test_hzerocl():

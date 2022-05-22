@@ -1,6 +1,4 @@
-"""algorithm for BRN operator."""
-import numpy as np
-import xarray as xr
+"""algorithm for height of zero degree operator."""
 from operators.destagger import destagger
 
 

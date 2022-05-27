@@ -21,6 +21,6 @@ jobs:
         conda env create --file environment_dev.yml
         conda info --envs
         conda activate idpi_dev
-        conda install -c conda-forge jake
+        conda install -c conda-forge jake cyclonedx-bom cyclonedx-python-lib
         jake ddt
 

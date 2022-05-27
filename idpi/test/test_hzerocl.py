@@ -55,18 +55,11 @@ def test_hzerocl():
     fs_ds = xr.open_dataset("00_hzerocl.nc")
     hzerocl_ref = fs_ds["HZEROCL"].rename({"x_1": "x", "y_1": "y"}).squeeze()
 
-    # For this dataset, on point [74,211] last level (center of volume), i.e. 80 (1 base), T is 273.14966.
-    # Therefore FE should set hzerocl to undefined -999. However it does not, I assume that is because
-    # rather than operating on center of volume levels, it interpolates T into faces (where HEIGHT is defined)
-    # Needs to be confirmed
-    hzerocl_ref[74, 211] = -999
-    hzerocl_ref = hzerocl_ref.where(hzerocl_ref != -999)
-
     assert np.allclose(
         hzerocl_ref,
         hzerocl,
-        rtol=3e-1,
-        atol=3e-1,
+        rtol=1e-5,
+        atol=1e-5,
         equal_nan=True,
     )
 

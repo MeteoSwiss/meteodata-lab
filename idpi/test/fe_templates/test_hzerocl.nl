@@ -51,7 +51,7 @@
 &Process
   in_file="{{ file.inputc }}"
   out_type="INCORE" /
-&Process in_field="HSURF", tag='GRID' /
+&Process in_field="HSURF"/
 &Process in_field="HEIGHT", tag="hhl_c1e", levmin=1, levmax=81, level_class="k_half" /
 
 &Process
@@ -62,6 +62,7 @@
   in_size_field=240
 /
 &Process in_field="HEIGHT", use_tag="hhl_c1e", tag="HFL", level_class="k_full", levmin=1, levmax=80 /
+&Process in_field="HSURF" /
 
 &Process
   in_file="{{ file.inputi }}"
@@ -70,6 +71,8 @@
   tstart=0, tstop=0, tincr=1
 /
 &Process in_field="T", levmin=1, levmax=80 /
-&Process in_field="HZEROCL" /
+&Process tmp1_field="T"/ 
+&Process tmp1_field="HFL"/ 
+&Process tmp1_field="HSURF" / 
 &Process out_field="HZEROCL" /
 

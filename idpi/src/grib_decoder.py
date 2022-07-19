@@ -11,7 +11,7 @@ def load_data(outds, fields, datafile, chunk_size=10):
     dss = cfgrib.open_datasets(
         datafile,
         backend_kwargs={"read_keys": ["typeOfLevel", "gridType"]},
-        encode_cf=("time", "geography", "vertical"),
+        encode_cf=("time", "geography", "vertical", "number"),
         **chunk_arg,
     )
     for ds in dss:

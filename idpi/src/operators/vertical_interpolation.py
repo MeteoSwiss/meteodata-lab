@@ -24,15 +24,16 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     #   attrs (dict to hold arbitrary metadata)
 
     # TODO: check missing value consistency with GRIB2 (currently comparisons are done with np.nan)
-    #       check that pfield is also given in Pa
+    #       check that pfield is the pressure field, given in Pa
+    #       check that field and pfield are compatible
 
     # Parameters
     # ... supported interpolation modes
     interpolation_modes = dict(linear_in_tcf=1, linear_in_lntcf=2, nearest_sfc=3)
     # ... supported tc units and corresponding conversion factors
     tcp_unit_conversions = dict(Pa=1., hPa=100.)
-    # ... 
-    tc_max = 500000.
+    # ... tc value beyond upper bound for meaningful values of pressure, used in tc interval search (in Pa)
+    tc_max = 200000.
 
     # Define vertical target coordinates
     tc = dict()
@@ -46,7 +47,6 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
         raise RuntimeError("interpolate_k2p: unknown pressure coordinate units", tcp_units)    
     tc["attrs"] = {"units": "Pa",
                    "positive": "down",
-                   "stored_direction": "increasing",
                    "standard_name": "air_pressure",
                    "long_name": "pressure"
                   }
@@ -56,7 +56,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     if tc["mode"] is None:
         raise RuntimeError("interpolate_k2p: unknown mode", mode)
 
-    # Prepare pfield
+    # Prepare output field ftc on tc
     # name
     ftc_name = field.name
     # attrs
@@ -83,7 +83,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
         if c != "generalVerticalLayer":
             ftc_coords[c] = field.coords[c]
     # ... initialize the vertical target coordinates
-    ftcp_coords = xr.Coordinate(tc["typeOfLevel"], tc["data"], attrs=tc["attrs"])
+    ftcp_coords = xr.IndexVariable(tc["typeOfLevel"], tc["data"], attrs=tc["attrs"])
     ftc_coords[ftcp_coords.name] = ftcp_coords
     # data
     ftc_data = np.ndarray( tuple(ftc_dim_lens), dtype=float)

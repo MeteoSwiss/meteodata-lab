@@ -10,7 +10,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     # Arguments
     # field: source field (xarray.DataArray)
     # mode: interpolation algorithm, one of {"lin_p", "lin_lnp", "nearest"}
-    # tcp_values: target coordinate values (array)
+    # tcp_values: target coordinate values (list)
     # tcps_units: target coordinate units (string)
     # pfield: pressure field on k levels (xarray.DataArray)
     #
@@ -86,10 +86,14 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     ftcp_coords = xr.IndexVariable(tc["typeOfLevel"], tc["data"], attrs=tc["attrs"])
     ftc_coords[ftcp_coords.name] = ftcp_coords
     # data
-    ftc_data = np.ndarray( tuple(ftc_dim_lens), dtype=float)
+    ftc_data = np.ndarray( tuple(ftc_dim_lens), dtype=float )
     # ... fill with missing values (alternatively, use field.attrs["GRIB_missingValue"])
     ftc_data.fill(np.nan)
 
+    # Initialize the output field ftc
+    ftc = xr.DataArray(name=ftc_name, data=ftc_data, dims=ftc_dims, coords=ftc_coords, attrs=ftc_attrs)
+
+    # Interpolate
     # ... prepare interpolation
     pkm1 = pfield.copy()
     pkm1[{"generalVerticalLayer": slice(1, None)}] = pfield[
@@ -113,9 +117,9 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
         }
     )
 
-    # Interpolate
-    p_count = 0
-    for p0 in tc["data"]:
+    # ... loop through tc values
+    for tc_idx in range(len(tc["data"])):
+        p0 = tc["data"][tc_idx]
         # ... find the 3d field where pressure is >= p0 on level k and was < p0 on level k-1
         p2 = pfield.where((pfield >= p0) & (pkm1 < p0), drop=True)
         # ... extract the index k of the vertical layer at which p2 adopts its minimum
@@ -127,7 +131,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
         f1 = field.where((pfield < p0) & (pkp1 >= p0), drop=True)[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
         p1 = pfield.where((pfield < p0) & (pkp1 >= p0), drop=True)[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
 
-        # compute the interpolation weights
+        # ... compute the interpolation weights
         if tc["mode"] == interpolation_modes["linear_in_tcf"]:
             ratio = (p0 - p1) / (p2 - p1)
 
@@ -140,14 +144,9 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
             else:
                 ratio = 0.
 
-        # TODO: determine correct dimension and index automatically
-        p_dim = ftc_dims.index(tc["typeOfLevel"])
-        ftc_data[p_count] = (1. - ratio ) * f1 + ratio * f2
-        p_count += 1
-    
-    # initialize field on target coordinates
-    ftc = xr.DataArray(name=ftc_name, data=ftc_data, dims=ftc_dims, coords=ftc_coords, attrs=ftc_attrs)
-   
+        # ... interpolate and update ftc
+        ftc[{tc["typeOfLevel"]: tc_idx}] = (1. - ratio ) * f1 + ratio * f2
+     
 
     return ftc
 

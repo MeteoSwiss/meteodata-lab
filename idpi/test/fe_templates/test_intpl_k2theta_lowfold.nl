@@ -48,8 +48,7 @@
 &Process in_field = "T", levmin=1, levmax=80 /
 
 &Process tmp1_field = "THETA" /
-&Process tmp1_field = "T", voper="intpl_k2theta,low_fold", voper_lev = 310,315,320,325,330,335, voper_lev_units="K" /
-!&Process tmp1_field = "T", voper="intpl_k2theta,low_fold", voper_lev = 310, voper_lev_units="K" /
+&Process tmp1_field = "T", voper="intpl_k2theta,low_fold", voper_lev = 280,290,310,315,320,325,330,335, voper_lev_units="K" /
 
 &Process out_field = "T" /
 

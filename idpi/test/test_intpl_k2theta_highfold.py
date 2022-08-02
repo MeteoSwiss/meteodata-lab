@@ -23,8 +23,7 @@ def test_intpl_k2theta_highfold():
     THETA = ftheta(ds["P"], ds["T"])
     HFL = destagger(ds["HHL"], "generalVerticalLayer")
 
-    T = interpolate_k2theta(ds["T"], "high_fold", THETA, [310.,315.,320.,325.,330.,335.], "K", HFL)
-    #T = interpolate_k2theta(ds["T"], "high_fold", THETA, [335.], "K", HFL)
+    T = interpolate_k2theta(ds["T"], "high_fold", THETA, [280.,290.,310.,315.,320.,325.,330.,335.], "K", HFL)
 
     conf_files = {
         "inputi": datadir + "/lfff<DDHH>0000.ch",

@@ -16,7 +16,7 @@ def test_intpl_k2p_nearest():
     ds = {}
     grib_decoder.load_data(ds, ["T", "P"], datafile, chunk_size=None)
 
-    T = interpolate_k2p(ds["T"], "nearest_sfc", ds["P"], [500.,600.,700.,800.], "hPa")
+    T = interpolate_k2p(ds["T"], "nearest_sfc", ds["P"], [40.,500.,600.,700.,800.,1100.], "hPa")
 
     conf_files = {
         "inputi": datadir + "/lfff<DDHH>0000.ch",

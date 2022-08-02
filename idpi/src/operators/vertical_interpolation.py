@@ -123,36 +123,37 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
         p0 = tc["data"][tc_idx]
         # ... find the 3d field where pressure is >= p0 on level k and was < p0 on level k-1
         p2 = pfield.where((pfield >= p0) & (pkm1 < p0), drop=True)
-        # ... extract the index k of the vertical layer at which p2 adopts its minimum
-        minind = p2.fillna(tc_max).argmin(dim=["generalVerticalLayer"])
-        # ... extract pressure and field at level k
-        p2 = p2[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
-        f2 = field.where((pfield >= p0) & (pkm1 < p0), drop=True)[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
-        # ... extract pressure and field at level k-1
-        f1 = field.where((pfield < p0) & (pkp1 >= p0), drop=True)[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
-        p1 = pfield.where((pfield < p0) & (pkp1 >= p0), drop=True)[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
+        if p2.size > 0:
+            # ... extract the index k of the vertical layer at which p2 adopts its minimum
+            minind = p2.fillna(tc_max).argmin(dim=["generalVerticalLayer"])
+            # ... extract pressure and field at level k
+            p2 = p2[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
+            f2 = field.where((pfield >= p0) & (pkm1 < p0), drop=True)[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
+            # ... extract pressure and field at level k-1
+            f1 = field.where((pfield < p0) & (pkp1 >= p0), drop=True)[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
+            p1 = pfield.where((pfield < p0) & (pkp1 >= p0), drop=True)[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
 
-        # ... compute the interpolation weights
-        if tc["mode"] == interpolation_modes["linear_in_tcf"]:
-            ratio = (p0 - p1) / (p2 - p1)
+            # ... compute the interpolation weights
+            if tc["mode"] == interpolation_modes["linear_in_tcf"]:
+                ratio = (p0 - p1) / (p2 - p1)
 
-        if tc["mode"] == interpolation_modes["linear_in_lntcf"]:
-            ratio = (np.log(p0) - np.log(p1)) / (np.log(p2) - np.log(p1))
+            if tc["mode"] == interpolation_modes["linear_in_lntcf"]:
+                ratio = (np.log(p0) - np.log(p1)) / (np.log(p2) - np.log(p1))
 
-        if tc["mode"] == interpolation_modes["nearest_sfc"]:
-            ratio = xr.where(np.abs(p0 - p1) > np.abs(p0 - p2), 1., 0.)
+            if tc["mode"] == interpolation_modes["nearest_sfc"]:
+                ratio = xr.where(np.abs(p0 - p1) > np.abs(p0 - p2), 1., 0.)
 
-        # ... interpolate and update ftc
-        ftc[{tc["typeOfLevel"]: tc_idx}] = (1. - ratio ) * f1 + ratio * f2
+            # ... interpolate and update ftc
+            ftc[{tc["typeOfLevel"]: tc_idx}] = (1. - ratio ) * f1 + ratio * f2
      
-
     return ftc
 
+
 def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
-    """Interpolate a field from model (k) levels to theta coordinates"""
+    """Interpolate a field from model (k) levels to potential temperature (theta) coordinates"""
     # Arguments
     # field: source field (xarray.DataArray)
-    # mode: interpolation algorithm, one of {"low_fold", "high_fold"}
+    # mode: interpolation algorithm, one of {"low_fold", "high_fold","undef_fold"}
     # thfield: potential temperature theta on k levels in K (xarray.DataArray)
     # tcth_values: target coordinate values (list)
     # tcth_units: target coordinate units (string)
@@ -170,7 +171,7 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
     # TODO: check missing value consistency with GRIB2 (currently comparisons are done with np.nan)
     #       check that thfield is the theta field, given in K
     #       check that field, thfield, and hfield are compatible
-    #       print warn message if result contains NaN
+    #       print warn message if result contains missing values
 
     # ATTENTION: the attribute "positive" is not set for generalVerticalLayer
     #            we know that for COSMO it would be defined as positive:"down"; for the time being,

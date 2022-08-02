@@ -9,7 +9,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     """Interpolate a field from model (k) levels to pressure coordinates"""
     # Arguments
     # field: source field (xarray.DataArray)
-    # mode: interpolation algorithm, one of {"lin_p", "lin_lnp", "nearest"}
+    # mode: interpolation algorithm, one of {"linear_in_tcf", "linear_in_lntcf", "nearest_sfc"}
     # tcp_values: target coordinate values (list)
     # tcps_units: target coordinate units (string)
     # pfield: pressure field on k levels in Pa (xarray.DataArray)
@@ -140,10 +140,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
             ratio = (np.log(p0) - np.log(p1)) / (np.log(p2) - np.log(p1))
 
         if tc["mode"] == interpolation_modes["nearest_sfc"]:
-            if np.abs(p0 - p1) > np.abs(p0 - p2):
-                ratio = 1.
-            else:
-                ratio = 0.
+            ratio = xr.where(np.abs(p0 - p1) > np.abs(p0 - p2), 1., 0.)
 
         # ... interpolate and update ftc
         ftc[{tc["typeOfLevel"]: tc_idx}] = (1. - ratio ) * f1 + ratio * f2

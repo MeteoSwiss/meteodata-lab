@@ -60,7 +60,7 @@ def test_intpl_k2theta_undeffold():
     fs_ds = xr.open_dataset("00_intpl_k2theta_undeffold.nc")
     t_ref = fs_ds["T"].rename({"x_1": "x", "y_1": "y", "z_1": "theta", "epsd_1": "number"})
 
-    assert np.allclose(t_ref, T, rtol=3e-5, atol=5e-2, equal_nan=True)
+    assert np.allclose(t_ref, T, rtol=1e-7, atol=1e-5, equal_nan=True)
 
 if __name__ == "__main__":
     test_intpl_k2theta_undeffold()

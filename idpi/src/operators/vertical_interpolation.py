@@ -26,7 +26,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     # TODO: check missing value consistency with GRIB2 (currently comparisons are done with np.nan)
     #       check that pfield is the pressure field, given in Pa
     #       check that field and pfield are compatible
-    #       handle the case that the tc pressure values are out of range of pfield
+    #       print warn message if result contains missing values
 
     # Parameters
     # ... supported interpolation modes
@@ -270,7 +270,7 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
         }
     )
 
-    # ... loop through tc values (downward search)
+    # ... loop through tc values
     for tc_idx in range(len(tc["data"])):
         th0 = tc["data"][tc_idx]
         folding_coord_exception = xr.full_like(hfield[{"generalVerticalLayer": 0}], False)

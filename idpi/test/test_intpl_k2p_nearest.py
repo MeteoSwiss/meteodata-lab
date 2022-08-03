@@ -53,7 +53,7 @@ def test_intpl_k2p_nearest():
     fs_ds = xr.open_dataset("00_intpl_k2p_nearest.nc")
     t_ref = fs_ds["T"].rename({"x_1": "x", "y_1": "y", "z_1": "isobaricInPa", "epsd_1": "number"})
 
-    assert np.allclose(t_ref, T, rtol=3e-5, atol=5e-2, equal_nan=True)
+    assert np.allclose(t_ref, T, equal_nan=True)
 
 if __name__ == "__main__":
     test_intpl_k2p_nearest()

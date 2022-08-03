@@ -58,7 +58,7 @@ def test_hzerocl():
     assert np.allclose(
         hzerocl_ref,
         hzerocl,
-        rtol=1e-5,
+        rtol=1e-6,
         atol=1e-5,
         equal_nan=True,
     )

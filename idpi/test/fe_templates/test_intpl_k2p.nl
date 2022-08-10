@@ -45,9 +45,8 @@
   tstart=0, tstop=0, tincr=1
 /
 &Process in_field="P", levmin=1, levmax=80 /
-&Process in_field="T", levmin=1, levmax=80, voper="intpl_k2p,lin_p", voper_lev=40,500,600,700,800,1100 /
+&Process in_field="T", levmin=1, levmax=80, voper="intpl_k2p,{{ mode }}", voper_lev=40,500,600,700,800,1100 /
 &Process out_field="T" /
-
 
 
 

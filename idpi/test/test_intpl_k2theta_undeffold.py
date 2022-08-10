@@ -29,6 +29,7 @@ def test_intpl_k2theta_undeffold():
         "inputi": datadir + "/lfff<DDHH>0000.ch",
         "output": "<HH>_intpl_k2theta_undeffold.nc"
     }
+    mode = "undef_fold"
     out_file = "00_intpl_k2theta_undeffold.nc"
     prodfiles = ["fieldextra.diagnostic"]
 
@@ -44,8 +45,8 @@ def test_intpl_k2theta_undeffold():
 
     templateLoader = jinja2.FileSystemLoader(searchpath=testdir + "/fe_templates")
     templateEnv = jinja2.Environment(loader=templateLoader)
-    template = templateEnv.get_template("./test_intpl_k2theta_undeffold.nl")
-    outputText = template.render(file=conf_files, ready_flags=tmpdir)
+    template = templateEnv.get_template("./test_intpl_k2theta.nl")
+    outputText = template.render(file=conf_files, mode=mode, ready_flags=tmpdir)
 
     with open(tmpdir + "/test_intpl_k2theta_undeffold.nl", "w") as nl_file:
         nl_file.write(outputText)

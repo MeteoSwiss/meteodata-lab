@@ -29,6 +29,7 @@ def test_intpl_k2theta_lowfold():
         "inputi": datadir + "/lfff<DDHH>0000.ch",
         "output": "<HH>_intpl_k2theta_lowfold.nc"
     }
+    mode = "low_fold"
     out_file = "00_intpl_k2theta_lowfold.nc"
     prodfiles = ["fieldextra.diagnostic"]
 
@@ -44,8 +45,8 @@ def test_intpl_k2theta_lowfold():
 
     templateLoader = jinja2.FileSystemLoader(searchpath=testdir + "/fe_templates")
     templateEnv = jinja2.Environment(loader=templateLoader)
-    template = templateEnv.get_template("./test_intpl_k2theta_lowfold.nl")
-    outputText = template.render(file=conf_files, ready_flags=tmpdir)
+    template = templateEnv.get_template("./test_intpl_k2theta.nl")
+    outputText = template.render(file=conf_files, mode=mode, ready_flags=tmpdir)
 
     with open(tmpdir + "/test_intpl_k2theta_lowfold.nl", "w") as nl_file:
         nl_file.write(outputText)

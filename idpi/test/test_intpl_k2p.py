@@ -12,7 +12,8 @@ from operators.vertical_interpolation import interpolate_k2p
 
 def test_intpl_k2p():
     # define target coordinates
-    tc_values = [40,500,600,700,800,1100]
+    tc_values = [40.,500.,600.,700.,800.,1100.]
+    fx_voper_lev = "40,500,600,700,800,1100"
     tc_unit = "hPa"
 
     # interpolation modes
@@ -54,7 +55,7 @@ def test_intpl_k2p():
     for mode in modes:
 
         # call interpolation operator    
-        T = interpolate_k2p(ds["T"], mode, ds["P"], [40.,500.,600.,700.,800.,1100.], "hPa")
+        T = interpolate_k2p(ds["T"], mode, ds["P"], tc_values, "hPa")
 
         fx_mode = fx_modes[mode]
         conf_files = {
@@ -63,7 +64,7 @@ def test_intpl_k2p():
         }
         fx_out_file = "00_intpl_k2p_" + fx_mode + ".nc"
 
-        rendered_text = template.render(file=conf_files, mode=fx_mode)
+        rendered_text = template.render(file=conf_files, mode=fx_mode, voper_lev=fx_voper_lev)
         nl_rendered = os.path.join(tmpdir, "test_intpl_k2p" + fx_mode + ".nl")
 
         with open(nl_rendered, "w") as nl_file:

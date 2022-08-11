@@ -119,8 +119,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     )
 
     # ... loop through tc values
-    for tc_idx in range(len(tc["data"])):
-        p0 = tc["data"][tc_idx]
+    for tc_idx, p0 in enumerate(tc["data"]):
         # ... find the 3d field where pressure is >= p0 on level k and was < p0 on level k-1
         p2 = pfield.where((pfield >= p0) & (pkm1 < p0), drop=True)
         if p2.size > 0:
@@ -271,8 +270,7 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
     )
 
     # ... loop through tc values
-    for tc_idx in range(len(tc["data"])):
-        th0 = tc["data"][tc_idx]
+    for tc_idx, th0 in enumerate(tc["data"]):
         folding_coord_exception = xr.full_like(hfield[{"generalVerticalLayer": 0}], False)
         # ... find the height field where theta is >= th0 on level k and was <= th0 on level k-1
         #     or where theta is <= th0 on level k and was >= th0 on level k-1

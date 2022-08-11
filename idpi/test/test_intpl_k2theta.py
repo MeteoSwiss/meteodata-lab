@@ -1,4 +1,3 @@
-from gettext import translation
 import os
 import shutil
 import subprocess
@@ -7,31 +6,31 @@ import grib_decoder
 import jinja2
 import numpy as np
 import xarray as xr
-from operators.vertical_interpolation import interpolate_k2p
+from operators.vertical_interpolation import interpolate_k2theta
+from operators.theta import ftheta
+from operators.destagger import destagger
 
 
-def test_intpl_k2p():
+def test_intpl_k2theta():
     # define target coordinates
-    tc_values = [40.,500.,600.,700.,800.,1100.]
-    fx_voper_lev = "40,500,600,700,800,1100"
-    tc_units = "hPa"
+    tc_values = [280.,290.,310.,315.,320.,325.,330.,335.]
+    fx_voper_lev = "280,290,310,315,320,325,330,335"
+    tc_units = "K"
 
     # interpolation modes
-    modes = ["nearest_sfc", "linear_in_tcf", "linear_in_lntcf"]
-    
-    # mode dependent tolerances
-    atolerances = {"nearest_sfc": 0, "linear_in_tcf": 1e-5, "linear_in_lntcf": 1e-5}
-    rtolerances = {"nearest_sfc": 0, "linear_in_tcf": 1e-7, "linear_in_lntcf": 1e-6}
+    modes = ["high_fold","low_fold","undef_fold"]
 
-    # mode translation for fieldextra
-    fx_modes = {"nearest_sfc": "nearest", "linear_in_tcf": "lin_p", "linear_in_lntcf": "lin_lnp"}
+    # mode dependent tolerances
+    atolerances = {"undef_fold": 1e-5, "low_fold": 1e-5, "high_fold": 1e-5}
+    rtolerances = {"undef_fold": 1e-7, "low_fold": 1e-7, "high_fold": 1e-7}
 
     # input data
     datadir = "/project/s83c/rz+/icon_data_processing_incubator/data/SWISS"
     datafile = datadir + "/lfff00000000.ch"
+    cdatafile = datadir + "/lfff00000000c.ch"
 
     # fieldextra executable
-    executable = "/project/s83c/fieldextra/tsa/bin/fieldextra_gnu_opt_omp"
+    fx_executable = "/project/s83c/fieldextra/tsa/bin/fieldextra_gnu_opt_omp"
     # list of diagnostic files produced by fieldextra
     fx_diagnostics = ["fieldextra.diagnostic"]
 
@@ -45,27 +44,30 @@ def test_intpl_k2p():
     # prepare the template generator
     templateLoader = jinja2.FileSystemLoader(searchpath=testdir + "/fe_templates")
     templateEnv = jinja2.Environment(loader=templateLoader)
-    template = templateEnv.get_template("./test_intpl_k2p.nl")
+    template = templateEnv.get_template("./test_intpl_k2theta.nl")
 
     # load input data set
     ds = {}
     grib_decoder.load_data(ds, ["T", "P"], datafile, chunk_size=None)
+    grib_decoder.load_data(ds, ["HHL"], cdatafile, chunk_size=None)
+ 
+    THETA = ftheta(ds["P"], ds["T"])
+    HFL = destagger(ds["HHL"], "generalVerticalLayer")
 
     # loop through interpolation modes
     for mode in modes:
 
         # call interpolation operator    
-        T = interpolate_k2p(ds["T"], mode, ds["P"], tc_values, tc_units)
+        T = interpolate_k2theta(ds["T"], mode, THETA, tc_values, tc_units, HFL)
 
-        fx_mode = fx_modes[mode]
         conf_files = {
             "inputi": datadir + "/lfff<DDHH>0000.ch",
-            "output": "<HH>_intpl_k2p_" + fx_mode + ".nc"
+            "output": "<HH>_intpl_k2theta_" + mode + ".nc"
         }
-        fx_out_file = "00_intpl_k2p_" + fx_mode + ".nc"
+        fx_out_file = "00_intpl_k2theta_" + mode + ".nc"
 
-        rendered_text = template.render(file=conf_files, mode=fx_mode, voper_lev=fx_voper_lev)
-        nl_rendered = os.path.join(tmpdir, "test_intpl_k2p" + fx_mode + ".nl")
+        rendered_text = template.render(file=conf_files, mode=mode, voper_lev=fx_voper_lev, voper_lev_units=tc_units)
+        nl_rendered = os.path.join(tmpdir, "test_intpl_k2theta" + mode + ".nl")
 
         with open(nl_rendered, "w") as nl_file:
             nl_file.write(rendered_text)
@@ -76,14 +78,13 @@ def test_intpl_k2p():
                 os.remove(os.path.join(cwd, afile))
 
         # run fieldextra
-        subprocess.run([executable, nl_rendered], check=True)
+        subprocess.run([fx_executable, nl_rendered], check=True)
 
         fx_ds = xr.open_dataset(fx_out_file)
-        t_ref = fx_ds["T"].rename({"x_1": "x", "y_1": "y", "z_1": "isobaricInPa", "epsd_1": "number"})
+        t_ref = fx_ds["T"].rename({"x_1": "x", "y_1": "y", "z_1": "theta", "epsd_1": "number"})
 
         # compare numerical results
         assert np.allclose(t_ref, T, rtol=rtolerances[mode], atol=atolerances[mode], equal_nan=True)
 
-
 if __name__ == "__main__":
-    test_intpl_k2p()
+    test_intpl_k2theta()

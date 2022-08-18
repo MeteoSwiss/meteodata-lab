@@ -5,8 +5,29 @@ import numpy as np
 
 
 def fhzerocl(t, hhl):
+    """Height of the zero deg C isotherm in m amsl.
+    The algorithm searches from the top of the atmosphere downwards.
+    No extrapolation below the earth's surface is done.
+
+    Parameters
+    ----------
+        t : xarray.DataArray
+            air temperature in K
+        hhl : xarray.DataArray
+            heights of the interfaces between vertical layers in m amsl
+
+    Returns
+    -------
+        hzerocl: xarray.DataArray
+            height of the zero deg C isotherm in m amsl
+
+    """
+    # Physical constants
     t0 = 273.15
+
+    # Heights of layer mid surfaces (where t is defined)
     hfl = destagger(hhl, "generalVerticalLayer")
+
     tkm1 = t.copy()
     tkm1[{"generalVerticalLayer": slice(1, None)}] = t[
         {"generalVerticalLayer": slice(0, -1)}
@@ -39,13 +60,13 @@ def fhzerocl(t, hhl):
         # The previous condition can be satisfied on multiple levels.
         # Take the k indices of the maximum height value where the condition is satisfied
         maxind = height2.fillna(-1).argmax(dim=["generalVerticalLayer"])
-        # compute the 2D fields with height values where T is > 0 and < 0 on level below
+        # Compute the 2D fields with height values where T is > 0 and < 0 on level below
         height2 = height2[{"generalVerticalLayer": maxind["generalVerticalLayer"]}]
-        # compute the 2D fields with height values where T is < 0 and > 0 on level above
+        # Compute the 2D fields with height values where T is < 0 and > 0 on level above
         height1 = hfl.where((tkp1 >= t0) & (t < t0), drop=True)[
             {"generalVerticalLayer": maxind["generalVerticalLayer"]}
         ]
-        # the height leve where T == 0 must be between [height1, height2]
+        # The height level where T == t0 must be between [height1, height2]
         t1 = t.where((t >= t0) & (tkm1 < t0), drop=True)[
             {"generalVerticalLayer": maxind["generalVerticalLayer"]}
         ]

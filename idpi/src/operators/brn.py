@@ -8,7 +8,7 @@ pc_g = 9.80665
 
 
 def fbrn(p, t, qv, u, v, hhl, hsurf):
-    """Compute the Bulk Richardson Number (BRN)."""
+    """Bulk Richardson Number (BRN)."""
     nlevels = len(p.coords["generalVerticalLayer"])
 
     thetav = fthetav(p, t, qv)

@@ -1,26 +1,37 @@
 """Vertical interpolation operators."""
 
 from ast import Pass
-from re import match
 import xarray as xr
 import numpy as np
 
 def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
-    """Interpolate a field from model (k) levels to pressure coordinates"""
-    # Arguments
-    # field: source field (xarray.DataArray)
-    # mode: interpolation algorithm, one of {"linear_in_tcf", "linear_in_lntcf", "nearest_sfc"}
-    # tcp_values: target coordinate values (list)
-    # tcps_units: target coordinate units (string)
-    # pfield: pressure field on k levels in Pa (xarray.DataArray)
-    #
-    # Result
-    # ftc: target field (xarray.DataArray)
+    """Interpolate a field from model (k) levels to pressure coordinates.
+
+    Parameters
+    ----------
+    field : xarray.DataArray
+        field to interpolate
+    mode : str
+        interpolation algorithm, one of {"linear_in_tcf", "linear_in_lntcf", "nearest_sfc"}
+    pfield : xarray.DataArray
+        pressure field on k levels in Pa
+    tcp_values : list of float
+        target coordinate values
+    tcps_units : str
+        target coordinate units
+    
+    Returns
+    -------
+    ftc : xarray.DataArray
+        field on target coordinates
+
+    """
+
     # xarray.DataArray key properties:
     #   name (str)
     #   data (numpy.ndarray)
     #   dims (tuple of str)
-    #   coords (dict-like container of arrays (ccordinates))
+    #   coords (dict-like container of arrays (coordinates))
     #   attrs (dict to hold arbitrary metadata)
 
     # TODO: check missing value consistency with GRIB2 (currently comparisons are done with np.nan)
@@ -28,7 +39,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     #       check that field and pfield are compatible
     #       print warn message if result contains missing values
 
-    # Parameters
+    # Initializations
     # ... supported interpolation modes
     interpolation_modes = dict(linear_in_tcf=1, linear_in_lntcf=2, nearest_sfc=3)
     # ... supported tc units and corresponding conversion factors
@@ -36,7 +47,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     # ... tc value beyond upper bound for meaningful values of pressure, used in tc interval search (in Pa)
     tc_max = 200000.
 
-    # Define vertical target coordinates
+    # Define vertical target coordinates (tc)
     tc = dict()
     tc_data = tcp_values.copy()
     tc_data.sort(reverse=False)
@@ -57,7 +68,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     if tc["mode"] is None:
         raise RuntimeError("interpolate_k2p: unknown mode", mode)
 
-    # Prepare output field ftc on tc
+    # Prepare output field ftc on target coordinates
     # name
     ftc_name = field.name
     # attrs
@@ -87,7 +98,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     ftcp_coords = xr.IndexVariable(tc["typeOfLevel"], tc["data"], attrs=tc["attrs"])
     ftc_coords[ftcp_coords.name] = ftcp_coords
     # data
-    ftc_data = np.ndarray( tuple(ftc_dim_lens), dtype=float )
+    ftc_data = np.ndarray(tuple(ftc_dim_lens), dtype=float)
     # ... fill with missing values (alternatively, use field.attrs["GRIB_missingValue"])
     ftc_data.fill(np.nan)
 
@@ -149,22 +160,35 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
 
 
 def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
-    """Interpolate a field from model (k) levels to potential temperature (theta) coordinates"""
-    # Arguments
-    # field: source field (xarray.DataArray)
-    # mode: interpolation algorithm, one of {"low_fold", "high_fold","undef_fold"}
-    # thfield: potential temperature theta on k levels in K (xarray.DataArray)
-    # tcth_values: target coordinate values (list)
-    # tcth_units: target coordinate units (string)
-    # hfield: height on k levels (xarray.DataArray)
-    #
-    # Result
-    # ftc: target field (xarray.DataArray)
+    """Interpolate a field from model (k) levels to potential temperature (theta) coordinates.
+    
+    Parameters
+    ----------
+    field : xarray.DataArray
+        field to interpolate
+    mode : str
+        interpolation algorithm, one of {"low_fold", "high_fold","undef_fold"}
+    thfield : xarray.DataArray
+        potential temperature theta on k levels in K
+    tcth_values : list of float
+        target coordinate values
+    tcth_units : str
+        target coordinate units
+    hfield : xarray.DataArray
+        height on k levels
+    
+    Returns
+    -------
+    ftc : xarray.DataArray
+        field on target coordinates
+
+    """
+
     # xarray.DataArray key properties:
     #   name (str)
     #   data (numpy.ndarray)
     #   dims (tuple of str)
-    #   coords (dict-like container of arrays (ccordinates))
+    #   coords (dict-like container of arrays (coordinates))
     #   attrs (dict to hold arbitrary metadata)
 
     # TODO: check missing value consistency with GRIB2 (currently comparisons are done with np.nan)
@@ -174,7 +198,7 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
 
     # ATTENTION: the attribute "positive" is not set for generalVerticalLayer
     #            we know that for COSMO it would be defined as positive:"down"; for the time being,
-    #            we explicitly use the height field, defined on model mid layer surfaces as auxiliary field
+    #            we explicitly use the height field on model mid layer surfaces as auxiliary field
 
     # Parameters
     # ... supported folding modes

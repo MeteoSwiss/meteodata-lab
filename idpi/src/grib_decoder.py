@@ -18,13 +18,9 @@ def load_data(outds, fields, datafile, chunk_size=10):
         for field in fields:
             if field in ds:
                 outds[field] = ds[field]
-                if "generalVertical" in ds[field].dims:
-                    outds[field] = outds[field].rename(
-                        {"generalVertical": "generalVerticalLayer"}
-                    )
                 if field == "HHL":
                     outds[field] = outds[field].interpolate_na(
-                        dim="generalVerticalLayer"
+                        dim="generalVertical"
                     )
 
     if any(field not in outds for field in fields):

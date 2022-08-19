@@ -52,7 +52,7 @@ def test_intpl_k2theta():
     grib_decoder.load_data(ds, ["HHL"], cdatafile, chunk_size=None)
  
     THETA = ftheta(ds["P"], ds["T"])
-    HFL = destagger(ds["HHL"], "generalVerticalLayer")
+    HFL = destagger(ds["HHL"], "generalVertical")
 
     # loop through interpolation modes
     for mode in modes:

@@ -21,11 +21,11 @@ def fbrn(p, t, qv, u, v, hhl, hsurf):
     )
     u_ = destagger(u, "x")
     v_ = destagger(v, "y")
-    hhl_fl = destagger(hhl, "generalVerticalLayer")
+    hfl = destagger(hhl, "generalVertical")
 
     brn = (
         pc_g
-        * (hhl_fl - hsurf)
+        * (hfl - hsurf)
         * (thetav - thetav.isel(generalVerticalLayer=79))
         * nlevels_xr
         / (thetav_sum * (u_**2 + v_**2))

@@ -26,7 +26,7 @@ def fhzerocl(t, hhl):
     t0 = 273.15
 
     # Heights of layer mid surfaces (where t is defined)
-    hfl = destagger(hhl, "generalVerticalLayer")
+    hfl = destagger(hhl, "generalVertical")
 
     tkm1 = t.copy()
     tkm1[{"generalVerticalLayer": slice(1, None)}] = t[

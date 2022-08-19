@@ -49,12 +49,12 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
 
     # Define vertical target coordinates (tc)
     tc = dict()
-    tc_data = tcp_values.copy()
-    tc_data.sort(reverse=False)
-    tc["data"] = np.array(tc_data)
+    tc_values = tcp_values.copy()
+    tc_values.sort(reverse=False)
+    tc["values"] = np.array(tc_values)
     tc_factor = tcp_unit_conversions.get(tcp_units)
     if tc_factor is not None:
-        tc["data"] *= tc_factor
+        tc["values"] *= tc_factor
     else:
         raise RuntimeError("interpolate_k2p: unknown pressure coordinate units", tcp_units)    
     tc["attrs"] = {"units": "Pa",
@@ -85,7 +85,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
             ftc_dim_lens.append(len(field[d]))
         else:
             ftc_dims.append(tc["typeOfLevel"])
-            ftc_dim_lens.append(len(tc["data"]))
+            ftc_dim_lens.append(len(tc["values"]))
     ftc_dims = tuple(ftc_dims)
     ftc_dim_lens = tuple(ftc_dim_lens)
     # coords
@@ -95,7 +95,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
         if c != "generalVerticalLayer":
             ftc_coords[c] = field.coords[c]
     # ... initialize the vertical target coordinates
-    ftcp_coords = xr.IndexVariable(tc["typeOfLevel"], tc["data"], attrs=tc["attrs"])
+    ftcp_coords = xr.IndexVariable(tc["typeOfLevel"], tc["values"], attrs=tc["attrs"])
     ftc_coords[ftcp_coords.name] = ftcp_coords
     # data
     ftc_data = np.ndarray(tuple(ftc_dim_lens), dtype=float)
@@ -130,7 +130,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     )
 
     # ... loop through tc values
-    for tc_idx, p0 in enumerate(tc["data"]):
+    for tc_idx, p0 in enumerate(tc["values"]):
         # ... find the 3d field where pressure is >= p0 on level k and was < p0 on level k-1
         p2 = pfield.where((pfield >= p0) & (pkm1 < p0), drop=True)
         if p2.size > 0:
@@ -212,13 +212,13 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
 
     # Define vertical target coordinates
     tc = dict()
-    tc_data = tcth_values.copy()
-    tc_data.sort(reverse=False) # Sorting cannot be exploited for optimizations, since theta is not monotonous wrt to height
-    # tc data have to be stored in cK
-    tc["data"] = np.array(tc_data)
+    tc_values = tcth_values.copy()
+    tc_values.sort(reverse=False) # Sorting cannot be exploited for optimizations, since theta is not monotonous wrt to height
+    # tc values have to be stored in cK
+    tc["values"] = np.array(tc_values)
     tc_factor = tcth_unit_conversions.get(tcth_units)
     if tc_factor is not None:
-        tc["data"] *= tc_factor
+        tc["values"] *= tc_factor
     else:
         raise RuntimeError("interpolate_k2theta: unknown theta coordinate units", tcth_units)    
     tc["attrs"] = {"units": "K",
@@ -249,7 +249,7 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
             ftc_dim_lens.append(len(field[d]))
         else:
             ftc_dims.append(tc["typeOfLevel"])
-            ftc_dim_lens.append(len(tc["data"]))
+            ftc_dim_lens.append(len(tc["values"]))
     ftc_dims = tuple(ftc_dims)
     ftc_dim_lens = tuple(ftc_dim_lens)
     # coords
@@ -259,7 +259,7 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
         if c != "generalVerticalLayer":
             ftc_coords[c] = field.coords[c]
     # ... initialize the vertical target coordinates
-    ftcth_coords = xr.IndexVariable(tc["typeOfLevel"], tc["data"], attrs=tc["attrs"])
+    ftcth_coords = xr.IndexVariable(tc["typeOfLevel"], tc["values"], attrs=tc["attrs"])
     ftc_coords[ftcth_coords.name] = ftcth_coords
     # data
     ftc_data = np.ndarray( tuple(ftc_dim_lens), dtype=float )
@@ -294,7 +294,7 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
     )
 
     # ... loop through tc values
-    for tc_idx, th0 in enumerate(tc["data"]):
+    for tc_idx, th0 in enumerate(tc["values"]):
         folding_coord_exception = xr.full_like(hfield[{"generalVerticalLayer": 0}], False)
         # ... find the height field where theta is >= th0 on level k and was <= th0 on level k-1
         #     or where theta is <= th0 on level k and was >= th0 on level k-1

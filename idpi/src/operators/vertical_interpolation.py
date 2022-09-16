@@ -41,22 +41,23 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
 
     # Initializations
     # ... supported interpolation modes
-    interpolation_modes = dict(linear_in_tcf=1, linear_in_lntcf=2, nearest_sfc=3)
+    interpolation_modes = ("linear_in_tcf", "linear_in_lntcf", "nearest_sfc")
+    if mode not in interpolation_modes:
+        raise RuntimeError("interpolate_k2p: unknown mode", mode)
     # ... supported tc units and corresponding conversion factors
     tcp_unit_conversions = dict(Pa=1., hPa=100.)
+    if tcp_units not in tcp_unit_conversions.keys():
+        raise RuntimeError("interpolate_k2p: unsupported value of tcp_units", tcp_units)
     # ... tc value beyond upper bound for meaningful values of pressure, used in tc interval search (in Pa)
     tc_max = 200000.
 
     # Define vertical target coordinates (tc)
     tc = dict()
     tc_values = tcp_values.copy()
-    tc_values.sort(reverse=False)
+    tc_values.sort(reverse=False) # not exploited; can be omitted
     tc["values"] = np.array(tc_values)
-    tc_factor = tcp_unit_conversions.get(tcp_units)
-    if tc_factor is not None:
-        tc["values"] *= tc_factor
-    else:
-        raise RuntimeError("interpolate_k2p: unknown pressure coordinate units", tcp_units)    
+    tc_factor = tcp_unit_conversions[tcp_units]
+    tc["values"] *= tc_factor
     tc["attrs"] = {"units": "Pa",
                    "positive": "down",
                    "standard_name": "air_pressure",
@@ -64,9 +65,6 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
                   }
     tc["typeOfLevel"] = "isobaricInPa"
     tc["NV"] = 0
-    tc["mode"] = interpolation_modes.get(mode)
-    if tc["mode"] is None:
-        raise RuntimeError("interpolate_k2p: unknown mode", mode)
 
     # Prepare output field ftc on target coordinates
     # name
@@ -77,15 +75,8 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     if ftc_attrs["GRIB_NV"] is not None:
         ftc_attrs["GRIB_NV"] = tc["NV"]
     # dims
-    ftc_dims = []
-    ftc_dim_lens = []
-    for d in field.dims:
-        if d != "generalVerticalLayer":
-            ftc_dims.append(d)
-            ftc_dim_lens.append(len(field[d]))
-        else:
-            ftc_dims.append(tc["typeOfLevel"])
-            ftc_dim_lens.append(len(tc["values"]))
+    ftc_dim_lens = list(len(field[d]) if d != "generalVerticalLayer" else len(tc["values"]) for d in field.dims)
+    ftc_dims = list(map(lambda x: x.replace('generalVerticalLayer', tc["typeOfLevel"]), field.dims))
     ftc_dims = tuple(ftc_dims)
     ftc_dim_lens = tuple(ftc_dim_lens)
     # coords
@@ -98,9 +89,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     ftcp_coords = xr.IndexVariable(tc["typeOfLevel"], tc["values"], attrs=tc["attrs"])
     ftc_coords[ftcp_coords.name] = ftcp_coords
     # data
-    ftc_data = np.ndarray(tuple(ftc_dim_lens), dtype=float)
-    # ... fill with missing values (alternatively, use field.attrs["GRIB_missingValue"])
-    ftc_data.fill(np.nan)
+    ftc_data = np.full( tuple(ftc_dim_lens), np.nan, dtype=field.data.dtype )
 
     # Initialize the output field ftc
     ftc = xr.DataArray(name=ftc_name, data=ftc_data, dims=ftc_dims, coords=ftc_coords, attrs=ftc_attrs)
@@ -144,13 +133,13 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
             p1 = pfield.where((pfield < p0) & (pkp1 >= p0), drop=True)[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
 
             # ... compute the interpolation weights
-            if tc["mode"] == interpolation_modes["linear_in_tcf"]:
+            if mode == "linear_in_tcf":
                 ratio = (p0 - p1) / (p2 - p1)
 
-            if tc["mode"] == interpolation_modes["linear_in_lntcf"]:
+            if mode == "linear_in_lntcf":
                 ratio = (np.log(p0) - np.log(p1)) / (np.log(p2) - np.log(p1))
 
-            if tc["mode"] == interpolation_modes["nearest_sfc"]:
+            if mode == "nearest_sfc":
                 ratio = xr.where(np.abs(p0 - p1) > np.abs(p0 - p2), 1., 0.)
 
             # ... interpolate and update ftc
@@ -202,10 +191,15 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
 
     # Parameters
     # ... supported folding modes
-    folding_modes = dict(low_fold=1, high_fold=2, undef_fold=3)
+    folding_modes = ("low_fold", "high_fold", "undef_fold")
+    if mode not in folding_modes:
+        raise RuntimeError("interpolate_k2theta: unsupported mode", mode)
+
     # ... supported tc units and corresponding conversion factor to K (i.e. to the same unit as theta); according to GRIB2 
     #     isentropic surfaces are coded in K; fieldextra codes them in cK for NetCDF (to be checked)
     tcth_unit_conversions = dict(K=1., cK=100.)
+    if tcth_units not in tcth_unit_conversions.keys():
+        raise RuntimeError("interpolate_k2theta: unsupported value of tcth_units", tcth_units)
     # ... tc value below and beyond upper bound for meaningful values of height, used in tc interval search (in m amsl)
     h_min = -1000.
     h_max = 100000.
@@ -216,11 +210,8 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
     tc_values.sort(reverse=False) # Sorting cannot be exploited for optimizations, since theta is not monotonous wrt to height
     # tc values have to be stored in cK
     tc["values"] = np.array(tc_values)
-    tc_factor = tcth_unit_conversions.get(tcth_units)
-    if tc_factor is not None:
-        tc["values"] *= tc_factor
-    else:
-        raise RuntimeError("interpolate_k2theta: unknown theta coordinate units", tcth_units)    
+    tc_factor = tcth_unit_conversions[tcth_units]
+    tc["values"] *= tc_factor
     tc["attrs"] = {"units": "K",
                    "positive": "up",
                    "standard_name": "air_potential_temperature",
@@ -228,9 +219,6 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
                   }
     tc["typeOfLevel"] = "theta" # not yet properly defined in eccodes
     tc["NV"] = 0
-    tc["mode"] = folding_modes.get(mode)
-    if tc["mode"] is None:
-        raise RuntimeError("interpolate_k2theta: unknown mode", mode)
 
     # Prepare output field ftc on tc
     # name
@@ -241,30 +229,21 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
     if ftc_attrs["GRIB_NV"] is not None:
         ftc_attrs["GRIB_NV"] = tc["NV"]
     # dims
-    ftc_dims = []
-    ftc_dim_lens = []
-    for d in field.dims:
-        if d != "generalVerticalLayer":
-            ftc_dims.append(d)
-            ftc_dim_lens.append(len(field[d]))
-        else:
-            ftc_dims.append(tc["typeOfLevel"])
-            ftc_dim_lens.append(len(tc["values"]))
+    ftc_dim_lens = list(len(field[d]) if d != "generalVerticalLayer" else len(tc["values"]) for d in field.dims)
+    ftc_dims = list(map(lambda x: x.replace('generalVerticalLayer', tc["typeOfLevel"]), field.dims))
     ftc_dims = tuple(ftc_dims)
     ftc_dim_lens = tuple(ftc_dim_lens)
     # coords
     # ... inherit all except for the vertical coordinates
-    ftc_coords = {}
+    ftc_coords = dict()
     for c in field.coords:
         if c != "generalVerticalLayer":
             ftc_coords[c] = field.coords[c]
     # ... initialize the vertical target coordinates
     ftcth_coords = xr.IndexVariable(tc["typeOfLevel"], tc["values"], attrs=tc["attrs"])
     ftc_coords[ftcth_coords.name] = ftcth_coords
-    # data
-    ftc_data = np.ndarray( tuple(ftc_dim_lens), dtype=float )
-    # ... fill with missing values (alternatively, use field.attrs["GRIB_missingValue"])
-    ftc_data.fill(np.nan)
+    # data, filled with missing values
+    ftc_data = np.full( tuple(ftc_dim_lens), np.nan, dtype=field.data.dtype )
 
     # Initialize the output field ftc
     ftc = xr.DataArray(name=ftc_name, data=ftc_data, dims=ftc_dims, coords=ftc_coords, attrs=ftc_attrs)
@@ -300,14 +279,14 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
         #     or where theta is <= th0 on level k and was >= th0 on level k-1
         h = hfield.where(((thfield >= th0) & (thkm1 <= th0)) | ((thfield <= th0) & (thkm1 >= th0)), drop=True)
         if h.size > 0:
-            if tc["mode"] == folding_modes["undef_fold"]:
+            if mode == "undef_fold":
                 # ... find condition where more than one interval is found, which contains the target coordinate value
                 folding_coord_exception = xr.where(h.notnull(), 1., 0.).sum(dim=["generalVerticalLayer"])
                 folding_coord_exception = folding_coord_exception.where(folding_coord_exception >1.).notnull()
-            if tc["mode"] in (folding_modes["low_fold"], folding_modes["undef_fold"]):
+            if mode in ("low_fold", "undef_fold"):
                 # ... extract the index k of the smallest height at which the condition is fulfilled
                 tcind = h.fillna(h_max).argmin(dim=["generalVerticalLayer"])
-            if tc["mode"] == folding_modes["high_fold"]:
+            if mode == "high_fold":
                 # ... extract the index k of the largest height at which the condition is fulfilled
                 tcind = h.fillna(h_min).argmax(dim=["generalVerticalLayer"])
 

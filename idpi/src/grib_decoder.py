@@ -8,10 +8,11 @@ def load_data(outds, fields, datafile, chunk_size=10):
     if chunk_size:
         chunk_arg = {"chunks": {"generalVerticalLayer": chunk_size}}
 
+    # Note: dataset assignment is based on typeOfLevel in cfgrib
     dss = cfgrib.open_datasets(
         datafile,
         backend_kwargs={"read_keys": ["typeOfLevel", "gridType"]},
-        encode_cf=("time", "geography", "vertical", "number"),
+        encode_cf=("time", "geography", "vertical"),
         **chunk_arg,
     )
     for ds in dss:

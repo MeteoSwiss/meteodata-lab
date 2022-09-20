@@ -1,7 +1,7 @@
 """Vertical interpolation operators."""
 
-import xarray as xr
 import numpy as np
+import xarray as xr
 
 
 def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):

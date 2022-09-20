@@ -6,9 +6,9 @@ import grib_decoder
 import jinja2
 import numpy as np
 import xarray as xr
-from operators.vertical_interpolation import interpolate_k2theta
-from operators.theta import ftheta
 from operators.destagger import destagger
+from operators.theta import ftheta
+from operators.vertical_interpolation import interpolate_k2theta
 
 
 def test_intpl_k2theta():

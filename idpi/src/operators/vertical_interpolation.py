@@ -44,20 +44,23 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     interpolation_modes = ("linear_in_tcf", "linear_in_lntcf", "nearest_sfc")
     if mode not in interpolation_modes:
         raise RuntimeError("interpolate_k2p: unknown mode", mode)
-    # ... supported tc units and corresponding conversion factors
+    # ... supported tc units and corresponding conversion factors to Pa
     tcp_unit_conversions = dict(Pa=1., hPa=100.)
     if tcp_units not in tcp_unit_conversions.keys():
         raise RuntimeError("interpolate_k2p: unsupported value of tcp_units", tcp_units)
-    # ... tc value beyond upper bound for meaningful values of pressure, used in tc interval search (in Pa)
-    tc_max = 200000.
+    # ... supported range of tc values (in Pa)
+    tc_min = 1.
+    tc_max = 120000.
 
     # Define vertical target coordinates (tc)
     tc = dict()
     tc_values = tcp_values.copy()
-    tc_values.sort(reverse=False) # not exploited; can be omitted
+    tc_values.sort(reverse=False)
     tc["values"] = np.array(tc_values)
     tc_factor = tcp_unit_conversions[tcp_units]
     tc["values"] *= tc_factor
+    if min(tc["values"]) < tc_min or max(tc["values"]) > tc_max:
+        raise RuntimeError("interpolate_k2p: target coordinate value out of range (must be in interval [",tc_min,", ",tc_max,"]Pa)")
     tc["attrs"] = {"units": "Pa",
                    "positive": "down",
                    "standard_name": "air_pressure",
@@ -197,10 +200,13 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
 
     # ... supported tc units and corresponding conversion factor to K (i.e. to the same unit as theta); according to GRIB2 
     #     isentropic surfaces are coded in K; fieldextra codes them in cK for NetCDF (to be checked)
-    tcth_unit_conversions = dict(K=1., cK=100.)
+    tcth_unit_conversions = dict(K=1., cK=.01)
     if tcth_units not in tcth_unit_conversions.keys():
         raise RuntimeError("interpolate_k2theta: unsupported value of tcth_units", tcth_units)
-    # ... tc value below and beyond upper bound for meaningful values of height, used in tc interval search (in m amsl)
+    # ... supported range of tc values (in K)
+    tc_min = 1.
+    tc_max = 1000.
+    # ... tc values outside range of meaningful values of height, used in tc interval search (in m amsl)
     h_min = -1000.
     h_max = 100000.
 
@@ -208,10 +214,12 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
     tc = dict()
     tc_values = tcth_values.copy()
     tc_values.sort(reverse=False) # Sorting cannot be exploited for optimizations, since theta is not monotonous wrt to height
-    # tc values have to be stored in cK
+    # tc values are stored in K
     tc["values"] = np.array(tc_values)
     tc_factor = tcth_unit_conversions[tcth_units]
     tc["values"] *= tc_factor
+    if min(tc["values"]) < tc_min or max(tc["values"]) > tc_max:
+        raise RuntimeError("interpolate_k2theta: target coordinate value out of range (must be in interval [",tc_min,", ",tc_max,"]K)")
     tc["attrs"] = {"units": "K",
                    "positive": "up",
                    "standard_name": "air_potential_temperature",

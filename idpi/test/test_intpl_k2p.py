@@ -1,4 +1,3 @@
-from gettext import translation
 import os
 import shutil
 import subprocess

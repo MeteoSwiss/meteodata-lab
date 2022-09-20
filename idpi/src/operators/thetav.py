@@ -21,7 +21,7 @@ def fthetav(p, t, qv):
     # Physical constants
     pc_r_d = 287.05  # Gas constant for dry air [J kg-1 K-1]
     pc_r_v = 461.51  # Gas constant for water vapour[J kg-1 K-1]
-    pc_cp_d = 1005.0 # Specific heat capacity of dry air at 0 deg C and constant pressure [J kg-1 K-1]
+    pc_cp_d = 1005.0  # Specific heat capacity of dry air at 0 deg C and constant pressure [J kg-1 K-1]
 
     # Derived quantities
     pc_rvd = pc_r_v / pc_r_d

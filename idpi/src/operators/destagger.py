@@ -31,6 +31,8 @@ def destagger(field, dim):
         field_k1_ = field[{dim: slice(1, None)}].assign_coords(
             {dim: field[{dim: slice(0, -1)}].generalVertical}
         )
-        return ((field_k0_ + field_k1_) * 0.5).rename({"generalVertical": "generalVerticalLayer"})
+        return ((field_k0_ + field_k1_) * 0.5).rename(
+            {"generalVertical": "generalVerticalLayer"}
+        )
 
     raise RuntimeError("Unknown dimension", dim)

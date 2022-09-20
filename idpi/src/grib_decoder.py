@@ -20,9 +20,7 @@ def load_data(outds, fields, datafile, chunk_size=10):
             if field in ds:
                 outds[field] = ds[field]
                 if field == "HHL":
-                    outds[field] = outds[field].interpolate_na(
-                        dim="generalVertical"
-                    )
+                    outds[field] = outds[field].interpolate_na(dim="generalVertical")
 
     if any(field not in outds for field in fields):
         raise RuntimeError("Not all fields found in datafile", fields)

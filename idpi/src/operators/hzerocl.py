@@ -75,8 +75,7 @@ def fhzerocl(t, hhl):
         t2 = t.where((tkp1 >= t0) & (t < t0), drop=True)[
             {"generalVerticalLayer": maxind["generalVerticalLayer"]}
         ]
-    
-        hzerocl = height1 + (height2 - height1) * (t2 - t0) / (t2 - t1)
 
+        hzerocl = height1 + (height2 - height1) * (t2 - t0) / (t2 - t1)
 
     return hzerocl

@@ -6,6 +6,7 @@ import numpy as np
 
 def fhzerocl(t, hhl):
     """Height of the zero deg C isotherm in m amsl.
+
     The algorithm searches from the top of the atmosphere downwards.
     No extrapolation below the earth's surface is done.
 

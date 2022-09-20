@@ -1,12 +1,11 @@
 """Vertical interpolation operators."""
 
-from ast import Pass
 import xarray as xr
 import numpy as np
 
 def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     """Interpolate a field from model (k) levels to pressure coordinates.
-
+    
     Parameters
     ----------
     field : xarray.DataArray
@@ -24,9 +23,8 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     -------
     ftc : xarray.DataArray
         field on target coordinates
-
+        
     """
-
     # xarray.DataArray key properties:
     #   name (str)
     #   data (numpy.ndarray)
@@ -153,7 +151,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
 
 def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
     """Interpolate a field from model (k) levels to potential temperature (theta) coordinates.
-    
+        
     Parameters
     ----------
     field : xarray.DataArray
@@ -173,9 +171,8 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
     -------
     ftc : xarray.DataArray
         field on target coordinates
-
+        
     """
-
     # xarray.DataArray key properties:
     #   name (str)
     #   data (numpy.ndarray)

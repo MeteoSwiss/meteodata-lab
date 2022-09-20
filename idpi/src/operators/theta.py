@@ -1,4 +1,4 @@
-"""algorithm to compute the potential temperature theta in K"""
+"""algorithm to compute the potential temperature theta in K."""
 
 
 def ftheta(p, t):

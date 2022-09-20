@@ -25,13 +25,6 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
         field on target coordinates
         
     """
-    # xarray.DataArray key properties:
-    #   name (str)
-    #   data (numpy.ndarray)
-    #   dims (tuple of str)
-    #   coords (dict-like container of arrays (coordinates))
-    #   attrs (dict to hold arbitrary metadata)
-
     # TODO: check missing value consistency with GRIB2 (currently comparisons are done with np.nan)
     #       check that pfield is the pressure field, given in Pa
     #       check that field and pfield are compatible
@@ -173,13 +166,6 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
         field on target coordinates
         
     """
-    # xarray.DataArray key properties:
-    #   name (str)
-    #   data (numpy.ndarray)
-    #   dims (tuple of str)
-    #   coords (dict-like container of arrays (coordinates))
-    #   attrs (dict to hold arbitrary metadata)
-
     # TODO: check missing value consistency with GRIB2 (currently comparisons are done with np.nan)
     #       check that thfield is the theta field, given in K
     #       check that field, thfield, and hfield are compatible

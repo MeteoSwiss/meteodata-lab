@@ -1,7 +1,6 @@
 """algorithm for computation of height of zero degree isotherm (without extrapolation below model orography)."""
 import numpy as np
 import xarray as xr
-
 from operators.destagger import destagger
 
 
@@ -52,7 +51,7 @@ def fhzerocl(t, hhl):
         }
     )
 
-    # Initiailize hzerocl with missing values
+    # Initialize hzerocl with missing values
     hzerocl = xr.full_like(hfl[{"generalVerticalLayer": 0}], np.nan)
 
     # 3d field with values of height for those levels where temperature is > 0 and it was

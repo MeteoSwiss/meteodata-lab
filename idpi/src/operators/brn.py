@@ -1,7 +1,6 @@
 """algorithm for BRN operator."""
 import numpy as np
 import xarray as xr
-
 from operators.destagger import destagger
 from operators.thetav import fthetav
 

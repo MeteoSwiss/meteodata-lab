@@ -1,5 +1,5 @@
 # icon_data_processing_incubator
-Prototype for data processing framework
+Prototype for a data post-processing framework on the basis of xarray.
 
 ## How to install the conda environment and run the tests
 ```

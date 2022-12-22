@@ -48,9 +48,8 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     tc = dict()
     tc_values = tcp_values.copy()
     tc_values.sort(reverse=False)
-    tc["values"] = np.array(tc_values)
     tc_factor = tcp_unit_conversions[tcp_units]
-    tc["values"] *= tc_factor
+    tc["values"] = np.array(tc_values) * tc_factor
     if min(tc["values"]) < tc_min or max(tc["values"]) > tc_max:
         raise RuntimeError(
             "interpolate_k2p: target coordinate value out of range (must be in interval [",
@@ -88,13 +87,9 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     ftc_shape = tuple(ftc_shape)
     # coords
     # ... inherit all except for the vertical coordinates
-    ftc_coords = {}
-    for c in field.coords:
-        if c != "generalVerticalLayer":
-            ftc_coords[c] = field.coords[c]
+    ftc_coords = {c:v for c,v in field.coords.items() if c != 'generalVerticalLayer'}
     # ... initialize the vertical target coordinates
-    ftcp_coords = xr.IndexVariable(tc["typeOfLevel"], tc["values"], attrs=tc["attrs"])
-    ftc_coords[ftcp_coords.name] = ftcp_coords
+    ftc_coords[tc["typeOfLevel"]] = xr.IndexVariable(tc["typeOfLevel"], tc["values"], attrs=tc["attrs"])
     # data
     ftc_data = np.full(tuple(ftc_shape), np.nan, dtype=field.data.dtype)
 
@@ -223,9 +218,7 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
         reverse=False
     )  # Sorting cannot be exploited for optimizations, since theta is not monotonous wrt to height
     # tc values are stored in K
-    tc["values"] = np.array(tc_values)
-    tc_factor = tcth_unit_conversions[tcth_units]
-    tc["values"] *= tc_factor
+    tc["values"] = np.array(tcth_values) * tcth_unit_conversions[tcth_units]
     if min(tc["values"]) < tc_min or max(tc["values"]) > tc_max:
         raise RuntimeError(
             "interpolate_k2theta: target coordinate value out of range (must be in interval [",
@@ -256,17 +249,14 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
         len(field[d]) if d != "generalVerticalLayer" else len(tc["values"])
         for d in field.dims
     )
-    ftc_dims = list(
+    ftc_dims = tuple(
         map(lambda x: x.replace("generalVerticalLayer", tc["typeOfLevel"]), field.dims)
     )
-    ftc_dims = tuple(ftc_dims)
     ftc_shape = tuple(ftc_shape)
     # coords
     # ... inherit all except for the vertical coordinates
-    ftc_coords = dict()
-    for c in field.coords:
-        if c != "generalVerticalLayer":
-            ftc_coords[c] = field.coords[c]
+    ftc_coords = {c:v for c,v in field.coords.items() if c != 'generalVerticalLayer'}
+    
     # ... initialize the vertical target coordinates
     ftcth_coords = xr.IndexVariable(tc["typeOfLevel"], tc["values"], attrs=tc["attrs"])
     ftc_coords[ftcth_coords.name] = ftcth_coords

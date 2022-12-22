@@ -1,3 +1,4 @@
+import pytest
 import os
 import shutil
 import subprocess
@@ -11,14 +12,12 @@ from operators.theta import ftheta
 from operators.vertical_interpolation import interpolate_k2theta
 
 
-def test_intpl_k2theta():
+@pytest.mark.parametrize("mode",["high_fold", "low_fold", "undef_fold"])
+def test_intpl_k2theta(mode):
     # define target coordinates
     tc_values = [280.0, 290.0, 310.0, 315.0, 320.0, 325.0, 330.0, 335.0]
     fx_voper_lev = "280,290,310,315,320,325,330,335"
     tc_units = "K"
-
-    # interpolation modes
-    modes = ["high_fold", "low_fold", "undef_fold"]
 
     # mode dependent tolerances
     atolerances = {"undef_fold": 1e-5, "low_fold": 1e-5, "high_fold": 1e-5}
@@ -54,43 +53,40 @@ def test_intpl_k2theta():
     THETA = ftheta(ds["P"], ds["T"])
     HFL = destagger(ds["HHL"], "generalVertical")
 
-    # loop through interpolation modes
-    for mode in modes:
+    # call interpolation operator
+    T = interpolate_k2theta(ds["T"], mode, THETA, tc_values, tc_units, HFL)
 
-        # call interpolation operator
-        T = interpolate_k2theta(ds["T"], mode, THETA, tc_values, tc_units, HFL)
+    conf_files = {
+        "inputi": datadir + "/lfff<DDHH>0000.ch",
+        "output": "<HH>_intpl_k2theta_" + mode + ".nc",
+    }
+    fx_out_file = "00_intpl_k2theta_" + mode + ".nc"
 
-        conf_files = {
-            "inputi": datadir + "/lfff<DDHH>0000.ch",
-            "output": "<HH>_intpl_k2theta_" + mode + ".nc",
-        }
-        fx_out_file = "00_intpl_k2theta_" + mode + ".nc"
+    rendered_text = template.render(
+        file=conf_files, mode=mode, voper_lev=fx_voper_lev, voper_lev_units=tc_units
+    )
+    nl_rendered = os.path.join(tmpdir, "test_intpl_k2theta" + mode + ".nl")
 
-        rendered_text = template.render(
-            file=conf_files, mode=mode, voper_lev=fx_voper_lev, voper_lev_units=tc_units
-        )
-        nl_rendered = os.path.join(tmpdir, "test_intpl_k2theta" + mode + ".nl")
+    with open(nl_rendered, "w") as nl_file:
+        nl_file.write(rendered_text)
 
-        with open(nl_rendered, "w") as nl_file:
-            nl_file.write(rendered_text)
+     # remove output and diagnostics produced during previous runs of fieldextra
+    for afile in [fx_out_file] + fx_diagnostics:
+        if os.path.exists(os.path.join(cwd, afile)):
+            os.remove(os.path.join(cwd, afile))
 
-        # remove output and diagnostics produced during previous runs of fieldextra
-        for afile in [fx_out_file] + fx_diagnostics:
-            if os.path.exists(os.path.join(cwd, afile)):
-                os.remove(os.path.join(cwd, afile))
+    # run fieldextra
+    subprocess.run([fx_executable, nl_rendered], check=True)
 
-        # run fieldextra
-        subprocess.run([fx_executable, nl_rendered], check=True)
+    fx_ds = xr.open_dataset(fx_out_file)
+    t_ref = fx_ds["T"].rename(
+        {"x_1": "x", "y_1": "y", "z_1": "theta", "epsd_1": "number"}
+    )
 
-        fx_ds = xr.open_dataset(fx_out_file)
-        t_ref = fx_ds["T"].rename(
-            {"x_1": "x", "y_1": "y", "z_1": "theta", "epsd_1": "number"}
-        )
-
-        # compare numerical results
-        assert np.allclose(
-            t_ref, T, rtol=rtolerances[mode], atol=atolerances[mode], equal_nan=True
-        )
+    # compare numerical results
+    assert np.allclose(
+        t_ref, T, rtol=rtolerances[mode], atol=atolerances[mode], equal_nan=True
+    )
 
 
 if __name__ == "__main__":

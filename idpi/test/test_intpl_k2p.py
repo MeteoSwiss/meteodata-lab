@@ -1,3 +1,4 @@
+import pytest
 import os
 import shutil
 import subprocess
@@ -9,14 +10,12 @@ import xarray as xr
 from operators.vertical_interpolation import interpolate_k2p
 
 
-def test_intpl_k2p():
+@pytest.mark.parametrize("mode",["nearest_sfc", "linear_in_tcf", "linear_in_lntcf"])
+def test_intpl_k2p(mode):
     # define target coordinates
     tc_values = [40.0, 500.0, 600.0, 700.0, 800.0, 1100.0]
     fx_voper_lev = "40,500,600,700,800,1100"
     tc_units = "hPa"
-
-    # interpolation modes
-    modes = ["nearest_sfc", "linear_in_tcf", "linear_in_lntcf"]
 
     # mode dependent tolerances
     atolerances = {"nearest_sfc": 0, "linear_in_tcf": 1e-5, "linear_in_lntcf": 1e-5}
@@ -54,44 +53,42 @@ def test_intpl_k2p():
     ds = {}
     grib_decoder.load_data(ds, ["T", "P"], datafile, chunk_size=None)
 
-    # loop through interpolation modes
-    for mode in modes:
 
-        # call interpolation operator
-        T = interpolate_k2p(ds["T"], mode, ds["P"], tc_values, tc_units)
+    # call interpolation operator
+    T = interpolate_k2p(ds["T"], mode, ds["P"], tc_values, tc_units)
 
-        fx_mode = fx_modes[mode]
-        conf_files = {
-            "inputi": datadir + "/lfff<DDHH>0000.ch",
-            "output": "<HH>_intpl_k2p_" + fx_mode + ".nc",
-        }
-        fx_out_file = "00_intpl_k2p_" + fx_mode + ".nc"
+    fx_mode = fx_modes[mode]
+    conf_files = {
+        "inputi": datadir + "/lfff<DDHH>0000.ch",
+        "output": "<HH>_intpl_k2p_" + fx_mode + ".nc",
+    }
+    fx_out_file = "00_intpl_k2p_" + fx_mode + ".nc"
 
-        rendered_text = template.render(
-            file=conf_files, mode=fx_mode, voper_lev=fx_voper_lev
-        )
-        nl_rendered = os.path.join(tmpdir, "test_intpl_k2p" + fx_mode + ".nl")
+    rendered_text = template.render(
+        file=conf_files, mode=fx_mode, voper_lev=fx_voper_lev
+    )
+    nl_rendered = os.path.join(tmpdir, "test_intpl_k2p" + fx_mode + ".nl")
 
-        with open(nl_rendered, "w") as nl_file:
-            nl_file.write(rendered_text)
+    with open(nl_rendered, "w") as nl_file:
+        nl_file.write(rendered_text)
 
-        # remove output and diagnostics produced during previous runs of fieldextra
-        for afile in [fx_out_file] + fx_diagnostics:
-            if os.path.exists(os.path.join(cwd, afile)):
-                os.remove(os.path.join(cwd, afile))
+    # remove output and diagnostics produced during previous runs of fieldextra
+    for afile in [fx_out_file] + fx_diagnostics:
+        if os.path.exists(os.path.join(cwd, afile)):
+            os.remove(os.path.join(cwd, afile))
 
-        # run fieldextra
-        subprocess.run([executable, nl_rendered], check=True)
+    # run fieldextra
+    subprocess.run([executable, nl_rendered], check=True)
 
-        fx_ds = xr.open_dataset(fx_out_file)
-        t_ref = fx_ds["T"].rename(
-            {"x_1": "x", "y_1": "y", "z_1": "isobaricInPa", "epsd_1": "number"}
-        )
+    fx_ds = xr.open_dataset(fx_out_file)
+    t_ref = fx_ds["T"].rename(
+        {"x_1": "x", "y_1": "y", "z_1": "isobaricInPa", "epsd_1": "number"}
+    )
 
-        # compare numerical results
-        assert np.allclose(
-            t_ref, T, rtol=rtolerances[mode], atol=atolerances[mode], equal_nan=True
-        )
+    # compare numerical results
+    assert np.allclose(
+        t_ref, T, rtol=rtolerances[mode], atol=atolerances[mode], equal_nan=True
+    )
 
 
 if __name__ == "__main__":

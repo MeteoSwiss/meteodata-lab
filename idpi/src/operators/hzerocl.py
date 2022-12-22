@@ -57,25 +57,28 @@ def fhzerocl(t, hhl):
     # 3d field with values of height for those levels where temperature is > 0 and it was
     # < 0 on the level below. Otherwise values are NaN.
     height2 = hfl.where((t >= t0) & (tkm1 < t0), drop=True)
-    if height2.size > 0:
-        # The previous condition can be satisfied on multiple levels.
-        # Take the k indices of the maximum height value where the condition is satisfied
-        maxind = height2.fillna(-1).argmax(dim=["generalVerticalLayer"])
-        # Compute the 2D fields with height values where T is > 0 and < 0 on level below
-        height2 = height2[{"generalVerticalLayer": maxind["generalVerticalLayer"]}]
-        # Compute the 2D fields with height values where T is < 0 and > 0 on level above
-        height1 = hfl.where((tkp1 >= t0) & (t < t0), drop=True)[
-            {"generalVerticalLayer": maxind["generalVerticalLayer"]}
-        ]
-        # The height level where T == t0 must be between [height1, height2]
-        t1 = t.where((t >= t0) & (tkm1 < t0), drop=True)[
-            {"generalVerticalLayer": maxind["generalVerticalLayer"]}
-        ]
+    
+    if height2.size == 0:
+        return hzerocl
+        
+    # The previous condition can be satisfied on multiple levels.
+    # Take the k indices of the maximum height value where the condition is satisfied
+    maxind = height2.fillna(-1).argmax(dim=["generalVerticalLayer"])
+    # Compute the 2D fields with height values where T is > 0 and < 0 on level below
+    height2 = height2[{"generalVerticalLayer": maxind["generalVerticalLayer"]}]
+    # Compute the 2D fields with height values where T is < 0 and > 0 on level above
+    height1 = hfl.where((tkp1 >= t0) & (t < t0), drop=True)[
+        {"generalVerticalLayer": maxind["generalVerticalLayer"]}
+    ]
+    # The height level where T == t0 must be between [height1, height2]
+    t1 = t.where((t >= t0) & (tkm1 < t0), drop=True)[
+        {"generalVerticalLayer": maxind["generalVerticalLayer"]}
+    ]
 
-        t2 = t.where((tkp1 >= t0) & (t < t0), drop=True)[
-            {"generalVerticalLayer": maxind["generalVerticalLayer"]}
-        ]
+    t2 = t.where((tkp1 >= t0) & (t < t0), drop=True)[
+        {"generalVerticalLayer": maxind["generalVerticalLayer"]}
+    ]
 
-        hzerocl = height1 + (height2 - height1) * (t2 - t0) / (t2 - t1)
+    hzerocl = height1 + (height2 - height1) * (t2 - t0) / (t2 - t1)
 
     return hzerocl

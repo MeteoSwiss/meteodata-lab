@@ -1,18 +1,31 @@
-"""algorithms to support operations on a field."""
+"""Algorithms to support operations on a field."""
 
 import numpy as np
 import xarray as xr
 
 
-def init_field(parent: xr.DataArray, fill_value, dtype=None, vcoord=None) -> xr.DataArray:
-    # Initialize a new field with some meta-information
-    attrs = parent.attrs.copy()
-    shape = list(len(parent[d]) for d in parent.dims)
-    dims = list(parent.dims)
-    coords = dict(parent.coords)
+def init_field(parent: xr.DataArray, fill_value, dtype=None, vcoord: dict=None) -> xr.DataArray:
+    """ Initializes a new field with some meta meta-information.
+    
+    Meta-information is inherited from the parent field as long as optional arguments
+    are not specified.
+
+    Parameters
+    ----------
+        parent (xr.DataArray): Parent field.
+        fill_value : Value the new field is initialized with.
+        dtype : Fill value data type. Defaults to None, in which case the data type
+                                  is inherited from the parent field. 
+        vcoord (dict, optional) : Dictionary specifying new vertical coordinates. Defaults to None.
+                                  Expected keys: "typeOfLevel" (string), "values" (list)
+
+    Returns
+    -------
+        xr.DataArray : New field.
+    """
     
     if vcoord is None:
-        return xr.full_like(parent, fill_value, dtype)  
+        return xr.full_like(parent, fill_value, dtype)
       
     else:
         # attrs

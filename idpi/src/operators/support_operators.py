@@ -17,7 +17,8 @@ def init_field(parent: xr.DataArray, fill_value, dtype=None, vcoord: dict=None) 
         dtype : Fill value data type. Defaults to None, in which case the data type
                                   is inherited from the parent field. 
         vcoord (dict, optional) : Dictionary specifying new vertical coordinates. Defaults to None.
-                                  Expected keys: "typeOfLevel" (string), "values" (list)
+                                  Expected keys: "typeOfLevel" (string), "values" (list), "NV" (int),
+                                  "attrs" (dict)
 
     Returns
     -------
@@ -28,10 +29,15 @@ def init_field(parent: xr.DataArray, fill_value, dtype=None, vcoord: dict=None) 
         return xr.full_like(parent, fill_value, dtype)
       
     else:
+        # check vcoord keys
+        expected_vcoord_keys = ("typeOfLevel", "NV", "values", "attrs")
+        for k in expected_vcoord_keys:
+            if k not in vcoord:
+                raise KeyError("init_field: missing vcoord key ", k)
         # attrs
         attrs = parent.attrs.copy()
         attrs["GRIB_typeOfLevel"] = vcoord["typeOfLevel"]
-        if attrs["GRIB_NV"] is not None:
+        if "GRIB_NV" in attrs:
             attrs["GRIB_NV"] = vcoord["NV"]
         # dims
         shape = list(

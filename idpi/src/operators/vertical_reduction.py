@@ -29,7 +29,7 @@ def reduce_k(field, operator, mode, height, h_bounds, hsurf=None):
         "h2z": height agl to height amsl
         "z2h": height amsl to height agl
         "z2z": height amsl to height amsl
-    h_bounds : list of float of length 2
+    h_bounds : list of xarray.DataArray of length 2
         height interval bounds (surface level field or single level of a multi-level field)
     hsurf : Optional(xarray.DataArray)
         earth surface height in m asl

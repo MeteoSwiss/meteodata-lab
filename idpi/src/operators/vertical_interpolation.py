@@ -206,7 +206,7 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
         "standard_name": "air_potential_temperature",
         "long_name": "potential temperature",
     }
-    tc["typeOfLevel"] = "theta"  # not yet properly defined in eccodes
+    tc["typeOfLevel"] = "theta"
     tc["NV"] = 0
 
     # Prepare output field ftc on target coordinates

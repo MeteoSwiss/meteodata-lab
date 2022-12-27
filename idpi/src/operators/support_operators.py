@@ -12,17 +12,22 @@ def init_field(parent: xr.DataArray, fill_value, dtype=None, vcoord: dict=None) 
 
     Parameters
     ----------
-        parent (xr.DataArray): Parent field.
-        fill_value : Value the new field is initialized with.
-        dtype : Fill value data type. Defaults to None, in which case the data type
-                                  is inherited from the parent field. 
-        vcoord (dict, optional) : Dictionary specifying new vertical coordinates. Defaults to None.
-                                  Expected keys: "typeOfLevel" (string), "values" (list), "NV" (int),
-                                  "attrs" (dict)
+        parent : xr.DataArray 
+            parent field
+        fill_value : 
+            value the data array of the new field is initialized with
+        dtype : 
+            fill value data type; defaults to None (in this case the data type
+            is inherited from the parent field)
+        vcoord (optional) : dict
+            dictionary specifying new vertical coordinates; defaults to None
+            expected keys: "typeOfLevel" (string), "values" (list), "NV" (int),
+                           "attrs" (dict)
 
     Returns
     -------
-        xr.DataArray : New field.
+        init_field : xr.DataArray
+            new field
     """
     
     if vcoord is None:

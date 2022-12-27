@@ -29,7 +29,7 @@ def reduce_k(field, operator, mode, height, h_bounds, hsurf=None):
         "h2z": height agl to height amsl
         "z2h": height amsl to height agl
         "z2z": height amsl to height amsl
-    h_bounds : list of xarray.DataArray of length 2
+    h_bounds : list of float of length 2
         height interval bounds (surface level field or single level of a multi-level field)
     hsurf : Optional(xarray.DataArray)
         earth surface height in m asl
@@ -39,14 +39,13 @@ def reduce_k(field, operator, mode, height, h_bounds, hsurf=None):
     -------
     rfield : xarray.DataArray
         reduced field
-        level types are inherited from h_bounds
 
     """
     # Note on multilevel results
-    # z2z: h_bounds fields refer to single level of a height field
-    # z2h: h_bounds fields refer to single level of a height field
-    # h2h: h_bounds fields refer to single level of a height field
-    # h2z: h_bounds fields refer to single level of a height field
+    # z2z: h_bounds elements refer to single level of a height field
+    # z2h: h_bounds elements refer to single level of a height field
+    # h2h: h_bounds elements refer to single level of a height field
+    # h2z: h_bounds elements refer to single level of a height field
     # TODO: add some checks on level types of input fields, and on order of h_bounds
 
     # Parameters
@@ -54,9 +53,6 @@ def reduce_k(field, operator, mode, height, h_bounds, hsurf=None):
     reduction_operators = ("integral", "normed_integral", "maximum", "minimum")
     # ... supported height interval modes
     height_interval_modes = ("h2h", "h2z", "z2h", "z2z")
-    # ... supported height bound types
-    h_field = 0
-    z_field = 1
 
     # Check arguments
     # ... operator
@@ -76,75 +72,18 @@ def reduce_k(field, operator, mode, height, h_bounds, hsurf=None):
 
     # Height bounds are always converted to heights amsl; lower_bound_type and upper_bound_type
     # can be used to code typeOfFirstFixedSurface and typeOfSecondFixedSurface in GRIB2, and
-    # to set the bounds attribute for the vertical coorinates in NetCDF
+    # to set the bounds attribute for the vertical coordinates in NetCDF
     h_bottom = h_bounds[0].copy()
     h_top = h_bounds[1].copy()
     if mode in ["h2z", "h2h"]:
-        lower_bound_type = h_field
         # ... convert lower bound to height amsl
         h_bottom += hsurf
-    else:
-        lower_bound_type = z_field
     if mode in ["z2h", "h2h"]:
-        upper_bound_type = h_field
         # ... convert upper bound to height amsl
         h_top += hsurf
-    else:
-        upper_bound_type = z_field
-
-    # Prepare the reduced field
-    # name
-    rfield_name = field.name
-    # attrs
-    # TODO: read all relevant GRIB keys and re-set them, in particular levelOfFirstFixedSurface, scaleFactorOfFirstFixedSurface
-    #       scaledValueOfFirstFixedSurface, levelOfSeconsFixedSurface, scaleFactorOfSeconsFixedSurface, scaledValueOfSecondFixedSurface
-    #   or: set the bounds attribute (and cells_method)
-    # ATTENTION: if h_bounds are provided by destaggering HHL, the attributes are lost!
-    # rfield_attrs = field.attrs.copy()
-    # for the time being, inherit the typeOfLevel from the top height level
-    # rfield_attrs["GRIB_typeOfLevel"] = h_bounds[1].attrs["GRIB_typeOfLevel"]
-    # level value
-    # rfield_level_values = [h_bounds[1].coords[rfield_attrs["GRIB_typeOfLevel"]].data[0]]
-    # dims
-    # rfield_shape = list(
-    #    len(field[d]) if d != "generalVerticalLayer" else 1 for d in field.dims
-    # )
-    # rfield_dims = list(
-    #    map(
-    #        lambda x: x.replace(
-    #            "generalVerticalLayer", rfield_attrs["GRIB_typeOfLevel"]
-    #        ),
-    #        field.dims,
-    #    )
-    # )
-    # rfield_dims = tuple(rfield_dims)
-    # rfield_shape = tuple(rfield_shape)
-    # coords
-    # ... inherit all except for the vertical coordinates
-    # rfield_coords = {}
-    # for c in field.coords:
-    #    if c != "generalVerticalLayer":
-    #        rfield_coords[c] = field.coords[c]
-    # ... initialize the vertical target coordinates
-    # rfield_h_coords = xr.IndexVariable(
-    #    rfield_attrs["GRIB_typeOfLevel"],
-    #    rfield_level_values
-    # )
-    # rfield_coords[rfield_h_coords.name] = rfield_h_coords
-    # data (initialized with missing value)
-    # rfield_data = np.full(tuple(rfield_shape), np.nan, dtype=field.data.dtype)
-
-    # Initialize the reduced field
-    # rfield = xr.DataArray(
-    #    name=rfield_name,
-    #    data=rfield_data,
-    #    dims=rfield_dims,
-    #    coords=rfield_coords,
-    #    attrs=rfield_attrs,
-    # )
 
     # Find height interval including the interval [h_bottom, h_top]
-    # ... integral: approximated by midpoint rule, taking into account that h_bottom and H_top, respectively,
+    # ... integral: approximated by midpoint rule, taking into account that h_bottom and h_top, respectively,
     #               may not coincide with a model layer interface;
     #               if typeOfLevel(f)="generalVerticalLayer":
     #                       f(kstart)[h_top - hhl(kstart+1)] + sum(k=kstart+1,kstop-1)f(k)[hhl(k)-hhl(k+1)] + f(kstop)[hhl(kstop) - h_bottom]
@@ -185,10 +124,10 @@ def reduce_k(field, operator, mode, height, h_bounds, hsurf=None):
             (hfl >= h_bottom) & (hfl <= h_top), drop=True
         )
         dh_in_h_bounds = dh.where((hfl >= h_bottom) & (hfl <= h_top), drop=True)
-        # ensure that dh_in_h_bounds is not None
         # ... compute integral by midpoint rule (apply fractional corrections for the height intervals containing h_top and h_bottom)
         # NOTE: The vertical dimension is lost in the reduction operation.
         # TODO: assign coordinates and attributes to rfield
+        #       ensure that dh_in_h_bounds.size > 0; return everywhere undefined rfield otherwise
         rfield = (
             (field_in_h_bounds * dh_in_h_bounds)
             .fillna(0.0)

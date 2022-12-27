@@ -2,6 +2,7 @@
 
 import numpy as np
 import xarray as xr
+from operators.support_operators import init_field
 
 
 def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
@@ -68,35 +69,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     tc["NV"] = 0
 
     # Prepare output field ftc on target coordinates
-    # name
-    ftc_name = field.name
-    # attrs
-    ftc_attrs = field.attrs.copy()
-    ftc_attrs["GRIB_typeOfLevel"] = tc["typeOfLevel"]
-    if ftc_attrs["GRIB_NV"] is not None:
-        ftc_attrs["GRIB_NV"] = tc["NV"]
-    # dims
-    ftc_shape = list(
-        len(field[d]) if d != "generalVerticalLayer" else len(tc["values"])
-        for d in field.dims
-    )
-    ftc_dims = list(
-        map(lambda x: x.replace("generalVerticalLayer", tc["typeOfLevel"]), field.dims)
-    )
-    ftc_dims = tuple(ftc_dims)
-    ftc_shape = tuple(ftc_shape)
-    # coords
-    # ... inherit all except for the vertical coordinates
-    ftc_coords = {c:v for c,v in field.coords.items() if c != 'generalVerticalLayer'}
-    # ... initialize the vertical target coordinates
-    ftc_coords[tc["typeOfLevel"]] = xr.IndexVariable(tc["typeOfLevel"], tc["values"], attrs=tc["attrs"])
-    # data
-    ftc_data = np.full(tuple(ftc_shape), np.nan, dtype=field.data.dtype)
-
-    # Initialize the output field ftc
-    ftc = xr.DataArray(
-        name=ftc_name, data=ftc_data, dims=ftc_dims, coords=ftc_coords, attrs=ftc_attrs
-    )
+    ftc = init_field(field, np.nan, vcoord=tc)
 
     # Interpolate
     # ... prepare interpolation
@@ -236,37 +209,8 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
     tc["typeOfLevel"] = "theta"  # not yet properly defined in eccodes
     tc["NV"] = 0
 
-    # Prepare output field ftc on tc
-    # name
-    ftc_name = field.name
-    # attrs
-    ftc_attrs = field.attrs.copy()
-    ftc_attrs["GRIB_typeOfLevel"] = tc["typeOfLevel"]
-    if ftc_attrs["GRIB_NV"] is not None:
-        ftc_attrs["GRIB_NV"] = tc["NV"]
-    # dims
-    ftc_shape = list(
-        len(field[d]) if d != "generalVerticalLayer" else len(tc["values"])
-        for d in field.dims
-    )
-    ftc_dims = tuple(
-        map(lambda x: x.replace("generalVerticalLayer", tc["typeOfLevel"]), field.dims)
-    )
-    ftc_shape = tuple(ftc_shape)
-    # coords
-    # ... inherit all except for the vertical coordinates
-    ftc_coords = {c:v for c,v in field.coords.items() if c != 'generalVerticalLayer'}
-    
-    # ... initialize the vertical target coordinates
-    ftcth_coords = xr.IndexVariable(tc["typeOfLevel"], tc["values"], attrs=tc["attrs"])
-    ftc_coords[ftcth_coords.name] = ftcth_coords
-    # data, filled with missing values
-    ftc_data = np.full(tuple(ftc_shape), np.nan, dtype=field.data.dtype)
-
-    # Initialize the output field ftc
-    ftc = xr.DataArray(
-        name=ftc_name, data=ftc_data, dims=ftc_dims, coords=ftc_coords, attrs=ftc_attrs
-    )
+    # Prepare output field ftc on target coordinates
+    ftc = init_field(field, np.nan, vcoord=tc)
 
     # Interpolate
     # ... prepare interpolation

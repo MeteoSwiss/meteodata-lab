@@ -125,18 +125,19 @@ def reduce_k(field, operator, mode, height, h_bounds, hsurf=None):
         )
         dh_in_h_bounds = dh.where((hfl >= h_bottom) & (hfl <= h_top), drop=True)
         # ... compute integral by midpoint rule (apply fractional corrections for the height intervals containing h_top and h_bottom)
+        #     at grid points where field_in_h_bounds is not undefined for all entries along dimension "generalVerticalLayer"
         # NOTE: The vertical dimension is lost in the reduction operation.
         # TODO: assign coordinates and attributes to rfield
         #       ensure that dh_in_h_bounds.size > 0; return everywhere undefined rfield otherwise
-        rfield = (
+        rfield = xr.where(
+            dh_in_h_bounds.count(dim="generalVerticalLayer") > 0,
             (field_in_h_bounds * dh_in_h_bounds)
             .fillna(0.0)
-            .sum(dim="generalVerticalLayer")
+            .sum(dim="generalVerticalLayer"),
+            np.nan
         )
         if operator == "normed_integral":
-            rfield /= (h_top - h_bottom)
-        # ... reset rfield to undef at grid points where field_in_h_bounds was undefined for all entries along dimension "generalVerticalLayer"
-        rfield = xr.where(dh_in_h_bounds.count(dim="generalVerticalLayer") > 0, rfield, np.nan)
+            rfield /= (h_top - h_bottom)            
     else:
         if "generalVerticalLayer" in field.coords:
             vertical_dim = "generalVerticalLayer"

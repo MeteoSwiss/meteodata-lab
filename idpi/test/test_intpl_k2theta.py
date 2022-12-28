@@ -1,4 +1,3 @@
-import pytest
 import os
 import shutil
 import subprocess
@@ -6,13 +5,14 @@ import subprocess
 import grib_decoder
 import jinja2
 import numpy as np
+import pytest
 import xarray as xr
 from operators.destagger import destagger
 from operators.theta import ftheta
 from operators.vertical_interpolation import interpolate_k2theta
 
 
-@pytest.mark.parametrize("mode",["high_fold", "low_fold", "undef_fold"])
+@pytest.mark.parametrize("mode", ["high_fold", "low_fold", "undef_fold"])
 def test_intpl_k2theta(mode):
     # define target coordinates
     tc_values = [280.0, 290.0, 310.0, 315.0, 320.0, 325.0, 330.0, 335.0]
@@ -70,7 +70,7 @@ def test_intpl_k2theta(mode):
     with open(nl_rendered, "w") as nl_file:
         nl_file.write(rendered_text)
 
-     # remove output and diagnostics produced during previous runs of fieldextra
+    # remove output and diagnostics produced during previous runs of fieldextra
     for afile in [fx_out_file] + fx_diagnostics:
         if os.path.exists(os.path.join(cwd, afile)):
             os.remove(os.path.join(cwd, afile))

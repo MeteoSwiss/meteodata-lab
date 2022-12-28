@@ -134,10 +134,10 @@ def reduce_k(field, operator, mode, height, h_bounds, hsurf=None):
             (field_in_h_bounds * dh_in_h_bounds)
             .fillna(0.0)
             .sum(dim="generalVerticalLayer"),
-            np.nan
+            np.nan,
         )
         if operator == "normed_integral":
-            rfield /= (h_top - h_bottom)            
+            rfield /= h_top - h_bottom
     else:
         if "generalVerticalLayer" in field.coords:
             vertical_dim = "generalVerticalLayer"

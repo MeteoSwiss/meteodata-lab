@@ -1,4 +1,3 @@
-import pytest
 import os
 import shutil
 import subprocess
@@ -6,13 +5,14 @@ import subprocess
 import grib_decoder
 import jinja2
 import numpy as np
+import pytest
 import xarray as xr
 from operators.destagger import destagger
 from operators.vertical_reduction import reduce_k
 
 
 @pytest.mark.parametrize("operator", ["maximum", "minimum"])
-@pytest.mark.parametrize("field", ["T","W"])
+@pytest.mark.parametrize("field", ["T", "W"])
 def test_minmax_z2z(operator, field):
 
     # modes
@@ -112,9 +112,7 @@ def test_minmax_z2z(operator, field):
     subprocess.run([fx_executable, nl_rendered], check=True)
 
     fx_ds = xr.open_dataset(fx_out_file)
-    f_minmax_ref = fx_ds[field].rename(
-        {"x_1": "x", "y_1": "y", "epsd_1": "number"}
-    )
+    f_minmax_ref = fx_ds[field].rename({"x_1": "x", "y_1": "y", "epsd_1": "number"})
 
     # compare numerical results
     assert np.allclose(

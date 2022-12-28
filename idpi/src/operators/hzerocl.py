@@ -57,10 +57,10 @@ def fhzerocl(t, hhl):
     # 3d field with values of height for those levels where temperature is > 0 and it was
     # < 0 on the level below. Otherwise values are NaN.
     height2 = hfl.where((t >= t0) & (tkm1 < t0), drop=True)
-    
+
     if height2.size == 0:
         return hzerocl
-        
+
     # The previous condition can be satisfied on multiple levels.
     # Take the k indices of the maximum height value where the condition is satisfied
     maxind = height2.fillna(-1).argmax(dim=["generalVerticalLayer"])

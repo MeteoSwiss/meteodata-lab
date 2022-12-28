@@ -12,7 +12,7 @@ from operators.vertical_reduction import reduce_k
 
 def test_integ_sfc2z():
     # fields
-    fields = ("T","W")
+    fields = ("T", "W")
 
     # operator
     operators = ["integral", "normed_integral"]
@@ -26,12 +26,9 @@ def test_integ_sfc2z():
     # operator dependent tolerances
     atolerances = {"integral": 1e-4, "normed_integral": 1e-5}
     rtolerances = {"integral": 1e-6, "normed_integral": 1e-6}
-    
+
     # operator translation for fieldextra
-    fx_operators = {
-        "integral": "integ",
-        "normed_integral": "norm_integ"
-    }
+    fx_operators = {"integral": "integ", "normed_integral": "norm_integ"}
 
     # input data
     datadir = "/project/s83c/rz+/icon_data_processing_incubator/data/SWISS"
@@ -58,7 +55,7 @@ def test_integ_sfc2z():
     # load input data set
     ds = {}
     grib_decoder.load_data(ds, fields, datafile, chunk_size=None)
-    grib_decoder.load_data(ds, ["HHL","HSURF"], cdatafile, chunk_size=None)
+    grib_decoder.load_data(ds, ["HHL", "HSURF"], cdatafile, chunk_size=None)
     HHL = ds["HHL"]
     HFL = destagger(HHL, "generalVertical")
     HSURF = ds["HSURF"]
@@ -117,7 +114,7 @@ def test_integ_sfc2z():
                 f_bar,
                 rtol=rtolerances[operator],
                 atol=atolerances[operator],
-                equal_nan=True
+                equal_nan=True,
             )
 
 

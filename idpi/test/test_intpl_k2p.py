@@ -1,4 +1,3 @@
-import pytest
 import os
 import shutil
 import subprocess
@@ -6,11 +5,12 @@ import subprocess
 import grib_decoder
 import jinja2
 import numpy as np
+import pytest
 import xarray as xr
 from operators.vertical_interpolation import interpolate_k2p
 
 
-@pytest.mark.parametrize("mode",["nearest_sfc", "linear_in_tcf", "linear_in_lntcf"])
+@pytest.mark.parametrize("mode", ["nearest_sfc", "linear_in_tcf", "linear_in_lntcf"])
 def test_intpl_k2p(mode):
     # define target coordinates
     tc_values = [40.0, 500.0, 600.0, 700.0, 800.0, 1100.0]
@@ -52,7 +52,6 @@ def test_intpl_k2p(mode):
     # load input data set
     ds = {}
     grib_decoder.load_data(ds, ["T", "P"], datafile, chunk_size=None)
-
 
     # call interpolation operator
     T = interpolate_k2p(ds["T"], mode, ds["P"], tc_values, tc_units)

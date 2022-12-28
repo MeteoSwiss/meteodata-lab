@@ -46,7 +46,7 @@ def reduce_k(field, operator, mode, height, h_bounds, hsurf=None):
     # z2h: h_bounds elements refer to single level of a height field
     # h2h: h_bounds elements refer to single level of a height field
     # h2z: h_bounds elements refer to single level of a height field
-    # TODO: add some checks on level types of input fields, and on order of h_bounds
+    # TODO: add some checks on level types of input fields, and on values and order of h_bounds
 
     # Parameters
     # ... supported reduction operators
@@ -134,7 +134,9 @@ def reduce_k(field, operator, mode, height, h_bounds, hsurf=None):
             .sum(dim="generalVerticalLayer")
         )
         if operator == "normed_integral":
-            rfield /= h_top - h_bottom
+            rfield /= (h_top - h_bottom)
+        # ... reset rfield to undef at grid points where field_in_h_bounds was undefined for all entries along dimension "generalVerticalLayer"
+        rfield = xr.where(dh_in_h_bounds.count(dim="generalVerticalLayer") > 0, rfield, np.nan)
     else:
         if "generalVerticalLayer" in field.coords:
             vertical_dim = "generalVerticalLayer"

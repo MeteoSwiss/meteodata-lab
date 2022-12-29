@@ -2,7 +2,7 @@
 
 import numpy as np
 import xarray as xr
-from operators.support_operators import init_field
+from operators.support_operators import init_field_with_vcoord
 
 
 def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
@@ -69,7 +69,7 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     tc["NV"] = 0
 
     # Prepare output field ftc on target coordinates
-    ftc = init_field(field, np.nan, vcoord=tc)
+    ftc = init_field_with_vcoord(field, tc, np.nan)
 
     # Interpolate
     # ... prepare interpolation
@@ -210,7 +210,7 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
     tc["NV"] = 0
 
     # Prepare output field ftc on target coordinates
-    ftc = init_field(field, np.nan, vcoord=tc)
+    ftc = init_field_with_vcoord(field, tc, np.nan)
 
     # Interpolate
     # ... prepare interpolation

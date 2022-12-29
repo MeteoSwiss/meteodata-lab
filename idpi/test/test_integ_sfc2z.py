@@ -7,7 +7,7 @@ import jinja2
 import numpy as np
 import xarray as xr
 from operators.destagger import destagger
-from operators.vertical_reduction import reduce_k
+from operators.vertical_reduction import integrate_k
 
 
 def test_integ_sfc2z():
@@ -73,7 +73,7 @@ def test_integ_sfc2z():
 
         for operator in operators:
             # call integral operator
-            f_bar = reduce_k(ds[field], operator, mode, HHL, h_bounds)
+            f_bar = integrate_k(ds[field], operator, mode, HHL, h_bounds)
 
             conf_files = {
                 "inputc": datadir + "/lfff00000000c.ch",

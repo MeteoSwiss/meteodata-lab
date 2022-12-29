@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 import xarray as xr
 from operators.destagger import destagger
-from operators.vertical_reduction import reduce_k
+from operators.vertical_reduction import minmax_k
 
 
 @pytest.mark.parametrize("operator", ["maximum", "minimum"])
@@ -81,7 +81,7 @@ def test_minmax_z2z(operator, field):
         )
 
     # call reduction operator
-    f_minmax = reduce_k(ds[field], operator, mode, height, h_bounds)
+    f_minmax = minmax_k(ds[field], operator, mode, height, h_bounds)
 
     conf_files = {
         "inputc": datadir + "/lfff00000000c.ch",

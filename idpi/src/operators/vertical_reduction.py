@@ -1,7 +1,5 @@
 """Vertical reduction operators."""
 
-from lib2to3.pytree import HUGE
-
 import numpy as np
 import xarray as xr
 from operators.destagger import destagger
@@ -85,13 +83,11 @@ def reduce_k(field, operator, mode, height, h_bounds, hsurf=None):
     # Find height interval including the interval [h_bottom, h_top]
     # ... integral: approximated by midpoint rule, taking into account that h_bottom and h_top, respectively,
     #               may not coincide with a model layer interface;
-    #               if typeOfLevel(f)="generalVerticalLayer":
-    #                       f(kstart)[h_top - hhl(kstart+1)] + sum(k=kstart+1,kstop-1)f(k)[hhl(k)-hhl(k+1)] + f(kstop)[hhl(kstop) - h_bottom]
-    #               if typeOfLevel(f)="generalVertical"
-    #                       0.5*[f(kstart+1) + f(kstart)][h_top - hhl(kstart+1)]
-    #                       + sum(k=kstart+1,kstop-1)0.5*[f(k+1)+f(k)][hhl(k)-hhl(k+1)]
-    #                       + 0.5*[f(kstop)+f(kstop+1)][hhl(kstop) - h_bottom]
-    #               kstart and kstop refer to all model midpoint surfaces included in the height interval.
+    #       if typeOfLevel(f)="generalVerticalLayer"
+    #         f(kstart)[h_top - hhl(kstart+1)] + sum(k=kstart+1,kstop-1)f(k)[hhl(k)-hhl(k+1)] + f(kstop)[hhl(kstop) - h_bottom]
+    #       if typeOfLevel(f)="generalVertical"
+    #         0.5*[f(kstart+1) + f(kstart)][h_top - hhl(kstart+1)] + sum(k=kstart+1,kstop-1)0.5*[f(k+1)+f(k)][hhl(k)-hhl(k+1)] + 0.5*[f(kstop)+f(kstop+1)][hhl(kstop) - h_bottom]
+    #       kstart and kstop refer to all model midpoint surfaces included in the height interval.
     # ... normed_integral: integral / (h_top - h_bottom)
     # ... maximum/minimum: extremum over the field values at all model levels included in the height interval, and at the interval boundaries
     #     after linear interpolation wrt height; f and auxiliary height fields must either both be defined on full levels or half levels
@@ -209,3 +205,4 @@ def reduce_k(field, operator, mode, height, h_bounds, hsurf=None):
                 )
 
     return rfield
+

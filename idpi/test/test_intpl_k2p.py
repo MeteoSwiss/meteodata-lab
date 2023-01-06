@@ -10,7 +10,7 @@ import xarray as xr
 from operators.vertical_interpolation import interpolate_k2p
 
 
-@pytest.mark.parametrize("mode", ["nearest_sfc", "linear_in_tcf", "linear_in_lntcf"])
+@pytest.mark.parametrize("mode", ["nearest_sfc", "linear_in_p", "linear_in_lnp"])
 def test_intpl_k2p(mode):
     # define target coordinates
     tc_values = [40.0, 500.0, 600.0, 700.0, 800.0, 1100.0]
@@ -18,14 +18,14 @@ def test_intpl_k2p(mode):
     tc_units = "hPa"
 
     # mode dependent tolerances
-    atolerances = {"nearest_sfc": 0, "linear_in_tcf": 1e-5, "linear_in_lntcf": 1e-5}
-    rtolerances = {"nearest_sfc": 0, "linear_in_tcf": 1e-7, "linear_in_lntcf": 1e-6}
+    atolerances = {"nearest_sfc": 0, "linear_in_p": 1e-5, "linear_in_lnp": 1e-5}
+    rtolerances = {"nearest_sfc": 0, "linear_in_p": 1e-7, "linear_in_lnp": 1e-6}
 
     # mode translation for fieldextra
     fx_modes = {
         "nearest_sfc": "nearest",
-        "linear_in_tcf": "lin_p",
-        "linear_in_lntcf": "lin_lnp",
+        "linear_in_p": "lin_p",
+        "linear_in_lnp": "lin_lnp",
     }
 
     # input data

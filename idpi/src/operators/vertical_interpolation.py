@@ -5,58 +5,63 @@ import xarray as xr
 from operators.support_operators import init_field_with_vcoord
 
 
-def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
+def interpolate_k2p(field, mode, p_field, p_tc_values, p_tc_units):
     """Interpolate a field from model (k) levels to pressure coordinates.
+
+    Example for vertical interpolation to a target field which is strictly
+    monotonically decreasing with height.
 
     Parameters
     ----------
     field : xarray.DataArray
         field to interpolate
     mode : str
-        interpolation algorithm, one of {"linear_in_tcf", "linear_in_lntcf", "nearest_sfc"}
-    pfield : xarray.DataArray
+        interpolation algorithm, one of {"linear_in_p", "linear_in_lnp", "nearest_sfc"}
+    p_field : xarray.DataArray
         pressure field on k levels in Pa
-    tcp_values : list of float
-        target coordinate values
-    tcps_units : str
-        target coordinate units
+    p_tc_values : list of float
+        pressure target coordinate values
+    p_tc_units : str
+        pressure target coordinate units
 
     Returns
     -------
-    ftc : xarray.DataArray
-        field on target coordinates
+    field_on_tc : xarray.DataArray
+        field on target (i.e., pressure) coordinates
 
     """
     # TODO: check missing value consistency with GRIB2 (currently comparisons are done with np.nan)
-    #       check that pfield is the pressure field, given in Pa
-    #       check that field and pfield are compatible
+    #       check that p_field is the pressure field, given in Pa
+    #       check that field and p_field are compatible
     #       print warn message if result contains missing values
 
     # Initializations
     # ... supported interpolation modes
-    interpolation_modes = ("linear_in_tcf", "linear_in_lntcf", "nearest_sfc")
+    interpolation_modes = ("linear_in_p", "linear_in_lnp", "nearest_sfc")
     if mode not in interpolation_modes:
         raise RuntimeError("interpolate_k2p: unknown mode", mode)
     # ... supported tc units and corresponding conversion factors to Pa
-    tcp_unit_conversions = dict(Pa=1.0, hPa=100.0)
-    if tcp_units not in tcp_unit_conversions.keys():
-        raise RuntimeError("interpolate_k2p: unsupported value of tcp_units", tcp_units)
-    # ... supported range of tc values (in Pa)
-    tc_min = 1.0
-    tc_max = 120000.0
+    p_tc_unit_conversions = dict(Pa=1.0, hPa=100.0)
+    if p_tc_units not in p_tc_unit_conversions.keys():
+        raise RuntimeError(
+            "interpolate_k2p: unsupported value of p_tc_units", p_tc_units
+        )
+    # ... supported range of pressure tc values (in Pa)
+    p_tc_min = 1.0
+    p_tc_max = 120000.0
 
     # Define vertical target coordinates (tc)
     tc = dict()
-    tc_values = tcp_values.copy()
+    tc_values = p_tc_values.copy()
     tc_values.sort(reverse=False)
-    tc_factor = tcp_unit_conversions[tcp_units]
+    tc_factor = p_tc_unit_conversions[p_tc_units]
     tc["values"] = np.array(tc_values) * tc_factor
-    if min(tc["values"]) < tc_min or max(tc["values"]) > tc_max:
+    if min(tc["values"]) < p_tc_min or max(tc["values"]) > p_tc_max:
         raise RuntimeError(
             "interpolate_k2p: target coordinate value out of range (must be in interval [",
-            tc_min,
+            p_tc_min,
             ", ",
-            tc_max,
+            p_tc_max,
             "]Pa)",
         )
     tc["attrs"] = {
@@ -68,28 +73,28 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     tc["typeOfLevel"] = "isobaricInPa"
     tc["NV"] = 0
 
-    # Prepare output field ftc on target coordinates
-    ftc = init_field_with_vcoord(field, tc, np.nan)
+    # Prepare output field field_on_tc on target coordinates
+    field_on_tc = init_field_with_vcoord(field, tc, np.nan)
 
     # Interpolate
     # ... prepare interpolation
-    pkm1 = pfield.copy()
-    pkm1[{"generalVerticalLayer": slice(1, None)}] = pfield[
+    pkm1 = p_field.copy()
+    pkm1[{"generalVerticalLayer": slice(1, None)}] = p_field[
         {"generalVerticalLayer": slice(0, -1)}
     ].assign_coords(
         {
-            "generalVerticalLayer": pfield[
+            "generalVerticalLayer": p_field[
                 {"generalVerticalLayer": slice(1, None)}
             ].generalVerticalLayer
         }
     )
 
-    pkp1 = pfield.copy()
-    pkp1[{"generalVerticalLayer": slice(0, -1)}] = pfield[
+    pkp1 = p_field.copy()
+    pkp1[{"generalVerticalLayer": slice(0, -1)}] = p_field[
         {"generalVerticalLayer": slice(1, None)}
     ].assign_coords(
         {
-            "generalVerticalLayer": pfield[
+            "generalVerticalLayer": p_field[
                 {"generalVerticalLayer": slice(0, -1)}
             ].generalVerticalLayer
         }
@@ -98,41 +103,43 @@ def interpolate_k2p(field, mode, pfield, tcp_values, tcp_units):
     # ... loop through tc values
     for tc_idx, p0 in enumerate(tc["values"]):
         # ... find the 3d field where pressure is >= p0 on level k and was < p0 on level k-1
-        p2 = pfield.where((pfield >= p0) & (pkm1 < p0), drop=True)
+        p2 = p_field.where((p_field >= p0) & (pkm1 < p0), drop=True)
         if p2.size > 0:
             # ... extract the index k of the vertical layer at which p2 adopts its minimum
-            minind = p2.fillna(tc_max).argmin(dim=["generalVerticalLayer"])
+            minind = p2.fillna(p_tc_max).argmin(dim=["generalVerticalLayer"])
             # ... extract pressure and field at level k
             p2 = p2[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
-            f2 = field.where((pfield >= p0) & (pkm1 < p0), drop=True)[
+            f2 = field.where((p_field >= p0) & (pkm1 < p0), drop=True)[
                 {"generalVerticalLayer": minind["generalVerticalLayer"]}
             ]
             # ... extract pressure and field at level k-1
-            f1 = field.where((pfield < p0) & (pkp1 >= p0), drop=True)[
+            f1 = field.where((p_field < p0) & (pkp1 >= p0), drop=True)[
                 {"generalVerticalLayer": minind["generalVerticalLayer"]}
             ]
-            p1 = pfield.where((pfield < p0) & (pkp1 >= p0), drop=True)[
+            p1 = p_field.where((p_field < p0) & (pkp1 >= p0), drop=True)[
                 {"generalVerticalLayer": minind["generalVerticalLayer"]}
             ]
 
             # ... compute the interpolation weights
-            if mode == "linear_in_tcf":
+            if mode == "linear_in_p":
                 ratio = (p0 - p1) / (p2 - p1)
 
-            if mode == "linear_in_lntcf":
+            if mode == "linear_in_lnp":
                 ratio = (np.log(p0) - np.log(p1)) / (np.log(p2) - np.log(p1))
 
             if mode == "nearest_sfc":
                 ratio = xr.where(np.abs(p0 - p1) > np.abs(p0 - p2), 1.0, 0.0)
 
-            # ... interpolate and update ftc
-            ftc[{tc["typeOfLevel"]: tc_idx}] = (1.0 - ratio) * f1 + ratio * f2
+            # ... interpolate and update field_on_tc
+            field_on_tc[{tc["typeOfLevel"]: tc_idx}] = (1.0 - ratio) * f1 + ratio * f2
 
-    return ftc
+    return field_on_tc
 
 
-def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
+def interpolate_k2theta(field, mode, th_field, th_tc_values, th_tc_units, h_field):
     """Interpolate a field from model (k) levels to potential temperature (theta) coordinates.
+
+       Example for vertical interpolation to a target field that is no monotonic function of height.
 
     Parameters
     ----------
@@ -140,24 +147,24 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
         field to interpolate
     mode : str
         interpolation algorithm, one of {"low_fold", "high_fold","undef_fold"}
-    thfield : xarray.DataArray
+    th_field : xarray.DataArray
         potential temperature theta on k levels in K
-    tcth_values : list of float
+    th_tc_values : list of float
         target coordinate values
-    tcth_units : str
+    th_tc_units : str
         target coordinate units
-    hfield : xarray.DataArray
+    h_field : xarray.DataArray
         height on k levels
 
     Returns
     -------
-    ftc : xarray.DataArray
-        field on target coordinates
+    field_on_tc : xarray.DataArray
+        field on target (i.e., theta) coordinates
 
     """
     # TODO: check missing value consistency with GRIB2 (currently comparisons are done with np.nan)
-    #       check that thfield is the theta field, given in K
-    #       check that field, thfield, and hfield are compatible
+    #       check that th_field is the theta field, given in K
+    #       check that field, th_field, and h_field are compatible
     #       print warn message if result contains missing values
 
     # ATTENTION: the attribute "positive" is not set for generalVerticalLayer
@@ -172,32 +179,32 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
 
     # ... supported tc units and corresponding conversion factor to K (i.e. to the same unit as theta); according to GRIB2
     #     isentropic surfaces are coded in K; fieldextra codes them in cK for NetCDF (to be checked)
-    tcth_unit_conversions = dict(K=1.0, cK=0.01)
-    if tcth_units not in tcth_unit_conversions.keys():
+    th_tc_unit_conversions = dict(K=1.0, cK=0.01)
+    if th_tc_units not in th_tc_unit_conversions.keys():
         raise RuntimeError(
-            "interpolate_k2theta: unsupported value of tcth_units", tcth_units
+            "interpolate_k2theta: unsupported value of th_tc_units", th_tc_units
         )
     # ... supported range of tc values (in K)
-    tc_min = 1.0
-    tc_max = 1000.0
+    th_tc_min = 1.0
+    th_tc_max = 1000.0
     # ... tc values outside range of meaningful values of height, used in tc interval search (in m amsl)
     h_min = -1000.0
     h_max = 100000.0
 
     # Define vertical target coordinates
     tc = dict()
-    tc_values = tcth_values.copy()
+    tc_values = th_tc_values.copy()
     tc_values.sort(
         reverse=False
     )  # Sorting cannot be exploited for optimizations, since theta is not monotonous wrt to height
     # tc values are stored in K
-    tc["values"] = np.array(tcth_values) * tcth_unit_conversions[tcth_units]
-    if min(tc["values"]) < tc_min or max(tc["values"]) > tc_max:
+    tc["values"] = np.array(th_tc_values) * th_tc_unit_conversions[th_tc_units]
+    if min(tc["values"]) < th_tc_min or max(tc["values"]) > th_tc_max:
         raise RuntimeError(
             "interpolate_k2theta: target coordinate value out of range (must be in interval [",
-            tc_min,
+            th_tc_min,
             ", ",
-            tc_max,
+            th_tc_max,
             "]K)",
         )
     tc["attrs"] = {
@@ -209,28 +216,28 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
     tc["typeOfLevel"] = "theta"
     tc["NV"] = 0
 
-    # Prepare output field ftc on target coordinates
-    ftc = init_field_with_vcoord(field, tc, np.nan)
+    # Prepare output field field_on_tc on target coordinates
+    field_on_tc = init_field_with_vcoord(field, tc, np.nan)
 
     # Interpolate
     # ... prepare interpolation
-    thkm1 = thfield.copy()
-    thkm1[{"generalVerticalLayer": slice(1, None)}] = thfield[
+    thkm1 = th_field.copy()
+    thkm1[{"generalVerticalLayer": slice(1, None)}] = th_field[
         {"generalVerticalLayer": slice(0, -1)}
     ].assign_coords(
         {
-            "generalVerticalLayer": thfield[
+            "generalVerticalLayer": th_field[
                 {"generalVerticalLayer": slice(1, None)}
             ].generalVerticalLayer
         }
     )
 
-    thkp1 = thfield.copy()
-    thkp1[{"generalVerticalLayer": slice(0, -1)}] = thfield[
+    thkp1 = th_field.copy()
+    thkp1[{"generalVerticalLayer": slice(0, -1)}] = th_field[
         {"generalVerticalLayer": slice(1, None)}
     ].assign_coords(
         {
-            "generalVerticalLayer": thfield[
+            "generalVerticalLayer": th_field[
                 {"generalVerticalLayer": slice(0, -1)}
             ].generalVerticalLayer
         }
@@ -239,12 +246,12 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
     # ... loop through tc values
     for tc_idx, th0 in enumerate(tc["values"]):
         folding_coord_exception = xr.full_like(
-            hfield[{"generalVerticalLayer": 0}], False
+            h_field[{"generalVerticalLayer": 0}], False
         )
         # ... find the height field where theta is >= th0 on level k and was <= th0 on level k-1
         #     or where theta is <= th0 on level k and was >= th0 on level k-1
-        h = hfield.where(
-            ((thfield >= th0) & (thkm1 <= th0)) | ((thfield <= th0) & (thkm1 >= th0)),
+        h = h_field.where(
+            ((th_field >= th0) & (thkm1 <= th0)) | ((th_field <= th0) & (thkm1 >= th0)),
             drop=True,
         )
         if h.size > 0:
@@ -264,34 +271,34 @@ def interpolate_k2theta(field, mode, thfield, tcth_values, tcth_units, hfield):
                 tcind = h.fillna(h_min).argmax(dim=["generalVerticalLayer"])
 
             # ... extract theta and field at level k
-            th2 = thfield.where(
-                ((thfield >= th0) & (thkm1 <= th0))
-                | ((thfield <= th0) & (thkm1 >= th0)),
+            th2 = th_field.where(
+                ((th_field >= th0) & (thkm1 <= th0))
+                | ((th_field <= th0) & (thkm1 >= th0)),
                 drop=True,
             )[{"generalVerticalLayer": tcind["generalVerticalLayer"]}]
             f2 = field.where(
-                ((thfield >= th0) & (thkm1 <= th0))
-                | ((thfield <= th0) & (thkm1 >= th0)),
+                ((th_field >= th0) & (thkm1 <= th0))
+                | ((th_field <= th0) & (thkm1 >= th0)),
                 drop=True,
             )[{"generalVerticalLayer": tcind["generalVerticalLayer"]}]
             # ... extract theta and field at level k-1
             f1 = field.where(
-                ((thfield <= th0) & (thkp1 >= th0))
-                | ((thfield >= th0) & (thkp1 <= th0)),
+                ((th_field <= th0) & (thkp1 >= th0))
+                | ((th_field >= th0) & (thkp1 <= th0)),
                 drop=True,
             )[{"generalVerticalLayer": tcind["generalVerticalLayer"]}]
-            th1 = thfield.where(
-                ((thfield <= th0) & (thkp1 >= th0))
-                | ((thfield >= th0) & (thkp1 <= th0)),
+            th1 = th_field.where(
+                ((th_field <= th0) & (thkp1 >= th0))
+                | ((th_field >= th0) & (thkp1 <= th0)),
                 drop=True,
             )[{"generalVerticalLayer": tcind["generalVerticalLayer"]}]
 
             # ... compute the interpolation weights
             ratio = xr.where(np.abs(th2 - th1) > 0, (th0 - th1) / (th2 - th1), 0.0)
 
-            # ... interpolate and update ftc
-            ftc[{tc["typeOfLevel"]: tc_idx}] = xr.where(
+            # ... interpolate and update field_on_tc
+            field_on_tc[{tc["typeOfLevel"]: tc_idx}] = xr.where(
                 folding_coord_exception, np.nan, (1.0 - ratio) * f1 + ratio * f2
             )
 
-    return ftc
+    return field_on_tc

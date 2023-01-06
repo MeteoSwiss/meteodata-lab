@@ -8,17 +8,18 @@ from operators.support_operators import init_field_with_vcoord
 def interpolate_k2p(field, mode, p_field, p_tc_values, p_tc_units):
     """Interpolate a field from model (k) levels to pressure coordinates.
 
-    Example for vertical interpolation to a target field which is strictly
+    Example for vertical interpolation to isosurfaces of a target field, which is strictly
     monotonically decreasing with height.
+
 
     Parameters
     ----------
     field : xarray.DataArray
-        field to interpolate
+        field to interpolate (only typeOfLevel="generalVerticalLayer" is supported)
     mode : str
         interpolation algorithm, one of {"linear_in_p", "linear_in_lnp", "nearest_sfc"}
     p_field : xarray.DataArray
-        pressure field on k levels in Pa
+        pressure field on k levels in Pa (only typeOfLevel="generalVerticalLayer" is supported)
     p_tc_values : list of float
         pressure target coordinate values
     p_tc_units : str
@@ -49,6 +50,8 @@ def interpolate_k2p(field, mode, p_field, p_tc_values, p_tc_units):
     # ... supported range of pressure tc values (in Pa)
     p_tc_min = 1.0
     p_tc_max = 120000.0
+    # ... supported vertical coordinate type for field and p_field
+    supported_vc_type = "generalVerticalLayer"
 
     # Define vertical target coordinates (tc)
     tc = dict()
@@ -72,6 +75,18 @@ def interpolate_k2p(field, mode, p_field, p_tc_values, p_tc_units):
     }
     tc["typeOfLevel"] = "isobaricInPa"
     tc["NV"] = 0
+
+    # Check that typeOfLevel is supported and equal for both field and p_field
+    if supported_vc_type not in field.dims:
+        raise RuntimeError(
+            "interpolate_k2p: field to interpolate must be defined for typeOfLevel=",
+            supported_vc_type,
+        )
+    if supported_vc_type not in p_field.dims:
+        raise RuntimeError(
+            "interpolate_k2p: pressure field must be defined for typeOfLevel=",
+            supported_vc_type,
+        )
 
     # Prepare output field field_on_tc on target coordinates
     field_on_tc = init_field_with_vcoord(field, tc, np.nan)
@@ -139,22 +154,23 @@ def interpolate_k2p(field, mode, p_field, p_tc_values, p_tc_units):
 def interpolate_k2theta(field, mode, th_field, th_tc_values, th_tc_units, h_field):
     """Interpolate a field from model (k) levels to potential temperature (theta) coordinates.
 
-       Example for vertical interpolation to a target field that is no monotonic function of height.
+       Example for vertical interpolation to isosurfaces of a target field that is no monotonic
+       function of height.
 
     Parameters
     ----------
     field : xarray.DataArray
-        field to interpolate
+        field to interpolate (only typeOfLevel="generalVerticalLayer" is supported)
     mode : str
         interpolation algorithm, one of {"low_fold", "high_fold","undef_fold"}
     th_field : xarray.DataArray
-        potential temperature theta on k levels in K
+        potential temperature theta on k levels in K (only typeOfLevel="generalVerticalLayer" is supported)
     th_tc_values : list of float
         target coordinate values
     th_tc_units : str
         target coordinate units
     h_field : xarray.DataArray
-        height on k levels
+        height on k levels (only typeOfLevel="generalVerticalLayer" is supported)
 
     Returns
     -------
@@ -190,6 +206,8 @@ def interpolate_k2theta(field, mode, th_field, th_tc_values, th_tc_units, h_fiel
     # ... tc values outside range of meaningful values of height, used in tc interval search (in m amsl)
     h_min = -1000.0
     h_max = 100000.0
+    # ... supported vertical coordinate type for field and p_field
+    supported_vc_type = "generalVerticalLayer"
 
     # Define vertical target coordinates
     tc = dict()
@@ -215,6 +233,23 @@ def interpolate_k2theta(field, mode, th_field, th_tc_values, th_tc_units, h_fiel
     }
     tc["typeOfLevel"] = "theta"
     tc["NV"] = 0
+
+    # Check that typeOfLevel is supported and equal for field, th_field, and h_field
+    if supported_vc_type not in field.dims:
+        raise RuntimeError(
+            "interpolate_k2theta: field to interpolate must be defined for typeOfLevel=",
+            supported_vc_type,
+        )
+    if supported_vc_type not in th_field.dims:
+        raise RuntimeError(
+            "interpolate_k2theta: theta field must be defined for typeOfLevel=",
+            supported_vc_type,
+        )
+    if supported_vc_type not in h_field.dims:
+        raise RuntimeError(
+            "interpolate_k2theta: height field must be defined for typeOfLevel=",
+            supported_vc_type,
+        )
 
     # Prepare output field field_on_tc on target coordinates
     field_on_tc = init_field_with_vcoord(field, tc, np.nan)

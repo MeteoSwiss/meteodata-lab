@@ -121,6 +121,7 @@ def interpolate_k2p(field, mode, p_field, p_tc_values, p_tc_units):
         p2 = p_field.where((p_field >= p0) & (pkm1 < p0), drop=True)
         if p2.size > 0:
             # ... extract the index k of the vertical layer at which p2 adopts its minimum
+            #     (corresponds to search from top of atmosphere to bottom)
             minind = p2.fillna(p_tc_max).argmin(dim=["generalVerticalLayer"])
             # ... extract pressure and field at level k
             p2 = p2[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
@@ -146,6 +147,9 @@ def interpolate_k2p(field, mode, p_field, p_tc_values, p_tc_units):
                 ratio = xr.where(np.abs(p0 - p1) > np.abs(p0 - p2), 1.0, 0.0)
 
             # ... interpolate and update field_on_tc
+            # BUG: This assignment is only possible if the horizontal dimensions of field_on_tc and ratio are the same!
+            #      However, these can very well be reduced for ratio, since the traget coordinate surface may fall
+            #      below the model orography, which is e.g. the case if the 1000 hPa isotherm is chosen in the unit test.
             field_on_tc[{tc["typeOfLevel"]: tc_idx}] = (1.0 - ratio) * f1 + ratio * f2
 
     return field_on_tc

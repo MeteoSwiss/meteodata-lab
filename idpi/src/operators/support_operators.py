@@ -1,35 +1,43 @@
 """Algorithms to support operations on a field."""
 
+import typing
+
 import numpy as np
 import xarray as xr
 
 
 def init_field_with_vcoord(
-    parent: xr.DataArray, vcoord: dict, fill_value, dtype=None
+    parent: xr.DataArray,
+    vcoord: dict[str, typing.Any],
+    fill_value: typing.Any,
+    dtype: np.dtype = None,
 ) -> xr.DataArray:
-    """Initialize an xr.DataArray with new vertical coordinates.
+    """Initialize an xarray.DataArray with new vertical coordinates.
 
-    Properties except for those related to the vertical coordinates are inherited from a
-    parent xr.DataArray.
+    Properties except for those related to the vertical coordinates, and optionally dtype,
+    are inherited from the parent xarray.DataArray.
 
     Parameters
     ----------
-        parent : xr.DataArray
+        parent : xarray.DataArray
             parent field
-        vcoord : dict
+        vcoord : dict[str, typing.Any]
             dictionary specifying new vertical coordinates; defaults to None
             expected keys: "typeOfLevel" (string), "values" (list), "NV" (int), "attrs" (dict)
-        fill_value :
+        fill_value : typing.Any
             value the data array of the new field is initialized with
-        dtype :
+        dtype : numpy.dtype
             fill value data type; defaults to None (in this case the data type
             is inherited from the parent field)
 
     Returns
     -------
-        init_field_with_vcoord : xr.DataArray
+        init_field_with_vcoord : xarray.DataArray
             new field
     """
+    # TODO: test that vertical dim of parent is named "generalVerticalLayer" or take vertical dim to replace as argument
+    #       be aware that vcoord contains also xr.DataArray GRIB attributes; one should separate these from coordinate properties
+    #       in the interface
     # check vcoord keys
     expected_vcoord_keys = ("typeOfLevel", "NV", "values", "attrs")
     for k in expected_vcoord_keys:

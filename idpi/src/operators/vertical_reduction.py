@@ -208,9 +208,10 @@ def integrate_k(field, operator, mode, height, h_bounds, hsurf=None):
             mode,
         )
 
-    # Height bounds are always converted to heights amsl; lower_bound_type and upper_bound_type
-    # can be used to code typeOfFirstFixedSurface and typeOfSecondFixedSurface in GRIB2, and
-    # to set the bounds attribute for the vertical coordinates in NetCDF
+    # Height bounds are always converted to heights a msl
+    # TODO: additional variables lower_bound_type and upper_bound_type could be set here for later usage to code
+    # typeOfFirstFixedSurface and typeOfSecondFixedSurface in GRIB2, and to set the bounds attribute for the vertical
+    # coordinates in NetCDF
     h_bottom = h_bounds[0].copy()
     h_top = h_bounds[1].copy()
     if mode in ["h2z", "h2h"]:
@@ -256,7 +257,9 @@ def integrate_k(field, operator, mode, height, h_bounds, hsurf=None):
     dh_in_h_bounds = dh.where((hfl >= h_bottom) & (hfl <= h_top), drop=True)
     # ... compute integral by midpoint rule (apply fractional corrections for the height intervals containing h_top and h_bottom)
     #     at grid points where field_in_h_bounds is not undefined for all entries along dimension "generalVerticalLayer"
-    # NOTE: The vertical dimension is lost in the reduction operation.
+    # NOTE: The vertical dimension is lost in the reduction operation; one could use xr.DataArray.expand_dims to add a vertical dim
+    #       of size 1 and assign a coordinate with associated attributes to it
+    #       re-ordering of dimensions would, however, be unnecessary due to xarray's broadcasting by dimension name
     # TODO: assign coordinates and attributes to rfield
     #       ensure that dh_in_h_bounds.size > 0; return everywhere undefined rfield otherwise
     rfield = xr.where(

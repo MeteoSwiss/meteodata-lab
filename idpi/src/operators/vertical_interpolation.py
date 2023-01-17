@@ -103,54 +103,48 @@ def interpolate_k2p(field, mode, p_field, p_tc_values, p_tc_units):
             ].generalVerticalLayer
         }
     )
-
-    pkp1 = p_field.copy()
-    pkp1[{"generalVerticalLayer": slice(0, -1)}] = p_field[
-        {"generalVerticalLayer": slice(1, None)}
+    pkm1[{"generalVerticalLayer": 0}] = np.nan
+    fkm1 = field.copy()
+    fkm1[{"generalVerticalLayer": slice(1, None)}] = field[
+        {"generalVerticalLayer": slice(0, -1)}
     ].assign_coords(
         {
-            "generalVerticalLayer": p_field[
-                {"generalVerticalLayer": slice(0, -1)}
+            "generalVerticalLayer": field[
+                {"generalVerticalLayer": slice(1, None)}
             ].generalVerticalLayer
         }
     )
+    fkm1[{"generalVerticalLayer": 0}] = np.nan
 
     # ... loop through tc values
     for tc_idx, p0 in enumerate(tc["values"]):
         # ... find the 3d field where pressure is >= p0 on level k and was < p0 on level k-1
-        p2 = p_field.where((p_field >= p0) & (pkm1 < p0), drop=True)
-        if p2.size > 0:
-            # ... extract the index k of the vertical layer at which p2 adopts its minimum
-            #     (corresponds to search from top of atmosphere to bottom)
-            minind = p2.fillna(p_tc_max).argmin(dim=["generalVerticalLayer"])
-            # ... extract pressure and field at level k
-            p2 = p2[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
-            f2 = field.where((p_field >= p0) & (pkm1 < p0), drop=True)[
-                {"generalVerticalLayer": minind["generalVerticalLayer"]}
-            ]
-            # ... extract pressure and field at level k-1
-            f1 = field.where((p_field < p0) & (pkp1 >= p0), drop=True)[
-                {"generalVerticalLayer": minind["generalVerticalLayer"]}
-            ]
-            p1 = p_field.where((p_field < p0) & (pkp1 >= p0), drop=True)[
-                {"generalVerticalLayer": minind["generalVerticalLayer"]}
-            ]
+        p2 = p_field.where((p_field >= p0) & (pkm1 < p0))
+        # ... extract the index k of the vertical layer at which p2 adopts its minimum
+        #     (corresponds to search from top of atmosphere to bottom)
+        minind = p2.fillna(p_tc_max).argmin(dim=["generalVerticalLayer"])
+        # ... extract pressure and field at level k
+        p2 = p2[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
+        f2 = field[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
+        # ... extract pressure and field at level k-1
+        f1 = fkm1[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
+        p1 = pkm1[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
 
-            # ... compute the interpolation weights
-            if mode == "linear_in_p":
-                ratio = (p0 - p1) / (p2 - p1)
+        # ... compute the interpolation weights
+        if mode == "linear_in_p":
+            ratio = (p0 - p1) / (p2 - p1)
 
-            if mode == "linear_in_lnp":
-                ratio = (np.log(p0) - np.log(p1)) / (np.log(p2) - np.log(p1))
+        if mode == "linear_in_lnp":
+            ratio = (np.log(p0) - np.log(p1)) / (np.log(p2) - np.log(p1))
 
-            if mode == "nearest_sfc":
-                ratio = xr.where(np.abs(p0 - p1) > np.abs(p0 - p2), 1.0, 0.0)
+        if mode == "nearest_sfc":
+            # ... note that by construction, p2 is always defined;
+            #     this operation sets ratio to 0 if p1 (and by construction also f1) is undefined;
+            #     therefore, the interpolation formula below works correctly also in this case
+            ratio = xr.where(np.abs(p0 - p1) >= np.abs(p0 - p2), 1.0, 0.0)
 
-            # ... interpolate and update field_on_tc
-            # BUG: This assignment is only possible if the horizontal dimensions of field_on_tc and ratio are the same!
-            #      However, these can very well be reduced for ratio, since the traget coordinate surface may fall
-            #      below the model orography, which is e.g. the case if the 1000 hPa isotherm is chosen in the unit test.
-            field_on_tc[{tc["typeOfLevel"]: tc_idx}] = (1.0 - ratio) * f1 + ratio * f2
+        # ... interpolate and update field_on_tc
+        field_on_tc[{tc["typeOfLevel"]: tc_idx}] = (1.0 - ratio) * f1 + ratio * f2
 
     return field_on_tc
 

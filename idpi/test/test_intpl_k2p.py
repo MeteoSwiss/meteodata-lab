@@ -13,8 +13,8 @@ from operators.vertical_interpolation import interpolate_k2p
 @pytest.mark.parametrize("mode", ["nearest_sfc", "linear_in_p", "linear_in_lnp"])
 def test_intpl_k2p(mode):
     # define target coordinates
-    tc_values = [40.0, 500.0, 600.0, 700.0, 800.0, 1100.0]
-    fx_voper_lev = "40,500,600,700,800,1100"
+    tc_values = [40.0, 500.0, 600.0, 700.0, 800.0, 900.0, 1100.0]
+    fx_voper_lev = "40,500,600,700,800,900,1100"
     tc_units = "hPa"
 
     # mode dependent tolerances

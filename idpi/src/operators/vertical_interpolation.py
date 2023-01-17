@@ -264,17 +264,19 @@ def interpolate_k2theta(field, mode, th_field, th_tc_values, th_tc_units, h_fiel
             ].generalVerticalLayer
         }
     )
-
-    thkp1 = th_field.copy()
-    thkp1[{"generalVerticalLayer": slice(0, -1)}] = th_field[
-        {"generalVerticalLayer": slice(1, None)}
+    thkm1[{"generalVerticalLayer":0}] = np.nan
+    
+    fkm1 = field.copy()
+    fkm1[{"generalVerticalLayer": slice(1, None)}] = field[
+        {"generalVerticalLayer": slice(0, -1)}
     ].assign_coords(
         {
-            "generalVerticalLayer": th_field[
-                {"generalVerticalLayer": slice(0, -1)}
+            "generalVerticalLayer": field[
+                {"generalVerticalLayer": slice(1, None)}
             ].generalVerticalLayer
         }
     )
+    fkm1[{"generalVerticalLayer": 0}] = np.nan
 
     # ... loop through tc values
     for tc_idx, th0 in enumerate(tc["values"]):
@@ -283,55 +285,35 @@ def interpolate_k2theta(field, mode, th_field, th_tc_values, th_tc_units, h_fiel
         )
         # ... find the height field where theta is >= th0 on level k and was <= th0 on level k-1
         #     or where theta is <= th0 on level k and was >= th0 on level k-1
-        h = h_field.where(
-            ((th_field >= th0) & (thkm1 <= th0)) | ((th_field <= th0) & (thkm1 >= th0)),
-            drop=True,
-        )
-        if h.size > 0:
-            if mode == "undef_fold":
-                # ... find condition where more than one interval is found, which contains the target coordinate value
-                folding_coord_exception = xr.where(h.notnull(), 1.0, 0.0).sum(
-                    dim=["generalVerticalLayer"]
-                )
-                folding_coord_exception = folding_coord_exception.where(
-                    folding_coord_exception > 1.0
-                ).notnull()
-            if mode in ("low_fold", "undef_fold"):
-                # ... extract the index k of the smallest height at which the condition is fulfilled
-                tcind = h.fillna(h_max).argmin(dim=["generalVerticalLayer"])
-            if mode == "high_fold":
-                # ... extract the index k of the largest height at which the condition is fulfilled
-                tcind = h.fillna(h_min).argmax(dim=["generalVerticalLayer"])
-
-            # ... extract theta and field at level k
-            th2 = th_field.where(
-                ((th_field >= th0) & (thkm1 <= th0))
-                | ((th_field <= th0) & (thkm1 >= th0)),
-                drop=True,
-            )[{"generalVerticalLayer": tcind["generalVerticalLayer"]}]
-            f2 = field.where(
-                ((th_field >= th0) & (thkm1 <= th0))
-                | ((th_field <= th0) & (thkm1 >= th0)),
-                drop=True,
-            )[{"generalVerticalLayer": tcind["generalVerticalLayer"]}]
-            # ... extract theta and field at level k-1
-            f1 = field.where(
-                ((th_field <= th0) & (thkp1 >= th0))
-                | ((th_field >= th0) & (thkp1 <= th0)),
-                drop=True,
-            )[{"generalVerticalLayer": tcind["generalVerticalLayer"]}]
-            th1 = th_field.where(
-                ((th_field <= th0) & (thkp1 >= th0))
-                | ((th_field >= th0) & (thkp1 <= th0)),
-                drop=True,
-            )[{"generalVerticalLayer": tcind["generalVerticalLayer"]}]
-
-            # ... compute the interpolation weights
-            ratio = xr.where(np.abs(th2 - th1) > 0, (th0 - th1) / (th2 - th1), 0.0)
-
-            # ... interpolate and update field_on_tc
-            field_on_tc[{tc["typeOfLevel"]: tc_idx}] = xr.where(
-                folding_coord_exception, np.nan, (1.0 - ratio) * f1 + ratio * f2
+        h = h_field.where(((th_field >= th0) & (thkm1 <= th0)) | ((th_field <= th0) & (thkm1 >= th0)))
+        if mode == "undef_fold":
+            # ... find condition where more than one interval is found, which contains the target coordinate value
+            folding_coord_exception = xr.where(h.notnull(), 1.0, 0.0).sum(
+                dim=["generalVerticalLayer"]
             )
+            folding_coord_exception = folding_coord_exception.where(
+                folding_coord_exception > 1.0
+            ).notnull()
+        if mode in ("low_fold", "undef_fold"):
+            # ... extract the index k of the smallest height at which the condition is fulfilled
+            tcind = h.fillna(h_max).argmin(dim=["generalVerticalLayer"])
+        if mode == "high_fold":
+            # ... extract the index k of the largest height at which the condition is fulfilled
+            tcind = h.fillna(h_min).argmax(dim=["generalVerticalLayer"])
+
+        # ... extract theta and field at level k
+        th2 = th_field[{"generalVerticalLayer": tcind["generalVerticalLayer"]}]
+        f2 = field[{"generalVerticalLayer": tcind["generalVerticalLayer"]}]
+        # ... extract theta and field at level k-1
+        f1 = fkm1[{"generalVerticalLayer": tcind["generalVerticalLayer"]}]
+        th1 = thkm1[{"generalVerticalLayer": tcind["generalVerticalLayer"]}]
+
+        # ... compute the interpolation weights
+        ratio = xr.where(np.abs(th2 - th1) > 0, (th0 - th1) / (th2 - th1), 0.0)
+
+        # ... interpolate and update field_on_tc
+        field_on_tc[{tc["typeOfLevel"]: tc_idx}] = xr.where(
+            folding_coord_exception, np.nan, (1.0 - ratio) * f1 + ratio * f2
+        )
 
     return field_on_tc

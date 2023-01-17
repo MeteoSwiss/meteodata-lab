@@ -39,27 +39,11 @@ def fhzerocl(t, hhl):
             ].generalVerticalLayer
         }
     )
-
-    tkp1 = t.copy()
-    tkp1[{"generalVerticalLayer": slice(0, -1)}] = t[
-        {"generalVerticalLayer": slice(1, None)}
-    ].assign_coords(
-        {
-            "generalVerticalLayer": t[
-                {"generalVerticalLayer": slice(0, -1)}
-            ].generalVerticalLayer
-        }
-    )
-
-    # Initialize hzerocl with missing values
-    hzerocl = xr.full_like(hfl[{"generalVerticalLayer": 0}], np.nan)
+    tkm1[{"generalVerticalLayer": 0}] = np.nan
 
     # 3d field with values of height for those levels where temperature is > 0 and it was
     # < 0 on the level below. Otherwise values are NaN.
-    height2 = hfl.where((t >= t0) & (tkm1 < t0), drop=True)
-
-    if height2.size == 0:
-        return hzerocl
+    height2 = hfl.where((t >= t0) & (tkm1 < t0))
 
     # The previous condition can be satisfied on multiple levels.
     # Take the k indices of the maximum height value where the condition is satisfied
@@ -67,18 +51,11 @@ def fhzerocl(t, hhl):
     # Compute the 2D fields with height values where T is > 0 and < 0 on level below
     height2 = height2[{"generalVerticalLayer": maxind["generalVerticalLayer"]}]
     # Compute the 2D fields with height values where T is < 0 and > 0 on level above
-    height1 = hfl.where((tkp1 >= t0) & (t < t0), drop=True)[
-        {"generalVerticalLayer": maxind["generalVerticalLayer"]}
-    ]
+    height1 = hfl[{"generalVerticalLayer": maxind["generalVerticalLayer"] - 1}]
     # The height level where T == t0 must be between [height1, height2]
-    t1 = t.where((t >= t0) & (tkm1 < t0), drop=True)[
-        {"generalVerticalLayer": maxind["generalVerticalLayer"]}
-    ]
+    t2 = t[{"generalVerticalLayer": maxind["generalVerticalLayer"]}]
+    t1 = tkm1[{"generalVerticalLayer": maxind["generalVerticalLayer"]}]
 
-    t2 = t.where((tkp1 >= t0) & (t < t0), drop=True)[
-        {"generalVerticalLayer": maxind["generalVerticalLayer"]}
-    ]
-
-    hzerocl = height1 + (height2 - height1) * (t2 - t0) / (t2 - t1)
+    hzerocl = height1 + (height2 - height1) * (t0 - t1) / (t2 - t1)
 
     return hzerocl

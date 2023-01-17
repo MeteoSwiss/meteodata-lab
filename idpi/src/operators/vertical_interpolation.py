@@ -264,8 +264,8 @@ def interpolate_k2theta(field, mode, th_field, th_tc_values, th_tc_units, h_fiel
             ].generalVerticalLayer
         }
     )
-    thkm1[{"generalVerticalLayer":0}] = np.nan
-    
+    thkm1[{"generalVerticalLayer": 0}] = np.nan
+
     fkm1 = field.copy()
     fkm1[{"generalVerticalLayer": slice(1, None)}] = field[
         {"generalVerticalLayer": slice(0, -1)}
@@ -285,7 +285,9 @@ def interpolate_k2theta(field, mode, th_field, th_tc_values, th_tc_units, h_fiel
         )
         # ... find the height field where theta is >= th0 on level k and was <= th0 on level k-1
         #     or where theta is <= th0 on level k and was >= th0 on level k-1
-        h = h_field.where(((th_field >= th0) & (thkm1 <= th0)) | ((th_field <= th0) & (thkm1 >= th0)))
+        h = h_field.where(
+            ((th_field >= th0) & (thkm1 <= th0)) | ((th_field <= th0) & (thkm1 >= th0))
+        )
         if mode == "undef_fold":
             # ... find condition where more than one interval is found, which contains the target coordinate value
             folding_coord_exception = xr.where(h.notnull(), 1.0, 0.0).sum(

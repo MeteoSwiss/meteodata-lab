@@ -90,7 +90,9 @@ def minmax_k(field, operator, mode, height, h_bounds, hsurf=None):
             vertical_dim,
             ")",
         )
-    field_in_h_bounds = field.where((height >= h_bottom) & (height <= h_top), drop=True)
+    field_in_h_bounds = field.where((height >= h_bottom) & (height <= h_top)).dropna(
+        vertical_dim
+    )
     heightkp1 = height.copy()
     heightkp1 = height[{vertical_dim: slice(1, None)}].assign_coords(
         {vertical_dim: height[{vertical_dim: slice(0, -1)}][vertical_dim]}
@@ -253,8 +255,12 @@ def integrate_k(field, operator, mode, height, h_bounds, hsurf=None):
     dh = xr.where((hhlkp1 < h_bottom) & (hhlk > h_bottom), hhlk - h_bottom, dh)
 
     # ... find field and dh where hfl is in interval [h_bottom, h_top]
-    field_in_h_bounds = field_on_fl.where((hfl >= h_bottom) & (hfl <= h_top), drop=True)
-    dh_in_h_bounds = dh.where((hfl >= h_bottom) & (hfl <= h_top), drop=True)
+    field_in_h_bounds = field_on_fl.where((hfl >= h_bottom) & (hfl <= h_top)).dropna(
+        "generalVerticalLayer"
+    )
+    dh_in_h_bounds = dh.where((hfl >= h_bottom) & (hfl <= h_top)).dropna(
+        "generalVerticalLayer"
+    )
     # ... compute integral by midpoint rule (apply fractional corrections for the height intervals containing h_top and h_bottom)
     #     at grid points where field_in_h_bounds is not undefined for all entries along dimension "generalVerticalLayer"
     # NOTE: The vertical dimension is lost in the reduction operation; one could use xr.DataArray.expand_dims to add a vertical dim

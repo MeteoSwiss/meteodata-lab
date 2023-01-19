@@ -235,7 +235,12 @@ def integrate_k(field, operator, mode, height, h_bounds, hsurf=None):
     if "generalVertical" in field.coords:
         field_on_fl = destagger(field, "generalVertical")
     else:
-        field_on_fl = field
+        if "generalVerticalLayer" in field.coords:
+            field_on_fl = field
+        else:
+            raise RuntimeError(
+                "integrate_k: field must be defined for level type generalVertical or generalVerticalLayer"
+            )
     if "generalVertical" not in height.coords:
         raise RuntimeError(
             "integrate_k: height must be defined on level type generalVertical"
@@ -255,6 +260,7 @@ def integrate_k(field, operator, mode, height, h_bounds, hsurf=None):
     dh = xr.where((hhlkp1 < h_bottom) & (hhlk > h_bottom), hhlk - h_bottom, dh)
 
     # ... find field and dh where hfl is in interval [h_bottom, h_top]
+    # ... note that the dimension "generalVericalLayer" is lost of this condition is nowhere satisfied
     field_in_h_bounds = field_on_fl.where((hfl >= h_bottom) & (hfl <= h_top)).dropna(
         "generalVerticalLayer"
     )
@@ -267,15 +273,15 @@ def integrate_k(field, operator, mode, height, h_bounds, hsurf=None):
     #       of size 1 and assign a coordinate with associated attributes to it
     #       re-ordering of dimensions would, however, be unnecessary due to xarray's broadcasting by dimension name
     # TODO: assign coordinates and attributes to rfield
-    #       ensure that dh_in_h_bounds.size > 0; return everywhere undefined rfield otherwise
-    rfield = xr.where(
-        dh_in_h_bounds.count(dim="generalVerticalLayer") > 0,
-        (field_in_h_bounds * dh_in_h_bounds)
-        .fillna(0.0)
-        .sum(dim="generalVerticalLayer"),
-        np.nan,
-    )
-    if operator == "normed_integral":
-        rfield /= h_top - h_bottom
+    if "generalVerticalLayer" in field_in_h_bounds.dims:
+        rfield = (
+            (field_in_h_bounds * dh_in_h_bounds)
+            .fillna(0.0)
+            .sum(dim="generalVerticalLayer")
+        )
+        if operator == "normed_integral":
+            rfield /= h_top - h_bottom
+    else:
+        rfield = xr.full_like(field_in_h_bounds, fill_value=np.nan)
 
     return rfield

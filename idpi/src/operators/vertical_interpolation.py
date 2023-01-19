@@ -118,23 +118,27 @@ def interpolate_k2p(field, mode, p_field, p_tc_values, p_tc_units):
 
     # ... loop through tc values
     for tc_idx, p0 in enumerate(tc["values"]):
-        # ... find the 3d field where pressure is >= p0 on level k and was < p0 on level k-1
-        p2 = p_field.where((p_field >= p0) & (pkm1 < p0))
+        # ... find the 3d field where pressure is > p0 on level k and was <= p0 on level k-1
+        p2 = p_field.where((p_field > p0) & (pkm1 <= p0))
         # ... extract the index k of the vertical layer at which p2 adopts its minimum
         #     (corresponds to search from top of atmosphere to bottom)
+        # ... note that if the condition above is not fulfilled, minind will be set to k_top
         minind = p2.fillna(p_tc_max).argmin(dim=["generalVerticalLayer"])
         # ... extract pressure and field at level k
         p2 = p2[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
         f2 = field[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
         # ... extract pressure and field at level k-1
+        # ... note that f1 and p1 are both undefined, if minind equals k_top
         f1 = fkm1[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
         p1 = pkm1[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
 
         # ... compute the interpolation weights
         if mode == "linear_in_p":
+            # ... note that p1 is undefined, if minind equals k_top, so ratio will be undefined
             ratio = (p0 - p1) / (p2 - p1)
 
         if mode == "linear_in_lnp":
+            # ... note that p1 is undefined, if minind equals k_top, so ratio will be undefined
             ratio = (np.log(p0) - np.log(p1)) / (np.log(p2) - np.log(p1))
 
         if mode == "nearest_sfc":

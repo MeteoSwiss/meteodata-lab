@@ -71,11 +71,19 @@ def minmax_k(field, operator, mode, height, h_bounds, hsurf=None):
     h_bottom = h_bounds[0].copy()
     h_top = h_bounds[1].copy()
     if mode in ["h2z", "h2h"]:
+        # raise error as long as no unit test is available
+        raise NotImplementedError(
+            "minmax_k: unit test not yet implemented for mode ", mode
+        )
         # ... convert lower bound to height amsl
-        h_bottom += hsurf
+        # h_bottom += hsurf
     if mode in ["z2h", "h2h"]:
+        # raise error as long as no unit test is available
+        raise NotImplementedError(
+            "minmax_k: unit test not yet implemented for mode ", mode
+        )
         # ... convert upper bound to height amsl
-        h_top += hsurf
+        # h_top += hsurf
 
     # Find height interval including the interval [h_bottom, h_top]
     # ... maximum/minimum: extremum over the field values at all model levels included in the height interval, and at the interval boundaries
@@ -217,11 +225,19 @@ def integrate_k(field, operator, mode, height, h_bounds, hsurf=None):
     h_bottom = h_bounds[0].copy()
     h_top = h_bounds[1].copy()
     if mode in ["h2z", "h2h"]:
+        # raise error as long as no unit test is available
+        raise NotImplementedError(
+            "integrate_k: unit test not yet implemented for mode ", mode
+        )
         # ... convert lower bound to height amsl
-        h_bottom += hsurf
+        # h_bottom += hsurf
     if mode in ["z2h", "h2h"]:
+        # raise error as long as no unit test is available
+        raise NotImplementedError(
+            "integrate_k: unit test not yet implemented for mode ", mode
+        )
         # ... convert upper bound to height amsl
-        h_top += hsurf
+        # h_top += hsurf
 
     # Find height interval including the interval [h_bottom, h_top]
     # ... integral: approximated by midpoint rule, taking into account that h_bottom and h_top, respectively,

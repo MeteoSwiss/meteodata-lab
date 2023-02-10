@@ -32,8 +32,8 @@ def interpolate_k2p(field, mode, p_field, p_tc_values, p_tc_units):
 
     """
     # TODO: check missing value consistency with GRIB2 (currently comparisons are done with np.nan)
-    #       check that p_field is the pressure field, given in Pa
-    #       check that field and p_field are compatible
+    #       check that p_field is the pressure field, given in Pa (can only be done if attributes are consequently set)
+    #       check that field and p_field are compatible (have the same dimensions and sizes)
     #       print warn message if result contains missing values
 
     # Initializations
@@ -86,6 +86,11 @@ def interpolate_k2p(field, mode, p_field, p_tc_values, p_tc_units):
         raise RuntimeError(
             "interpolate_k2p: pressure field must be defined for typeOfLevel=",
             supported_vc_type,
+        )
+    # Check that dimensions are the same for field and p_field
+    if field.dims != p_field.dims or field.size != p_field.size:
+        raise RuntimeError(
+            "interpolate_k2p: field and p_field must have equal dimensions and size"
         )
 
     # Prepare output field field_on_tc on target coordinates
@@ -181,7 +186,7 @@ def interpolate_k2theta(field, mode, th_field, th_tc_values, th_tc_units, h_fiel
 
     """
     # TODO: check missing value consistency with GRIB2 (currently comparisons are done with np.nan)
-    #       check that th_field is the theta field, given in K
+    #       check that th_field is the theta field, given in K (can only be done if attributes are consequently set)
     #       check that field, th_field, and h_field are compatible
     #       print warn message if result contains missing values
 

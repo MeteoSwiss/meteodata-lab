@@ -8,6 +8,7 @@ def load_data(outds, fields, datafile, chunk_size=10):
     if chunk_size:
         chunk_arg = {"chunks": {"generalVerticalLayer": chunk_size}}
 
+    # Note: dataset assignment is based on typeOfLevel in cfgrib
     dss = cfgrib.open_datasets(
         datafile,
         backend_kwargs={"read_keys": ["typeOfLevel", "gridType"]},
@@ -18,14 +19,8 @@ def load_data(outds, fields, datafile, chunk_size=10):
         for field in fields:
             if field in ds:
                 outds[field] = ds[field]
-                if "generalVertical" in ds[field].dims:
-                    outds[field] = outds[field].rename(
-                        {"generalVertical": "generalVerticalLayer"}
-                    )
                 if field == "HHL":
-                    outds[field] = outds[field].interpolate_na(
-                        dim="generalVerticalLayer"
-                    )
+                    outds[field] = outds[field].interpolate_na(dim="generalVertical")
 
     if any(field not in outds for field in fields):
         raise RuntimeError("Not all fields found in datafile", fields)

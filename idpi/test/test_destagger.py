@@ -20,7 +20,7 @@ def test_destagger():
 
     U = destagger(ds["U"], "x")
     V = destagger(ds["V"], "y")
-    HFL = destagger(ds["HHL"], "generalVerticalLayer")
+    HFL = destagger(ds["HHL"], "generalVertical")
 
     conf_files = {
         "inputi": datadir + "/lfff<DDHH>0000.ch",
@@ -62,9 +62,9 @@ def test_destagger():
         {"x_1": "x", "y_1": "y", "z_1": "generalVerticalLayer"}
     )
 
-    assert np.allclose(u_ref, U, rtol=3e-5, atol=5e-2, equal_nan=True)
-    assert np.allclose(v_ref, V, rtol=3e-5, atol=5e-2, equal_nan=True)
-    assert np.allclose(hfl_ref, HFL, rtol=3e-3, atol=5e-2, equal_nan=True)
+    assert np.allclose(u_ref, U, rtol=1e-12, atol=1e-9, equal_nan=True)
+    assert np.allclose(v_ref, V, rtol=1e-12, atol=1e-9, equal_nan=True)
+    assert np.allclose(hfl_ref, HFL, rtol=1e-12, atol=1e-9, equal_nan=True)
 
 
 if __name__ == "__main__":

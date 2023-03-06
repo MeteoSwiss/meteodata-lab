@@ -27,7 +27,7 @@ def minmax_k(field, operator, mode, height, h_bounds, hsurf=None):
     h_bounds : list of xarray.DataArray of length 2
         height interval bounds (surface level field or single level of a multi-level field)
     hsurf : Optional(xarray.DataArray)
-        earth surface height in m asl
+        earth surface height in m amsl
         required if mode is one of {"h2h", "h2z", "z2h"}
 
     Returns
@@ -178,7 +178,7 @@ def integrate_k(field, operator, mode, height, h_bounds, hsurf=None):
     h_bounds : list of xarray.DataArray of length 2
         height interval bounds (surface level field or single level of a multi-level field)
     hsurf : Optional(xarray.DataArray)
-        earth surface height in m asl
+        earth surface height in m amsl
         required if mode is one of {"h2h", "h2z", "z2h"}
 
     Returns

@@ -1,9 +1,16 @@
-source /project/g110/spack/user/tsa/spack/share/spack/setup-env.sh
+#!/usr/bin/env bash
+SCRIPT_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-cosmo_eccodes_dir=$(spack find --format "{prefix}" cosmo-eccodes-definitions@2.19.0.7%gcc | head -n1)
-eccodes_dir=$(spack find --format "{prefix}" eccodes@2.19.0%gcc | head -n1)
-export GRIB_DEFINITION_PATH=${cosmo_eccodes_dir}/cosmoDefinitions/definitions/:${eccodes_dir}/share/eccodes/definitions/
-SCRIPTPATH="$( cd -- "$(dirname "${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]} ")" >/dev/null 2>&1 ; pwd -P )"
-export PYTHONPATH=${SCRIPTPATH}/../src
+PKG_DIR=${SCRIPT_PATH}/../../
+if [[ ! -d ${PKG_DIR}/eccodes-cosmo-resources ]]; then
+  git clone --depth 1 --branch v2.25.0.1 git@github.com:COSMO-ORG/eccodes-cosmo-resources.git ${PKG_DIR}/eccodes-cosmo-resources 
+fi 
+
+if [[ ! -d ${PKG_DIR}/eccodes ]]; then
+  git clone --depth 1 --branch 2.25.2 git@github.com:ecmwf/eccodes.git/ ${PKG_DIR}/eccodes
+fi 
+
+export GRIB_DEFINITION_PATH=${PKG_DIR}/eccodes-cosmo-resources/definitions/:${PKG_DIR}/eccodes/share/eccodes/definitions/
+export PYTHONPATH=${SCRIPT_PATH}/../src
 
 

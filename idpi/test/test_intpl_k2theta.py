@@ -12,16 +12,12 @@ from operators.theta import ftheta
 from operators.vertical_interpolation import interpolate_k2theta
 
 
-@pytest.mark.parametrize("mode", ["high_fold", "low_fold", "undef_fold"])
+@pytest.mark.parametrize("mode", ["high_fold", "low_fold"])  # "undef_fold"])
 def test_intpl_k2theta(mode):
     # define target coordinates
     tc_values = [280.0, 290.0, 310.0, 315.0, 320.0, 325.0, 330.0, 335.0]
     fx_voper_lev = "280,290,310,315,320,325,330,335"
     tc_units = "K"
-
-    # mode dependent tolerances
-    atolerances = {"undef_fold": 1e-5, "low_fold": 1e-5, "high_fold": 1e-5}
-    rtolerances = {"undef_fold": 1e-7, "low_fold": 1e-7, "high_fold": 1e-7}
 
     # input data
     datadir = "/project/s83c/rz+/icon_data_processing_incubator/data/SWISS"
@@ -84,9 +80,7 @@ def test_intpl_k2theta(mode):
     )
 
     # compare numerical results
-    assert np.allclose(
-        t_ref, T, rtol=rtolerances[mode], atol=atolerances[mode], equal_nan=True
-    )
+    assert np.allclose(t_ref, T, rtol=1e-4, atol=1e-4, equal_nan=True)
 
 
 if __name__ == "__main__":

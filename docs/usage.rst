@@ -1,0 +1,1 @@
+.. mdinclude:: ../USAGE.md

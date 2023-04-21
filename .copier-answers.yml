@@ -1,0 +1,18 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: cc8b3de
+_src_path: git@github.com:MeteoSwiss-APN/mch-python-blueprint.git
+email: tobias.wicky@meteoswiss.ch
+full_name: Tobias Wicky
+github_username: MeteoSwiss-APN
+module_name: idpi
+project_doc_url: https://github.io/MeteoSwiss-APN/icon-data-processing-incubator
+project_github: https://github.com/MeteoSwiss-APN/icon-data-processing-incubator
+project_keywords: Icon,Data Processing
+project_name: Icon Data Processing Incubator
+project_short_description: Prototype for a data post-processing framework on the basis
+    of xarray.
+project_slug: icon-data-processing-incubator
+project_ssh_url: git+ssh://git@github.com/MeteoSwiss-APN/icon-data-processing-incubator.git
+python_version: '3.10'
+version: 0.1.0
+year: '2023'

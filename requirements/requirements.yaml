@@ -1,0 +1,44 @@
+name: idpi
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10
+  - pip>=22.3
+  # runtime
+  - click>=8.1
+  - cfgrib>=0.9.10.1
+  - jinja2>=3.1.1
+  - netcdf4>=1.5.8
+  - eccodes=2.25.0
+  - numpy >=1.23
+  # development
+  - anaconda-client>=1.11
+  - black>=22.10
+  - boa>=0.14
+  - codespell>=2.2
+  - conda-build>=3.23
+  - flake8>=6.0
+  - flake8-black>=0.3
+  - ipdb>=0.13
+  - ipython>=8.7
+  - isort>=5.12
+  - mccabe>=0.7
+  - mypy>=0.991
+  - mamba>=1.1
+  - pre-commit>=2.20
+  - pydocstyle>=6.1
+  - pylint>=2.15
+  - pytest>=7.2
+  - rich>=12.6
+  - rope>=1.6
+  - rstcheck>=6.1
+  - sphinx>=4.3
+  - sphinx-autobuild>=2021.3
+  - toml>=0.10
+  - types-setuptools>=65.6
+  - types-toml>=0.10
+  - pip:
+    # development
+    - copier>=7.0
+    - flake8-pyproject>=1.2
+    - sphinx-mdinclude>=0.5

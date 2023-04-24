@@ -1,58 +1,105 @@
-default_language_version:
-  python: python3.10.10
 repos:
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.1.0
-  hooks:
-  - id: check-case-conflict
-  - id: check-merge-conflict
-    exclude_types: [rst]
-  - id: check-toml
-  - id: check-yaml
-  - id: debug-statements
-
-- repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.2.0
-  hooks:
-  - id: pretty-format-ini
-    args: [--autofix]
-  - id: pretty-format-toml
-    args: [--autofix]
-  - id: pretty-format-yaml
-    args: [--autofix, --preserve-quotes, --indent, '2']
-
-- repo: https://github.com/psf/black
-  rev: 22.3.0
-  hooks:
-  - id: black
-
-- repo: https://github.com/pre-commit/mirrors-isort
-  rev: v5.10.1
-  hooks:
-  - id: isort
-
-- repo: https://github.com/PyCQA/flake8
-  rev: 4.0.1
-  hooks:
-  - id: flake8
-    additional_dependencies:
-    - darglint
-    - flake8-bugbear
-    - flake8-builtins
-    - flake8-debugger
-    - flake8-docstrings
-    - flake8-eradicate
-    - flake8-mutable
-    - pygments
-    exclude: |
-      (?x)^(
-      setup.py |
-      )$
-- repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v0.812
-  hooks:
-  - id: mypy
-    exclude: |
-      (?x)^(
-      docs/gt4py/conf.py |
-      )$
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+    -   id: check-ast
+    -   id: check-case-conflict
+    -   id: check-docstring-first
+    -   id: check-symlinks
+    -   id: check-toml
+    -   id: check-yaml
+    -   id: debug-statements
+    -   id: end-of-file-fixer
+        # Note that fieldextra namelists requires an empty newline at the end of the file
+        # therefore we don't correct this here
+        exclude: ^tests/test_idpi/fieldextra_templates/.*
+    -   id: trailing-whitespace
+-   repo: local
+    hooks:
+    -   id: forbidden-files-copier-rej
+        name: find copier rejection files
+        language: fail
+        entry: "Found copier update rejection file(s): review and remove them"
+        files: "\\.rej$"
+    -   id: forbidden-files-git-orig
+        name: find git merge backup files
+        language: fail
+        entry: "Found git merge backup file(s): review and remove them"
+        files: "\\.orig$"
+-   repo: local
+    hooks:
+    -   id: rstcheck
+        name: rstcheck
+        description: Check REST files for correctness
+        language: system
+        entry: rstcheck
+        types: [rst]
+-   repo: local
+    hooks:
+    -   id: codespell
+        name: codespell
+        description: Check for spelling errors
+        language: system
+        entry: codespell
+-   repo: local
+    hooks:
+    -   id: black
+        name: black
+        description: Format Python code
+        language: system
+        entry: black
+        types_or: [python, pyi]
+-   repo: local
+    hooks:
+    -   id: isort
+        name: isort
+        description: Group and sort Python imports
+        language: system
+        entry: isort
+        types_or: [python, pyi, cython]
+-   repo: local
+    hooks:
+    -   id: pydocstyle
+        name: pydocstyle
+        description: Check docstrings in Python code for compliance with conventions
+        language: system
+        entry: pydocstyle
+        types: [python]
+        files: ^src/
+# SR It would be handy to abort if one linter fails b/c the same error often
+# SR triggers multiple linters. That way, if flake8 fails, pylint and mypy
+# SR (which in large code bases can take some time to run) could be skipped
+# SR before fixing the error. Unfortunately, pre-commit only provides the global
+# SR option fail_fast, which would abort even after the small fixers and
+# SR formatters changed something. A potential solution could be to write a
+# SR small bash script run-linters.sh that runs flake8, pylint and run-mypy.sh
+# SR in that order and aborts on error.
+# TODO: There is significant work involved in getting pylint going. This can be its separate task
+# -   repo: local
+#     hooks:
+#     -   id: pylint
+#         name: pylint
+#         description: Check Python code for correctness, consistency and adherence to best practices
+#         language: system
+#         entry: pylint
+#         types: [python]
+-   repo: local
+    hooks:
+    -   id: flake8
+        name: flake8
+        description: Check Python code for correctness, consistency and adherence to best practices
+        language: system
+        entry: flake8
+        types: [python]
+-   repo: local
+    hooks:
+    -   id: mypy
+        name: mypy
+        description: Perform static type analysis of Python code
+        language: system
+        entry: bash tools/run-mypy.sh
+        require_serial: true
+        pass_filenames: false
+        verbose: true
+        types: [python]
+        files: ^(src|tests)/

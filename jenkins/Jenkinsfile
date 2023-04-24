@@ -22,23 +22,33 @@ pipeline {
     stages {
         stage('setup miniconda') {
             steps {
-                sh 'wget -O ${WORKSPACE}/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh'
-                sh 'bash miniconda.sh -b -p $WORKSPACE/miniconda'
-                sh 'conda config --set always_yes yes --set changeps1 no'
-                sh 'conda config --add channels conda-forge'
-                sh 'conda env create -f environment.yml'
-                sh 'rm miniconda.sh'
-            }        
+                sh '''#!/usr/bin/env bash
+                set -e
+                bash tools/setup_miniconda.sh -p ${WORKSPACE}
+                '''
+            }
+        }
+        stage('build package') {
+            steps {
+                sh '''#!/usr/bin/env bash
+                set -e
+                source ${WORKSPACE}/miniconda/etc/profile.d/conda.sh
+                conda init bash --no-user --install --system
+                conda activate
+                bash tools/setup_env.sh -u -n no-deps -f /project/s83c/fieldextra/tsa/bin/fieldextra_gnu_opt_omp
+                conda activate no-deps
+                pip install --no-deps .
+                '''
+            }
         }
         stage('test') {
             steps {
                 sh '''#!/usr/bin/env bash
                 source $WORKSPACE/miniconda/etc/profile.d/conda.sh
-                conda activate idpi
-                cd idpi/test
-                source setup.sh
-                export PYTHONPATH=$WORKSPACE/idpi/src
-                pytest -s
+                conda activate no-deps
+                cd ${WORKSPACE}
+                export INPUT_DATA_DIR=/project/s83c/rz+/icon_data_processing_incubator/data/SWISS
+                pytest tests
                 '''
             }
         }

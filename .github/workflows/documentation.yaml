@@ -4,9 +4,6 @@ on:
   push:
     branches:
     - main
-  pull_request:
-    branches:
-      - '*'
 
 jobs:
   build:
@@ -50,4 +47,5 @@ jobs:
         force: true
         branch: gh-pages
         directory: gh-pages
+        github_token: ${{ secrets.GITHUB_TOKEN }}
     # ===============================

@@ -16,7 +16,7 @@ except KeyError:
     input_data_directory = str(
         pathlib.Path(__file__).parent.parent.parent.resolve() / "test_data"
     )
-    print(f"The DATA_DIR is not set, setting it to {input_data_directory}")
+    print(f"The INPUT_DATA_DIR is not set, setting it to {input_data_directory}")
 
 
 FX_BINARY = fieldextra_executable

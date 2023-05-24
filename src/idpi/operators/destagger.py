@@ -1,4 +1,7 @@
 """algorithm for destaggering a field."""
+# Standard library
+from typing import Literal
+
 # Third-party
 import numpy as np
 import xarray as xr
@@ -14,19 +17,30 @@ def _dstgr_z(a: np.ndarray):
     return 0.5 * (a[..., :-1] + a[..., 1:])
 
 
-def destagger(field: xr.DataArray, dim: str) -> xr.DataArray:
+def destagger(
+    field: xr.DataArray,
+    dim: Literal["x", "y", "generalVertical"],
+) -> xr.DataArray:
     """Destagger a field.
 
-    Args:
-        field (xr.DataArray): field to destagger
-        dim (str): dimension, one of {"x", "y", "generalVertical"}
+    Parameters
+    ----------
+    field: xr.DataArray
+        field to destagger
+    dim: str
+        dimension, one of {"x", "y", "generalVertical"}
 
-    Raises:
-        RuntimeError: todo: describe this
+    Raises
+    ------
+    ValueError:
+        Raises ValueError if dim argument is not one of
+        {"x","y","generalVerticalLayer"}.
 
-    Returns:
-        xr.DataArray: destaggered field with dimensions in
-            {"x","y","generalVerticalLayer"}
+    Returns
+    -------
+    xr.DataArray:
+        destaggered field with dimensions in
+        {"x","y","generalVerticalLayer"}
 
     """
     dims = list(field.sizes.keys())
@@ -51,4 +65,4 @@ def destagger(field: xr.DataArray, dim: str) -> xr.DataArray:
             .rename({"generalVertical": "generalVerticalLayer"})
         )
 
-    raise RuntimeError("Unknown dimension", dim)
+    raise ValueError("Unknown dimension", dim)

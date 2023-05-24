@@ -1,6 +1,17 @@
 """algorithm for destaggering a field."""
 # Third-party
+import numpy as np
 import xarray as xr
+
+
+def _dstgr(a: np.ndarray):
+    t = a.copy()
+    t[..., 1:] = 0.5 * (a[..., :-1] + a[..., 1:])
+    return t
+
+
+def _dstgr_z(a: np.ndarray):
+    return 0.5 * (a[..., :-1] + a[..., 1:])
 
 
 def destagger(field: xr.DataArray, dim: str) -> xr.DataArray:
@@ -18,22 +29,26 @@ def destagger(field: xr.DataArray, dim: str) -> xr.DataArray:
             {"x","y","generalVerticalLayer"}
 
     """
+    dims = list(field.sizes.keys())
     if dim == "x" or dim == "y":
-        field_ = field
-        field_[{dim: slice(1, None)}] = (
-            field[{dim: slice(0, -1)}] + field[{dim: slice(1, None)}]
-        ) * 0.5
-        return field_
+        return xr.apply_ufunc(
+            _dstgr,
+            field.reset_coords(drop=True),
+            input_core_dims=[[dim]],
+            output_core_dims=[[dim]],
+        ).transpose(*dims)
     elif dim == "generalVertical":
-        field_k0_ = field[{dim: slice(0, -1)}].assign_coords(
-            {dim: field[{dim: slice(0, -1)}].generalVertical}
-        )
-
-        field_k1_ = field[{dim: slice(1, None)}].assign_coords(
-            {dim: field[{dim: slice(0, -1)}].generalVertical}
-        )
-        return ((field_k0_ + field_k1_) * 0.5).rename(
-            {"generalVertical": "generalVerticalLayer"}
+        return (
+            xr.apply_ufunc(
+                _dstgr_z,
+                field,
+                input_core_dims=[[dim]],
+                output_core_dims=[[dim]],
+                exclude_dims={dim},
+            )
+            .transpose(*dims)
+            .assign_coords({dim: field.generalVertical[:-1]})
+            .rename({"generalVertical": "generalVerticalLayer"})
         )
 
     raise RuntimeError("Unknown dimension", dim)

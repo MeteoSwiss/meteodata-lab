@@ -6,7 +6,6 @@ from typing import Literal
 import numpy as np
 import xarray as xr
 
-
 ExtendArg = Literal["left", "right", "both"] | None
 
 

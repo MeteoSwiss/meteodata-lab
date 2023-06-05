@@ -87,3 +87,11 @@ def init_field_with_vcoord(
         coords=coords,
         attrs=attrs,
     )
+
+
+def get_rotated_latitude(field: xr.DataArray) -> xr.DataArray:
+    ny = field.attrs["GRIB_Ny"]
+    lat_min = field.attrs["GRIB_latitudeOfFirstGridPointInDegrees"]
+    dlat = field.attrs["GRIB_jDirectionIncrementInDegrees"]
+    rlat = xr.DataArray(np.arange(ny, dtype=np.float32) * dlat + lat_min, dims="y")
+    return rlat * np.pi / 180

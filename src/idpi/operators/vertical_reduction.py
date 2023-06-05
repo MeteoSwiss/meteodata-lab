@@ -297,10 +297,12 @@ def integrate_k(field, operator, mode, height, h_bounds, hsurf=None):
     # ... note that the dimension "generalVericalLayer" is lost of this condition is
     # nowhere satisfied
     field_in_h_bounds = field_on_fl.where((hfl >= h_bottom) & (hfl <= h_top)).dropna(
-        "generalVerticalLayer"
+        dim="generalVerticalLayer",
+        how="all",
     )
     dh_in_h_bounds = dh.where((hfl >= h_bottom) & (hfl <= h_top)).dropna(
-        "generalVerticalLayer"
+        dim="generalVerticalLayer",
+        how="all",
     )
     # ... compute integral by midpoint rule (apply fractional corrections for
     # the height intervals containing h_top and h_bottom)

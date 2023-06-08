@@ -29,7 +29,7 @@ def template_env():
     """Jinja input namelist template environment."""
     test_dir = Path(__file__).parent
     loader = FileSystemLoader(test_dir / "fieldextra_templates")
-    return Environment(loader=loader)
+    return Environment(loader=loader, keep_trailing_newline=True)
 
 
 @pytest.fixture
@@ -48,7 +48,7 @@ def fieldextra(tmp_path, data_dir, template_env, fieldextra_executable):
 
         subprocess.run([fieldextra_executable, str(nl_path)], check=True, cwd=tmp_path)
 
-        return xr.open_dataset(tmp_path / f"00_{field_name}.nc")[field_name]
+        return xr.open_dataset(tmp_path / f"00_{field_name}.nc")
 
     return f
 

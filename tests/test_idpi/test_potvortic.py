@@ -38,7 +38,7 @@ def test_pv(data_dir, fieldextra, grib_defs):
 
     assert_allclose(
         observed,
-        expected,
+        expected["POT_VORTIC"],
         rtol=1e-4,
         atol=1e-8,
     )

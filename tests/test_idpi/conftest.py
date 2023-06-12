@@ -36,7 +36,7 @@ def template_env():
 def fieldextra(tmp_path, data_dir, template_env, fieldextra_executable):
     """Run fieldextra on a given field."""
 
-    def f(field_name):
+    def f(field_name, **ctx):
         conf_files = {
             "inputi": data_dir / "lfff<DDHH>0000.ch",
             "inputc": data_dir / "lfff00000000c.ch",
@@ -44,7 +44,7 @@ def fieldextra(tmp_path, data_dir, template_env, fieldextra_executable):
         }
         template = template_env.get_template(f"test_{field_name}.nl")
         nl_path = tmp_path / f"test_{field_name}.nl"
-        nl_path.write_text(template.render(file=conf_files))
+        nl_path.write_text(template.render(file=conf_files, **ctx))
 
         subprocess.run([fieldextra_executable, str(nl_path)], check=True, cwd=tmp_path)
 

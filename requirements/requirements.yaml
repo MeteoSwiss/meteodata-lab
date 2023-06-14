@@ -37,6 +37,8 @@ dependencies:
   - toml>=0.10
   - types-setuptools>=65.6
   - types-toml>=0.10
+  - yaml>=0.2.1
+  - types-PyYAML>=6.0.10
   - pip:
     # development
     - copier>=7.0

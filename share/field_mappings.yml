@@ -1,0 +1,136 @@
+FI:
+  ifs:
+    name: z
+    paramId: 129
+  cosmo:
+    paramId: 500006
+FIS:
+  # ifs does not define a field for FIS (surface of geopotential), there is only z
+  ifs:
+    name: z
+    paramId: 129
+  cosmo:
+    paramId: 500004
+FR_LAND:
+  ifs:
+    name: lsm
+    paramId: 172
+  cosmo:
+    paramId: 500054
+SDOR:
+  ifs:
+    name: sdor
+    paramId: 160
+ETADOT:
+  ifs:
+    name: etadot
+    paramId: 77
+T:
+  ifs:
+    name: t
+    paramId: 130
+  cosmo:
+    paramId: 500014
+QV:
+  ifs:
+    name: q
+    paramId: 133
+  cosmo:
+    paramId: 500035
+U:
+  ifs:
+    name: u
+    paramId: 131
+  cosmo:
+    paramId: 500028
+V:
+  ifs:
+    name: v
+    paramId: 132
+  cosmo:
+    paramId: 500030
+PS:
+  ifs:
+    name: sp
+    paramId: 134
+  cosmo:
+    paramId: 500000
+U_10M:
+  ifs:
+    name: 10u
+    paramId: 165
+  cosmo:
+    paramId: 500027
+V_10M:
+  ifs:
+    name: 10v
+    paramId: 166
+  cosmo:
+    paramId: 500029
+T_2M:
+  ifs:
+    name: 2t
+    paramId: 167
+  cosmo:
+    paramId: 500011
+TD_2M:
+  ifs:
+    name: 2d
+    paramId: 168
+  cosmo:
+    paramId: 500017
+CLCT:
+  ifs:
+    name: tcc
+    paramId: 164
+  cosmo:
+    paramId: 500046
+W_SNOW:
+  ifs:
+    name: sd
+    paramId: 228141
+  cosmo:
+    paramId: 500044
+
+TOT_CON:
+# IFS and cosmo not compatible
+  ifs:
+    name: cp
+    paramId: 143
+  cosmo:
+    paramId: 500043
+    unit_factor: 1000
+
+TOT_GSP:
+# IFS and cosmo not compatible
+  ifs:
+    name: lsp
+    paramId: 142
+  cosmo:
+    paramId: 500042
+    unit_factor: 1000
+ASOB_S:
+# IFS and cosmo not compatible
+  ifs:
+    name: ssr
+    paramId: 176
+  cosmo:
+    paramId: 500078
+ASHFL_S:
+# IFS and cosmo not compatible
+  ifs:
+    name: sshf
+    paramId: 146
+  cosmo:
+    paramId: 500087
+EWSS:
+  ifs:
+    name: ewss
+    paramId: 180
+NSSS:
+  ifs:
+    name: nsss
+    paramId: 181
+OMEGA:
+  cosmo:
+    paramId: 500031

@@ -21,3 +21,5 @@ except KeyError:
 
 FX_BINARY = fieldextra_executable
 INPUT_DATA_DIR = input_data_directory
+
+root_dir = (pathlib.Path(os.path.dirname(os.path.abspath(__file__))) / "..").resolve()

@@ -48,7 +48,8 @@ pipeline {
                 conda activate no-deps
                 cd ${WORKSPACE}
                 export INPUT_DATA_DIR=/project/s83c/rz+/icon_data_processing_incubator/data/SWISS
-                pytest tests
+                pytest -s -m ifs tests
+                pytest -s -m "not ifs"
                 '''
             }
         }

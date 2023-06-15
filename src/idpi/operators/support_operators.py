@@ -2,19 +2,43 @@
 
 
 # Standard library
+import dataclasses as dc
 from typing import Any
-from typing import Callable
-from typing import Mapping
+from typing import Literal
 from typing import Optional
+from typing import Sequence
 
 # Third-party
 import numpy as np
 import xarray as xr
 
 
+@dc.dataclass
+class TargetCoordinatesAttrs:
+    """Attributes to the target coordinates."""
+
+    standard_name: str
+    long_name: str
+    units: str
+    positive: Literal["up", "down"]
+
+
+@dc.dataclass
+class TargetCoordinates:
+    """Target Coordinates."""
+
+    type_of_level: str
+    values: Sequence[float]
+    attrs: TargetCoordinatesAttrs
+
+    @property
+    def size(self):
+        return len(self.values)
+
+
 def init_field_with_vcoord(
     parent: xr.DataArray,
-    vcoord: Mapping[str, Any],
+    vcoord: TargetCoordinates,
     fill_value: Any,
     dtype: Optional[np.dtype] = None,
 ) -> xr.DataArray:
@@ -23,21 +47,23 @@ def init_field_with_vcoord(
     Properties except for those related to the vertical coordinates,
     and optionally dtype, are inherited from the parent xarray.DataArray.
 
-    Args:
-        parent (xr.DataArray): parent field
-        vcoord (dict[str, Any]): dictionary specifying new vertical coordinates;
-            expected keys: "typeOfLevel" (string), "values" (list),
-                "NV" (int), "attrs" (dict)
-        fill_value (Any): value the data array of the new field
-            is initialized with
-        dtype (np.dtype, optional): fill value data type; defaults to None (in this case
-            the data type is inherited from the parent field). Defaults to None.
+    Parameters
+    ----------
+    parent : xr.DataArray
+        parent field
+    vcoord: TargetCoordinates
+        target vertical coordinates for the output field
+    fill_value : Any
+        value the data array of the new field is initialized with
+    dtype : np.dtype, optional
+        fill value data type; defaults to None (in this case
+        the data type is inherited from the parent field)
 
-    Raises:
-        KeyError: _description_
-
-    Returns:
-        xr.DataArray: new field
+    Returns
+    -------
+    xr.DataArray
+        new field located at the parent field horizontal coordinates, the target
+        coordinates in the vertical and filled with the given value
 
     """
     # TODO: test that vertical dim of parent is named "generalVerticalLayer"
@@ -45,36 +71,29 @@ def init_field_with_vcoord(
     #       be aware that vcoord contains also xr.DataArray GRIB attributes;
     #  one should separate these from coordinate properties
     #       in the interface
-    # check vcoord keys
-    expected_vcoord_keys = ("typeOfLevel", "NV", "values", "attrs")
-    for k in expected_vcoord_keys:
-        if k not in vcoord:
-            raise KeyError("init_field: missing vcoord key ", k)
     # attrs
     attrs = parent.attrs.copy()
-    attrs["GRIB_typeOfLevel"] = vcoord["typeOfLevel"]
+    attrs["GRIB_typeOfLevel"] = vcoord.type_of_level
     if "GRIB_NV" in attrs:
-        attrs["GRIB_NV"] = vcoord["NV"]
+        # NV is only non-zero when hybrid coordinates are in use
+        attrs["GRIB_NV"] = 0
+
     # dims
-    shape = list(
-        len(parent[d]) if d != "generalVerticalLayer" else len(vcoord["values"])
-        for d in parent.dims
-    )
-    remap: Callable[[str], str] = lambda x: x.replace(
-        "generalVerticalLayer", vcoord["typeOfLevel"]
-    )
-    dims = list(
-        map(
-            remap,  # type: ignore
-            parent.dims,
-        )
-    )
+    def replace_vertical(items):
+        for dim, size in items:
+            if dim == "generalVerticalLayer":
+                yield vcoord.type_of_level, vcoord.size
+            else:
+                yield dim, size
+
+    # ... make sure to maintain the ordering of the dims
+    sizes = {dim: size for dim, size in replace_vertical(parent.sizes.items())}
     # coords
     # ... inherit all except for the vertical coordinates
     coords = {c: v for c, v in parent.coords.items() if c != "generalVerticalLayer"}
     # ... initialize the vertical target coordinates
-    coords[vcoord["typeOfLevel"]] = xr.IndexVariable(
-        vcoord["typeOfLevel"], vcoord["values"], attrs=vcoord["attrs"]
+    coords[vcoord.type_of_level] = xr.IndexVariable(
+        vcoord.type_of_level, vcoord.values, attrs=dc.asdict(vcoord.attrs)
     )
     # dtype
     if dtype is None:
@@ -82,8 +101,8 @@ def init_field_with_vcoord(
 
     return xr.DataArray(
         name=parent.name,
-        data=np.full(tuple(shape), fill_value, dtype),
-        dims=tuple(dims),
+        data=np.full(tuple(sizes.values()), fill_value, dtype),
+        dims=tuple(sizes.keys()),
         coords=coords,
         attrs=attrs,
     )

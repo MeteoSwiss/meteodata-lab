@@ -1,14 +1,25 @@
 """Vertical interpolation operators."""
 
+# Standard library
+from typing import Literal
+
 # Third-party
 import numpy as np
 import xarray as xr
 
 # First-party
 from idpi.operators.support_operators import init_field_with_vcoord
+from idpi.operators.support_operators import TargetCoordinates
+from idpi.operators.support_operators import TargetCoordinatesAttrs
 
 
-def interpolate_k2p(field, mode, p_field, p_tc_values, p_tc_units):
+def interpolate_k2p(
+    field: xr.DataArray,
+    mode: Literal["linear_in_p", "linear_in_lnp", "nearest_sfc"],
+    p_field: xr.DataArray,
+    p_tc_values: list[float],
+    p_tc_units: Literal["Pa", "hPa"],
+) -> xr.DataArray:
     """Interpolate a field from model (k) levels to pressure coordinates.
 
     Example for vertical interpolation to isosurfaces of a target field,
@@ -62,28 +73,23 @@ def interpolate_k2p(field, mode, p_field, p_tc_values, p_tc_units):
     supported_vc_type = "generalVerticalLayer"
 
     # Define vertical target coordinates (tc)
-    tc = dict()
-    tc_values = p_tc_values.copy()
-    tc_values.sort(reverse=False)
     tc_factor = p_tc_unit_conversions[p_tc_units]
-    tc["values"] = np.array(tc_values) * tc_factor
-    if min(tc["values"]) < p_tc_min or max(tc["values"]) > p_tc_max:
+    tc_values = np.array(sorted(p_tc_values)) * tc_factor
+    if np.any((tc_values < p_tc_min) | (tc_values > p_tc_max)):
         raise RuntimeError(
             "interpolate_k2p: target coordinate value out of range "
-            "(must be in interval [",
-            p_tc_min,
-            ", ",
-            p_tc_max,
-            "]Pa)",
+            f"(must be in interval [{p_tc_min}, {p_tc_max}]Pa)"
         )
-    tc["attrs"] = {
-        "units": "Pa",
-        "positive": "down",
-        "standard_name": "air_pressure",
-        "long_name": "pressure",
-    }
-    tc["typeOfLevel"] = "isobaricInPa"
-    tc["NV"] = 0
+    tc = TargetCoordinates(
+        type_of_level="isobaricInPa",
+        values=tc_values.tolist(),
+        attrs=TargetCoordinatesAttrs(
+            units="Pa",
+            positive="down",
+            standard_name="air_pressure",
+            long_name="pressure",
+        ),
+    )
 
     # Check that typeOfLevel is supported and equal for both field and p_field
     if supported_vc_type not in field.dims:
@@ -107,31 +113,11 @@ def interpolate_k2p(field, mode, p_field, p_tc_values, p_tc_units):
 
     # Interpolate
     # ... prepare interpolation
-    pkm1 = p_field.copy()
-    pkm1[{"generalVerticalLayer": slice(1, None)}] = p_field[
-        {"generalVerticalLayer": slice(0, -1)}
-    ].assign_coords(
-        {
-            "generalVerticalLayer": p_field[
-                {"generalVerticalLayer": slice(1, None)}
-            ].generalVerticalLayer
-        }
-    )
-    pkm1[{"generalVerticalLayer": 0}] = np.nan
-    fkm1 = field.copy()
-    fkm1[{"generalVerticalLayer": slice(1, None)}] = field[
-        {"generalVerticalLayer": slice(0, -1)}
-    ].assign_coords(
-        {
-            "generalVerticalLayer": field[
-                {"generalVerticalLayer": slice(1, None)}
-            ].generalVerticalLayer
-        }
-    )
-    fkm1[{"generalVerticalLayer": 0}] = np.nan
+    pkm1 = p_field.shift(generalVerticalLayer=1)
+    fkm1 = field.shift(generalVerticalLayer=1)
 
     # ... loop through tc values
-    for tc_idx, p0 in enumerate(tc["values"]):
+    for tc_idx, p0 in enumerate(tc_values):
         # ... find the 3d field where pressure is > p0 on level k
         # and was <= p0 on level k-1
         p2 = p_field.where((p_field > p0) & (pkm1 <= p0))
@@ -167,12 +153,19 @@ def interpolate_k2p(field, mode, p_field, p_tc_values, p_tc_units):
             ratio = xr.where(np.abs(p0 - p1) >= np.abs(p0 - p2), 1.0, 0.0)
 
         # ... interpolate and update field_on_tc
-        field_on_tc[{tc["typeOfLevel"]: tc_idx}] = (1.0 - ratio) * f1 + ratio * f2
+        field_on_tc[{tc.type_of_level: tc_idx}] = (1.0 - ratio) * f1 + ratio * f2
 
     return field_on_tc
 
 
-def interpolate_k2theta(field, mode, th_field, th_tc_values, th_tc_units, h_field):
+def interpolate_k2theta(
+    field: xr.DataArray,
+    mode: Literal["low_fold", "high_fold", "undef_fold"],
+    th_field: xr.DataArray,
+    th_tc_values: list[float],
+    th_tc_units: Literal["K", "cK"],
+    h_field: xr.DataArray,
+) -> xr.DataArray:
     """Interpolate a field from model levels to potential temperature coordinates.
 
        Example for vertical interpolation to isosurfaces of a target field
@@ -183,7 +176,7 @@ def interpolate_k2theta(field, mode, th_field, th_tc_values, th_tc_units, h_fiel
     field : xarray.DataArray
         field to interpolate (only typeOfLevel="generalVerticalLayer" is supported)
     mode : str
-        interpolation algorithm, one of {"low_fold", "high_fold","undef_fold"}
+        interpolation algorithm, one of {"low_fold", "high_fold", "undef_fold"}
     th_field : xarray.DataArray
         potential temperature theta on k levels in K
         (only typeOfLevel="generalVerticalLayer" is supported)
@@ -239,29 +232,24 @@ def interpolate_k2theta(field, mode, th_field, th_tc_values, th_tc_units, h_fiel
     supported_vc_type = "generalVerticalLayer"
 
     # Define vertical target coordinates
-    tc = dict()
-    tc_values = th_tc_values.copy()
-    tc_values.sort(reverse=False)
     # Sorting cannot be exploited for optimizations, since theta is
     # not monotonous wrt to height tc values are stored in K
-    tc["values"] = np.array(th_tc_values) * th_tc_unit_conversions[th_tc_units]
-    if min(tc["values"]) < th_tc_min or max(tc["values"]) > th_tc_max:
+    tc_values = np.array(th_tc_values) * th_tc_unit_conversions[th_tc_units]
+    if np.any((tc_values < th_tc_min) | (tc_values > th_tc_max)):
         raise RuntimeError(
             "interpolate_k2theta: target coordinate value "
-            "out of range (must be in interval [",
-            th_tc_min,
-            ", ",
-            th_tc_max,
-            "]K)",
+            f"out of range (must be in interval [{th_tc_min}, {th_tc_max}]K)"
         )
-    tc["attrs"] = {
-        "units": "K",
-        "positive": "up",
-        "standard_name": "air_potential_temperature",
-        "long_name": "potential temperature",
-    }
-    tc["typeOfLevel"] = "theta"
-    tc["NV"] = 0
+    tc = TargetCoordinates(
+        type_of_level="theta",
+        values=tc_values.tolist(),
+        attrs=TargetCoordinatesAttrs(
+            units="K",
+            positive="up",
+            standard_name="air_potential_temperature",
+            long_name="potential temperature",
+        ),
+    )
 
     # Check that typeOfLevel is supported and equal for field, th_field, and h_field
     if supported_vc_type not in field.dims:
@@ -286,32 +274,11 @@ def interpolate_k2theta(field, mode, th_field, th_tc_values, th_tc_units, h_fiel
 
     # Interpolate
     # ... prepare interpolation
-    thkm1 = th_field.copy()
-    thkm1[{"generalVerticalLayer": slice(1, None)}] = th_field[
-        {"generalVerticalLayer": slice(0, -1)}
-    ].assign_coords(
-        {
-            "generalVerticalLayer": th_field[
-                {"generalVerticalLayer": slice(1, None)}
-            ].generalVerticalLayer
-        }
-    )
-    thkm1[{"generalVerticalLayer": 0}] = np.nan
-
-    fkm1 = field.copy()
-    fkm1[{"generalVerticalLayer": slice(1, None)}] = field[
-        {"generalVerticalLayer": slice(0, -1)}
-    ].assign_coords(
-        {
-            "generalVerticalLayer": field[
-                {"generalVerticalLayer": slice(1, None)}
-            ].generalVerticalLayer
-        }
-    )
-    fkm1[{"generalVerticalLayer": 0}] = np.nan
+    thkm1 = th_field.shift(generalVerticalLayer=1)
+    fkm1 = field.shift(generalVerticalLayer=1)
 
     # ... loop through tc values
-    for tc_idx, th0 in enumerate(tc["values"]):
+    for tc_idx, th0 in enumerate(tc.values):
         folding_coord_exception = xr.full_like(
             h_field[{"generalVerticalLayer": 0}], False
         )
@@ -350,7 +317,7 @@ def interpolate_k2theta(field, mode, th_field, th_tc_values, th_tc_units, h_fiel
         ratio = xr.where(np.abs(th2 - th1) > 0, (th0 - th1) / (th2 - th1), 0.0)
 
         # ... interpolate and update field_on_tc
-        field_on_tc[{tc["typeOfLevel"]: tc_idx}] = xr.where(
+        field_on_tc[{tc.type_of_level: tc_idx}] = xr.where(
             folding_coord_exception, np.nan, (1.0 - ratio) * f1 + ratio * f2
         )
 

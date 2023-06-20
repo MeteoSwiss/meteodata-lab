@@ -102,7 +102,5 @@ else
     exit $1
 fi
 
-GRIB_DEFINITION_PATH=${cosmo_eccodes}/definitions/:${eccodes}/definitions/
-conda env config vars set GRIB_DEFINITION_PATH=${cosmo_eccodes}/definitions/:${eccodes}/definitions/
 pip install -e .
 conda deactivate

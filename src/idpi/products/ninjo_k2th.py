@@ -62,7 +62,7 @@ def _compute_at_theta(
     theta: xr.DataArray, hfl: xr.DataArray, **fields: xr.DataArray
 ) -> dict[str, xr.DataArray]:
     logger.info(f"Interpolating {tuple(fields.keys())} at isotherms")
-    theta_values = [310, 315, 320, 325, 330, 335]
+    theta_values = [310.0, 315.0, 320.0, 325.0, 330.0, 335.0]
     return {
         key: interpolate_k2theta(field, "low_fold", theta, theta_values, "K", hfl)
         for key, field in fields.items()

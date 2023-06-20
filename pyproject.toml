@@ -34,6 +34,13 @@ documentation = "https://github.io/MeteoSwiss-APN/icon-data-processing-incubator
 # Format: <command> = "<package>.<module>:<function>"
 # icon-data-processing-incubator = "idpi.cli:main"
 
+[tool.setuptools.packages.find]
+namespaces = true
+where = ["src"]
+
+[tool.setuptools.package-data]
+"idpi.data" = ["*.yml"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = [
@@ -43,6 +50,10 @@ addopts = [
 	"--tb=short",
     # "--cov=idpi",
     # "--mypy",
+]
+markers = [
+  "ifs",  # marks tests that use IFS grib definitions
+  "cosmo",  # marks tests that use COSMO grib definitions
 ]
 
 [tool.black]

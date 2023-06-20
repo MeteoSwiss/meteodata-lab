@@ -11,7 +11,7 @@ def load_data(outds, fields, datafile, chunk_size=10):
     # Note: dataset assignment is based on typeOfLevel in cfgrib
     dss = cfgrib.open_datasets(
         datafile,
-        backend_kwargs={"read_keys": ["typeOfLevel", "gridType"], "indexpath": ""},
+        backend_kwargs={"read_keys": ["typeOfLevel", "gridType"]},
         encode_cf=("time", "geography", "vertical"),
         **chunk_arg,
     )

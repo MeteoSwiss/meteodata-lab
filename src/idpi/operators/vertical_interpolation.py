@@ -2,6 +2,7 @@
 
 # Standard library
 from typing import Literal
+from typing import Sequence
 
 # Third-party
 import numpy as np
@@ -17,7 +18,7 @@ def interpolate_k2p(
     field: xr.DataArray,
     mode: Literal["linear_in_p", "linear_in_lnp", "nearest_sfc"],
     p_field: xr.DataArray,
-    p_tc_values: list[float],
+    p_tc_values: Sequence[float],
     p_tc_units: Literal["Pa", "hPa"],
 ) -> xr.DataArray:
     """Interpolate a field from model (k) levels to pressure coordinates.
@@ -162,7 +163,7 @@ def interpolate_k2theta(
     field: xr.DataArray,
     mode: Literal["low_fold", "high_fold", "undef_fold"],
     th_field: xr.DataArray,
-    th_tc_values: list[float],
+    th_tc_values: Sequence[float],
     th_tc_units: Literal["K", "cK"],
     h_field: xr.DataArray,
 ) -> xr.DataArray:

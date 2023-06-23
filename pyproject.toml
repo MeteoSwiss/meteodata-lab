@@ -44,7 +44,7 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = [
-    "-s",
+
     "-ra",
     "--pdbcls=IPython.terminal.debugger:TerminalPdb",
 	"--tb=short",

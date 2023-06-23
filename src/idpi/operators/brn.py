@@ -15,8 +15,10 @@ def fbrn(p, t, qv, u, v, hhl, hsurf):
     nlevels = len(p.coords["generalVerticalLayer"])
 
     thetav = fthetav(p, t, qv)
-    thetav_sum = thetav.isel(generalVerticalLayer=slice(None, None, -1)).cumsum(
-        dim="generalVerticalLayer"
+    thetav_sum = (
+        thetav.isel(generalVerticalLayer=slice(None, None, -1))
+        .cumsum(dim="generalVerticalLayer")
+        .isel(generalVerticalLayer=slice(None, None, -1))
     )
 
     nlevels_xr = xr.DataArray(
@@ -28,7 +30,7 @@ def fbrn(p, t, qv, u, v, hhl, hsurf):
 
     brn = (
         pc_g
-        * (hfl - hsurf)
+        * (hfl - hsurf.squeeze())
         * (thetav - thetav.isel(generalVerticalLayer=nlevels - 1))
         * nlevels_xr
         / (thetav_sum * (u_**2 + v_**2))

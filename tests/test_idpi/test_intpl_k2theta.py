@@ -11,7 +11,7 @@ from idpi.operators.vertical_interpolation import interpolate_k2theta
 
 # @pytest.mark.parametrize("mode", ["high_fold", "low_fold", "undef_fold"])
 @pytest.mark.parametrize("mode", ["high_fold", "low_fold"])
-def test_intpl_k2theta(mode, data_dir, fieldextra, grib_defs):
+def test_intpl_k2theta(mode, data_dir, fieldextra):
     # define target coordinates
     tc_values = [280.0, 290.0, 310.0, 315.0, 320.0, 325.0, 330.0, 335.0]
     fx_voper_lev = ",".join(str(int(v)) for v in tc_values)
@@ -22,9 +22,10 @@ def test_intpl_k2theta(mode, data_dir, fieldextra, grib_defs):
     cdatafile = data_dir / "lfff00000000c.ch"
 
     # load input data set
-    ds = {}
-    grib_decoder.load_data(ds, ["T", "P"], datafile, chunk_size=None)
-    grib_decoder.load_data(ds, ["HHL"], cdatafile, chunk_size=None)
+    ds = grib_decoder.load_cosmo_data(
+        ["P", "T", "HHL"],
+        [datafile, cdatafile],
+    )
 
     theta = ftheta(ds["P"], ds["T"])
     hfl = destagger(ds["HHL"], "generalVertical")
@@ -38,11 +39,6 @@ def test_intpl_k2theta(mode, data_dir, fieldextra, grib_defs):
         voper_lev=fx_voper_lev,
         voper_lev_units=tc_units,
     )
-    t_ref = (
-        fx_ds["T"]
-        .rename({"x_1": "x", "y_1": "y", "z_1": "theta", "epsd_1": "number"})
-        .squeeze()
-    )
 
     # compare numerical results
-    assert_allclose(t_ref, t, rtol=1e-4, atol=1e-4, equal_nan=True)
+    assert_allclose(fx_ds["T"], t, rtol=1e-4, atol=1e-4, equal_nan=True)

@@ -1,7 +1,6 @@
 """Test configuration."""
 
 # Standard library
-import os
 import subprocess
 from pathlib import Path
 
@@ -54,24 +53,3 @@ def fieldextra(tmp_path, data_dir, template_env, fieldextra_executable):
         return [xr.open_dataset(tmp_path / f"{h:02d}_{field_name}.nc") for h in hh]
 
     return f
-
-
-@pytest.fixture
-def grib_defs():
-    """Setup COSMO GRIB definitions."""
-    # Third-party
-    import eccodes  # type: ignore
-
-    prefix = os.environ["CONDA_PREFIX"]
-    root_dir = Path(prefix) / "share"
-    paths = (
-        root_dir / "eccodes-cosmo-resources/definitions",
-        root_dir / "eccodes/definitions",
-    )
-    for path in paths:
-        assert path.exists(), f"{path} does not exist"
-    defs_path = ":".join(map(str, paths))
-    restore = eccodes.codes_definition_path()
-    eccodes.codes_set_definitions_path(defs_path)
-    yield
-    eccodes.codes_set_definitions_path(restore)

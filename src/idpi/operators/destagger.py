@@ -119,7 +119,6 @@ def destagger(
                 exclude_dims={dim},
             )
             .transpose(*dims)
-            .assign_coords({dim: field.generalVertical[:-1]})
             .rename({"generalVertical": "generalVerticalLayer"})
         )
 

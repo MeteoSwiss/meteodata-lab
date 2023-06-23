@@ -108,9 +108,24 @@ def init_field_with_vcoord(
     )
 
 
-def get_rotated_latitude(field: xr.DataArray) -> xr.DataArray:
-    ny = field.attrs["GRIB_Ny"]
-    lat_min = field.attrs["GRIB_latitudeOfFirstGridPointInDegrees"]
-    dlat = field.attrs["GRIB_jDirectionIncrementInDegrees"]
-    rlat = xr.DataArray(np.arange(ny, dtype=np.float32) * dlat + lat_min, dims="y")
-    return rlat * np.pi / 180
+def get_grid_coords(n: int, x0: float, dx: float, dim: str) -> xr.DataArray:
+    """Compute coordinates for an equally spaced grid.
+
+    Parameters
+    ----------
+    n : int
+        Number of grid points
+    x0 : float
+        Coordinates of the origin in the given dimension
+    dx : float
+        Spacing of the grid along the given dimension
+    dim : str
+        Dimension along which the grid is defined
+
+    Returns
+    -------
+    xr.DataArray
+        A 1-D field containing the coordinates of the grid along the given dimension
+
+    """
+    return xr.DataArray(np.arange(n, dtype=np.float32) * dx + x0, dims=dim)

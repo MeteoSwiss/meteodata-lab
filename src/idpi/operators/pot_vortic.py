@@ -8,7 +8,7 @@ import xarray as xr
 from .. import constants as const
 from . import diff
 from .curl import curl
-from .support_operators import get_rotated_latitude
+from .support_operators import get_grid_coords
 from .total_diff import TotalDiff
 
 
@@ -57,8 +57,13 @@ def fpotvortic(
     """
     # target coordinates
     deg2rad = np.pi / 180
-    lat = (rho_tot["latitude"] * deg2rad).astype(np.float32)
-    rlat = get_rotated_latitude(w)
+    lat = (rho_tot["lat"] * deg2rad).astype(np.float32)
+
+    geo = w.attrs["geography"]
+    ny = geo["Nj"]
+    lat_min = geo["latitudeOfFirstGridPointInDegrees"]
+    dlat = geo["jDirectionIncrementInDegrees"]
+    rlat = get_grid_coords(ny, lat_min, dlat, "y") * deg2rad
 
     # compute curl
     curl1, curl2, curl3 = curl(u, v, w, rlat, total_diff)

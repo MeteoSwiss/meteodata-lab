@@ -38,8 +38,9 @@ def _compute_pot_vortic(
     rho_tot = f_rho_tot(T, P, QV, QC, QI)
 
     logger.info("Computing terrain following grid deformation factors")
-    dlon = HHL.attrs["GRIB_iDirectionIncrementInDegrees"]
-    dlat = HHL.attrs["GRIB_jDirectionIncrementInDegrees"]
+    geo = HHL.attrs["geography"]
+    dlon = geo["iDirectionIncrementInDegrees"]
+    dlat = geo["jDirectionIncrementInDegrees"]
     deg2rad = np.pi / 180
     total_diff = TotalDiff(dlon * deg2rad, dlat * deg2rad, HHL)
 
@@ -54,7 +55,8 @@ def _compute_mean(
     pressure: xr.DataArray,
 ) -> xr.DataArray:
     logger.info("Computing mean potential vorticity between 700 and 900 hPa")
-    h700, h900 = interpolate_k2p(hfl, "linear_in_lnp", pressure, [700, 900], "hPa")
+    isobars = interpolate_k2p(hfl, "linear_in_lnp", pressure, [700, 900], "hPa")
+    h700, h900 = isobars.transpose("isobaricInPa", ...)
     return integrate_k(pot_vortic, "normed_integral", "z2z", hhl, (h900, h700))
 
 

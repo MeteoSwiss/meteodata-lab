@@ -95,11 +95,11 @@ def minmax_k(field, operator, mode, height, h_bounds, hsurf=None):
     #  levels included in the height interval, and at the interval boundaries
     #     after linear interpolation wrt height; f and auxiliary height fields
     #     must either both be defined on full levels or half levels
-    if "generalVerticalLayer" in field.coords:
+    if "generalVerticalLayer" in field.dims:
         vertical_dim = "generalVerticalLayer"
     else:
         vertical_dim = "generalVertical"
-    if vertical_dim not in height.coords:
+    if vertical_dim not in height.dims:
         raise RuntimeError(
             "minmax_k: height is not defined for the same level "
             "type as field (required type is ",
@@ -109,19 +109,10 @@ def minmax_k(field, operator, mode, height, h_bounds, hsurf=None):
     field_in_h_bounds = field.where((height >= h_bottom) & (height <= h_top)).dropna(
         vertical_dim
     )
-    heightkp1 = height.copy()
-    heightkp1 = height[{vertical_dim: slice(1, None)}].assign_coords(
-        {vertical_dim: height[{vertical_dim: slice(0, -1)}][vertical_dim]}
-    )
-    fieldkp1 = field.copy()
-    fieldkp1 = field[{vertical_dim: slice(1, None)}].assign_coords(
-        {vertical_dim: field[{vertical_dim: slice(0, -1)}][vertical_dim]}
-    )
+    heightkp1 = height.shift({vertical_dim: -1})
+    fieldkp1 = field.shift({vertical_dim: -1})
     gradf = (field - fieldkp1) / (height - heightkp1)
-    gradfkm1 = gradf.copy()
-    gradfkm1[{vertical_dim: slice(1, None)}] = gradf[
-        {vertical_dim: slice(0, -1)}
-    ].assign_coords({vertical_dim: gradf[{vertical_dim: slice(1, None)}][vertical_dim]})
+    gradfkm1 = gradf.shift({vertical_dim: 1})
     field_extrapolated_to_h_top = xr.where(
         (height > h_top) & (heightkp1 < h_top),
         field + gradf * (height - h_top),
@@ -264,17 +255,17 @@ def integrate_k(field, operator, mode, height, h_bounds, hsurf=None):
     #       kstart and kstop refer to all model midpoint surfaces included
     #       in the height interval.
     # ... normed_integral: integral / (h_top - h_bottom)
-    if "generalVertical" in field.coords:
+    if "generalVertical" in field.dims:
         field_on_fl = destagger(field, "generalVertical")
     else:
-        if "generalVerticalLayer" in field.coords:
+        if "generalVerticalLayer" in field.dims:
             field_on_fl = field
         else:
             raise RuntimeError(
                 "integrate_k: field must be defined for level type "
                 "generalVertical or generalVerticalLayer"
             )
-    if "generalVertical" not in height.coords:
+    if "generalVertical" not in height.dims:
         raise RuntimeError(
             "integrate_k: height must be defined on level type generalVertical"
         )

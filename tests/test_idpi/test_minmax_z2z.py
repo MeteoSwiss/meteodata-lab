@@ -10,7 +10,7 @@ from idpi.operators.vertical_reduction import minmax_k
 
 @pytest.mark.parametrize("operator,fx_op", [("maximum", "max"), ("minimum", "min")])
 @pytest.mark.parametrize("field,layer", [("T", "full"), ("W", "half")])
-def test_minmax_z2z(operator, fx_op, field, layer, data_dir, fieldextra, grib_defs):
+def test_minmax_z2z(operator, fx_op, field, layer, data_dir, fieldextra):
     # modes
     mode = "z2z"
 
@@ -23,9 +23,10 @@ def test_minmax_z2z(operator, fx_op, field, layer, data_dir, fieldextra, grib_de
     cdatafile = data_dir / "lfff00000000c.ch"
 
     # load input data set
-    ds = {}
-    grib_decoder.load_data(ds, field, datafile, chunk_size=None)
-    grib_decoder.load_data(ds, ["HHL"], cdatafile, chunk_size=None)
+    ds = grib_decoder.load_cosmo_data(
+        [field, "HHL"],
+        [datafile, cdatafile],
+    )
 
     if layer == "half":
         height = ds["HHL"]
@@ -54,13 +55,9 @@ def test_minmax_z2z(operator, fx_op, field, layer, data_dir, fieldextra, grib_de
         ktop=k_top,
     )
 
-    f_minmax_ref = (
-        fx_ds[field].rename({"x_1": "x", "y_1": "y", "epsd_1": "number"}).squeeze()
-    )
-
     # compare numerical results
     assert_allclose(
-        f_minmax_ref,
+        fx_ds[field].isel(z_1=0),
         f_minmax,
         rtol=1e-6,
         atol=1e-5,

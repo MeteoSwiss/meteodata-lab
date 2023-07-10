@@ -32,7 +32,7 @@ def test_intpl_hk2p(mode, fx_mode, rtol, data_dir, fieldextra):
         [datafile, cdatafile],
     )
     hhl = ds["HHL"]
-    hfl = destagger(hhl, "generalVertical")
+    hfl = destagger(hhl, "z")
     # ATTENTION: attributes are lost in destagger operation
 
     # call interpolation operator

@@ -12,26 +12,24 @@ pc_g = 9.80665
 
 def fbrn(p, t, qv, u, v, hhl, hsurf):
     """Bulk Richardson Number (BRN)."""
-    nlevels = len(p.coords["generalVerticalLayer"])
+    nlevels = p.sizes["z"]
 
     thetav = fthetav(p, t, qv)
     thetav_sum = (
-        thetav.isel(generalVerticalLayer=slice(None, None, -1))
-        .cumsum(dim="generalVerticalLayer")
-        .isel(generalVerticalLayer=slice(None, None, -1))
+        thetav.isel(z=slice(None, None, -1))
+        .cumsum(dim="z")
+        .isel(z=slice(None, None, -1))
     )
 
-    nlevels_xr = xr.DataArray(
-        data=np.arange(nlevels, 0, -1), dims=["generalVerticalLayer"]
-    )
+    nlevels_xr = xr.DataArray(data=np.arange(nlevels, 0, -1), dims=["z"])
     u_ = destagger(u, "x")
     v_ = destagger(v, "y")
-    hfl = destagger(hhl, "generalVertical")
+    hfl = destagger(hhl, "z")
 
     brn = (
         pc_g
-        * (hfl - hsurf.squeeze())
-        * (thetav - thetav.isel(generalVerticalLayer=nlevels - 1))
+        * (hfl - hsurf)
+        * (thetav - thetav.isel(z=nlevels - 1))
         * nlevels_xr
         / (thetav_sum * (u_**2 + v_**2))
     )

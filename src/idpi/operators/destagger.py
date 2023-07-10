@@ -72,7 +72,7 @@ def interpolate_midpoint(array: np.ndarray, extend: ExtendArg = None) -> np.ndar
 
 def destagger(
     field: xr.DataArray,
-    dim: Literal["x", "y", "generalVertical"],
+    dim: Literal["x", "y", "z"],
 ) -> xr.DataArray:
     """Destagger a field.
 
@@ -84,32 +84,41 @@ def destagger(
     ----------
     field : xr.DataArray
         Field to destagger
-    dim : Literal["x", "y", "generalVertical"]
+    dim : Literal["x", "y", "z"]
         Dimension along which to destagger
 
     Raises
     ------
     ValueError
         Raises ValueError if dim argument is not one of
-        {"x","y","generalVerticalLayer"}.
+        {"x","y","z"}.
 
     Returns
     -------
     xr.DataArray
         destaggered field with dimensions in
-        {"x","y","generalVerticalLayer"}
+        {"x","y","z"}
 
     """
     dims = list(field.sizes.keys())
     if dim == "x" or dim == "y":
-        return xr.apply_ufunc(
-            interpolate_midpoint,
-            field.reset_coords(drop=True),
-            input_core_dims=[[dim]],
-            output_core_dims=[[dim]],
-            kwargs={"extend": "left"},
-        ).transpose(*dims)
-    elif dim == "generalVertical":
+        if field.origin[dim] != 0.5:
+            raise ValueError
+        return (
+            xr.apply_ufunc(
+                interpolate_midpoint,
+                field.reset_coords(drop=True),
+                input_core_dims=[[dim]],
+                output_core_dims=[[dim]],
+                kwargs={"extend": "left"},
+                keep_attrs=True,
+            )
+            .transpose(*dims)
+            .assign_attrs(origin=field.origin | {dim: 0.0})
+        )
+    elif dim == "z":
+        if field.origin[dim] != -0.5:
+            raise ValueError
         return (
             xr.apply_ufunc(
                 interpolate_midpoint,
@@ -117,9 +126,10 @@ def destagger(
                 input_core_dims=[[dim]],
                 output_core_dims=[[dim]],
                 exclude_dims={dim},
+                keep_attrs=True,
             )
             .transpose(*dims)
-            .rename({"generalVertical": "generalVerticalLayer"})
+            .assign_attrs(origin=field.origin | {dim: 0.0})
         )
 
     raise ValueError("Unknown dimension", dim)

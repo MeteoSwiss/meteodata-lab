@@ -85,7 +85,7 @@ def test_flexpart(data_dir, fieldextra):
 
     ds_out = flx.fflexpart(
         {
-            param: field.isel(step=slice(3), surface=0, missing_dims="ignore")
+            param: field.isel(time=slice(3), missing_dims="ignore")
             for param, field in ds.items()
         }
     )

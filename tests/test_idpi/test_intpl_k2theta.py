@@ -28,7 +28,7 @@ def test_intpl_k2theta(mode, data_dir, fieldextra):
     )
 
     theta = ftheta(ds["P"], ds["T"])
-    hfl = destagger(ds["HHL"], "generalVertical")
+    hfl = destagger(ds["HHL"], "z")
 
     # call interpolation operator
     t = interpolate_k2theta(ds["T"], mode, theta, tc_values, tc_units, hfl)

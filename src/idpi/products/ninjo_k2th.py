@@ -56,7 +56,7 @@ def _compute_mean(
 ) -> xr.DataArray:
     logger.info("Computing mean potential vorticity between 700 and 900 hPa")
     isobars = interpolate_k2p(hfl, "linear_in_lnp", pressure, [700, 900], "hPa")
-    h700, h900 = isobars.transpose("isobaricInPa", ...)
+    h700, h900 = isobars.transpose("pressure", ...)
     return integrate_k(pot_vortic, "normed_integral", "z2z", hhl, (h900, h700))
 
 
@@ -123,7 +123,7 @@ def ninjo_k2th(
 
     pot_vortic = _compute_pot_vortic(U, V, W, T, P, QV, QC, QI, HHL, theta)
 
-    hfl = destagger(HHL, "generalVertical")
+    hfl = destagger(HHL, "z")
     output_mean = _compute_mean(pot_vortic, HHL, hfl, P)
     output_at_theta = _compute_at_theta(
         theta,

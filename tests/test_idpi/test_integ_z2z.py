@@ -31,11 +31,11 @@ def test_integ_z2z(field, k_max, operator, fx_op, data_dir, fieldextra):
         [datafile, cdatafile],
     )
     hhl = ds["HHL"]
-    hfl = destagger(hhl, "generalVertical")
+    hfl = destagger(hhl, "z")
     # ATTENTION: attributes are lost in destagger operation
     h_bounds = [
-        hfl.isel(generalVerticalLayer=k_bottom - 1),
-        hfl.isel(generalVerticalLayer=k_top - 1),
+        hfl.isel(z=k_bottom - 1),
+        hfl.isel(z=k_top - 1),
     ]
 
     # call integral operator

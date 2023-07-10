@@ -23,7 +23,7 @@ def fflexpart(ds):
         "CLCT",
         "W_SNOW",
     ):
-        ds_out[field] = ds[field].isel(step=slice(1, None))
+        ds_out[field] = ds[field].isel(time=slice(1, None))
 
     ds_out["TOT_CON"] = time_rate(ds["TOT_CON"], np.timedelta64(1, "h"))
     ds_out["TOT_GSP"] = time_rate(ds["TOT_GSP"], np.timedelta64(1, "h"))
@@ -33,7 +33,7 @@ def fflexpart(ds):
     ds_out["EWSS"] = time_rate(ds["EWSS"], np.timedelta64(1, "s"))
 
     ds_out["OMEGA"] = omega_slope(ds["PS"], ds["ETADOT"], ds["ak"], ds["bk"]).isel(
-        hybrid=slice(39, 137), step=slice(1, None)
+        z=slice(39, 137), time=slice(1, None)
     )
 
     return ds_out

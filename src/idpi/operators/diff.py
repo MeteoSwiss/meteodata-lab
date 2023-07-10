@@ -117,5 +117,4 @@ def dz_staggered(field: xr.DataArray) -> xr.DataArray:
         The finite difference of the field along the z-axis.
 
     """
-    z = "generalVertical"
-    return field.diff(dim=z, label="lower").rename({z: "generalVerticalLayer"})
+    return field.diff(dim="z", label="lower")

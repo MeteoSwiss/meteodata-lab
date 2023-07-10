@@ -81,4 +81,6 @@ def fpotvortic(
         dt_dlam * curl1 + dt_dphi * (curl2 + cor2) - dt_dzeta * (curl3 + cor3)
     ) / rho_tot
 
+    out.attrs = theta.attrs
+
     return out

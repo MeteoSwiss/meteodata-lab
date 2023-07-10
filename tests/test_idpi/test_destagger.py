@@ -17,10 +17,14 @@ def test_destagger(data_dir, fieldextra):
 
     u = destagger(ds["U"], "x")
     v = destagger(ds["V"], "y")
-    hfl = destagger(ds["HHL"], "generalVertical")
+    hfl = destagger(ds["HHL"].isel(time=0), "z")
 
     fs_ds = fieldextra("destagger")
 
     assert_allclose(fs_ds["U"], u, rtol=1e-12, atol=1e-9)
     assert_allclose(fs_ds["V"], v, rtol=1e-12, atol=1e-9)
-    assert_allclose(fs_ds["HFL"], hfl.isel(step=0), rtol=1e-12, atol=1e-9)
+    assert_allclose(fs_ds["HFL"], hfl, rtol=1e-12, atol=1e-9)
+
+    assert u.origin["x"] == 0.0
+    assert v.origin["y"] == 0.0
+    assert hfl.origin["z"] == 0.0

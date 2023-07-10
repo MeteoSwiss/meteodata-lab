@@ -24,4 +24,7 @@ def ftheta(p: xr.DataArray, t: xr.DataArray) -> xr.DataArray:
     # Reference surface pressure for computation of potential temperature
     p0 = 1.0e5
 
-    return (p0 / p) ** pc_rdocp * t
+    result = (p0 / p) ** pc_rdocp * t
+    result.attrs = p.attrs | {"parameter": None}
+
+    return result

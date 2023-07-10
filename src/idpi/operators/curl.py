@@ -29,7 +29,7 @@ def curl(
     # compute weighted derivatives for FD
     u_f = destagger(u, "x")
     v_f = destagger(v, "y")
-    w_f = destagger(w, "generalVertical")
+    w_f = destagger(w, "z")
 
     du_dz = diff.dz(u_f)
     du_dphi = total_diff.d_dphi(diff.dy(u_f), du_dz)
@@ -66,7 +66,7 @@ def curl_alt(
 
     u_f = destagger(u, "x")
     v_f = destagger(v, "y")
-    w_f = destagger(w, "generalVertical")
+    w_f = destagger(w, "z")
 
     du_dphi = np.gradient(u_f, td.dlat, axis=-2)
     du_dzeta = np.gradient(u_f, axis=-3)

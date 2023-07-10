@@ -70,8 +70,6 @@ def interpolate_k2p(
     # ... supported range of pressure tc values (in Pa)
     p_tc_min = 1.0
     p_tc_max = 120000.0
-    # ... supported vertical coordinate type for field and p_field
-    supported_vc_type = "generalVerticalLayer"
 
     # Define vertical target coordinates (tc)
     tc_factor = p_tc_unit_conversions[p_tc_units]
@@ -82,7 +80,7 @@ def interpolate_k2p(
             f"(must be in interval [{p_tc_min}, {p_tc_max}]Pa)"
         )
     tc = TargetCoordinates(
-        type_of_level="isobaricInPa",
+        type_of_level="pressure",
         values=tc_values.tolist(),
         attrs=TargetCoordinatesAttrs(
             units="Pa",
@@ -93,20 +91,23 @@ def interpolate_k2p(
     )
 
     # Check that typeOfLevel is supported and equal for both field and p_field
-    if supported_vc_type not in field.dims:
+    if field.vcoord_type != "model_level":
         raise RuntimeError(
-            "interpolate_k2p: field to interpolate must be defined for typeOfLevel=",
-            supported_vc_type,
+            "interpolate_k2p: field to interpolate must be defined on model levels"
         )
-    if supported_vc_type not in p_field.dims:
+    if p_field.vcoord_type != "model_level":
         raise RuntimeError(
-            "interpolate_k2p: pressure field must be defined for typeOfLevel=",
-            supported_vc_type,
+            "interpolate_k2p: pressure field must be defined on model levels"
         )
     # Check that dimensions are the same for field and p_field
-    if field.dims != p_field.dims or field.size != p_field.size:
+    if (
+        field.origin != p_field.origin
+        or field.dims != p_field.dims
+        or field.size != p_field.size
+    ):
         raise RuntimeError(
-            "interpolate_k2p: field and p_field must have equal dimensions and size"
+            "interpolate_k2p: field and p_field must have equal "
+            "origin, dimensions and size"
         )
 
     # Prepare output field field_on_tc on target coordinates
@@ -114,8 +115,8 @@ def interpolate_k2p(
 
     # Interpolate
     # ... prepare interpolation
-    pkm1 = p_field.shift(generalVerticalLayer=1)
-    fkm1 = field.shift(generalVerticalLayer=1)
+    pkm1 = p_field.shift(z=1)
+    fkm1 = field.shift(z=1)
 
     # ... loop through tc values
     for tc_idx, p0 in enumerate(tc_values):
@@ -126,14 +127,14 @@ def interpolate_k2p(
         #     (corresponds to search from top of atmosphere to bottom)
         # ... note that if the condition above is not fulfilled, minind will
         # be set to k_top
-        minind = p2.fillna(p_tc_max).argmin(dim=["generalVerticalLayer"])
+        minind = p2.fillna(p_tc_max).argmin(dim="z")
         # ... extract pressure and field at level k
-        p2 = p2[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
-        f2 = field[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
+        p2 = p2[{"z": minind}]
+        f2 = field[{"z": minind}]
         # ... extract pressure and field at level k-1
         # ... note that f1 and p1 are both undefined, if minind equals k_top
-        f1 = fkm1[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
-        p1 = pkm1[{"generalVerticalLayer": minind["generalVerticalLayer"]}]
+        f1 = fkm1[{"z": minind}]
+        p1 = pkm1[{"z": minind}]
 
         # ... compute the interpolation weights
         if mode == "linear_in_p":
@@ -154,7 +155,7 @@ def interpolate_k2p(
             ratio = xr.where(np.abs(p0 - p1) >= np.abs(p0 - p2), 1.0, 0.0)
 
         # ... interpolate and update field_on_tc
-        field_on_tc[{tc.type_of_level: tc_idx}] = (1.0 - ratio) * f1 + ratio * f2
+        field_on_tc[{"pressure": tc_idx}] = (1.0 - ratio) * f1 + ratio * f2
 
     return field_on_tc
 
@@ -229,8 +230,6 @@ def interpolate_k2theta(
     # used in tc interval search (in m amsl)
     h_min = -1000.0
     h_max = 100000.0
-    # ... supported vertical coordinate type for field and p_field
-    supported_vc_type = "generalVerticalLayer"
 
     # Define vertical target coordinates
     # Sorting cannot be exploited for optimizations, since theta is
@@ -253,21 +252,18 @@ def interpolate_k2theta(
     )
 
     # Check that typeOfLevel is supported and equal for field, th_field, and h_field
-    if supported_vc_type not in field.dims:
+    if field.vcoord_type != "model_level" or field.origin["z"] != 0.0:
         raise RuntimeError(
             "interpolate_k2theta: field to interpolate must "
-            "be defined for typeOfLevel=",
-            supported_vc_type,
+            "be defined on model_level layers"
         )
-    if supported_vc_type not in th_field.dims:
+    if th_field.vcoord_type != "model_level" or th_field.origin["z"] != 0.0:
         raise RuntimeError(
-            "interpolate_k2theta: theta field must be defined for typeOfLevel=",
-            supported_vc_type,
+            "interpolate_k2theta: theta field must be defined on model_level layers"
         )
-    if supported_vc_type not in h_field.dims:
+    if h_field.vcoord_type != "model_level" or h_field.origin["z"] != 0.0:
         raise RuntimeError(
-            "interpolate_k2theta: height field must be defined for typeOfLevel=",
-            supported_vc_type,
+            "interpolate_k2theta: height field must be defined on model_level layers"
         )
 
     # Prepare output field field_on_tc on target coordinates
@@ -275,14 +271,12 @@ def interpolate_k2theta(
 
     # Interpolate
     # ... prepare interpolation
-    thkm1 = th_field.shift(generalVerticalLayer=1)
-    fkm1 = field.shift(generalVerticalLayer=1)
+    thkm1 = th_field.shift(z=1)
+    fkm1 = field.shift(z=1)
 
     # ... loop through tc values
     for tc_idx, th0 in enumerate(tc.values):
-        folding_coord_exception = xr.full_like(
-            h_field[{"generalVerticalLayer": 0}], False
-        )
+        folding_coord_exception = xr.full_like(h_field[{"z": 0}], False)
         # ... find the height field where theta is >= th0 on level k and was <= th0
         #     on level k-1 or where theta is <= th0 on level k
         #     and was >= th0 on level k-1
@@ -292,33 +286,31 @@ def interpolate_k2theta(
         if mode == "undef_fold":
             # ... find condition where more than one interval is found, which
             # contains the target coordinate value
-            folding_coord_exception = xr.where(h.notnull(), 1.0, 0.0).sum(
-                dim=["generalVerticalLayer"]
-            )
+            folding_coord_exception = xr.where(h.notnull(), 1.0, 0.0).sum(dim=["z"])
             folding_coord_exception = folding_coord_exception.where(
                 folding_coord_exception > 1.0
             ).notnull()
         if mode in ("low_fold", "undef_fold"):
             # ... extract the index k of the smallest height at which
             # the condition is fulfilled
-            tcind = h.fillna(h_max).argmin(dim=["generalVerticalLayer"])
+            tcind = h.fillna(h_max).argmin(dim="z")
         if mode == "high_fold":
             # ... extract the index k of the largest height at which the condition
             # is fulfilled
-            tcind = h.fillna(h_min).argmax(dim=["generalVerticalLayer"])
+            tcind = h.fillna(h_min).argmax(dim="z")
 
         # ... extract theta and field at level k
-        th2 = th_field[{"generalVerticalLayer": tcind["generalVerticalLayer"]}]
-        f2 = field[{"generalVerticalLayer": tcind["generalVerticalLayer"]}]
+        th2 = th_field[{"z": tcind}]
+        f2 = field[{"z": tcind}]
         # ... extract theta and field at level k-1
-        f1 = fkm1[{"generalVerticalLayer": tcind["generalVerticalLayer"]}]
-        th1 = thkm1[{"generalVerticalLayer": tcind["generalVerticalLayer"]}]
+        f1 = fkm1[{"z": tcind}]
+        th1 = thkm1[{"z": tcind}]
 
         # ... compute the interpolation weights
         ratio = xr.where(np.abs(th2 - th1) > 0, (th0 - th1) / (th2 - th1), 0.0)
 
         # ... interpolate and update field_on_tc
-        field_on_tc[{tc.type_of_level: tc_idx}] = xr.where(
+        field_on_tc[{"theta": tc_idx}] = xr.where(
             folding_coord_exception, np.nan, (1.0 - ratio) * f1 + ratio * f2
         )
 

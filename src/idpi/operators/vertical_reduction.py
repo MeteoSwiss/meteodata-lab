@@ -95,38 +95,34 @@ def minmax_k(field, operator, mode, height, h_bounds, hsurf=None):
     #  levels included in the height interval, and at the interval boundaries
     #     after linear interpolation wrt height; f and auxiliary height fields
     #     must either both be defined on full levels or half levels
-    if "generalVerticalLayer" in field.dims:
-        vertical_dim = "generalVerticalLayer"
-    else:
-        vertical_dim = "generalVertical"
-    if vertical_dim not in height.dims:
+    if (
+        field.vcoord_type != height.vcoord_type
+        or field.origin["z"] != height.origin["z"]
+    ):
         raise RuntimeError(
-            "minmax_k: height is not defined for the same level "
-            "type as field (required type is ",
-            vertical_dim,
-            ")",
+            "minmax_k: height is not defined for the same level type as field."
         )
     field_in_h_bounds = field.where((height >= h_bottom) & (height <= h_top)).dropna(
-        vertical_dim
+        "z"
     )
-    heightkp1 = height.shift({vertical_dim: -1})
-    fieldkp1 = field.shift({vertical_dim: -1})
+    heightkp1 = height.shift({"z": -1})
+    fieldkp1 = field.shift({"z": -1})
     gradf = (field - fieldkp1) / (height - heightkp1)
-    gradfkm1 = gradf.shift({vertical_dim: 1})
+    gradfkm1 = gradf.shift({"z": 1})
     field_extrapolated_to_h_top = xr.where(
         (height > h_top) & (heightkp1 < h_top),
         field + gradf * (height - h_top),
         np.nan,
-    ).dropna(vertical_dim)
+    ).dropna("z")
     field_extrapolated_to_h_bottom = xr.where(
         (heightkp1 < h_bottom) & (height > h_bottom),
         field + gradfkm1 * (height - h_bottom),
         np.nan,
-    ).dropna(vertical_dim)
+    ).dropna("z")
 
     # ... compute the extremum
     if operator == "minimum":
-        rfield = field_in_h_bounds.min(dim=[vertical_dim])
+        rfield = field_in_h_bounds.min(dim="z")
         if field_extrapolated_to_h_bottom.size > 0:
             rfield = xr.where(
                 field_extrapolated_to_h_bottom < rfield,
@@ -140,7 +136,7 @@ def minmax_k(field, operator, mode, height, h_bounds, hsurf=None):
                 rfield,
             )
     else:
-        rfield = field_in_h_bounds.max(dim=[vertical_dim])
+        rfield = field_in_h_bounds.max(dim="z")
         if field_extrapolated_to_h_bottom.size > 0:
             rfield = xr.where(
                 field_extrapolated_to_h_bottom > rfield,
@@ -255,32 +251,21 @@ def integrate_k(field, operator, mode, height, h_bounds, hsurf=None):
     #       kstart and kstop refer to all model midpoint surfaces included
     #       in the height interval.
     # ... normed_integral: integral / (h_top - h_bottom)
-    if "generalVertical" in field.dims:
-        field_on_fl = destagger(field, "generalVertical")
-    else:
-        if "generalVerticalLayer" in field.dims:
-            field_on_fl = field
-        else:
-            raise RuntimeError(
-                "integrate_k: field must be defined for level type "
-                "generalVertical or generalVerticalLayer"
-            )
-    if "generalVertical" not in height.dims:
+    if field.vcoord_type != "model_level":
         raise RuntimeError(
-            "integrate_k: height must be defined on level type generalVertical"
+            "integrate_k: field must be defined for level type "
+            "generalVertical or generalVerticalLayer"
         )
+    if field.origin["z"] != 0.0:
+        field_on_fl = destagger(field, "z")
+    else:
+        field_on_fl = field
     # ... prepare the height hfl of model mid layer surfaces (needed to select
     # the field values within [h_bottom, h_top])
-    hfl = destagger(height, "generalVertical")
+    hfl = destagger(height, "z")
     # .. prepare dh = height(k) - height(k+1), defined on model mid layer surfaces
-    hhlk = xr.full_like(hfl, np.nan)
-    hhlkp1 = xr.full_like(hfl, np.nan)
-    hhlk[{"generalVerticalLayer": slice(0, None)}] = height[
-        {"generalVertical": slice(0, -1)}
-    ]
-    hhlkp1[{"generalVerticalLayer": slice(0, None)}] = height[
-        {"generalVertical": slice(1, None)}
-    ]
+    hhlk = height[{"z": slice(-1)}]
+    hhlkp1 = height.shift(z=-1)[{"z": slice(-1)}]
     dh = xr.where((hhlk > h_top) & (hhlkp1 < h_top), h_top - hhlkp1, hhlk - hhlkp1)
     dh = xr.where((hhlkp1 < h_bottom) & (hhlk > h_bottom), hhlk - h_bottom, dh)
 
@@ -288,11 +273,11 @@ def integrate_k(field, operator, mode, height, h_bounds, hsurf=None):
     # ... note that the dimension "generalVericalLayer" is lost of this condition is
     # nowhere satisfied
     field_in_h_bounds = field_on_fl.where((hfl >= h_bottom) & (hfl <= h_top)).dropna(
-        dim="generalVerticalLayer",
+        dim="z",
         how="all",
     )
     dh_in_h_bounds = dh.where((hfl >= h_bottom) & (hfl <= h_top)).dropna(
-        dim="generalVerticalLayer",
+        dim="z",
         how="all",
     )
     # ... compute integral by midpoint rule (apply fractional corrections for
@@ -305,11 +290,11 @@ def integrate_k(field, operator, mode, height, h_bounds, hsurf=None):
     #       re-ordering of dimensions would, however, be unnecessary due to xarray's
     #       broadcasting by dimension name
     # TODO: assign coordinates and attributes to rfield
-    if "generalVerticalLayer" in field_in_h_bounds.dims:
+    if "z" in field_in_h_bounds.dims:
         rfield = (
             (field_in_h_bounds * dh_in_h_bounds)
-            .sum(dim="generalVerticalLayer")
-            .where(~field_in_h_bounds.isnull().all(dim="generalVerticalLayer"))
+            .sum(dim="z")
+            .where(~field_in_h_bounds.isnull().all(dim="z"))
             # the line above reverts all nan columns to nan value instead of zero
         )
         if operator == "normed_integral":

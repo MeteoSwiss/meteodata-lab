@@ -16,6 +16,6 @@ def time_rate(var: xr.DataArray, dtime: np.timedelta64):
 
     """
     coord = var.valid_time
-    result = var.diff(dim="step") / (coord.diff(dim="step") / dtime)
+    result = var.diff(dim="time") / (coord.diff(dim="time") / dtime)
     result.attrs = var.attrs
     return result

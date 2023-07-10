@@ -73,15 +73,12 @@ def init_field_with_vcoord(
     #       in the interface
     # attrs
     attrs = parent.attrs.copy()
-    attrs["GRIB_typeOfLevel"] = vcoord.type_of_level
-    if "GRIB_NV" in attrs:
-        # NV is only non-zero when hybrid coordinates are in use
-        attrs["GRIB_NV"] = 0
+    attrs["vcoord_type"] = vcoord.type_of_level
 
     # dims
     def replace_vertical(items):
         for dim, size in items:
-            if dim == "generalVerticalLayer":
+            if dim == "z":
                 yield vcoord.type_of_level, vcoord.size
             else:
                 yield dim, size
@@ -90,7 +87,7 @@ def init_field_with_vcoord(
     sizes = {dim: size for dim, size in replace_vertical(parent.sizes.items())}
     # coords
     # ... inherit all except for the vertical coordinates
-    coords = {c: v for c, v in parent.coords.items() if c != "generalVerticalLayer"}
+    coords = {c: v for c, v in parent.coords.items() if c != "z"}
     # ... initialize the vertical target coordinates
     coords[vcoord.type_of_level] = xr.IndexVariable(
         vcoord.type_of_level, vcoord.values, attrs=dc.asdict(vcoord.attrs)

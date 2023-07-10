@@ -30,8 +30,8 @@ def omega_slope(
     ps: xr.DataArray, etadot: xr.DataArray, ak: xr.DataArray, bk: xr.DataArray
 ):
     """Compute omega slope."""
-    dak_dz = ak.diff(dim="hybrid")
-    dbk_dz = bk.diff(dim="hybrid")
+    dak_dz = ak.diff(dim="z")
+    dbk_dz = bk.diff(dim="z")
 
     res = (
         2.0
@@ -39,7 +39,7 @@ def omega_slope(
         * ps
         * (dak_dz / ps + dbk_dz)
         / (dak_dz / cnt.surface_pressure_ref() + dbk_dz)
-    ).reduce(cumdiff, dim="hybrid")
+    ).reduce(cumdiff, dim="z")
 
     res.attrs = etadot.attrs
     return res

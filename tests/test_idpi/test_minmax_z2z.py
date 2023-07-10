@@ -30,17 +30,15 @@ def test_minmax_z2z(operator, fx_op, field, layer, data_dir, fieldextra):
 
     if layer == "half":
         height = ds["HHL"]
-        z = "generalVertical"
     elif layer == "full":
-        height = destagger(ds["HHL"], "generalVertical")
-        z = "generalVerticalLayer"
+        height = destagger(ds["HHL"], "z")
     else:
         raise RuntimeError(f"Unknown value for layer: {layer}")
     # ATTENTION: attributes are lost in destagger operation
 
     h_bounds = [
-        height.isel({z: k_bottom - 1}),
-        height.isel({z: k_top - 1}),
+        height.isel(z=k_bottom - 1),
+        height.isel(z=k_top - 1),
     ]
 
     # call reduction operator

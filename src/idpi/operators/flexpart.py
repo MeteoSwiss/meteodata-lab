@@ -31,6 +31,7 @@ def fflexpart(ds):
     ds_out["ASOB_S"] = time_rate(ds["ASOB_S"], np.timedelta64(1, "s"))
     ds_out["ASHFL_S"] = time_rate(ds["ASHFL_S"], np.timedelta64(1, "s"))
     ds_out["EWSS"] = time_rate(ds["EWSS"], np.timedelta64(1, "s"))
+    ds_out["NSSS"] = time_rate(ds["NSSS"], np.timedelta64(1, "s"))
 
     ds_out["OMEGA"] = omega_slope(ds["PS"], ds["ETADOT"], ds["ak"], ds["bk"]).isel(
         z=slice(39, 137), time=slice(1, None)

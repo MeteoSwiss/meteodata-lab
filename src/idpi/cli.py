@@ -25,8 +25,3 @@ def print_version(ctx, _, value: bool) -> None:
 def main() -> None:
     """Console script for test_cli_project."""
     print("CLI for IDPI")
-
-
-@main.command("something")
-def basic():
-    print("basic usage")

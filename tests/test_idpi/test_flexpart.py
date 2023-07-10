@@ -77,6 +77,7 @@ def test_flexpart(data_dir, fieldextra):
         "SSR",
         "SSHF",
         "EWSS",
+        "NSSS",
         "ETADOT",
     ):
         fs_ds_o[field] = xr.concat([ds[field] for ds in fs_ds_h], dim="time").isel(
@@ -108,3 +109,4 @@ def test_flexpart(data_dir, fieldextra):
     assert_allclose(fs_ds_o["SSR"], ds_out["ASOB_S"], rtol=3e-7, atol=5e-7)
     assert_allclose(fs_ds_o["SSHF"], ds_out["ASHFL_S"], rtol=3e-7, atol=5e-7)
     assert_allclose(fs_ds_o["EWSS"], ds_out["EWSS"], rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["NSSS"], ds_out["NSSS"], rtol=3e-7, atol=5e-7)

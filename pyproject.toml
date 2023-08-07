@@ -1,8 +1,5 @@
 [build-system]
-requires = [
-    "setuptools>=65",
-    "wheel>=0.38",
-]
+requires = ["setuptools>=65", "wheel>=0.38"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -10,10 +7,7 @@ name = "idpi"
 version = "0.1.0"
 description = "Prototype for a data post-processing framework on the basis of xarray."
 readme = "README.md"
-keywords = [
-    "Icon",
-    "Data Processing",
-]
+keywords = ["Icon", "Data Processing"]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Developers",
@@ -22,8 +16,14 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
 ]
 requires-python = ">=3.10"
-authors = [
-    {name="Tobias Wicky", email="tobias.wicky@meteoswiss.ch"},
+authors = [{ name = "Carlos Osuna", email = "carlos.osuna@meteoswiss.ch" }]
+dependencies = [
+    "click",
+    "earthkit-data",
+    "eccodes",
+    "pyyaml",
+    "numpy",
+    "xarray",
 ]
 
 [project.urls]
@@ -44,16 +44,15 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = [
-
     "-ra",
     "--pdbcls=IPython.terminal.debugger:TerminalPdb",
-	"--tb=short",
+    "--tb=short",
     # "--cov=idpi",
     # "--mypy",
 ]
 markers = [
-  "ifs",  # marks tests that use IFS grib definitions
-  "cosmo",  # marks tests that use COSMO grib definitions
+    "ifs",   # marks tests that use IFS grib definitions
+    "cosmo", # marks tests that use COSMO grib definitions
 ]
 
 [tool.black]
@@ -69,7 +68,7 @@ order_by_type = false
 # (e.g., `# type: ignore [import]  # pylint: disable=no-name-in-module`).
 # (Note that thanks to `force_single_line = true`, this should be the main
 # reason for too long lines because multi-import lines are already broken up.)
-multi_line_output = 7  # 7=noqa
+multi_line_output = 7 # 7=noqa
 # Headings
 import_heading_stdlib = "Standard library"
 import_heading_thirdparty = "Third-party"
@@ -107,7 +106,7 @@ ignore = [
     "W503", # Allow line break before binary operator (PEP 8-compatible)
 ]
 per-file-ignores = [
-    "__init__.py: F401",  # Allow unused imports
+    "__init__.py: F401", # Allow unused imports
 ]
 
 [tool.pylint]
@@ -124,14 +123,14 @@ max-line-length = 88
 #  class-rgx     = "^[A-Z_][a-zA-Z0-9]+$"
 #  const-rgx     = "^(([A-Z_][A-Z0-9_]*)|(__.*__))$"
 #  module-rgx    = "^(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$"
-argument-rgx  = "^[a-z_][a-z0-9_]{,40}$"
-attr-rgx      = "^[a-z_][a-z0-9_]{,40}$"
-function-rgx  = "^[a-z_][a-z0-9_]{,40}$"
-method-rgx    = "^[a-z_][a-z0-9_]{,40}$"
-variable-rgx  = "^[a-z_][a-z0-9_]{,40}$"
-class-rgx     = "^[A-Z_][a-zA-Z0-9]+$"
-const-rgx     = "^(([a-z_][a-z0-9_]*)|([A-Z_][A-Z0-9_]*)|(__[a-zA-Z0-9]+__))$"
-module-rgx    = "^(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$"
+argument-rgx = "^[a-z_][a-z0-9_]{,40}$"
+attr-rgx = "^[a-z_][a-z0-9_]{,40}$"
+function-rgx = "^[a-z_][a-z0-9_]{,40}$"
+method-rgx = "^[a-z_][a-z0-9_]{,40}$"
+variable-rgx = "^[a-z_][a-z0-9_]{,40}$"
+class-rgx = "^[A-Z_][a-zA-Z0-9]+$"
+const-rgx = "^(([a-z_][a-z0-9_]*)|([A-Z_][A-Z0-9_]*)|(__[a-zA-Z0-9]+__))$"
+module-rgx = "^(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$"
 inlinevar-rgx = "^[A-Za-z_][A-Za-z0-9_]*$"
 # Disable selected warnings, errors etc. that conflict with style guide etc.
 # Note: To locally ignore certain errors, use "pylint: disable=XXXX" comments instead!
@@ -168,10 +167,7 @@ ignore = [
 ]
 
 [tool.rstcheck]
-ignore_directives = [
-    "automodule",
-    "mdinclude",
-]
+ignore_directives = ["automodule", "mdinclude"]
 
 [tool.codespell]
 ignore-words-list = "inout"

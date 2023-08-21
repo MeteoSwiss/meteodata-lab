@@ -48,6 +48,7 @@
   tstart=0, tstop=0, tincr=1
   out_file="{{ file.output }}"
   out_type="NETCDF"
+  out_mode_h0cl_extrapolate = {{ h0cl_extrapolate }}
 /
 &Process in_field="HEIGHT", use_tag="hhl_c1e", tag="HFL", level_class="k_full", levmin=1, levmax=80 /
 &Process in_field="HSURF" /
@@ -55,6 +56,7 @@
 &Process
   in_file="{{ file.inputi }}"
   out_file="{{ file.output }}", out_type="NETCDF"
+  out_mode_h0cl_extrapolate = {{ h0cl_extrapolate }}
   tstart=0, tstop=0, tincr=1
 /
 &Process in_field="T", levmin=1, levmax=80 /

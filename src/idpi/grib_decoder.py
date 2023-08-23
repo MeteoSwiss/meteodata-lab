@@ -1,7 +1,7 @@
 """Decoder for grib data."""
 # Standard library
 import datetime as dt
-import os
+import sys
 from contextlib import contextmanager
 from importlib.resources import files
 from pathlib import Path
@@ -32,8 +32,7 @@ _cosmo_allowed = True
 @contextmanager
 def cosmo_grib_defs():
     """Enable COSMO GRIB definitions."""
-    prefix = os.environ["CONDA_PREFIX"]
-    root_dir = Path(prefix) / "share"
+    root_dir = Path(sys.prefix) / "share"
     paths = (
         root_dir / "eccodes-cosmo-resources/definitions",
         root_dir / "eccodes/definitions",

@@ -23,11 +23,10 @@
 
 &Process
 in_file="{{ file.inputi }}"
-tstart=0, tstop=33, tincr=3, tlag=-3,0,3
+tstart=0, tstop=33, tincr=1, tlag=-24,0,1, out_tstart=0, out_tincr=3
 out_file="{{ file.output }}"
 out_type="NETCDF"
 /
-!The point operator replaces negative values by zero as those are due to numerical inaccuracies.
-&Process in_field = "TOT_PREC", tag='tot_prec_03h', toper='delta,3,hour', poper="replace_cond,<0.,0." /
+&Process in_field = "VMAX_10M", toper='mask_all', toper_mask='lead_time=0' /
 
-&Process out_field = "tot_prec_03h", set_trange_type="accumulation" /
+&Process out_field = "VMAX_10M", tag='vmax_10m_24h', toper='max,-23,0,1,hour', set_trange_type="maximum" /

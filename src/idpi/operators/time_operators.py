@@ -21,6 +21,45 @@ def time_rate(var: xr.DataArray, dtime: np.timedelta64):
     return result
 
 
+def get_nsteps(valid_time: xr.DataArray, dtime: np.timedelta64) -> int:
+    """Compute number of steps required for a given time delta.
+
+    Parameters
+    ----------
+    valid_time : xr.DataArray
+        Array of time values.
+    dtime : np.timedelta64
+        Time difference for which to search the corresponding number of steps.
+
+    Raises
+    ------
+    ValueError
+        if the time difference is not a multiple of the given time index step or
+        if the array of time values is not uniform.
+
+    Returns
+    -------
+    int
+        Number of time steps.
+
+    """
+    dt = valid_time.diff(dim="time")
+    uniform = np.all(dt == dt[0]).item()
+
+    if not uniform:
+        msg = "Given field has an irregular time step."
+        raise ValueError(msg)
+
+    condition = valid_time - valid_time[0] == dtime
+    try:
+        [index] = np.nonzero(condition.values)
+    except ValueError:
+        msg = "Provided dtime is not a multiple of the time step."
+        raise ValueError(msg)
+
+    return index.item()
+
+
 def delta(field: xr.DataArray, dtime: np.timedelta64) -> xr.DataArray:
     """Compute difference for a given delta in time.
 
@@ -34,23 +73,45 @@ def delta(field: xr.DataArray, dtime: np.timedelta64) -> xr.DataArray:
     Raises
     ------
     ValueError
-        if dtime is not multiple of the field time step.
+        if dtime is not multiple of the field time step
+        or if the time step is not regular.
 
     Returns
     -------
     xr.DataArray
-        The Field difference for the given time delta.
+        The field difference for the given time delta.
 
     """
-    coord = field.valid_time
-    condition = coord - coord[0] == dtime
-
-    try:
-        [index] = np.nonzero(condition.values)
-    except ValueError:
-        msg = "Provided dtime is not a multiple of the time step."
-        raise ValueError(msg)
-
-    result = field - field.shift(time=index.item())
+    nsteps = get_nsteps(field.valid_time, dtime)
+    result = field - field.shift(time=nsteps)
     result.attrs = field.attrs
     return result
+
+
+def resample(field: xr.DataArray, interval: np.timedelta64) -> xr.DataArray:
+    """Resample field.
+
+    The interval must be a multiple of the current time step.
+    No interpolation is performed.
+
+    Parameters
+    ----------
+    field : xr.DataArray
+        Field that contains the input data.
+    interval : np.timedelta64
+        Output sample interval.
+
+    Raises
+    ------
+    ValueError
+        if dtime is not multiple of the field time step
+        or if the time step is not regular.
+
+    Returns
+    -------
+    xr.DataArray
+        The resampled field.
+
+    """
+    nsteps = get_nsteps(field.valid_time, interval)
+    return field.sel(time=slice(None, None, nsteps))

@@ -88,6 +88,44 @@ def delta(field: xr.DataArray, dtime: np.timedelta64) -> xr.DataArray:
     return result
 
 
+def resample_average(field: xr.DataArray, dtime: np.timedelta64) -> xr.DataArray:
+    """Compute weighted difference for a given delta in time.
+
+    This operator is useful for recomputing time averaged values that are
+    aggregated from the reference time to the lead time. The output field
+    is averaged with respect to the given time interval for every lead time
+    present in the input field. The output for lead times that are smaller
+    than the reference time shifted by the interval are undefined.
+
+    Note that this operator is named tdelta in fieldextra.
+
+    Parameters
+    ----------
+    field : xr.DataArray
+        Field that contains the input data.
+    dtime : np.timedelta64
+        Time delta for which to evaluate the difference.
+
+    Raises
+    ------
+    ValueError
+        if dtime is not multiple of the field time step
+        or if the time step is not regular.
+
+    Returns
+    -------
+    xr.DataArray
+        The field weighted difference for the given time delta.
+
+    """
+    nsteps = get_nsteps(field.valid_time, dtime)
+    weights = (field.valid_time - field.ref_time) / dtime
+    weighted = field * weights
+    result = weighted - weighted.shift(time=nsteps)
+    result.attrs = field.attrs
+    return result
+
+
 def resample(field: xr.DataArray, interval: np.timedelta64) -> xr.DataArray:
     """Resample field.
 

@@ -42,6 +42,6 @@ dependencies:
   - types-PyYAML>=6.0.10
   - pip:
     # development
-    - copier>=7.0
+    - copier>=7.0,<8
     - flake8-pyproject>=1.2
     - sphinx-mdinclude>=0.5

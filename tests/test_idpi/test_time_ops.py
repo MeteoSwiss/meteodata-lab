@@ -47,6 +47,40 @@ def test_delta(data_dir, fieldextra):
     assert_allclose(observed, expected.transpose("epsd_1", "time", ...))
 
 
+def test_resample_average(data_dir, fieldextra):
+    steps = np.arange(12)
+    dd, hh = np.divmod(steps, 24)
+    datafiles = [data_dir / f"lfff{d:02d}{h:02d}0000" for d, h in zip(dd, hh)]
+
+    ds = grib_decoder.load_cosmo_data(
+        ["ASWDIFD_S", "ASWDIR_S"], datafiles, ref_param="ASWDIFD_S"
+    )
+
+    direct = time_ops.resample_average(ds["ASWDIR_S"], np.timedelta64(1, "h"))
+    diffuse = time_ops.resample_average(ds["ASWDIFD_S"], np.timedelta64(1, "h"))
+
+    observed = (direct + diffuse).clip(min=0)
+
+    fx_ds_h = fieldextra(
+        "time_ops_tdelta",
+        hh=steps.tolist(),
+        conf_files={
+            "inputi": data_dir / "lfff<DDHH>0000",
+            "inputc": data_dir / "lfff00000000c",
+            "output": "<HH>_time_ops_tdelta.nc",
+        },
+    )
+
+    expected = xr.concat([fx_ds["GLOB"] for fx_ds in fx_ds_h], dim="time")
+
+    assert_allclose(
+        observed,
+        expected.transpose("epsd_1", "time", ...),
+        rtol=1e-5,
+        atol=1e-5,
+    )
+
+
 def test_max(data_dir, fieldextra):
     steps = np.arange(34)
     dd, hh = np.divmod(steps, 24)

@@ -8,7 +8,7 @@ from numpy.testing import assert_allclose
 
 # First-party
 import idpi.operators.flexpart as flx
-from idpi import grib_decoder
+from idpi.grib_decoder import GribReader
 
 
 @pytest.fixture
@@ -41,9 +41,9 @@ def test_flexpart(data_dir, fieldextra):
         "NSSS",
     )
 
-    ds = grib_decoder.load_ifs_data(
-        constants + inputf, datafiles, ref_param="T", extract_pv="U"
-    )
+    reader = GribReader(datafiles, ifs=True, ref_param="T")
+
+    ds = reader.load_ifs_data(inputf + constants, extract_pv="U")
 
     conf_files = {
         "inputi": str(data_dir / "efsf00<HH>0000"),

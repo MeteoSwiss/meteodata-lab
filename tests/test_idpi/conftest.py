@@ -1,5 +1,4 @@
 """Test configuration."""
-
 # Standard library
 import subprocess
 from pathlib import Path

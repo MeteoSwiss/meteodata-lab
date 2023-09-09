@@ -4,7 +4,7 @@ from numpy.testing import assert_allclose
 
 # First-party
 import idpi.operators.pot_vortic as pv
-from idpi import grib_decoder
+from idpi.grib_decoder import GribReader
 from idpi.operators.rho import f_rho_tot
 from idpi.operators.theta import ftheta
 from idpi.operators.total_diff import TotalDiff
@@ -14,10 +14,8 @@ def test_pv(data_dir, fieldextra):
     datafile = data_dir / "lfff00000000.ch"
     cdatafile = data_dir / "lfff00000000c.ch"
 
-    ds = grib_decoder.load_cosmo_data(
-        ["U", "V", "W", "P", "T", "QV", "QC", "QI", "HHL"],
-        [datafile, cdatafile],
-    )
+    reader = GribReader([cdatafile, datafile])
+    ds = reader.load_cosmo_data(["U", "V", "W", "P", "T", "QV", "QC", "QI", "HHL"])
 
     theta = ftheta(ds["P"], ds["T"])
     rho_tot = f_rho_tot(ds["T"], ds["P"], ds["QV"], ds["QC"], ds["QI"])

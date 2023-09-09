@@ -3,7 +3,7 @@ import numpy as np
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi import grib_decoder
+from idpi.grib_decoder import GribReader
 from idpi.operators import diff
 from idpi.operators.theta import ftheta
 from idpi.operators.total_diff import TotalDiff
@@ -11,11 +11,11 @@ from idpi.operators.total_diff import TotalDiff
 
 def test_total_diff(data_dir):
     cdatafile = data_dir / "lfff00000000c.ch"
+    datafile = data_dir / "lfff00000000.ch"
 
-    ds = grib_decoder.load_cosmo_data(
-        ["HHL"],
-        [cdatafile],
-    )
+    reader = GribReader([cdatafile, datafile])
+
+    ds = reader.load_cosmo_data(["HHL"])
 
     deg2rad = np.pi / 180
 
@@ -54,9 +54,7 @@ def test_total_diff(data_dir):
     assert_allclose(total_diff.dzeta_dlam.values, dzeta_dlam, rtol=1e-6)
     assert_allclose(total_diff.dzeta_dphi.values, dzeta_dphi, rtol=1e-6)
 
-    datafile = data_dir / "lfff00000000.ch"
-
-    ds = grib_decoder.load_cosmo_data(["P", "T"], [datafile], ref_param="P")
+    ds = reader.load_cosmo_data(["P", "T"])
     theta = ftheta(ds["P"], ds["T"])
 
     padding = [(0, 0)] * 2 + [(1, 1)] * 3

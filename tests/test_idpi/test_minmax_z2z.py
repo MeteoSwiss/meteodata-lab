@@ -3,7 +3,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi import grib_decoder
+from idpi.grib_decoder import GribReader
 from idpi.operators.destagger import destagger
 from idpi.operators.vertical_reduction import minmax_k
 
@@ -23,10 +23,8 @@ def test_minmax_z2z(operator, fx_op, field, layer, data_dir, fieldextra):
     cdatafile = data_dir / "lfff00000000c.ch"
 
     # load input data set
-    ds = grib_decoder.load_cosmo_data(
-        [field, "HHL"],
-        [datafile, cdatafile],
-    )
+    reader = GribReader([cdatafile, datafile])
+    ds = reader.load_cosmo_data([field, "HHL"])
 
     if layer == "half":
         height = ds["HHL"]

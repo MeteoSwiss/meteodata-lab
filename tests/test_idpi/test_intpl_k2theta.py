@@ -3,7 +3,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi import grib_decoder
+from idpi.grib_decoder import GribReader
 from idpi.operators.destagger import destagger
 from idpi.operators.theta import ftheta
 from idpi.operators.vertical_interpolation import interpolate_k2theta
@@ -22,10 +22,9 @@ def test_intpl_k2theta(mode, data_dir, fieldextra):
     cdatafile = data_dir / "lfff00000000c.ch"
 
     # load input data set
-    ds = grib_decoder.load_cosmo_data(
-        ["P", "T", "HHL"],
-        [datafile, cdatafile],
-    )
+    reader = GribReader([cdatafile, datafile])
+
+    ds = reader.load_cosmo_data(["P", "T", "HHL"])
 
     theta = ftheta(ds["P"], ds["T"])
     hfl = destagger(ds["HHL"], "z")

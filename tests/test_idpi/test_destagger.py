@@ -2,7 +2,7 @@
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi import grib_decoder
+from idpi.grib_decoder import GribReader
 from idpi.operators.destagger import destagger
 
 
@@ -10,9 +10,9 @@ def test_destagger(data_dir, fieldextra):
     datafile = data_dir / "lfff00000000.ch"
     cdatafile = data_dir / "lfff00000000c.ch"
 
-    ds = grib_decoder.load_cosmo_data(
+    reader = GribReader([cdatafile, datafile])
+    ds = reader.load_cosmo_data(
         ["U", "V", "HHL"],
-        [datafile, cdatafile],
     )
 
     u = destagger(ds["U"], "x")

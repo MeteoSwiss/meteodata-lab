@@ -5,7 +5,7 @@ from numpy.testing import assert_allclose
 
 # First-party
 import idpi.operators.lateral_operators as lat_ops
-from idpi import grib_decoder
+from idpi.grib_decoder import GribReader
 from idpi.operators.hzerocl import fhzerocl
 
 
@@ -13,10 +13,8 @@ def test_fill_undef(data_dir, fieldextra):
     datafile = data_dir / "lfff00000000.ch"
     cdatafile = data_dir / "lfff00000000c.ch"
 
-    ds = grib_decoder.load_cosmo_data(
-        ["T", "HHL"],
-        [datafile, cdatafile],
-    )
+    reader = GribReader([cdatafile, datafile])
+    ds = reader.load_cosmo_data(["T", "HHL"])
 
     hzerocl = fhzerocl(ds["T"], ds["HHL"])
 
@@ -32,9 +30,10 @@ def test_disk_avg(data_dir, fieldextra):
     datafile = data_dir / "lfff00000000.ch"
     cdatafile = data_dir / "lfff00000000c.ch"
 
-    ds = grib_decoder.load_cosmo_data(
+    reader = GribReader([cdatafile, datafile])
+
+    ds = reader.load_cosmo_data(
         ["T", "HHL"],
-        [datafile, cdatafile],
     )
 
     hzerocl = fhzerocl(ds["T"], ds["HHL"])

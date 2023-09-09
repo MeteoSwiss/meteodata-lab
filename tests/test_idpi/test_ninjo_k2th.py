@@ -3,18 +3,16 @@ from numpy.testing import assert_allclose
 
 # First-party
 import idpi.products.ninjo_k2th as ninjo
-from idpi import grib_decoder
+from idpi.grib_decoder import GribReader
 
 
 def test_ninjo_k2th(data_dir, fieldextra):
     datafile = data_dir / "lfff00000000.ch"
     cdatafile = data_dir / "lfff00000000c.ch"
 
-    ds = grib_decoder.load_cosmo_data(
-        ["U", "V", "W", "P", "T", "QV", "QC", "QI", "HHL"],
-        [datafile, cdatafile],
-    )
+    reader = GribReader([cdatafile, datafile])
 
+    ds = reader.load_cosmo_data(["U", "V", "W", "P", "T", "QV", "QC", "QI", "HHL"])
     observed_mean, observed_at_theta = ninjo.ninjo_k2th(
         ds["U"],
         ds["V"],

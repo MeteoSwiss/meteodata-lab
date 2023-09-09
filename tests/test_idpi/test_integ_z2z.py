@@ -3,7 +3,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi import grib_decoder
+from idpi.grib_decoder import GribReader
 from idpi.operators.destagger import destagger
 from idpi.operators.vertical_reduction import integrate_k
 
@@ -26,10 +26,9 @@ def test_integ_z2z(field, k_max, operator, fx_op, data_dir, fieldextra):
     cdatafile = data_dir / "lfff00000000c.ch"
 
     # load input data set
-    ds = grib_decoder.load_cosmo_data(
-        [field, "HHL"],
-        [datafile, cdatafile],
-    )
+    reader = GribReader([cdatafile, datafile])
+
+    ds = reader.load_cosmo_data([field, "HHL"])
     hhl = ds["HHL"]
     hfl = destagger(hhl, "z")
     # ATTENTION: attributes are lost in destagger operation

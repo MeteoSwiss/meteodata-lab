@@ -3,7 +3,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi import grib_decoder
+from idpi.grib_decoder import GribReader
 from idpi.operators.destagger import destagger
 from idpi.operators.vertical_reduction import integrate_k
 
@@ -24,10 +24,8 @@ def test_integ_sfc2z(field, k_max, operator, fx_op, atol, rtol, data_dir, fielde
     k_top = 61
 
     # load input data set
-    ds = grib_decoder.load_cosmo_data(
-        [field, "HHL", "HSURF"],
-        [datafile, cdatafile],
-    )
+    reader = GribReader([cdatafile, datafile])
+    ds = reader.load_cosmo_data([field, "HHL", "HSURF"])
 
     hhl = ds["HHL"]
     hfl = destagger(hhl, "z")

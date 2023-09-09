@@ -3,7 +3,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi import grib_decoder
+from idpi.grib_decoder import GribReader
 from idpi.operators.destagger import destagger
 from idpi.operators.vertical_interpolation import interpolate_k2p
 
@@ -27,10 +27,8 @@ def test_intpl_hk2p(mode, fx_mode, rtol, data_dir, fieldextra):
     cdatafile = data_dir / "lfff00000000c.ch"
 
     # load input data set
-    ds = grib_decoder.load_cosmo_data(
-        ["P", "HHL"],
-        [datafile, cdatafile],
-    )
+    reader = GribReader([cdatafile, datafile])
+    ds = reader.load_cosmo_data(["P", "HHL"])
     hhl = ds["HHL"]
     hfl = destagger(hhl, "z")
     # ATTENTION: attributes are lost in destagger operation

@@ -3,18 +3,15 @@ from numpy.testing import assert_allclose
 
 # First-party
 import idpi.operators.thetav as mthetav
-from idpi import grib_decoder
+from idpi.grib_decoder import GribReader
 
 
 def test_thetav(data_dir, fieldextra):
     datafile = data_dir / "lfff00000000.ch"
 
-    ds = grib_decoder.load_cosmo_data(
-        ["P", "T", "QV"],
-        [datafile],
-        ref_param="P",
-    )
+    reader = GribReader([datafile], ref_param="P")
 
+    ds = reader.load_cosmo_data(["P", "T", "QV"])
     thetav = mthetav.fthetav(ds["P"], ds["T"], ds["QV"])
 
     fs_ds = fieldextra("THETAV")

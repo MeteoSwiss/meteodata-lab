@@ -98,7 +98,7 @@ def test_max(data_dir, fieldextra):
 
     fx_ds_h = fieldextra(
         "time_ops_max",
-        hh=steps[::3],
+        hh=steps[::3].tolist(),
         conf_files={
             "inputi": data_dir / "lfff<DDHH>0000",
             "inputc": data_dir / "lfff00000000c",

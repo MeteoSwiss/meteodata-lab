@@ -1,6 +1,7 @@
 """Test configuration."""
 # Standard library
 import subprocess
+from collections.abc import Iterable
 from pathlib import Path
 
 # Third-party
@@ -34,7 +35,7 @@ def template_env():
 def fieldextra(tmp_path, data_dir, template_env, fieldextra_executable):
     """Run fieldextra on a given field."""
 
-    def f(field_name, hh=0, **ctx):
+    def f(field_name, hh: int | Iterable[int] | None = 0, **ctx):
         default_conf_files = {
             "inputi": data_dir / "lfff<DDHH>0000.ch",
             "inputc": data_dir / "lfff00000000c.ch",
@@ -49,6 +50,10 @@ def fieldextra(tmp_path, data_dir, template_env, fieldextra_executable):
 
         if isinstance(hh, int):
             return xr.open_dataset(tmp_path / f"{hh:02d}_{field_name}.nc")
-        return [xr.open_dataset(tmp_path / f"{h:02d}_{field_name}.nc") for h in hh]
+        if isinstance(hh, Iterable):
+            return [xr.open_dataset(tmp_path / f"{h:02d}_{field_name}.nc") for h in hh]
+        if hh is None:
+            return xr.open_dataset(tmp_path / f"{field_name}.nc")
+        raise TypeError("Unknown type for param hh")
 
     return f

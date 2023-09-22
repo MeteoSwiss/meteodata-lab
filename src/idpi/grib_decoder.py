@@ -5,6 +5,7 @@ import datetime as dt
 import sys
 import typing
 from contextlib import contextmanager
+from functools import partial
 from importlib.resources import files
 from pathlib import Path
 
@@ -15,6 +16,9 @@ import eccodes  # type: ignore
 import numpy as np
 import xarray as xr
 import yaml
+
+# First-party
+from idpi.product import ProductDescriptor
 
 DIM_MAP = {
     "level": "z",
@@ -150,7 +154,7 @@ class GribReader:
         """
         self._datafiles = [str(p) for p in datafiles]
         self._ifs = ifs
-        self._delayed = dask.delayed if delay else (lambda x: x)
+        self._delayed = partial(dask.delayed, pure=True) if delay else (lambda x: x)
         if not self._ifs:
             global _ifs_allowed
             _ifs_allowed = False  # due to incompatible data in cache
@@ -294,7 +298,7 @@ class GribReader:
 
     def _load_dataset(
         self,
-        params: list[str],
+        params: typing.Iterable[str],
         extract_pv: str | None = None,
     ) -> dict[str, xr.DataArray]:
         if not _check_string_arg(params):
@@ -308,7 +312,7 @@ class GribReader:
         result = {}
 
         for param in _params:
-            result[param] = self._delayed(self._load_param)(param)
+            result[param] = self._delayed(self._load_param)(param)  # type: ignore
 
         if not _params == result.keys():
             raise RuntimeError(f"Missing params: {_params - data.keys()}")
@@ -318,9 +322,46 @@ class GribReader:
 
         return result
 
+    def load(
+        self,
+        descriptors: list[ProductDescriptor],
+        extract_pv: str | None = None,
+    ) -> dict[str, xr.DataArray]:
+        """Load a dataset with the requested parameters.
+
+        Parameters
+        ----------
+        descriptors : list[ProductDescriptor]
+            List of product descriptors from which the input fields required
+            are extracted.
+        extract_pv: str | None
+            Optionally extract hybrid level coefficients from the given field.
+
+        Raises
+        ------
+        RuntimeError
+            if not all fields are found in the given datafiles.
+
+        Returns
+        -------
+        dict[str, xr.DataArray]
+            Mapping of fields by param name
+
+        """
+        params = set()
+        for desc in descriptors:
+            params |= set(desc.input_fields)
+
+        if self._ifs:
+            return self.load_ifs_data(params, extract_pv)
+        else:
+            if extract_pv:
+                raise ValueError(f"{extract_pv=} can only be set for ifs data")
+            return self.load_cosmo_data(params)
+
     def load_cosmo_data(
         self,
-        params: list[str],
+        params: typing.Iterable[str],
     ) -> dict[str, xr.DataArray]:
         """Load a COSMO dataset with the requested parameters.
 
@@ -353,7 +394,7 @@ class GribReader:
 
     def load_ifs_data(
         self,
-        params: list[str],
+        params: typing.Iterable[str],
         extract_pv: str | None = None,
     ) -> dict[str, xr.DataArray]:
         """Load an IFS dataset with the requested parameters.

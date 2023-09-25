@@ -11,6 +11,7 @@ from numpy.testing import assert_allclose
 # First-party
 import idpi.operators.time_operators as time_ops
 from idpi.grib_decoder import GribReader
+from idpi.operators import radiation
 
 
 @pytest.fixture
@@ -59,7 +60,7 @@ def test_resample_average(data_dir, fieldextra):
     direct = time_ops.resample_average(ds["ASWDIR_S"], np.timedelta64(1, "h"))
     diffuse = time_ops.resample_average(ds["ASWDIFD_S"], np.timedelta64(1, "h"))
 
-    observed = (direct + diffuse).clip(min=0)
+    observed = radiation.compute_swdown(diffuse, direct)
 
     fx_ds_h = fieldextra(
         "time_ops_tdelta",

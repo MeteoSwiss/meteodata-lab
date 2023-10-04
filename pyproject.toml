@@ -93,6 +93,8 @@ known_first_party = [
 # See https://blog.wolt.com/engineering/2021/09/30/professional-grade-mypy-configuration/
 module = [
     # Add external modules w/o type hints here
+    "rasterio",
+    "rasterio.crs",
 ]
 ignore_missing_imports = true
 

@@ -60,15 +60,6 @@ markers = [
 [tool.isort]
 default_section = "THIRDPARTY"
 profile = "black"
-force_single_line = true
-order_by_type = false
-# Set `multi_line_output = 7` to mark too long lines with `# NOQA` (uppercase!)
-# instead of spreading them over multiple lines. This leaves lines with long
-# trailing comments intact, which may occur if multiple directives are necessary
-# (e.g., `# type: ignore [import]  # pylint: disable=no-name-in-module`).
-# (Note that thanks to `force_single_line = true`, this should be the main
-# reason for too long lines because multi-import lines are already broken up.)
-multi_line_output = 7 # 7=noqa
 # Headings
 import_heading_stdlib = "Standard library"
 import_heading_thirdparty = "Third-party"

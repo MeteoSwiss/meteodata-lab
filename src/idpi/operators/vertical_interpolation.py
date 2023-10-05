@@ -1,17 +1,18 @@
 """Vertical interpolation operators."""
 
 # Standard library
-from typing import Literal
-from typing import Sequence
+from typing import Literal, Sequence
 
 # Third-party
 import numpy as np
 import xarray as xr
 
 # First-party
-from idpi.operators.support_operators import init_field_with_vcoord
-from idpi.operators.support_operators import TargetCoordinates
-from idpi.operators.support_operators import TargetCoordinatesAttrs
+from idpi.operators.support_operators import (
+    TargetCoordinates,
+    TargetCoordinatesAttrs,
+    init_field_with_vcoord,
+)
 
 
 def interpolate_k2p(

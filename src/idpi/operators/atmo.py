@@ -3,12 +3,7 @@
 import numpy as np
 
 # First-party
-from idpi.constants import pc_b1
-from idpi.constants import pc_b2w
-from idpi.constants import pc_b3
-from idpi.constants import pc_b4w
-from idpi.constants import pc_o_rdv
-from idpi.constants import pc_rdv
+from idpi.constants import pc_b1, pc_b2w, pc_b3, pc_b4w, pc_o_rdv, pc_rdv
 
 
 def pv_sw(t):

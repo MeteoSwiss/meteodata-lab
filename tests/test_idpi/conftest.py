@@ -7,8 +7,7 @@ from pathlib import Path
 # Third-party
 import pytest
 import xarray as xr
-from jinja2 import Environment
-from jinja2 import FileSystemLoader
+from jinja2 import Environment, FileSystemLoader
 
 
 @pytest.fixture

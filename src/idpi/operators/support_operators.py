@@ -3,10 +3,7 @@
 
 # Standard library
 import dataclasses as dc
-from typing import Any
-from typing import Literal
-from typing import Optional
-from typing import Sequence
+from typing import Any, Literal, Optional, Sequence
 
 # Third-party
 import numpy as np

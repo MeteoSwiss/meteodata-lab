@@ -7,8 +7,7 @@ import typing
 # Third-party
 import numpy as np
 import xarray as xr
-from rasterio import transform
-from rasterio import warp
+from rasterio import transform, warp
 from rasterio.crs import CRS
 
 Resampling: typing.TypeAlias = warp.Resampling

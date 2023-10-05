@@ -14,8 +14,7 @@ from idpi.operators.pot_vortic import fpotvortic
 from idpi.operators.rho import f_rho_tot
 from idpi.operators.theta import ftheta
 from idpi.operators.total_diff import TotalDiff
-from idpi.operators.vertical_interpolation import interpolate_k2p
-from idpi.operators.vertical_interpolation import interpolate_k2theta
+from idpi.operators.vertical_interpolation import interpolate_k2p, interpolate_k2theta
 from idpi.operators.vertical_reduction import integrate_k
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)

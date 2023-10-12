@@ -7,6 +7,7 @@ import xarray as xr
 from numpy.testing import assert_allclose
 
 # First-party
+import idpi.config
 import idpi.operators.flexpart as flx
 from idpi.grib_decoder import GribReader
 
@@ -19,31 +20,31 @@ def data_dir(data_dir):
 @pytest.mark.ifs
 def test_flexpart(data_dir, fieldextra):
     datafiles = list(data_dir.glob("efs*"))
-    constants = ("FIS", "FR_LAND", "SDOR")
+    constants = ("z", "lsm", "sdor")
     inputf = (
-        "ETADOT",
-        "T",
-        "QV",
-        "U",
-        "V",
-        "PS",
-        "U_10M",
-        "V_10M",
-        "T_2M",
-        "TD_2M",
-        "CLCT",
-        "W_SNOW",
-        "TOT_CON",
-        "TOT_GSP",
-        "ASOB_S",
-        "ASHFL_S",
-        "EWSS",
-        "NSSS",
+        "etadot",
+        "t",
+        "q",
+        "u",
+        "v",
+        "sp",
+        "10u",
+        "10v",
+        "2t",
+        "2d",
+        "tcc",
+        "sd",
+        "cp",
+        "lsp",
+        "ssr",
+        "sshf",
+        "ewss",
+        "nsss",
     )
 
-    reader = GribReader(datafiles, ifs=True, ref_param="T")
-
-    ds = reader.load_ifs_data(inputf + constants, extract_pv="U")
+    with idpi.config.set_values(data_scope="ifs"):
+        reader = GribReader(datafiles, ref_param="t")
+        ds = reader.load_fields(inputf + constants, extract_pv="u")
 
     conf_files = {
         "inputi": str(data_dir / "efsf00<HH>0000"),
@@ -56,9 +57,9 @@ def test_flexpart(data_dir, fieldextra):
     for f in ("FIS", "FR_LAND", "SDOR"):
         fs_ds_o[f] = fs_ds[f].isel(y_1=slice(None, None, -1))
 
-    assert_allclose(fs_ds_o["FIS"], ds["FIS"].squeeze(), rtol=3e-7, atol=5e-7)
-    assert_allclose(fs_ds_o["FR_LAND"], ds["FR_LAND"].squeeze(), rtol=3e-7, atol=5e-7)
-    assert_allclose(fs_ds_o["SDOR"], ds["SDOR"].squeeze(), rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["FIS"], ds["z"].squeeze(), rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["FR_LAND"], ds["lsm"].squeeze(), rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["SDOR"], ds["sdor"].squeeze(), rtol=3e-7, atol=5e-7)
 
     for field in (
         "U",
@@ -91,22 +92,22 @@ def test_flexpart(data_dir, fieldextra):
         }
     )
 
-    assert_allclose(fs_ds_o["ETADOT"], ds_out["OMEGA"], rtol=3e-6, atol=5e-5)
-    assert_allclose(fs_ds_o["U"], ds_out["U"], rtol=3e-7, atol=5e-7)
-    assert_allclose(fs_ds_o["V"], ds_out["V"], rtol=3e-7, atol=5e-7)
-    assert_allclose(fs_ds_o["T"], ds_out["T"], rtol=3e-7, atol=5e-7)
-    assert_allclose(fs_ds_o["QV"], ds_out["QV"], rtol=3e-7, atol=5e-7)
-    assert_allclose(fs_ds_o["PS"], ds_out["PS"], rtol=3e-7, atol=5e-7)
-    assert_allclose(fs_ds_o["U_10M"], ds_out["U_10M"], rtol=3e-7, atol=5e-7)
-    assert_allclose(fs_ds_o["V_10M"], ds_out["V_10M"], rtol=3e-7, atol=5e-7)
-    assert_allclose(fs_ds_o["T_2M"], ds_out["T_2M"], rtol=3e-7, atol=5e-7)
-    assert_allclose(fs_ds_o["TD_2M"], ds_out["TD_2M"], rtol=3e-7, atol=5e-7)
-    assert_allclose(fs_ds_o["CLCT"], ds_out["CLCT"], rtol=3e-7, atol=5e-7)
-    assert_allclose(fs_ds_o["W_SNOW"], ds_out["W_SNOW"], rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["ETADOT"], ds_out["omega"], rtol=3e-6, atol=5e-5)
+    assert_allclose(fs_ds_o["U"], ds_out["u"], rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["V"], ds_out["v"], rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["T"], ds_out["t"], rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["QV"], ds_out["q"], rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["PS"], ds_out["sp"], rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["U_10M"], ds_out["10u"], rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["V_10M"], ds_out["10v"], rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["T_2M"], ds_out["2t"], rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["TD_2M"], ds_out["2d"], rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["CLCT"], ds_out["tcc"], rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["W_SNOW"], ds_out["sd"], rtol=3e-7, atol=5e-7)
 
-    assert_allclose(fs_ds_o["TOT_CON"], ds_out["TOT_CON"], rtol=3e-6, atol=5e-7)
-    assert_allclose(fs_ds_o["TOT_GSP"], ds_out["TOT_GSP"], rtol=3e-6, atol=5e-7)
-    assert_allclose(fs_ds_o["SSR"], ds_out["ASOB_S"], rtol=3e-7, atol=5e-7)
-    assert_allclose(fs_ds_o["SSHF"], ds_out["ASHFL_S"], rtol=3e-7, atol=5e-7)
-    assert_allclose(fs_ds_o["EWSS"], ds_out["EWSS"], rtol=3e-7, atol=5e-7)
-    assert_allclose(fs_ds_o["NSSS"], ds_out["NSSS"], rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["TOT_CON"], ds_out["cp"] * 1000, rtol=3e-6, atol=5e-7)
+    assert_allclose(fs_ds_o["TOT_GSP"], ds_out["lsp"] * 1000, rtol=3e-6, atol=5e-7)
+    assert_allclose(fs_ds_o["SSR"], ds_out["ssr"], rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["SSHF"], ds_out["sshf"], rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["EWSS"], ds_out["ewss"], rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["NSSS"], ds_out["nsss"], rtol=3e-7, atol=5e-7)

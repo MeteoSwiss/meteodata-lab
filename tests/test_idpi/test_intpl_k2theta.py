@@ -24,7 +24,7 @@ def test_intpl_k2theta(mode, data_dir, fieldextra):
     # load input data set
     reader = GribReader([cdatafile, datafile])
 
-    ds = reader.load_cosmo_data(["P", "T", "HHL"])
+    ds = reader.load_fields(["P", "T", "HHL"])
 
     theta = ftheta(ds["P"], ds["T"])
     hfl = destagger(ds["HHL"], "z")

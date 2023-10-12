@@ -12,7 +12,7 @@ def test_ninjo_k2th(data_dir, fieldextra):
 
     reader = GribReader([cdatafile, datafile])
 
-    ds = reader.load_cosmo_data(["U", "V", "W", "P", "T", "QV", "QC", "QI", "HHL"])
+    ds = reader.load_fields(["U", "V", "W", "P", "T", "QV", "QC", "QI", "HHL"])
     observed_mean, observed_at_theta = ninjo.ninjo_k2th(
         ds["U"],
         ds["V"],

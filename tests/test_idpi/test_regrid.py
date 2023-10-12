@@ -12,7 +12,7 @@ def test_regrid(data_dir, fieldextra):
     cdatafile = data_dir / "lfff00000000c.ch"
 
     reader = grib_decoder.GribReader([cdatafile, datafile])
-    ds = reader.load_cosmo_data(["T", "HHL"])
+    ds = reader.load_fields(["T", "HHL"])
 
     hzerocl = fhzerocl(ds["T"], ds["HHL"], extrapolate=True)
     out_regrid_target = "swiss,549500,149500,650500,250500,1000,1000"

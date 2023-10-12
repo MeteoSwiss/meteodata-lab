@@ -14,7 +14,7 @@ def test_fill_undef(data_dir, fieldextra):
     cdatafile = data_dir / "lfff00000000c.ch"
 
     reader = GribReader([cdatafile, datafile])
-    ds = reader.load_cosmo_data(["T", "HHL"])
+    ds = reader.load_fields(["T", "HHL"])
 
     hzerocl = fhzerocl(ds["T"], ds["HHL"])
 
@@ -32,7 +32,7 @@ def test_disk_avg(data_dir, fieldextra):
 
     reader = GribReader([cdatafile, datafile])
 
-    ds = reader.load_cosmo_data(
+    ds = reader.load_fields(
         ["T", "HHL"],
     )
 

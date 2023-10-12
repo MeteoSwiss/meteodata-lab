@@ -11,7 +11,7 @@ def test_wind(data_dir, fieldextra):
     cdatafile = data_dir / "lfff00000000c.ch"
 
     reader = GribReader([datafile, cdatafile])
-    ds = reader.load_cosmo_data(["U_10M", "V_10M"])
+    ds = reader.load_fields(["U_10M", "V_10M"])
 
     u_10m = ds["U_10M"].isel(z=0)
     v_10m = ds["V_10M"].isel(z=0)

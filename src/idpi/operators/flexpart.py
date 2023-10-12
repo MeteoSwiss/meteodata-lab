@@ -11,29 +11,29 @@ from idpi.operators.time_operators import time_rate
 def fflexpart(ds):
     ds_out = {}
     for field in (
-        "U",
-        "V",
-        "T",
-        "QV",
-        "PS",
-        "U_10M",
-        "V_10M",
-        "T_2M",
-        "TD_2M",
-        "CLCT",
-        "W_SNOW",
+        "u",
+        "v",
+        "t",
+        "q",
+        "sp",
+        "10u",
+        "10v",
+        "2t",
+        "2d",
+        "tcc",
+        "sd",
     ):
         ds_out[field] = ds[field].isel(time=slice(1, None))
 
-    ds_out["TOT_CON"] = time_rate(ds["TOT_CON"], np.timedelta64(1, "h"))
-    ds_out["TOT_GSP"] = time_rate(ds["TOT_GSP"], np.timedelta64(1, "h"))
+    ds_out["cp"] = time_rate(ds["cp"], np.timedelta64(1, "h"))
+    ds_out["lsp"] = time_rate(ds["lsp"], np.timedelta64(1, "h"))
 
-    ds_out["ASOB_S"] = time_rate(ds["ASOB_S"], np.timedelta64(1, "s"))
-    ds_out["ASHFL_S"] = time_rate(ds["ASHFL_S"], np.timedelta64(1, "s"))
-    ds_out["EWSS"] = time_rate(ds["EWSS"], np.timedelta64(1, "s"))
-    ds_out["NSSS"] = time_rate(ds["NSSS"], np.timedelta64(1, "s"))
+    ds_out["ssr"] = time_rate(ds["ssr"], np.timedelta64(1, "s"))
+    ds_out["sshf"] = time_rate(ds["sshf"], np.timedelta64(1, "s"))
+    ds_out["ewss"] = time_rate(ds["ewss"], np.timedelta64(1, "s"))
+    ds_out["nsss"] = time_rate(ds["nsss"], np.timedelta64(1, "s"))
 
-    ds_out["OMEGA"] = omega_slope(ds["PS"], ds["ETADOT"], ds["ak"], ds["bk"]).isel(
+    ds_out["omega"] = omega_slope(ds["sp"], ds["etadot"], ds["ak"], ds["bk"]).isel(
         z=slice(39, 137), time=slice(1, None)
     )
 

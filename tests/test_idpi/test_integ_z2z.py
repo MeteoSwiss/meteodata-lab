@@ -28,7 +28,7 @@ def test_integ_z2z(field, k_max, operator, fx_op, data_dir, fieldextra):
     # load input data set
     reader = GribReader([cdatafile, datafile])
 
-    ds = reader.load_cosmo_data([field, "HHL"])
+    ds = reader.load_fields([field, "HHL"])
     hhl = ds["HHL"]
     hfl = destagger(hhl, "z")
     # ATTENTION: attributes are lost in destagger operation

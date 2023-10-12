@@ -13,7 +13,7 @@ def test_hzerocl(data_dir, fieldextra, extrapolate):
     cdatafile = data_dir / "lfff00000000c.ch"
 
     reader = GribReader([cdatafile, datafile])
-    ds = reader.load_cosmo_data(
+    ds = reader.load_fields(
         ["T", "HHL"],
     )
 

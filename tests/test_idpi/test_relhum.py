@@ -11,7 +11,7 @@ def test_relhum(data_dir, fieldextra):
     cdatafile = data_dir / "lfff00000000c.ch"
 
     reader = GribReader([cdatafile, datafile], ref_param="P")
-    ds = reader.load_cosmo_data(["P", "T", "QV"])
+    ds = reader.load_fields(["P", "T", "QV"])
 
     relhum_arr = relhum(ds["QV"], ds["T"], ds["P"], clipping=True, phase="water")
 

@@ -24,7 +24,7 @@ def test_minmax_z2z(operator, fx_op, field, layer, data_dir, fieldextra):
 
     # load input data set
     reader = GribReader([cdatafile, datafile])
-    ds = reader.load_cosmo_data([field, "HHL"])
+    ds = reader.load_fields([field, "HHL"])
 
     if layer == "half":
         height = ds["HHL"]

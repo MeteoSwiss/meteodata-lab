@@ -11,7 +11,7 @@ def test_theta(data_dir, fieldextra):
 
     reader = GribReader([datafile], ref_param="P")
 
-    ds = reader.load_cosmo_data(["P", "T"])
+    ds = reader.load_fields(["P", "T"])
 
     theta = mtheta.ftheta(ds["P"], ds["T"])
 

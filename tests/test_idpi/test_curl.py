@@ -14,7 +14,7 @@ def test_curl(data_dir):
     cdatafile = data_dir / "lfff00000000c.ch"
 
     reader = GribReader([cdatafile, datafile])
-    ds = reader.load_cosmo_data(["U", "V", "W", "HHL"])
+    ds = reader.load_fields(["U", "V", "W", "HHL"])
 
     geo = ds["HHL"].attrs["geography"]
     dlon = geo["iDirectionIncrementInDegrees"]

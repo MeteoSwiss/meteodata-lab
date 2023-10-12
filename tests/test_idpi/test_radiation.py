@@ -23,7 +23,7 @@ def test_athd_s(data_dir, fieldextra):
     datafiles = [data_dir / f"lfff{d:02d}{h:02d}0000" for d, h in zip(dd, hh)]
 
     reader = grib_decoder.GribReader(datafiles, ref_param="T_G")
-    ds = reader.load_cosmo_data(["ATHB_S", "T_G"])
+    ds = reader.load_fields(["ATHB_S", "T_G"])
 
     athb_s = time_ops.resample_average(ds["ATHB_S"], np.timedelta64(1, "h"))
     observed = radiation.compute_athd_s(athb_s, ds["T_G"])

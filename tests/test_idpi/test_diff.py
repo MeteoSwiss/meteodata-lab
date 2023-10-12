@@ -13,7 +13,7 @@ def test_masspoint_field(data_dir):
 
     reader = GribReader([datafile], ref_param="P")
 
-    ds = reader.load_cosmo_data(["P", "T"])
+    ds = reader.load_fields(["P", "T"])
 
     theta = ftheta(ds["P"], ds["T"])
 
@@ -37,7 +37,7 @@ def test_staggered_field(data_dir):
 
     reader = GribReader([datafile], ref_param="W")
 
-    ds = reader.load_cosmo_data(["W"])
+    ds = reader.load_fields(["W"])
 
     w = ds["W"]
     wn = w.to_numpy()

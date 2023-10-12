@@ -25,7 +25,7 @@ def test_integ_sfc2z(field, k_max, operator, fx_op, atol, rtol, data_dir, fielde
 
     # load input data set
     reader = GribReader([cdatafile, datafile])
-    ds = reader.load_cosmo_data([field, "HHL", "HSURF"])
+    ds = reader.load_fields([field, "HHL", "HSURF"])
 
     hhl = ds["HHL"]
     hfl = destagger(hhl, "z")

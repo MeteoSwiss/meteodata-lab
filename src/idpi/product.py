@@ -1,11 +1,10 @@
 """Product base classes."""
-
 # Standard library
 import dataclasses as dc
 from abc import ABCMeta, abstractmethod
 
-# Third-party
-import dask
+# Local
+from . import tasking
 
 
 @dc.dataclass
@@ -30,7 +29,7 @@ class Product(metaclass=ABCMeta):
 
     def __call__(self, *args):
         if self._delay_entire_product:
-            return dask.delayed(self._run, pure=True)(*args)
+            return tasking.delayed(self._run)(*args)
         else:
             return self._run(*args)
 

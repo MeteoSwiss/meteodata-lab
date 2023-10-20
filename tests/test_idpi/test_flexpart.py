@@ -44,7 +44,7 @@ def test_flexpart(data_dir, fieldextra):
 
     with idpi.config.set_values(data_scope="ifs"):
         reader = GribReader(datafiles, ref_param="t")
-        ds = reader.load_fields(inputf + constants, extract_pv="u")
+        ds = reader.load_fieldnames(inputf + constants, extract_pv="u")
 
     conf_files = {
         "inputi": str(data_dir / "efsf00<HH>0000"),

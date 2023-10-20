@@ -18,7 +18,7 @@ import idpi.config
 
 # Local
 from . import tasking
-from .product import ProductDescriptor
+from .product import ProductDescriptor, Request
 
 DIM_MAP = {
     "level": "z",
@@ -91,8 +91,8 @@ def _extract_pv(pv):
         return {}
     i = len(pv) // 2
     return {
-        "ak": xr.DataArray(pv[:i], dims="z"),
-        "bk": xr.DataArray(pv[i:], dims="z"),
+        Request("ak"): tasking.delayed(xr.DataArray(pv[:i], dims="z")),
+        Request("bk"): tasking.delayed(xr.DataArray(pv[i:], dims="z")),
     }
 
 
@@ -117,10 +117,6 @@ class Grid:
     lat: xr.DataArray
     lon_first_grid_point: float
     lat_first_grid_point: float
-
-
-def _check_string_arg(obj):
-    return bool(obj) and all(isinstance(elem, str) for elem in obj)
 
 
 class GribReader:
@@ -229,9 +225,10 @@ class GribReader:
 
     def _load_param(
         self,
-        param: str,
+        req: Request,
     ):
-        fs = earthkit.data.from_source("file", self._datafiles).sel(param=param)
+        arg = {k: v for k, v in req._asdict().items() if v is not None}
+        fs = earthkit.data.from_source("file", self._datafiles).sel(arg)
 
         hcoords = None
         metadata: dict[str, typing.Any] = {}
@@ -259,7 +256,7 @@ class GribReader:
                 metadata = self._construct_metadata(field)
 
         if not field_map:
-            raise RuntimeError(f"requested {param=} not found.")
+            raise RuntimeError(f"requested {req=} not found.")
 
         coords, shape = _gather_coords(field_map, dims)
         tcoords = _gather_tcoords(time_meta)
@@ -281,24 +278,17 @@ class GribReader:
 
     def _load_dataset(
         self,
-        params: typing.Iterable[str],
+        reqs: typing.Iterable[Request],
         extract_pv: str | None = None,
-    ) -> dict[str, xr.DataArray]:
-        if not _check_string_arg(params):
-            raise ValueError(f"wrong type for arg {params=}. Expected str")
+    ) -> dict[Request, xr.DataArray]:
+        params = {req.param for req in reqs}
+        if extract_pv is not None and extract_pv not in params:
+            raise ValueError(f"If set, {extract_pv=} must be in {params=}")
 
-        _params = set(params)
-        if extract_pv is not None and extract_pv not in _params:
-            raise ValueError(f"If set, {extract_pv=} must be in {_params=}")
+        result = {req: tasking.delayed(self._load_param)(req) for req in reqs}
 
-        data: dict[str, dict[tuple[int, ...], np.ndarray]] = {}
-        result = {}
-
-        for param in _params:
-            result[param] = tasking.delayed(self._load_param)(param)
-
-        if not _params == result.keys():
-            raise RuntimeError(f"Missing params: {_params - data.keys()}")
+        if not reqs == result.keys():
+            raise RuntimeError(f"Missing params: {reqs - result.keys()}")
 
         if extract_pv:
             result = result | _extract_pv(self._load_pv(extract_pv))
@@ -309,7 +299,7 @@ class GribReader:
         self,
         descriptors: list[ProductDescriptor],
         extract_pv: str | None = None,
-    ) -> dict[str, xr.DataArray]:
+    ) -> dict[Request, xr.DataArray]:
         """Load a dataset with the requested parameters.
 
         Parameters
@@ -323,7 +313,36 @@ class GribReader:
         Raises
         ------
         RuntimeError
-            if not all fields are found in the given datafiles.
+            if not all fields are found in the data source.
+
+        Returns
+        -------
+        dict[Request, xr.DataArray]
+            Mapping of fields by request
+
+        """
+        reqs = {req for desc in descriptors for req in desc.input_fields}
+
+        return self.load_fields(reqs, extract_pv=extract_pv)
+
+    def load_fieldnames(
+        self,
+        params: list[str],
+        extract_pv: str | None = None,
+    ) -> dict[str, xr.DataArray]:
+        """Load a dataset with the requested parameters by name.
+
+        Parameters
+        ----------
+        params : list[str]
+            List of parameter names to include in the dataset.
+        extract_pv: str | None
+            Optionally extract hybrid level coefficients from the given field.
+
+        Raises
+        ------
+        RuntimeError
+            if not all fields are found in the data source.
 
         Returns
         -------
@@ -331,17 +350,15 @@ class GribReader:
             Mapping of fields by param name
 
         """
-        params = set()
-        for desc in descriptors:
-            params |= set(desc.input_fields)
-
-        return self.load_fields(params, extract_pv=extract_pv)
+        desc = ProductDescriptor(input_fields=[Request(param) for param in params])
+        result = self.load([desc], extract_pv=extract_pv)
+        return {req.param: field for req, field in result.items()}
 
     def load_fields(
         self,
-        params: typing.Iterable[str],
+        params: typing.Iterable[Request],
         extract_pv: str | None = None,
-    ) -> dict[str, xr.DataArray]:
+    ) -> dict[Request, xr.DataArray]:
         """Load a dataset with the requested list of fields.
 
         Parameters
@@ -354,12 +371,12 @@ class GribReader:
         Raises
         ------
         RuntimeError
-            if not all fields are found in the given datafiles.
+            if not all fields are found in the data source.
 
         Returns
         -------
-        dict[str, xr.DataArray]
-            Mapping of fields by param name
+        dict[Request, xr.DataArray]
+            Mapping of fields by request
 
         """
         if idpi.config.get("data_scope", "cosmo") == "cosmo":

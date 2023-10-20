@@ -15,7 +15,7 @@ def test_total_diff(data_dir):
 
     reader = GribReader([cdatafile, datafile])
 
-    ds = reader.load_fields(["HHL"])
+    ds = reader.load_fieldnames(["HHL"])
 
     deg2rad = np.pi / 180
 
@@ -54,7 +54,7 @@ def test_total_diff(data_dir):
     assert_allclose(total_diff.dzeta_dlam.values, dzeta_dlam, rtol=1e-6)
     assert_allclose(total_diff.dzeta_dphi.values, dzeta_dphi, rtol=1e-6)
 
-    ds = reader.load_fields(["P", "T"])
+    ds = reader.load_fieldnames(["P", "T"])
     theta = ftheta(ds["P"], ds["T"])
 
     padding = [(0, 0)] * 2 + [(1, 1)] * 3

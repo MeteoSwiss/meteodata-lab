@@ -22,4 +22,4 @@ def test_param_not_found(mock_load_grid_reference, mock_from_source):
 
     with pytest.raises(RuntimeError):
         reader = GribReader([])
-        reader.load_fields(["U", "V"])
+        reader.load_fieldnames(["U", "V"])

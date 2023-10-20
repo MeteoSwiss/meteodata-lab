@@ -26,7 +26,7 @@ def test_intpl_k2p(mode, fx_mode, atol, rtol, data_dir, fieldextra):
 
     # load input data set
     reader = GribReader([datafile], ref_param="P")
-    ds = reader.load_fields(["P", "T"])
+    ds = reader.load_fieldnames(["P", "T"])
 
     # call interpolation operator
     t = interpolate_k2p(ds["T"], mode, ds["P"], tc_values, tc_units)

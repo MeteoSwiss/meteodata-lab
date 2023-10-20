@@ -28,7 +28,7 @@ def test_intpl_hk2p(mode, fx_mode, rtol, data_dir, fieldextra):
 
     # load input data set
     reader = GribReader([cdatafile, datafile])
-    ds = reader.load_fields(["P", "HHL"])
+    ds = reader.load_fieldnames(["P", "HHL"])
     hhl = ds["HHL"]
     hfl = destagger(hhl, "z")
     # ATTENTION: attributes are lost in destagger operation

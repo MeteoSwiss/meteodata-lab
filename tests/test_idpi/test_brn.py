@@ -11,7 +11,7 @@ def test_brn(data_dir, fieldextra):
     cdatafile = data_dir / "lfff00000000c.ch"
 
     reader = GribReader([cdatafile, datafile])
-    ds = reader.load_fields(["P", "T", "QV", "U", "V", "HHL", "HSURF"])
+    ds = reader.load_fieldnames(["P", "T", "QV", "U", "V", "HHL", "HSURF"])
 
     brn = mbrn.fbrn(
         ds["P"], ds["T"], ds["QV"], ds["U"], ds["V"], ds["HHL"], ds["HSURF"]

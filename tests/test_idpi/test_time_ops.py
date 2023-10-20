@@ -25,7 +25,7 @@ def test_delta(data_dir, fieldextra):
     datafiles = [data_dir / f"lfff{d:02d}{h:02d}0000" for d, h in zip(dd, hh)]
 
     reader = GribReader(datafiles, ref_param="TOT_PREC")
-    ds = reader.load_fields(["TOT_PREC"])
+    ds = reader.load_fieldnames(["TOT_PREC"])
 
     tot_prec = time_ops.resample(ds["TOT_PREC"], np.timedelta64(3, "h"))
     tot_prec_03h = time_ops.delta(tot_prec, np.timedelta64(3, "h"))
@@ -55,7 +55,7 @@ def test_resample_average(data_dir, fieldextra):
     datafiles = [data_dir / f"lfff{d:02d}{h:02d}0000" for d, h in zip(dd, hh)]
 
     reader = GribReader(datafiles, ref_param="ASWDIFD_S")
-    ds = reader.load_fields(["ASWDIFD_S", "ASWDIR_S"])
+    ds = reader.load_fieldnames(["ASWDIFD_S", "ASWDIR_S"])
 
     direct = time_ops.resample_average(ds["ASWDIR_S"], np.timedelta64(1, "h"))
     diffuse = time_ops.resample_average(ds["ASWDIFD_S"], np.timedelta64(1, "h"))
@@ -87,7 +87,7 @@ def test_max(data_dir, fieldextra):
     dd, hh = np.divmod(steps, 24)
     datafiles = [data_dir / f"lfff{d:02d}{h:02d}0000" for d, h in zip(dd, hh)]
     reader = GribReader(datafiles, ref_param="VMAX_10M")
-    ds = reader.load_fields(["VMAX_10M"])
+    ds = reader.load_fieldnames(["VMAX_10M"])
 
     f = ds["VMAX_10M"]
     nsteps = time_ops.get_nsteps(f.valid_time, np.timedelta64(24, "h"))

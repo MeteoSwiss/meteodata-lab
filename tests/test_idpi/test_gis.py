@@ -45,7 +45,7 @@ def test_vref_rot2geolatlon(data_dir, fieldextra):
     datafile = data_dir / "lfff00000000.ch"
 
     reader = grib_decoder.GribReader([datafile], ref_param="T")
-    ds = reader.load_fields(["U_10M", "V_10M"])
+    ds = reader.load_fieldnames(["U_10M", "V_10M"])
 
     u_g, v_g = gis.vref_rot2geolatlon(ds["U_10M"], ds["V_10M"])
 

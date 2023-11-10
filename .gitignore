@@ -109,3 +109,7 @@ venv_*/
 
 # VS Code
 .vscode
+
+# spack
+spack-env/.spack-env
+spack-env/spack.lock

@@ -1,0 +1,16 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  specs:
+  - fdb
+  - eckit@1.20.2 ~mpi
+  - eccodes@2.25 jp2k=none
+  - hdf5 ~mpi
+  view: false
+  concretizer:
+    unify: true
+  config:
+    install_tree:
+      padded_length: 255

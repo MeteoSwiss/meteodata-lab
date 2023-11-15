@@ -25,6 +25,9 @@ ETADOT:
   ifs:
     name: etadot
     paramId: 77
+P:
+  cosmo:
+    paramId: 500001
 T:
   ifs:
     name: t
@@ -37,6 +40,12 @@ QV:
     paramId: 133
   cosmo:
     paramId: 500035
+QC:
+  cosmo:
+    paramId: 500100
+QI:
+  cosmo:
+    paramId: 500101
 U:
   ifs:
     name: u
@@ -49,6 +58,10 @@ V:
     paramId: 132
   cosmo:
     paramId: 500030
+W:
+  cosmo:
+    paramId: 500032
+    vertStag: true
 PS:
   ifs:
     name: sp
@@ -134,3 +147,10 @@ NSSS:
 OMEGA:
   cosmo:
     paramId: 500031
+HHL:
+  cosmo:
+    paramId: 500008
+    vertStag: true
+HSURF:
+  cosmo:
+    paramId: 500007

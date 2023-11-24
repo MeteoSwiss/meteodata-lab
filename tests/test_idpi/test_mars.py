@@ -15,7 +15,7 @@ def sample():
         "levtype": "ml",
         "levelist": list(range(1, 81)),
         "model": "COSMO-1E",
-        "number": 1,
+        "number": 0,
         "stream": "enfo",
         "param": 500028,  # U
         "time": "0000",
@@ -59,10 +59,3 @@ def test_fdb_sfc(sample):
 def test_request_raises():
     with pytest.raises(ValueError):
         mars.Request("U", date="20200101", time="0000", model="undef")
-
-
-def test_no_defaults():
-    observed = mars.Request("U").dump(exclude_defaults=True)
-    expected = {"param": "U"}
-
-    assert observed == expected

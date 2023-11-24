@@ -8,9 +8,9 @@ spack:
   - eckit@1.20.2 ~mpi
   - eccodes@2.25 jp2k=none
   - hdf5 ~mpi
-  view: false
+  view: true
   concretizer:
     unify: true
   config:
     install_tree:
-      padded_length: 255
+      padded_length: 128

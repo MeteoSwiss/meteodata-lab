@@ -11,6 +11,8 @@ import pydantic
 import yaml
 from pydantic import dataclasses as pdc
 
+ValidationError = pydantic.ValidationError
+
 
 class Class(str, Enum):
     OPERATIONAL_DATA = "od"
@@ -71,7 +73,7 @@ class Request:
 
     expver: str = "0001"
     levelist: int | tuple[int, ...] | None = None
-    number: int | tuple[int, ...] = 1
+    number: int | tuple[int, ...] = 0
     step: int | tuple[int, ...] = 0
 
     class_: Class = dc.field(
@@ -83,19 +85,21 @@ class Request:
     stream: Stream = Stream.ENS_FORECAST
     type: Type = Type.ENS_MEMBER
 
-    def dump(self, exclude_defaults: bool = False):
+    def dump(self):
         root = pydantic.RootModel(self)
         return root.model_dump(
             mode="json",
             by_alias=True,
             exclude_none=True,
-            exclude_defaults=exclude_defaults,
         )
 
     def to_fdb(self):
         mapping = _load_mapping()
         param_id = mapping[self.param]["cosmo"]["paramId"]
         staggered = mapping[self.param]["cosmo"].get("vertStag", False)
+
+        if self.date is None or self.time is None:
+            raise RuntimeError("date and time are required fields for FDB.")
 
         if self.levelist is None and self.levtype == LevType.MODEL_LEVEL:
             n_lvl = N_LVL[self.model]
@@ -106,4 +110,4 @@ class Request:
             levelist = self.levelist
 
         obj = dc.replace(self, param=param_id, levelist=levelist)
-        return obj.dump(exclude_defaults=False)
+        return obj.dump()

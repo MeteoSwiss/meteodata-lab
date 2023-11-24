@@ -23,5 +23,6 @@ paths=(
 )
 for path in "${paths[@]}"; do
     ${VERBOSE} && echo "mypy \"${path}\""
-    mypy "${path}" || exit
+    # https://github.com/python/mypy/issues/7276
+    mypy "${path}" --no-incremental || exit
 done

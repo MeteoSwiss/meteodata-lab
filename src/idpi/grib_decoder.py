@@ -2,23 +2,16 @@
 # Standard library
 import dataclasses as dc
 import datetime as dt
-import sys
 import typing
-from contextlib import contextmanager
+from collections.abc import Mapping
 from pathlib import Path
 
 # Third-party
-import earthkit.data  # type: ignore
-import eccodes  # type: ignore
 import numpy as np
 import xarray as xr
 
-# First-party
-import idpi.config
-
 # Local
-from . import tasking
-from .product import ProductDescriptor, Request
+from . import data_source, mars, tasking
 
 DIM_MAP = {
     "level": "z",
@@ -33,25 +26,7 @@ VCOORD_TYPE = {
     "surface": ("surface", 0.0),
 }
 
-
-@contextmanager
-def cosmo_grib_defs():
-    """Enable COSMO GRIB definitions."""
-    root_dir = Path(sys.prefix) / "share"
-    paths = (
-        root_dir / "eccodes-cosmo-resources/definitions",
-        root_dir / "eccodes/definitions",
-    )
-    for path in paths:
-        if not path.exists():
-            raise RuntimeError(f"{path} does not exist")
-    defs_path = ":".join(map(str, paths))
-    restore = eccodes.codes_definition_path()
-    eccodes.codes_set_definitions_path(defs_path)
-    try:
-        yield
-    finally:
-        eccodes.codes_set_definitions_path(restore)
+Request = mars.Request | str | tuple | dict
 
 
 def _is_ensemble(field) -> bool:
@@ -91,8 +66,8 @@ def _extract_pv(pv):
         return {}
     i = len(pv) // 2
     return {
-        Request("ak"): tasking.delayed(xr.DataArray(pv[:i], dims="z")),
-        Request("bk"): tasking.delayed(xr.DataArray(pv[i:], dims="z")),
+        "ak": xr.DataArray(pv[:i], dims="z"),
+        "bk": xr.DataArray(pv[i:], dims="z"),
     }
 
 
@@ -124,7 +99,6 @@ class GribReader:
         self,
         datafiles: list[Path],
         ref_param: str = "HHL",
-        delay: bool = False,
     ):
         """Initialize a grib reader from a list of grib files.
 
@@ -143,12 +117,8 @@ class GribReader:
             if the grid can not be constructed from the ref_param
 
         """
-        self._datafiles = [str(p) for p in datafiles]
-        if idpi.config.get("data_scope", "cosmo") == "cosmo":
-            with cosmo_grib_defs():
-                self._grid = self.load_grid_reference(ref_param)
-        else:
-            self._grid = self.load_grid_reference(ref_param)
+        self.data_source = data_source.DataSource([str(p) for p in datafiles])
+        self._grid = self.load_grid_reference(ref_param)
 
     def load_grid_reference(self, ref_param: str) -> Grid:
         """Construct a grid from a reference parameter.
@@ -169,11 +139,11 @@ class GribReader:
             reference grid
 
         """
-        fs = earthkit.data.from_source("file", self._datafiles)
-        it = iter(fs.sel(param=ref_param))
+        fs = self.data_source.retrieve(ref_param)
+        it = iter(fs)
         field = next(it, None)
         if field is None:
-            msg = f"reference field, {ref_param=} not found in {self._datafiles=}"
+            msg = f"reference field, {ref_param=} not found in data source."
             raise RuntimeError(msg)
         lonlat_dict = {
             geo_dim: xr.DataArray(dims=("y", "x"), data=values)
@@ -191,8 +161,8 @@ class GribReader:
 
         return grid
 
-    def _load_pv(self, pv_param: str):
-        fs = earthkit.data.from_source("file", self._datafiles).sel(param=pv_param)
+    def _load_pv(self, pv_param: Request):
+        fs = self.data_source.retrieve(pv_param)
 
         for field in fs:
             return field.metadata("pv")
@@ -209,16 +179,15 @@ class GribReader:
         geo = metadata["geography"]
         dx = geo["iDirectionIncrementInDegrees"]
         dy = geo["jDirectionIncrementInDegrees"]
+        x0_key = "longitudeOfFirstGridPointInDegrees"
+        y0_key = "latitudeOfFirstGridPointInDegrees"
 
         metadata |= {
             "vcoord_type": vcoord_type,
             "origin": {
                 "z": zshift,
-                "x": np.round(
-                    (geo["longitudeOfFirstGridPointInDegrees"] % 360 - x0) / dx,
-                    1,
-                ),
-                "y": np.round((geo["latitudeOfFirstGridPointInDegrees"] - y0) / dy, 1),
+                "x": np.round((geo[x0_key] % 360 - x0) / dx, 1),
+                "y": np.round((geo[y0_key] - y0) / dy, 1),
             },
         }
         return metadata
@@ -227,8 +196,7 @@ class GribReader:
         self,
         req: Request,
     ):
-        arg = {k: v for k, v in req._asdict().items() if v is not None}
-        fs = earthkit.data.from_source("file", self._datafiles).sel(arg)
+        fs = self.data_source.retrieve(req)
 
         hcoords = None
         metadata: dict[str, typing.Any] = {}
@@ -276,68 +244,20 @@ class GribReader:
             array if array.vcoord_type != "surface" else array.squeeze("z", drop=True)
         )
 
-    def _load_dataset(
-        self,
-        reqs: typing.Iterable[Request],
-        extract_pv: str | None = None,
-    ) -> dict[Request, xr.DataArray]:
-        params = {req.param for req in reqs}
-        if extract_pv is not None and extract_pv not in params:
-            raise ValueError(f"If set, {extract_pv=} must be in {params=}")
-
-        result = {req: tasking.delayed(self._load_param)(req) for req in reqs}
-
-        if not reqs == result.keys():
-            raise RuntimeError(f"Missing params: {reqs - result.keys()}")
-
-        if extract_pv:
-            result = result | _extract_pv(self._load_pv(extract_pv))
-
-        return result
-
     def load(
         self,
-        descriptors: list[ProductDescriptor],
+        requests: Mapping[str, Request],
         extract_pv: str | None = None,
-    ) -> dict[Request, xr.DataArray]:
+    ) -> dict[str, xr.DataArray]:
         """Load a dataset with the requested parameters.
 
         Parameters
         ----------
-        descriptors : list[ProductDescriptor]
-            List of product descriptors from which the input fields required
-            are extracted.
+        requests : Mapping[str, Request]
+            Mapping of label to request for a given field from the data source.
         extract_pv: str | None
-            Optionally extract hybrid level coefficients from the given field.
-
-        Raises
-        ------
-        RuntimeError
-            if not all fields are found in the data source.
-
-        Returns
-        -------
-        dict[Request, xr.DataArray]
-            Mapping of fields by request
-
-        """
-        reqs = {req for desc in descriptors for req in desc.input_fields}
-
-        return self.load_fields(reqs, extract_pv=extract_pv)
-
-    def load_fieldnames(
-        self,
-        params: list[str],
-        extract_pv: str | None = None,
-    ) -> dict[str, xr.DataArray]:
-        """Load a dataset with the requested parameters by name.
-
-        Parameters
-        ----------
-        params : list[str]
-            List of parameter names to include in the dataset.
-        extract_pv: str | None
-            Optionally extract hybrid level coefficients from the given field.
+            Optionally extract hybrid level coefficients from the field referenced by
+            the given label.
 
         Raises
         ------
@@ -347,42 +267,28 @@ class GribReader:
         Returns
         -------
         dict[str, xr.DataArray]
-            Mapping of fields by param name
+            Mapping of fields by label
 
         """
-        desc = ProductDescriptor(input_fields=[Request(param) for param in params])
-        result = self.load([desc], extract_pv=extract_pv)
-        return {req.param: field for req, field in result.items()}
+        result = {
+            name: tasking.delayed(self._load_param)(req)
+            for name, req in requests.items()
+        }
 
-    def load_fields(
+        if extract_pv is not None:
+            if extract_pv not in requests:
+                msg = f"{extract_pv=} was not a key of the given requests."
+                raise RuntimeError(msg)
+            return result | tasking.delayed(
+                _extract_pv(self._load_pv(requests[extract_pv]))
+            )
+
+        return result
+
+    def load_fieldnames(
         self,
-        params: typing.Iterable[Request],
+        params: list[str],
         extract_pv: str | None = None,
-    ) -> dict[Request, xr.DataArray]:
-        """Load a dataset with the requested list of fields.
-
-        Parameters
-        ----------
-        params : list[str]
-            List of fields to load from the data files.
-        extract_pv: str | None, optional
-            Extract hybrid level coefficients from the given field.
-
-        Raises
-        ------
-        RuntimeError
-            if not all fields are found in the data source.
-
-        Returns
-        -------
-        dict[Request, xr.DataArray]
-            Mapping of fields by request
-
-        """
-        if idpi.config.get("data_scope", "cosmo") == "cosmo":
-            if extract_pv:
-                raise ValueError("extract_pv not supported with data_scope==cosmo")
-            with cosmo_grib_defs():
-                return self._load_dataset(params, extract_pv=None)
-        else:
-            return self._load_dataset(params, extract_pv=extract_pv)
+    ) -> dict[str, xr.DataArray]:
+        reqs = {param: param for param in params}
+        return self.load(reqs, extract_pv)

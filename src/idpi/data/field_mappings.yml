@@ -28,6 +28,9 @@ ETADOT:
 P:
   cosmo:
     paramId: 500001
+T_G:
+  cosmo:
+    paramId: 500010
 T:
   ifs:
     name: t
@@ -129,6 +132,9 @@ ASOB_S:
     paramId: 176
   cosmo:
     paramId: 500078
+ATHB_S:
+  cosmo:
+    paramId: 500080
 ASHFL_S:
 # IFS and cosmo not compatible
   ifs:

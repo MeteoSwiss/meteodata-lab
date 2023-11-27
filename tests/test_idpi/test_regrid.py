@@ -11,7 +11,7 @@ def test_regrid(data_dir, fieldextra):
     datafile = data_dir / "lfff00000000.ch"
     cdatafile = data_dir / "lfff00000000c.ch"
 
-    reader = grib_decoder.GribReader([cdatafile, datafile])
+    reader = grib_decoder.GribReader.from_files([cdatafile, datafile])
     ds = reader.load_fieldnames(["T", "HHL"])
 
     hzerocl = fhzerocl(ds["T"], ds["HHL"], extrapolate=True)

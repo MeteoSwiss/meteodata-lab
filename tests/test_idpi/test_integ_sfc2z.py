@@ -24,7 +24,7 @@ def test_integ_sfc2z(field, k_max, operator, fx_op, atol, rtol, data_dir, fielde
     k_top = 61
 
     # load input data set
-    reader = GribReader([cdatafile, datafile])
+    reader = GribReader.from_files([cdatafile, datafile])
     ds = reader.load_fieldnames([field, "HHL", "HSURF"])
 
     hhl = ds["HHL"]

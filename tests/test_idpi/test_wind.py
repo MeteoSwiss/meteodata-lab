@@ -10,7 +10,7 @@ def test_wind(data_dir, fieldextra):
     datafile = data_dir / "lfff00000000.ch"
     cdatafile = data_dir / "lfff00000000c.ch"
 
-    reader = GribReader([datafile, cdatafile])
+    reader = GribReader.from_files([datafile, cdatafile])
     ds = reader.load_fieldnames(["U_10M", "V_10M"])
 
     u_10m = ds["U_10M"].isel(z=0)

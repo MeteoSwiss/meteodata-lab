@@ -10,7 +10,7 @@ def test_relhum(data_dir, fieldextra):
     datafile = data_dir / "lfff00000000.ch"
     cdatafile = data_dir / "lfff00000000c.ch"
 
-    reader = GribReader([cdatafile, datafile], ref_param="P")
+    reader = GribReader.from_files([cdatafile, datafile], ref_param="P")
     ds = reader.load_fieldnames(["P", "T", "QV"])
 
     relhum_arr = relhum(ds["QV"], ds["T"], ds["P"], clipping=True, phase="water")

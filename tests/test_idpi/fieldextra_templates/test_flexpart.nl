@@ -14,10 +14,10 @@
 /
 
 &GlobalResource
- dictionary           = "/project/s83c/fieldextra/tsa/resources/dictionary_ifs.txt",
- grib_definition_path = "/project/s83c/fieldextra/tsa/resources/eccodes_definitions_cosmo",
-                        "/project/s83c/fieldextra/tsa/resources/eccodes_definitions_vendor"
- grib2_sample         = "/project/s83c/fieldextra/tsa/resources/eccodes_samples/COSMO_GRIB2_default.tmpl"
+ dictionary           = "{{ resources }}/dictionary_ifs.txt",
+ grib_definition_path = "{{ resources }}/eccodes_definitions_cosmo",
+                        "{{ resources }}/eccodes_definitions_vendor"
+ grib2_sample         = "{{ resources }}/eccodes_samples/COSMO_GRIB2_default.tmpl"
 /
 &GlobalSettings
  default_model_name ="ifs"

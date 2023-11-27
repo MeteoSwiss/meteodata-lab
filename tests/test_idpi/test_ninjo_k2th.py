@@ -10,7 +10,7 @@ def test_ninjo_k2th(data_dir, fieldextra):
     datafile = data_dir / "lfff00000000.ch"
     cdatafile = data_dir / "lfff00000000c.ch"
 
-    reader = GribReader([cdatafile, datafile])
+    reader = GribReader.from_files([cdatafile, datafile])
 
     ds = reader.load_fieldnames(["U", "V", "W", "P", "T", "QV", "QC", "QI", "HHL"])
     observed_mean, observed_at_theta = ninjo.ninjo_k2th(

@@ -13,7 +13,7 @@ def test_curl(data_dir):
     datafile = data_dir / "lfff00000000.ch"
     cdatafile = data_dir / "lfff00000000c.ch"
 
-    reader = GribReader([cdatafile, datafile])
+    reader = GribReader.from_files([cdatafile, datafile])
     ds = reader.load_fieldnames(["U", "V", "W", "HHL"])
 
     geo = ds["HHL"].attrs["geography"]

@@ -26,7 +26,7 @@ def test_integ_z2z(field, k_max, operator, fx_op, data_dir, fieldextra):
     cdatafile = data_dir / "lfff00000000c.ch"
 
     # load input data set
-    reader = GribReader([cdatafile, datafile])
+    reader = GribReader.from_files([cdatafile, datafile])
 
     ds = reader.load_fieldnames([field, "HHL"])
     hhl = ds["HHL"]

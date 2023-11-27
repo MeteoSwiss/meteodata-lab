@@ -4,11 +4,11 @@
 /
 
 &GlobalResource
- dictionary="/project/s83c/fieldextra/tsa/resources/dictionary_cosmo.txt"
- grib_definition_path="/project/s83c/fieldextra/tsa/resources/eccodes_definitions_cosmo",
-                        "/project/s83c/fieldextra/tsa/resources/eccodes_definitions_vendor"
- grib2_sample="/project/s83c/fieldextra/tsa/resources/eccodes_samples/COSMO_GRIB2_default.tmpl"
- rttov_coefs_path="/project/s83c/fieldextra/tsa/resources/rttov_coefficients"
+ dictionary="{{ resources }}/dictionary_cosmo.txt"
+ grib_definition_path="{{ resources }}/eccodes_definitions_cosmo",
+                        "{{ resources }}/eccodes_definitions_vendor"
+ grib2_sample="{{ resources }}/eccodes_samples/COSMO_GRIB2_default.tmpl"
+ rttov_coefs_path="{{ resources }}/rttov_coefficients"
 /
 
 &GlobalSettings

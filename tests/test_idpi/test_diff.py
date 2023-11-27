@@ -11,7 +11,7 @@ from idpi.operators.theta import ftheta
 def test_masspoint_field(data_dir):
     datafile = data_dir / "lfff00000000.ch"
 
-    reader = GribReader([datafile], ref_param="P")
+    reader = GribReader.from_files([datafile], ref_param="P")
 
     ds = reader.load_fieldnames(["P", "T"])
 
@@ -35,7 +35,7 @@ def test_masspoint_field(data_dir):
 def test_staggered_field(data_dir):
     datafile = data_dir / "lfff00000000.ch"
 
-    reader = GribReader([datafile], ref_param="W")
+    reader = GribReader.from_files([datafile], ref_param="W")
 
     ds = reader.load_fieldnames(["W"])
 

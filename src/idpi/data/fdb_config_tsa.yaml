@@ -1,0 +1,8 @@
+---
+type: local
+engine: toc
+schema: /project/s83c/rz+/icon_data_processing_incubator/fdb_schema
+spaces:
+- handler: Default
+  roots:
+  - path: /scratch/ckanesan/fdb_32_39x45_51

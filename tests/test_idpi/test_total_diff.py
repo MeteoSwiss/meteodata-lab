@@ -13,7 +13,7 @@ def test_total_diff(data_dir):
     cdatafile = data_dir / "lfff00000000c.ch"
     datafile = data_dir / "lfff00000000.ch"
 
-    reader = GribReader([cdatafile, datafile])
+    reader = GribReader.from_files([cdatafile, datafile])
 
     ds = reader.load_fieldnames(["HHL"])
 

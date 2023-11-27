@@ -13,7 +13,7 @@ def test_fill_undef(data_dir, fieldextra):
     datafile = data_dir / "lfff00000000.ch"
     cdatafile = data_dir / "lfff00000000c.ch"
 
-    reader = GribReader([cdatafile, datafile])
+    reader = GribReader.from_files([cdatafile, datafile])
     ds = reader.load_fieldnames(["T", "HHL"])
 
     hzerocl = fhzerocl(ds["T"], ds["HHL"])
@@ -30,7 +30,7 @@ def test_disk_avg(data_dir, fieldextra):
     datafile = data_dir / "lfff00000000.ch"
     cdatafile = data_dir / "lfff00000000c.ch"
 
-    reader = GribReader([cdatafile, datafile])
+    reader = GribReader.from_files([cdatafile, datafile])
 
     ds = reader.load_fieldnames(
         ["T", "HHL"],

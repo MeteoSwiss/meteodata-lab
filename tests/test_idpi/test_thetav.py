@@ -9,7 +9,7 @@ from idpi.grib_decoder import GribReader
 def test_thetav(data_dir, fieldextra):
     datafile = data_dir / "lfff00000000.ch"
 
-    reader = GribReader([datafile], ref_param="P")
+    reader = GribReader.from_files([datafile], ref_param="P")
 
     ds = reader.load_fieldnames(["P", "T", "QV"])
     thetav = mthetav.fthetav(ds["P"], ds["T"], ds["QV"])

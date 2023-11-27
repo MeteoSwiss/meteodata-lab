@@ -22,7 +22,7 @@ def test_intpl_k2theta(mode, data_dir, fieldextra):
     cdatafile = data_dir / "lfff00000000c.ch"
 
     # load input data set
-    reader = GribReader([cdatafile, datafile])
+    reader = GribReader.from_files([cdatafile, datafile])
 
     ds = reader.load_fieldnames(["P", "T", "HHL"])
 

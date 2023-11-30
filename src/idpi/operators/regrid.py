@@ -118,6 +118,48 @@ class RegularGrid:
             raise ValueError("Inconsistent regrid parameters")
         return cls(crs, int(nx), int(ny), xmin, xmax, ymin, ymax)
 
+    def to_crs(self, crs: str, **kwargs):
+        """Return a new grid in the given coordinate reference system.
+
+        Parameters
+        ----------
+        crs : str
+            The coordinate reference system in which the output grid should be defined.
+
+        Returns
+        -------
+        RegularGrid or subtype
+            Output grid in the given coordinate reference system.
+
+        """
+        dst_crs = CRS.from_string(crs)
+        tx, width, height = typing.cast(
+            tuple[transform.Affine, int, int],
+            warp.calculate_default_transform(
+                src_crs=self.crs,
+                dst_crs=dst_crs,
+                width=self.nx,
+                height=self.ny,
+                left=self.xmin,
+                bottom=self.ymin,
+                right=self.xmax,
+                top=self.ymax,
+                **kwargs,
+            ),
+        )
+        a = transform.AffineTransformer(tx)
+        xmin, ymax = a.xy(-0.5, -0.5)
+        xmax, ymin = a.xy(height + 0.5, width + 0.5)  # row, col
+        return type(self)(dst_crs, width, height, xmin, xmax, ymin, ymax)
+
+    @property
+    def x(self) -> np.ndarray:
+        return np.arange(self.nx) * self.dx + self.xmin
+
+    @property
+    def y(self) -> np.ndarray:
+        return np.arange(self.ny) * self.dy + self.ymin
+
     @property
     def dx(self) -> float:
         return (self.xmax - self.xmin) / (self.nx - 1)

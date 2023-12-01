@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "idpi"
-version = "0.1.0"
+version = "0.2.0-rc1"
 description = "Prototype for a data post-processing framework on the basis of xarray."
 readme = "README.md"
 keywords = ["Icon", "Data Processing"]

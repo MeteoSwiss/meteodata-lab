@@ -30,7 +30,7 @@ class DataCache:
     _populated: list[Path] = dc.field(default_factory=list, init=False)
 
     def __post_init__(self):
-        if not (self.fields.keys() <= self.files.keys()):
+        if not self.fields.keys() <= self.files.keys():
             raise ValueError("fields keys must be a subset of files keys")
 
     @property
@@ -48,17 +48,27 @@ class DataCache:
         )
         for label, name in self.files.items():
             name = name.lower()
+            numbers = self.numbers if "<mmm>" in name else [None]
+            steps = self.steps if "<ddhh>" in name else [None]
             for src, dst in patterns:
                 name = name.replace(src, dst)
-            for number, step in product(self.numbers, self.steps):
-                dd = step // 24
-                hh = step % 24
+            for number, step in product(numbers, steps):
+                dd = step // 24 if step is not None else None
+                hh = step % 24 if step is not None else None
                 yield label, name.format(mmm=number, dd=dd, hh=hh), number, step
 
-    def _iter_requests(self, label: str, number: int, step: int):
+    def _iter_requests(self, label: str, number: int | None, step: int | None):
+        param_map: dict[str, list[str]] = {}
         for param, levtype in self.fields[label]:
-            # TODO: group params by levtype
-            yield {"param": param, "levtype": levtype, "number": number, "step": step}
+            param_map.setdefault(levtype, []).append(param)
+
+        for levtype, params in param_map.items():
+            req = {"param": params, "levtype": levtype}
+            if number is not None:
+                req["number"] = number
+            if step is not None:
+                req["step"] = step
+            yield req
 
     def populate(self, source: data_source.DataSource):
         for label, rel_path, number, step in self._iter_files():

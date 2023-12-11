@@ -109,7 +109,7 @@ W_SNOW:
     paramId: 500044
 
 TOT_CON:
-# IFS and cosmo not compatible
+  # IFS and cosmo not compatible
   ifs:
     name: cp
     paramId: 143
@@ -118,7 +118,7 @@ TOT_CON:
     unit_factor: 1000
 
 TOT_GSP:
-# IFS and cosmo not compatible
+  # IFS and cosmo not compatible
   ifs:
     name: lsp
     paramId: 142
@@ -126,7 +126,7 @@ TOT_GSP:
     paramId: 500042
     unit_factor: 1000
 ASOB_S:
-# IFS and cosmo not compatible
+  # IFS and cosmo not compatible
   ifs:
     name: ssr
     paramId: 176
@@ -136,7 +136,7 @@ ATHB_S:
   cosmo:
     paramId: 500080
 ASHFL_S:
-# IFS and cosmo not compatible
+  # IFS and cosmo not compatible
   ifs:
     name: sshf
     paramId: 146
@@ -160,3 +160,12 @@ HHL:
 HSURF:
   cosmo:
     paramId: 500007
+TOT_PREC:
+  cosmo:
+    paramId: 500041
+TQC:
+  cosmo:
+    paramId: 500051
+ECHOTOPinM:
+  cosmo:
+    paramId: 503422

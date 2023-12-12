@@ -1,5 +1,13 @@
 # History
 
+## [0.2.0-rc2] (2023-12-11)
+
+- Added `product.run_products` function
+- Updated field mappings
+- Data cache will inject the step and number in the request depending on the file pattern
+- `mars.Request` now supports multiple params
+
+
 ## [0.2.0-rc1] (2023-12-01)
 
 - Added support for the FDB data source
@@ -46,5 +54,6 @@
 - Added ninjo_k2th product
 - Added GRIB data loader based on earthkit-data
 
+[0.2.0-rc2]: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.2.0-rc1..v0.2.0-rc2
 [0.2.0-rc1]: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.1.0..v0.2.0-rc1
 [0.1.0]: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/tree/v0.1.0

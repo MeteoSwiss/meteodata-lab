@@ -316,3 +316,100 @@ def interpolate_k2theta(
         )
 
     return field_on_tc
+
+
+def interpolate_k2any(
+    field: xr.DataArray,
+    mode: Literal["low_fold", "high_fold"],
+    tc_field: xr.DataArray,
+    tc_values: Sequence[float],
+    h_field: xr.DataArray,
+) -> xr.DataArray:
+    """Interpolate a field from model levels to coordinates w.r.t. an arbitrary field.
+
+    Example for vertical interpolation to isosurfaces of a target field
+    that is no monotonic function of height.
+
+    Parameters
+    ----------
+    field : xarray.DataArray
+        field to interpolate (only typeOfLevel="generalVerticalLayer" is supported)
+    mode : str
+        interpolation algorithm, one of {"low_fold", "high_fold"}
+    tc_field : xarray.DataArray
+        target field
+        (only typeOfLevel="generalVerticalLayer" is supported)
+    tc_values : list of float
+        target coordinate values
+    h_field : xarray.DataArray
+        height on k levels (only typeOfLevel="generalVerticalLayer" is supported)
+
+    Returns
+    -------
+    field_on_tc : xarray.DataArray
+        field on target coordinates
+
+    """
+    modes = ("low_fold", "high_fold")
+    if mode not in modes:
+        raise ValueError(f"Unsupported mode: {mode}")
+
+    for f in (field, tc_field, h_field):
+        if f.vcoord_type != "model_level" or f.origin["z"] != 0.0:
+            raise ValueError("Input fields must be defined on full model levels")
+
+    # ... tc values outside range of meaningful values of height,
+    # used in tc interval search (in m amsl)
+    h_min = -1000.0
+    h_max = 100000.0
+
+    tc = TargetCoordinates(
+        type_of_level=tc_field.parameter["shortName"],
+        values=list(tc_values),
+        attrs=TargetCoordinatesAttrs(
+            standard_name="",
+            long_name=tc_field.parameter["name"],
+            units=tc_field.parameter["units"],
+            positive="up",
+        ),
+    )
+
+    # Prepare output field field_on_tc on target coordinates
+    field_on_tc = init_field_with_vcoord(field, tc, np.nan)
+
+    # Interpolate
+    # ... prepare interpolation
+    tckm1 = tc_field.shift(z=1)
+    fkm1 = field.shift(z=1)
+
+    for tc_idx, value in enumerate(tc.values):
+        # ... find the height field where target is >= value on level k and was <= value
+        #     on level k-1 or where target is <= value on level k
+        #     and was >= value on level k-1
+        h = h_field.where(
+            ((tc_field >= value) & (tckm1 <= value))
+            | ((tc_field <= value) & (tckm1 >= value))
+        )
+        if mode == "low_fold":
+            # ... extract the index k of the smallest height at which
+            # the condition is fulfilled
+            tcind = h.fillna(h_max).argmin(dim="z")
+        if mode == "high_fold":
+            # ... extract the index k of the largest height at which the condition
+            # is fulfilled
+            tcind = h.fillna(h_min).argmax(dim="z")
+
+        # ... extract target and field at level k
+        t2 = tc_field[{"z": tcind}]
+        f2 = field[{"z": tcind}]
+        # ... extract target and field at level k-1
+        f1 = fkm1[{"z": tcind}]
+        t1 = tckm1[{"z": tcind}]
+
+        # ... compute the interpolation weights
+        ratio = xr.where(np.abs(t2 - t1) > 0, (value - t1) / (t2 - t1), 0.0)
+
+        # ... interpolate and update field_on_tc
+        field_on_tc[{tc.type_of_level: tc_idx}] = (1.0 - ratio) * f1 + ratio * f2
+
+    return field_on_tc

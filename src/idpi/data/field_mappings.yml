@@ -169,3 +169,9 @@ TQC:
 ECHOTOPinM:
   cosmo:
     paramId: 503422
+SLI:
+  cosmo:
+    paramId: 503204
+DBZ_CMAX:
+  cosmo:
+    paramId: 500175

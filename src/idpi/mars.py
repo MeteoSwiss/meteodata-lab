@@ -2,6 +2,7 @@
 
 # Standard library
 import dataclasses as dc
+import json
 import typing
 from collections.abc import Iterable
 from enum import Enum
@@ -88,6 +89,11 @@ class Request:
     type: Type = Type.ENS_MEMBER
 
     def dump(self):
+        if pydantic.__version__.startswith("1"):
+            json_str = json.dumps(self, default=pydantic.json.pydantic_encoder)
+            obj = json.loads(json_str.replace("class_", "class"))
+            return {key: value for key, value in obj.items() if value is not None}
+
         root = pydantic.RootModel(self)
         return root.model_dump(
             mode="json",

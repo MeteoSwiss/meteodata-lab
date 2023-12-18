@@ -1,5 +1,12 @@
 # History
 
+## [0.2.0-rc3] (2023-12-18)
+
+- Added vertical interpolation operator `interpolate_k2any`
+- Testing data marker determines the test data that should be used
+- Removed the `system_definitions` module
+
+
 ## [0.2.0-rc2] (2023-12-11)
 
 - Added `product.run_products` function
@@ -54,6 +61,7 @@
 - Added ninjo_k2th product
 - Added GRIB data loader based on earthkit-data
 
+[0.2.0-rc3]: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.2.0-rc2..v0.2.0-rc3
 [0.2.0-rc2]: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.2.0-rc1..v0.2.0-rc2
 [0.2.0-rc1]: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.1.0..v0.2.0-rc1
 [0.1.0]: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/tree/v0.1.0

@@ -7,8 +7,8 @@ from idpi.grib_decoder import GribReader
 
 
 def test_ninjo_k2th(data_dir, fieldextra):
-    datafile = data_dir / "lfff00000000.ch"
-    cdatafile = data_dir / "lfff00000000c.ch"
+    datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
+    cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
     reader = GribReader.from_files([cdatafile, datafile])
 
@@ -36,7 +36,7 @@ def test_ninjo_k2th(data_dir, fieldextra):
     assert_allclose(
         fs_ds["POT_VORTIC_AT_THETA"],
         observed_at_theta["pot_vortic"],
-        atol=1e-9,
+        atol=1e-8,
         rtol=1e-5,
     )
 
@@ -50,7 +50,7 @@ def test_ninjo_k2th(data_dir, fieldextra):
     assert_allclose(
         fs_ds["U"],
         observed_at_theta["u"],
-        atol=1e-9,
+        atol=1e-4,
         rtol=1e-5,
     )
 

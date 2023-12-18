@@ -7,8 +7,7 @@ from idpi.grib_decoder import GribReader
 
 
 def test_thetav(data_dir, fieldextra):
-    datafile = data_dir / "lfff00000000.ch"
-
+    datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
     reader = GribReader.from_files([datafile], ref_param="P")
 
     ds = reader.load_fieldnames(["P", "T", "QV"])

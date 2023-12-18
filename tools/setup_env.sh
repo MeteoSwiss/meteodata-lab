@@ -20,7 +20,6 @@ HELP=false
 help_msg="Usage: $(basename "${0}") [-n NAME] [-p VER] [-u] [-e] [-m] [-h]
 
 Options:
- -f NAME    Fieldextra Path - defaults to the system one
  -n NAME    Env name [default: ${DEFAULT_ENV_NAME}
  -p VER     Python version [default: ${PYVERSION}]
  -u         Use unpinned requirements (minimal version restrictions)
@@ -32,7 +31,6 @@ Options:
 # Eval command line options
 while getopts f:n:p:ehmu flag; do
     case ${flag} in
-        f) FIELDEXTRA_PATH=${OPTARG};;
         n) ENV_NAME=${OPTARG};;
         p) PYVERSION=${OPTARG};;
         e) EXPORT=true;;
@@ -46,11 +44,6 @@ done
 if ${HELP}; then
     echo "${help_msg}"
     exit 0
-fi
-
-if [ -z ${FIELDEXTRA_PATH+x} ]; then
-    echo "IDPI requires a fieldextra binary to be present. The path to the executable needs to be specified  (-f)"
-    exit 1
 fi
 
 echo "Setting up environment for installation"
@@ -81,8 +74,6 @@ source "${miniconda_base}/etc/profile.d/conda.sh"
 conda init bash --no-user --install --system
 
 conda activate ${ENV_NAME}
-
-conda env config vars set FIELDEXTRA_PATH=${FIELDEXTRA_PATH}
 
 cosmo_eccodes=$CONDA_PREFIX/share/eccodes-cosmo-resources
 git clone --depth 1 --branch v2.25.0.1 https://github.com/COSMO-ORG/eccodes-cosmo-resources.git $cosmo_eccodes

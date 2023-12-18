@@ -7,8 +7,8 @@ from idpi.grib_decoder import GribReader
 
 
 def test_brn(data_dir, fieldextra):
-    datafile = data_dir / "lfff00000000.ch"
-    cdatafile = data_dir / "lfff00000000c.ch"
+    datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
+    cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
     reader = GribReader.from_files([cdatafile, datafile])
     ds = reader.load_fieldnames(["P", "T", "QV", "U", "V", "HHL", "HSURF"])

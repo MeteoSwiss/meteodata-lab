@@ -14,8 +14,8 @@ from idpi.operators.vertical_reduction import integrate_k
     [("integral", "integ", 1e-4, 1e-6), ("normed_integral", "norm_integ", 1e-5, 1e-6)],
 )
 def test_integ_sfc2z(field, k_max, operator, fx_op, atol, rtol, data_dir, fieldextra):
-    datafile = data_dir / "lfff00000000.ch"
-    cdatafile = data_dir / "lfff00000000c.ch"
+    datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
+    cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
     # modes
     mode = "z2z"

@@ -19,8 +19,8 @@ def test_minmax_z2z(operator, fx_op, field, layer, data_dir, fieldextra):
     k_top = 60
 
     # input data
-    datafile = data_dir / "lfff00000000.ch"
-    cdatafile = data_dir / "lfff00000000c.ch"
+    datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
+    cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
     # load input data set
     reader = GribReader.from_files([cdatafile, datafile])

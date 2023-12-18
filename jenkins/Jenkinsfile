@@ -50,7 +50,7 @@ pipeline {
                 source ${WORKSPACE}/miniconda/etc/profile.d/conda.sh
                 conda init bash --no-user --install --system
                 conda activate
-                bash tools/setup_env.sh -u -n no-deps -f /project/s83c/fieldextra/tsa/bin/fieldextra_gnu_opt_omp
+                bash tools/setup_env.sh -u -n no-deps
                 conda activate no-deps
                 pip install --no-deps .
                 '''
@@ -62,14 +62,12 @@ pipeline {
                 source $WORKSPACE/miniconda/etc/profile.d/conda.sh
                 conda activate no-deps
                 cd ${WORKSPACE}
-                export INPUT_DATA_DIR=/project/s83c/rz+/icon_data_processing_incubator/data/SWISS
                 pytest -m "not ifs" tests
                 '''
                 sh '''#!/usr/bin/env bash
                 source $WORKSPACE/miniconda/etc/profile.d/conda.sh
                 conda activate no-deps
                 cd ${WORKSPACE}
-                export INPUT_DATA_DIR=/project/s83c/rz+/icon_data_processing_incubator/data/SWISS
                 pytest -m ifs tests
                 '''
             }

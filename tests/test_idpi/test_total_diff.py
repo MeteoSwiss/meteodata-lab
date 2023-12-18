@@ -10,8 +10,8 @@ from idpi.operators.total_diff import TotalDiff
 
 
 def test_total_diff(data_dir):
-    cdatafile = data_dir / "lfff00000000c.ch"
-    datafile = data_dir / "lfff00000000.ch"
+    datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
+    cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
     reader = GribReader.from_files([cdatafile, datafile])
 

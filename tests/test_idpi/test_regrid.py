@@ -11,9 +11,10 @@ from idpi.operators import regrid
 from idpi.operators.hzerocl import fhzerocl
 
 
+@pytest.mark.data("original")
 def test_regrid(data_dir, fieldextra):
-    datafile = data_dir / "lfff00000000.ch"
-    cdatafile = data_dir / "lfff00000000c.ch"
+    datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
+    cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
     reader = grib_decoder.GribReader.from_files([cdatafile, datafile])
     ds = reader.load_fieldnames(["T", "HHL"])

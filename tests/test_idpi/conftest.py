@@ -2,7 +2,6 @@
 # Standard library
 import os
 import subprocess
-from collections.abc import Iterable
 from pathlib import Path
 
 # Third-party
@@ -27,12 +26,25 @@ def machine():
     return "unknown"
 
 
-@pytest.fixture(scope="session")
-def data_dir(machine):
+@pytest.fixture
+def data_dir(request, machine):
     """Base data dir."""
-    if machine == "tsa":
-        return Path("/project/s83c/rz+/icon_data_processing_incubator/data/SWISS")
-    raise RuntimeError("panic")
+    if machine != "tsa":
+        return None
+    base_dir = Path("/project/s83c/rz+/icon_data_processing_incubator/")
+    marker = request.node.get_closest_marker("data")
+    if marker is None:
+        return base_dir / "datasets/32_39x45_51"
+    match marker.args[0]:
+        case "original":
+            return base_dir / "datasets/original"
+        case "reduced":
+            return base_dir / "datasets/32_39x45_51"
+        case "reduced-time":
+            return base_dir / "datasets/32_39x45_51/COSMO-1E_time"
+        case "reduced-ens":
+            return base_dir / "datasets/32_39x45_51/COSMO-1E_ens"
+    raise RuntimeError(f"No match for data mark {marker.args[0]}")
 
 
 @pytest.fixture(scope="session")
@@ -87,15 +99,20 @@ def request_template():
 def fieldextra(tmp_path, data_dir, template_env, fieldextra_path):
     """Run fieldextra on a given field."""
 
-    def f(field_name, hh: int | Iterable[int] | None = 0, **ctx):
-        default_conf_files = {
-            "inputi": data_dir / "lfff<DDHH>0000.ch",
-            "inputc": data_dir / "lfff00000000c.ch",
-            "output": f"<HH>_{field_name}.nc",
-        }
-        conf_files = ctx.pop("conf_files", default_conf_files)
-        template = template_env.get_template(f"test_{field_name}.nl")
-        nl_path = tmp_path / f"test_{field_name}.nl"
+    def f(
+        product: str,
+        conf_files: dict[str, str] | None = None,
+        load_output: str | list[str] = "00_outfile.nc",
+        **ctx,
+    ):
+        if conf_files is None:
+            conf_files = {
+                "inputi": data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000",
+                "inputc": data_dir / "COSMO-1E/1h/const/000/lfff00000000c",
+                "output": "<HH>_outfile.nc",
+            }
+        template = template_env.get_template(f"test_{product}.nl")
+        nl_path = tmp_path / f"test_{product}.nl"
         ctx["file"] = conf_files
         ctx["resources"] = fieldextra_path / "resources"
         nl_path.write_text(template.render(**ctx))
@@ -103,12 +120,8 @@ def fieldextra(tmp_path, data_dir, template_env, fieldextra_path):
         executable = str(fieldextra_path / "bin/fieldextra_gnu_opt_omp")
         subprocess.run([executable, str(nl_path)], check=True, cwd=tmp_path)
 
-        if isinstance(hh, int):
-            return xr.open_dataset(tmp_path / f"{hh:02d}_{field_name}.nc")
-        if isinstance(hh, Iterable):
-            return [xr.open_dataset(tmp_path / f"{h:02d}_{field_name}.nc") for h in hh]
-        if hh is None:
-            return xr.open_dataset(tmp_path / f"{field_name}.nc")
-        raise TypeError("Unknown type for param hh")
+        if isinstance(load_output, str):
+            return xr.open_dataset(tmp_path / load_output)
+        return [xr.open_dataset(tmp_path / filename) for filename in load_output]
 
     return f

@@ -9,9 +9,10 @@ from idpi.grib_decoder import GribReader
 from idpi.operators.hzerocl import fhzerocl
 
 
+@pytest.mark.data("original")
 def test_fill_undef(data_dir, fieldextra):
-    datafile = data_dir / "lfff00000000.ch"
-    cdatafile = data_dir / "lfff00000000c.ch"
+    datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
+    cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
     reader = GribReader.from_files([cdatafile, datafile])
     ds = reader.load_fieldnames(["T", "HHL"])
@@ -26,9 +27,10 @@ def test_fill_undef(data_dir, fieldextra):
     assert_allclose(observed, expected, rtol=2e-6)
 
 
+@pytest.mark.data("original")
 def test_disk_avg(data_dir, fieldextra):
-    datafile = data_dir / "lfff00000000.ch"
-    cdatafile = data_dir / "lfff00000000c.ch"
+    datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
+    cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
     reader = GribReader.from_files([cdatafile, datafile])
 

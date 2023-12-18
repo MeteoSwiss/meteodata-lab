@@ -9,8 +9,8 @@ from idpi.operators.hzerocl import fhzerocl
 
 @pytest.mark.parametrize("extrapolate", [True, False])
 def test_hzerocl(data_dir, fieldextra, extrapolate):
-    datafile = data_dir / "lfff00000000.ch"
-    cdatafile = data_dir / "lfff00000000c.ch"
+    datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
+    cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
     reader = GribReader.from_files([cdatafile, datafile])
     ds = reader.load_fieldnames(

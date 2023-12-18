@@ -44,7 +44,7 @@ def test_flexpart(data_dir, fieldextra):
 
     with idpi.config.set_values(data_scope="ifs"):
         reader = GribReader.from_files(datafiles, ref_param="t")
-        ds = reader.load_fieldnames(inputf + constants, extract_pv="u")
+        ds = reader.load_fieldnames(list(inputf + constants), extract_pv="u")
 
     conf_files = {
         "inputi": str(data_dir / "efsf00<HH>0000"),
@@ -52,7 +52,11 @@ def test_flexpart(data_dir, fieldextra):
         "output": "<HH>_flexpart.nc",
     }
 
-    fs_ds, *fs_ds_h = fieldextra("flexpart", hh=(0, 3, 6), conf_files=conf_files)
+    fs_ds, *fs_ds_h = fieldextra(
+        "flexpart",
+        load_output=[f"{i:02d}_flexpart.nc" for i in (0, 3, 6)],
+        conf_files=conf_files,
+    )
     fs_ds_o = {}
     for f in ("FIS", "FR_LAND", "SDOR"):
         fs_ds_o[f] = fs_ds[f].isel(y_1=slice(None, None, -1))

@@ -22,7 +22,7 @@ def test_intpl_k2p(mode, fx_mode, atol, rtol, data_dir, fieldextra):
     tc_units = "hPa"
 
     # input data
-    datafile = data_dir / "lfff00000000.ch"
+    datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
 
     # load input data set
     reader = GribReader.from_files([datafile], ref_param="P")

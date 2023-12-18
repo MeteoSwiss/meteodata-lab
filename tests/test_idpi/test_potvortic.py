@@ -47,7 +47,7 @@ def test_pv(data, fieldextra):
 
     observed = pv.fpotvortic(ds["U"], ds["V"], ds["W"], theta, rho_tot, total_diff)
 
-    conf_files = cache.conf_files | {"output": "<hh>_POT_VORTIC.nc"}
+    conf_files = cache.conf_files | {"output": "<hh>_outfile.nc"}
     fs_ds = fieldextra("POT_VORTIC", conf_files=conf_files)
 
     assert_allclose(

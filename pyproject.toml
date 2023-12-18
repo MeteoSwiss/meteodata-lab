@@ -55,6 +55,7 @@ addopts = [
 markers = [
     "ifs",   # marks tests that use IFS grib definitions
     "cosmo", # marks tests that use COSMO grib definitions
+    "data",  # marks tests that depend on specific test data
 ]
 
 [tool.black]

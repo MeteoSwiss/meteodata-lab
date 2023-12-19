@@ -175,3 +175,6 @@ SLI:
 DBZ_CMAX:
   cosmo:
     paramId: 500175
+DBZ:
+  cosmo:
+    paramId: 500174

@@ -2,11 +2,14 @@
 # Standard library
 import dataclasses as dc
 import datetime as dt
+import io
 import typing
 from collections.abc import Mapping
+from itertools import product
 from pathlib import Path
 
 # Third-party
+import earthkit.data as ekd  # type: ignore
 import numpy as np
 import xarray as xr
 
@@ -18,6 +21,7 @@ DIM_MAP = {
     "perturbationNumber": "eps",
     "step": "time",
 }
+INV_DIM_MAP = {v: k for k, v in DIM_MAP.items()}
 VCOORD_TYPE = {
     "generalVertical": ("model_level", -0.5),
     "generalVerticalLayer": ("model_level", 0.0),
@@ -206,6 +210,7 @@ class GribReader:
                 "x": np.round((geo[x0_key] % 360 - x0) / dx, 1),
                 "y": np.round((geo[y0_key] - y0) / dy, 1),
             },
+            "message": field.message(),
         }
         return metadata
 
@@ -309,3 +314,58 @@ class GribReader:
     ) -> dict[str, xr.DataArray]:
         reqs = {param: param for param in params}
         return self.load(reqs, extract_pv)
+
+
+def _get_type_of_level(field):
+    if field.vcoord_type == "model_level":
+        if field.origin["z"] == 0.0:
+            return "generalVerticalLayer"
+        elif field.origin["z"] == -0.5:
+            return "generalVertical"
+        else:
+            raise ValueError(f"Unsupported field origin in z: {field.origin['z']}")
+    else:
+        mapping = {vc: name for name, (vc, _) in VCOORD_TYPE.items()}
+        return mapping.get(field.vcoord_type, field.vcoord_type)
+
+
+def save(field: xr.DataArray, file_handle: io.BufferedWriter):
+    """Write field to file in GRIB format.
+
+    Parameters
+    ----------
+    field : xarray.DataArray
+        Field to write into the output file.
+    file_handle : io.BufferedWriter
+        File handle for the output file.
+
+    Raises
+    ------
+    ValueError
+        If the field does not have a message attribute.
+
+    """
+    if not hasattr(field, "message"):
+        msg = "The message attribute is required to write to the GRIB format."
+        raise ValueError(msg)
+
+    stream = io.BytesIO(field.message)
+    [md] = (f.metadata() for f in ekd.from_source("stream", stream))
+
+    idx = {
+        dim: field.coords[key]
+        for key in field.dims
+        if (dim := str(key)) not in {"x", "y"}
+    }
+
+    def to_grib(loc: dict[str, xr.DataArray]):
+        result = {INV_DIM_MAP[key]: value.item() for key, value in loc.items()}
+        return result | {"typeOfLevel": _get_type_of_level(field)}
+
+    for idx_slice in product(*idx.values()):
+        loc = {dim: value for dim, value in zip(idx.keys(), idx_slice)}
+        array = field.sel(loc).values
+        metadata = md.override(to_grib(loc))
+
+        fs = ekd.FieldList.from_numpy(array, metadata)
+        fs.write(file_handle)

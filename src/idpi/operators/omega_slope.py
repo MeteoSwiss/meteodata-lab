@@ -3,8 +3,8 @@
 import numpy as np
 import xarray as xr
 
-# First-party
-import idpi.operators.constants as cnt
+# Local
+from .. import physical_constants as pc
 
 
 # similar to the subtract.accumulate but permute the order of the operans of the diff
@@ -38,7 +38,7 @@ def omega_slope(
         * etadot
         * ps
         * (dak_dz / ps + dbk_dz)
-        / (dak_dz / cnt.surface_pressure_ref() + dbk_dz)
+        / (dak_dz / pc.surface_pressure_ref + dbk_dz)
     ).reduce(cumdiff, dim="z")
 
     res.attrs = etadot.attrs

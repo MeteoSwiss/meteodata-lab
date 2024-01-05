@@ -3,11 +3,10 @@
 import numpy as np
 import xarray as xr
 
-# First-party
-from idpi.operators.destagger import destagger
-from idpi.operators.thetav import fthetav
-
-pc_g = 9.80665
+# Local
+from .. import physical_constants as pc
+from .destagger import destagger
+from .thetav import fthetav
 
 
 def fbrn(p, t, qv, u, v, hhl, hsurf):
@@ -27,7 +26,7 @@ def fbrn(p, t, qv, u, v, hhl, hsurf):
     hfl = destagger(hhl, "z")
 
     brn = (
-        pc_g
+        pc.g
         * (hfl - hsurf)
         * (thetav - thetav.isel(z=nlevels - 1))
         * nlevels_xr

@@ -8,7 +8,7 @@ import numpy as np
 import xarray as xr
 
 # Local
-from .. import constants as const
+from .. import physical_constants as pc
 from . import diff
 from .destagger import destagger
 from .total_diff import TotalDiff
@@ -22,8 +22,8 @@ def curl(
     total_diff: TotalDiff,
 ) -> tuple[xr.DataArray, xr.DataArray, xr.DataArray]:
     """Compute the curl of the velocity field."""
-    r_earth_inv = 1 / const.earth_radius
-    acrlat = cast(xr.DataArray, 1 / (np.cos(rlat) * const.earth_radius))
+    r_earth_inv = 1 / pc.earth_radius
+    acrlat = cast(xr.DataArray, 1 / (np.cos(rlat) * pc.earth_radius))
     tgrlat = cast(xr.DataArray, np.tan(rlat))
 
     # compute weighted derivatives for FD
@@ -60,8 +60,8 @@ def curl_alt(
 ) -> tuple[xr.DataArray, xr.DataArray, xr.DataArray]:
     td = total_diff
 
-    r_earth_inv = 1 / const.earth_radius
-    acrlat = 1 / (np.cos(rlat) * const.earth_radius)
+    r_earth_inv = 1 / pc.earth_radius
+    acrlat = 1 / (np.cos(rlat) * pc.earth_radius)
     tgrlat = np.tan(rlat)
 
     u_f = destagger(u, "x")

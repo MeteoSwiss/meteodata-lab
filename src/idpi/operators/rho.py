@@ -4,7 +4,7 @@
 import xarray as xr
 
 # Local
-from .. import constants as const
+from .. import physical_constants as pc
 
 
 def f_rho_tot(
@@ -34,4 +34,4 @@ def f_rho_tot(
         q += QI
     if QP is not None:
         q += QP
-    return P / (const.pc_r_d * T * (1.0 + const.pc_rvd_o * QV - q))
+    return P / (pc.r_d * T * (1.0 + pc.rvd_o * QV - q))

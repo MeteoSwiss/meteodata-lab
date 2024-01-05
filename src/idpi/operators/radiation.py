@@ -3,6 +3,9 @@
 # Third-party
 import xarray as xr
 
+# Local
+from .. import physical_constants as pc
+
 
 def compute_athd_s(athb_s: xr.DataArray, tsurf: xr.DataArray) -> xr.DataArray:
     """Compute incoming longwave radiation at surface level.
@@ -20,9 +23,7 @@ def compute_athd_s(athb_s: xr.DataArray, tsurf: xr.DataArray) -> xr.DataArray:
         Average downward longwave radiation at the surface [W m-2]
 
     """
-    pc_emissivity_surface = 0.996
-    pc_boltzman_cst = 5.6697e-8
-    return athb_s / pc_emissivity_surface + pc_boltzman_cst * tsurf**4
+    return athb_s / pc.emissivity_surface + pc.boltzman_cst * tsurf**4
 
 
 def compute_swdown(diffuse: xr.DataArray, direct: xr.DataArray) -> xr.DataArray:

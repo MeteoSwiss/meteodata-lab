@@ -3,7 +3,7 @@
 import numpy as np
 
 # First-party
-from idpi.constants import pc_b1, pc_b2w, pc_b3, pc_b4w, pc_o_rdv, pc_rdv
+from idpi import physical_constants as pc
 
 
 def pv_sw(t):
@@ -20,7 +20,7 @@ def pv_sw(t):
         pressure of water vapor in Pascal
 
     """
-    return pc_b1 * np.exp(pc_b2w * (t - pc_b3) / (t - pc_b4w))
+    return pc.b1 * np.exp(pc.b2w * (t - pc.b3) / (t - pc.b4w))
 
 
 def qv_pvp(pv, p):
@@ -39,7 +39,7 @@ def qv_pvp(pv, p):
         specific water vapor (dimensionless)
 
     """
-    return pc_rdv * pv / np.maximum((p - pc_o_rdv * pv), 1.0)
+    return pc.rdv * pv / np.maximum((p - pc.o_rdv * pv), 1.0)
 
 
 def pv_qp(qv, p):
@@ -58,4 +58,4 @@ def pv_qp(qv, p):
         partial pressure of water vapor (same unit as p)
 
     """
-    return qv * p / (pc_rdv + pc_o_rdv * qv)
+    return qv * p / (pc.rdv + pc.o_rdv * qv)

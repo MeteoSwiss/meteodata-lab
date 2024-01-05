@@ -5,7 +5,7 @@ import numpy as np
 import xarray as xr
 
 # Local
-from .. import constants as const
+from .. import physical_constants as pc
 from . import diff
 from .curl import curl
 from .support_operators import get_grid_coords
@@ -69,8 +69,8 @@ def fpotvortic(
     curl1, curl2, curl3 = curl(u, v, w, rlat, total_diff)
 
     # coriolis terms
-    cor2 = 2 * const.pc_omega / const.earth_radius * np.cos(lat)
-    cor3 = 2 * const.pc_omega * np.sin(lat)
+    cor2 = 2 * pc.omega / pc.earth_radius * np.cos(lat)
+    cor3 = 2 * pc.omega * np.sin(lat)
 
     dt_dlam = total_diff.d_dlam(diff.dx(theta), diff.dz(theta))
     dt_dphi = total_diff.d_dphi(diff.dy(theta), diff.dz(theta))

@@ -23,3 +23,19 @@ def test_wind(data_dir, fieldextra):
 
     assert_allclose(ff_10m, fx_ds["FF_10M"], rtol=1e-6)
     assert_allclose(dd_10m, fx_ds["DD_10M"], atol=1e-4)
+
+    assert ff_10m.parameter == {
+        "centre": "lssw",
+        "name": "Wind speed (SP_10M)",
+        "paramId": 500025,
+        "shortName": "SP_10M",
+        "units": "m s-1",
+    }
+
+    assert dd_10m.parameter == {
+        "centre": "lssw",
+        "name": "Wind Direction (DD_10M)",
+        "paramId": 500023,
+        "shortName": "DD_10M",
+        "units": "degree true",
+    }

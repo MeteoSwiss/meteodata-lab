@@ -105,6 +105,11 @@ def init_field_with_vcoord(
 def get_grid_coords(n: int, x0: float, dx: float, dim: str) -> xr.DataArray:
     """Compute coordinates for an equally spaced grid.
 
+    Values are rounded to the 6th decimal because the data representation
+    in the GRIB specification calls for integers values in microdegrees.
+    It is assumed that data input will in the GRIB format and thus subject
+    to this property.
+
     Parameters
     ----------
     n : int
@@ -122,4 +127,5 @@ def get_grid_coords(n: int, x0: float, dx: float, dim: str) -> xr.DataArray:
         A 1-D field containing the coordinates of the grid along the given dimension
 
     """
-    return xr.DataArray(np.arange(n, dtype=np.float32) * dx + x0, dims=dim)
+    values = np.arange(n) * dx + x0
+    return xr.DataArray(np.round(values, 6), dims=dim)

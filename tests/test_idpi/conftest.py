@@ -1,4 +1,5 @@
 """Test configuration."""
+
 # Standard library
 import os
 import subprocess

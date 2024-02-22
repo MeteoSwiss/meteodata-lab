@@ -5,7 +5,6 @@ suitable for reading by fieldextra.
 
 """
 
-
 # Standard library
 import dataclasses as dc
 from itertools import product

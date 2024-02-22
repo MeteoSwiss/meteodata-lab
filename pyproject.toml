@@ -34,7 +34,7 @@ documentation = "https://github.io/MeteoSwiss-APN/icon-data-processing-incubator
 
 [project.scripts]
 # Format: <command> = "<package>.<module>:<function>"
-# icon-data-processing-incubator = "idpi.cli:main"
+icon-data-processing-incubator = "idpi.cli:main"
 
 [tool.setuptools.packages.find]
 namespaces = true

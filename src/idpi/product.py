@@ -1,4 +1,5 @@
 """Product base classes."""
+
 # Standard library
 import dataclasses as dc
 from abc import ABCMeta, abstractmethod

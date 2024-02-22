@@ -217,7 +217,8 @@ def vref_rot2geolatlon(
 
     grid = get_grid(u.geography)
     lon, lat = rot2geolatlon(grid)
-    return _vref_rot2geolatlon(u, v, lon, lat, grid)
+    u_g, v_g = _vref_rot2geolatlon(u, v, lon, lat, grid)
+    return xr.DataArray(u_g, attrs=u.attrs), xr.DataArray(v_g, attrs=v.attrs)
 
 
 def _vref_rot2geolatlon(

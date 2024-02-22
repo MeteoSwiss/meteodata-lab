@@ -1,4 +1,5 @@
 """Relative humidity operators."""
+
 # Standard library
 from typing import Literal
 

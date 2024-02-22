@@ -1,4 +1,5 @@
 """Atmospheric thermodynamic functions."""
+
 # Third-party
 import numpy as np
 

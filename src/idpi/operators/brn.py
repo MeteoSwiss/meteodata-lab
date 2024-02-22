@@ -1,4 +1,5 @@
 """algorithm for BRN operator."""
+
 # Third-party
 import numpy as np
 import xarray as xr

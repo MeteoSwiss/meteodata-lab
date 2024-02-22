@@ -1,4 +1,5 @@
 """Finite difference stencils on xarray dataarrays."""
+
 # Standard library
 import dataclasses as dc
 

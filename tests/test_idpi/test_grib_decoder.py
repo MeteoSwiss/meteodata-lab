@@ -6,6 +6,7 @@ import xarray as xr
 from idpi import grib_decoder
 
 
+@pytest.mark.xfail(reason="eccodes writes the values with 16 bit instead of 24 bit")
 def test_save(data_dir, tmp_path):
     datafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 

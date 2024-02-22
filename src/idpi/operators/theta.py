@@ -1,4 +1,5 @@
 """algorithm to compute the potential temperature theta in K."""
+
 # Third-party
 import xarray as xr
 

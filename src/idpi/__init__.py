@@ -1,4 +1,5 @@
 """Top-level package for Icon Data Processing Incubator."""
+
 # Standard library
 import importlib.metadata
 

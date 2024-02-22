@@ -1,6 +1,5 @@
 """Algorithms to support operations on a field."""
 
-
 # Standard library
 import dataclasses as dc
 from typing import Any, Literal, Optional, Sequence

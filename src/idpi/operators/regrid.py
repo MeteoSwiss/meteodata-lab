@@ -10,6 +10,10 @@ import xarray as xr
 from rasterio import transform, warp
 from rasterio.crs import CRS
 
+# Local
+from .. import metadata
+from ..grib_decoder import set_code_flag
+
 Resampling: typing.TypeAlias = warp.Resampling
 
 # For more information: check https://epsg.io/<id>
@@ -178,6 +182,39 @@ class RegularGrid:
         )
 
 
+def _udeg(value):
+    return int(round(value * 1e6))
+
+
+def _get_metadata(grid: RegularGrid):
+    # geolatlon
+    if grid.crs.to_epsg() == 4326:
+        # https://codes.ecmwf.int/grib/format/grib2/ctables/3/4/
+        scanning_mode = set_code_flag([2])  # positive y
+        # i, j direction increments given
+        # bit 5 left unset since the target grid is geolatlon
+        # both values are equivalent in this case
+        resolution_components_flags = set_code_flag([3, 4])
+        return {
+            "numberOfDataPoints": grid.nx * grid.ny,
+            "sourceOfGridDefinition": 0,  # defined by template number
+            "numberOfOctectsForNumberOfPoints": 0,
+            "interpretationOfNumberOfPoints": 0,
+            "gridDefinitionTemplateNumber": 0,  # latlon
+            "shapeOfTheEarth": 5,  # WGS 84
+            "Ni": grid.nx,
+            "Nj": grid.ny,
+            "latitudeOfFirstGridPoint": _udeg(grid.ymin),
+            "longitudeOfFirstGridPoint": _udeg(grid.xmin),
+            "resolutionAndComponentFlags": resolution_components_flags,
+            "latitudeOfLastGridPoint": _udeg(grid.ymax),
+            "longitudeOfLastGridPoint": _udeg(grid.xmax),
+            "iDirectionIncrement": _udeg(grid.dx),
+            "jDirectionIncrement": _udeg(grid.dy),
+            "scanningMode": scanning_mode,
+        }
+
+
 def regrid(field: xr.DataArray, dst: RegularGrid, resampling: Resampling):
     """Regrid a field.
 
@@ -219,10 +256,16 @@ def regrid(field: xr.DataArray, dst: RegularGrid, resampling: Resampling):
 
     # output dims renamed to workaround limitation that overlapping dims in the input
     # must not change in size
-    return xr.apply_ufunc(
+    data = xr.apply_ufunc(
         reproject_layer,
         field,
         input_core_dims=[["y", "x"]],
         output_core_dims=[["y1", "x1"]],
         vectorize=True,
     ).rename({"x1": "x", "y1": "y"})
+
+    attrs = field.attrs
+    if md := _get_metadata(dst):
+        attrs |= metadata.override(field.message, **md)
+
+    return xr.DataArray(data, attrs=attrs)

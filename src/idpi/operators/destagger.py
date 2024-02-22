@@ -1,10 +1,14 @@
 """algorithm for destaggering a field."""
+
 # Standard library
-from typing import Literal
+from typing import Any, Literal
 
 # Third-party
 import numpy as np
 import xarray as xr
+
+# Local
+from .. import metadata
 
 ExtendArg = Literal["left", "right", "both"] | None
 
@@ -70,6 +74,28 @@ def interpolate_midpoint(array: np.ndarray, extend: ExtendArg = None) -> np.ndar
     return f_map[extend](array)
 
 
+def _update_grid(field: xr.DataArray, dim: Literal["x", "y"]) -> dict[str, Any]:
+    geo = field.geography
+    if dim == "x":
+        lon_min = np.round(geo["longitudeOfFirstGridPointInDegrees"] * 1e6)
+        lon_max = np.round(geo["longitudeOfLastGridPointInDegrees"] * 1e6)
+        dx = np.round(geo["iDirectionIncrementInDegrees"] * 1e6)
+        return metadata.override(
+            field.message,
+            longitudeOfFirstGridPoint=lon_min - dx / 2,
+            longitudeOfLastGridPoint=lon_max - dx / 2,
+        )
+    if dim == "y":
+        lat_min = np.round(geo["latitudeOfFirstGridPointInDegrees"] * 1e6)
+        lat_max = np.round(geo["latitudeOfLastGridPointInDegrees"] * 1e6)
+        dy = np.round(geo["jDirectionIncrementInDegrees"] * 1e6)
+        return metadata.override(
+            field.message,
+            latitudeOfFirstGridPoint=lat_min - dy / 2,
+            latitudeOfLastGridPoint=lat_max - dy / 2,
+        )
+
+
 def destagger(
     field: xr.DataArray,
     dim: Literal["x", "y", "z"],
@@ -114,7 +140,7 @@ def destagger(
                 keep_attrs=True,
             )
             .transpose(*dims)
-            .assign_attrs(origin=field.origin | {dim: 0.0})
+            .assign_attrs(origin=field.origin | {dim: 0.0}, **_update_grid(field, dim))
         )
     elif dim == "z":
         if field.origin[dim] != -0.5:

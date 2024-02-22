@@ -1,4 +1,5 @@
 """algorithm for computing omega_slope."""
+
 # Third-party
 import numpy as np
 import xarray as xr

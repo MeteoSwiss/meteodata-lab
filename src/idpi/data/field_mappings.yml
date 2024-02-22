@@ -55,12 +55,14 @@ U:
     paramId: 131
   cosmo:
     paramId: 500028
+    vComponent: V
 V:
   ifs:
     name: v
     paramId: 132
   cosmo:
     paramId: 500030
+    uComponent: U
 W:
   cosmo:
     paramId: 500032
@@ -77,12 +79,14 @@ U_10M:
     paramId: 165
   cosmo:
     paramId: 500027
+    vComponent: V_10M
 V_10M:
   ifs:
     name: 10v
     paramId: 166
   cosmo:
     paramId: 500029
+    uComponent: U_10M
 T_2M:
   ifs:
     name: 2t

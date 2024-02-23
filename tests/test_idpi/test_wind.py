@@ -3,6 +3,7 @@ from numpy.testing import assert_allclose
 
 # First-party
 from idpi.grib_decoder import GribReader
+from idpi.metadata import set_origin_xy
 from idpi.operators import wind
 
 
@@ -12,6 +13,7 @@ def test_wind(data_dir, fieldextra):
 
     reader = GribReader.from_files([datafile, cdatafile])
     ds = reader.load_fieldnames(["U_10M", "V_10M"])
+    set_origin_xy(ds, ref_param="U_10M")
 
     u_10m = ds["U_10M"].isel(z=0)
     v_10m = ds["V_10M"].isel(z=0)

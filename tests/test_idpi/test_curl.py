@@ -4,6 +4,7 @@ from xarray.testing import assert_allclose
 
 # First-party
 from idpi.grib_decoder import GribReader
+from idpi.metadata import set_origin_xy
 from idpi.operators import curl
 from idpi.operators.support_operators import get_grid_coords
 from idpi.operators.total_diff import TotalDiff
@@ -15,6 +16,7 @@ def test_curl(data_dir):
 
     reader = GribReader.from_files([cdatafile, datafile])
     ds = reader.load_fieldnames(["U", "V", "W", "HHL"])
+    set_origin_xy(ds, ref_param="HHL")
 
     geo = ds["HHL"].attrs["geography"]
     dlon = geo["iDirectionIncrementInDegrees"]

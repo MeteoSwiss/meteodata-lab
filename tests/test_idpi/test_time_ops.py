@@ -17,7 +17,7 @@ def test_delta(data_dir, fieldextra):
     dd, hh = np.divmod(steps, 24)
     datafiles = [data_dir / f"lfff{d:02d}{h:02d}0000" for d, h in zip(dd, hh)]
 
-    reader = GribReader.from_files(datafiles, ref_param="TOT_PREC")
+    reader = GribReader.from_files(datafiles)
     ds = reader.load_fieldnames(["TOT_PREC"])
 
     tot_prec = time_ops.resample(ds["TOT_PREC"], np.timedelta64(3, "h"))

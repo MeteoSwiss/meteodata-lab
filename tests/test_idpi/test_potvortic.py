@@ -8,6 +8,7 @@ import idpi.operators.pot_vortic as pv
 from idpi.data_cache import DataCache
 from idpi.data_source import DataSource
 from idpi.grib_decoder import GribReader
+from idpi.metadata import set_origin_xy
 from idpi.operators.rho import f_rho_tot
 from idpi.operators.theta import ftheta
 from idpi.operators.total_diff import TotalDiff
@@ -34,6 +35,7 @@ def data(work_dir, request_template, setup_fdb):
 def test_pv(data, fieldextra):
     reader, cache = data
     ds = reader.load_fieldnames(["U", "V", "W", "P", "T", "QV", "QC", "QI", "HHL"])
+    set_origin_xy(ds, ref_param="HHL")
 
     theta = ftheta(ds["P"], ds["T"])
     rho_tot = f_rho_tot(ds["T"], ds["P"], ds["QV"], ds["QC"], ds["QI"])

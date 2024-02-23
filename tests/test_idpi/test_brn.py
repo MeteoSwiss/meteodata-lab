@@ -4,6 +4,7 @@ from numpy.testing import assert_allclose
 # First-party
 import idpi.operators.brn as mbrn
 from idpi.grib_decoder import GribReader
+from idpi.metadata import set_origin_xy
 
 
 def test_brn(data_dir, fieldextra):
@@ -12,6 +13,7 @@ def test_brn(data_dir, fieldextra):
 
     reader = GribReader.from_files([cdatafile, datafile])
     ds = reader.load_fieldnames(["P", "T", "QV", "U", "V", "HHL", "HSURF"])
+    set_origin_xy(ds, "HHL")
 
     brn = mbrn.fbrn(
         ds["P"], ds["T"], ds["QV"], ds["U"], ds["V"], ds["HHL"], ds["HSURF"]

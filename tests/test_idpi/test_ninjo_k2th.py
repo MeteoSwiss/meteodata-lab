@@ -4,6 +4,7 @@ from numpy.testing import assert_allclose
 # First-party
 import idpi.products.ninjo_k2th as ninjo
 from idpi.grib_decoder import GribReader
+from idpi.metadata import set_origin_xy
 
 
 def test_ninjo_k2th(data_dir, fieldextra):
@@ -13,6 +14,7 @@ def test_ninjo_k2th(data_dir, fieldextra):
     reader = GribReader.from_files([cdatafile, datafile])
 
     ds = reader.load_fieldnames(["U", "V", "W", "P", "T", "QV", "QC", "QI", "HHL"])
+    set_origin_xy(ds, ref_param="HHL")
     observed_mean, observed_at_theta = ninjo.ninjo_k2th(
         ds["U"],
         ds["V"],

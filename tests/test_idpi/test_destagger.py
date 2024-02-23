@@ -3,6 +3,7 @@ from numpy.testing import assert_allclose
 
 # First-party
 from idpi.grib_decoder import GribReader
+from idpi.metadata import set_origin_xy
 from idpi.operators.destagger import destagger
 
 
@@ -14,6 +15,7 @@ def test_destagger(data_dir, fieldextra):
     ds = reader.load_fieldnames(
         ["U", "V", "HHL"],
     )
+    set_origin_xy(ds, ref_param="HHL")
 
     u = destagger(ds["U"], "x")
     v = destagger(ds["V"], "y")

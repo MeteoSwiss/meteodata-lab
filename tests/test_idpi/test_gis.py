@@ -6,6 +6,7 @@ from numpy.testing import assert_allclose
 
 # First-party
 from idpi import grib_decoder
+from idpi.metadata import set_origin_xy
 from idpi.operators import gis
 
 
@@ -43,8 +44,9 @@ def test_geolatlon2swiss(coords):
 
 def test_vref_rot2geolatlon(data_dir, fieldextra):
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
-    reader = grib_decoder.GribReader.from_files([datafile], ref_param="T")
+    reader = grib_decoder.GribReader.from_files([datafile])
     ds = reader.load_fieldnames(["U_10M", "V_10M"])
+    set_origin_xy(ds, ref_param="U_10M")
 
     u_g, v_g = gis.vref_rot2geolatlon(ds["U_10M"], ds["V_10M"])
 

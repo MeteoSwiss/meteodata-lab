@@ -1,13 +1,13 @@
 """Decoder for grib data."""
 
 # Standard library
-import dataclasses as dc
 import datetime as dt
 import io
 import typing
 from collections.abc import Mapping, Sequence
 from itertools import product
 from pathlib import Path
+from warnings import warn
 
 # Third-party
 import earthkit.data as ekd  # type: ignore
@@ -76,34 +76,11 @@ def _extract_pv(pv):
     }
 
 
-@dc.dataclass
-class Grid:
-    """Coordinates of the reference grid.
-
-    Attributes
-    ----------
-    lon: xr.DataArray
-        2d array with longitude of geographical coordinates
-    lat: xr.DataArray
-        2d array with latitude of geographical coordinates
-    lon_first_grid_point: float
-        longitude of first grid point in rotated lat-lon CRS
-    lat_first_grid_point: float
-        latitude of first grid point in rotated lat-lon CRS
-
-    """
-
-    lon: xr.DataArray
-    lat: xr.DataArray
-    lon_first_grid_point: float
-    lat_first_grid_point: float
-
-
 class GribReader:
     def __init__(
         self,
         source: data_source.DataSource,
-        ref_param: Request = "HHL",
+        ref_param: Request | None = None,
     ):
         """Initialize a grib reader from a data source.
 
@@ -121,10 +98,11 @@ class GribReader:
 
         """
         self.data_source = source
-        self._grid = self.load_grid_reference(ref_param)
+        if ref_param is not None:
+            warn("GribReader: ref_param is deprecated.")
 
     @classmethod
-    def from_files(cls, datafiles: list[Path], ref_param: Request = "HHL"):
+    def from_files(cls, datafiles: list[Path], ref_param: Request | None = None):
         """Initialize a grib reader from a list of grib files.
 
         Parameters
@@ -142,47 +120,6 @@ class GribReader:
         """
         return cls(data_source.DataSource([str(p) for p in datafiles]), ref_param)
 
-    def load_grid_reference(self, ref_param: Request) -> Grid:
-        """Construct a grid from a reference parameter.
-
-        Parameters
-        ----------
-        ref_param : Request
-            name of parameter used to construct a reference grid.
-
-        Raises
-        ------
-        ValueError
-            if ref_param is not found in the input dataset
-
-        Returns
-        -------
-        Grid
-            reference grid
-
-        """
-        fs = self.data_source.retrieve(ref_param)
-        it = iter(fs)
-        field = next(it, None)
-        if field is None:
-            msg = f"reference field, {ref_param=} not found in data source."
-            raise RuntimeError(msg)
-        lonlat_dict = {
-            geo_dim: xr.DataArray(dims=("y", "x"), data=values)
-            for geo_dim, values in field.to_latlon().items()
-        }
-
-        grid = Grid(
-            lonlat_dict["lon"],
-            lonlat_dict["lat"],
-            *field.metadata(
-                "longitudeOfFirstGridPointInDegrees",
-                "latitudeOfFirstGridPointInDegrees",
-            ),
-        )
-
-        return grid
-
     def _load_pv(self, pv_param: Request):
         fs = self.data_source.retrieve(pv_param)
 
@@ -198,22 +135,10 @@ class GribReader:
         level_type: str = field.metadata("typeOfLevel")
         vcoord_type, zshift = VCOORD_TYPE.get(level_type, (level_type, 0.0))
 
-        x0 = self._grid.lon_first_grid_point % 360
-        y0 = self._grid.lat_first_grid_point
-        geo = metadata["geography"]
-        dx = geo["iDirectionIncrementInDegrees"]
-        dy = geo["jDirectionIncrementInDegrees"]
-        x0_key = "longitudeOfFirstGridPointInDegrees"
-        y0_key = "latitudeOfFirstGridPointInDegrees"
-
         metadata |= {
             "vref": "native" if vref_flag else "geo",
             "vcoord_type": vcoord_type,
-            "origin": {
-                "z": zshift,
-                "x": np.round((geo[x0_key] % 360 - x0) / dx, 1),
-                "y": np.round((geo[y0_key] - y0) / dy, 1),
-            },
+            "origin": {"z": zshift},
             "message": field.message(),
         }
         return metadata
@@ -224,7 +149,7 @@ class GribReader:
     ):
         fs = self.data_source.retrieve(req)
 
-        hcoords = None
+        hcoords: dict[str, xr.DataArray] = {}
         metadata: dict[str, typing.Any] = {}
         time_meta: dict[int, dict] = {}
         dims: tuple[str, ...] | None = None
@@ -249,15 +174,17 @@ class GribReader:
             if not metadata:
                 metadata = self._construct_metadata(field)
 
+            if not hcoords:
+                hcoords = {
+                    dim: xr.DataArray(dims=("y", "x"), data=values)
+                    for dim, values in field.to_latlon().items()
+                }
+
         if not field_map:
             raise RuntimeError(f"requested {req=} not found.")
 
         coords, shape = _gather_coords(field_map, dims)
         tcoords = _gather_tcoords(time_meta)
-        hcoords = {
-            "lon": self._grid.lon,
-            "lat": self._grid.lat,
-        }
 
         array = xr.DataArray(
             np.array([field_map.pop(key) for key in sorted(field_map)]).reshape(shape),

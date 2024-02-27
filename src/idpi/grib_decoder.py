@@ -260,7 +260,7 @@ def _get_type_of_level(field):
         return mapping.get(field.vcoord_type, field.vcoord_type)
 
 
-def save(field: xr.DataArray, file_handle: io.BufferedWriter):
+def save(field: xr.DataArray, file_handle: io.BufferedWriter, bits_per_value: int = 16):
     """Write field to file in GRIB format.
 
     Parameters
@@ -269,6 +269,8 @@ def save(field: xr.DataArray, file_handle: io.BufferedWriter):
         Field to write into the output file.
     file_handle : io.BufferedWriter
         File handle for the output file.
+    bits_per_value : int
+        Bits per value encoded in the output file.
 
     Raises
     ------
@@ -299,7 +301,7 @@ def save(field: xr.DataArray, file_handle: io.BufferedWriter):
         metadata = md.override(to_grib(loc))
 
         fs = ekd.FieldList.from_numpy(array, metadata)
-        fs.write(file_handle)
+        fs.write(file_handle, bits_per_value=bits_per_value)
 
 
 def get_code_flag(value: int, indices: Sequence[int]) -> list[bool]:

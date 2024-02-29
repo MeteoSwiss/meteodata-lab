@@ -3,6 +3,7 @@
 # Standard library
 import datetime as dt
 import io
+import logging
 import typing
 from collections.abc import Mapping, Sequence
 from itertools import product
@@ -16,6 +17,8 @@ import xarray as xr
 
 # Local
 from . import data_source, tasking
+
+logger = logging.getLogger(__name__)
 
 DIM_MAP = {
     "level": "z",
@@ -45,6 +48,16 @@ def _gather_coords(field_map, dims):
     coord_values = zip(*field_map)
     unique = (sorted(set(values)) for values in coord_values)
     coords = {dim: c for dim, c in zip(dims[:-2], unique)}
+
+    if missing := [
+        combination
+        for combination in product(*coords.values())
+        if combination not in field_map
+    ]:
+        msg = f"Missing combinations: {missing}"
+        logger.exception(msg)
+        raise RuntimeError(msg)
+
     ny, nx = next(iter(field_map.values())).shape
     shape = tuple(len(v) for v in coords.values()) + (ny, nx)
     return coords, shape
@@ -147,6 +160,7 @@ class GribReader:
         self,
         req: Request,
     ):
+        logger.info("Retrieving request: %s", req)
         fs = self.data_source.retrieve(req)
 
         hcoords: dict[str, xr.DataArray] = {}
@@ -162,6 +176,7 @@ class GribReader:
                 else ("step", "level")
             )
             key = field.metadata(*dim_keys)
+            logger.debug("Received field for key: %s", key)
             field_map[key] = field.to_numpy(dtype=np.float32)
 
             step = key[-2]  # assume all members share the same time steps

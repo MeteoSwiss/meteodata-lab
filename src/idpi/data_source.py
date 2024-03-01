@@ -19,6 +19,8 @@ from . import config, mars
 GRIB_DEF = {
     mars.Model.COSMO_1E: "cosmo",
     mars.Model.COSMO_2E: "cosmo",
+    mars.Model.ICON_CH1_EPS: "cosmo",
+    mars.Model.ICON_CH2_EPS: "cosmo",
 }
 
 

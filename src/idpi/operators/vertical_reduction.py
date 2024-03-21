@@ -95,10 +95,7 @@ def minmax_k(field, operator, mode, height, h_bounds, hsurf=None):
     #  levels included in the height interval, and at the interval boundaries
     #     after linear interpolation wrt height; f and auxiliary height fields
     #     must either both be defined on full levels or half levels
-    if (
-        field.vcoord_type != height.vcoord_type
-        or field.origin["z"] != height.origin["z"]
-    ):
+    if field.vcoord_type != height.vcoord_type or field.origin_z != height.origin_z:
         raise RuntimeError(
             "minmax_k: height is not defined for the same level type as field."
         )
@@ -256,7 +253,7 @@ def integrate_k(field, operator, mode, height, h_bounds, hsurf=None):
             "integrate_k: field must be defined for level type "
             "generalVertical or generalVerticalLayer"
         )
-    if field.origin["z"] != 0.0:
+    if field.origin_z != 0.0:
         field_on_fl = destagger(field, "z")
     else:
         field_on_fl = field

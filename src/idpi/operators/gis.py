@@ -211,8 +211,7 @@ def vref_rot2geolatlon(
         x and y components of the vector field w.r.t. the geo lat lon coords.
 
     """
-    valid_origin = {d: 0.0 for d in tuple("xyz")}
-    if u.origin != valid_origin or v.origin != valid_origin:
+    if u.origin_x != 0.0 or v.origin_y != 0.0:
         raise ValueError("The vector fields must be destaggered.")
 
     grid = get_grid(u.geography)

@@ -69,9 +69,9 @@ def handle_vector_fields(ds):
     for u_name, v_name in pairs:
         click.echo(f"Rotating vector field components {u_name}, {v_name} to geolatlon")
         u, v = ds[u_name], ds[v_name]
-        if u.origin["x"] != 0.0:
+        if u.origin_x != 0.0:
             u = destagger.destagger(u, "x")
-        if v.origin["y"] != 0.0:
+        if v.origin_y != 0.0:
             v = destagger.destagger(v, "y")
         if u.vref == "native" and v.vref == "native":
             u_g, v_g = gis.vref_rot2geolatlon(u, v)

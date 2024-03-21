@@ -102,7 +102,7 @@ def interpolate_k2p(
         )
     # Check that dimensions are the same for field and p_field
     if (
-        field.origin != p_field.origin
+        field.origin_z != p_field.origin_z
         or field.dims != p_field.dims
         or field.size != p_field.size
     ):
@@ -253,16 +253,16 @@ def interpolate_k2theta(
     )
 
     # Check that typeOfLevel is supported and equal for field, th_field, and h_field
-    if field.vcoord_type != "model_level" or field.origin["z"] != 0.0:
+    if field.vcoord_type != "model_level" or field.origin_z != 0.0:
         raise RuntimeError(
             "interpolate_k2theta: field to interpolate must "
             "be defined on model_level layers"
         )
-    if th_field.vcoord_type != "model_level" or th_field.origin["z"] != 0.0:
+    if th_field.vcoord_type != "model_level" or th_field.origin_z != 0.0:
         raise RuntimeError(
             "interpolate_k2theta: theta field must be defined on model_level layers"
         )
-    if h_field.vcoord_type != "model_level" or h_field.origin["z"] != 0.0:
+    if h_field.vcoord_type != "model_level" or h_field.origin_z != 0.0:
         raise RuntimeError(
             "interpolate_k2theta: height field must be defined on model_level layers"
         )
@@ -355,7 +355,7 @@ def interpolate_k2any(
         raise ValueError(f"Unsupported mode: {mode}")
 
     for f in (field, tc_field, h_field):
-        if f.vcoord_type != "model_level" or f.origin["z"] != 0.0:
+        if f.vcoord_type != "model_level" or f.origin_z != 0.0:
             raise ValueError("Input fields must be defined on full model levels")
 
     # ... tc values outside range of meaningful values of height,

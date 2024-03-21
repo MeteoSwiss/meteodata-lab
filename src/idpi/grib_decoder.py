@@ -16,7 +16,7 @@ import numpy as np
 import xarray as xr
 
 # Local
-from . import data_source, tasking
+from . import data_source, metadata, tasking
 
 logger = logging.getLogger(__name__)
 
@@ -26,13 +26,6 @@ DIM_MAP = {
     "step": "time",
 }
 INV_DIM_MAP = {v: k for k, v in DIM_MAP.items()}
-VCOORD_TYPE = {
-    "generalVertical": ("model_level", -0.5),
-    "generalVerticalLayer": ("model_level", 0.0),
-    "hybrid": ("hybrid", 0.0),
-    "isobaricInPa": ("pressure", 0.0),
-    "surface": ("surface", 0.0),
-}
 
 Request = str | tuple | dict
 
@@ -139,23 +132,6 @@ class GribReader:
         for field in fs:
             return field.metadata("pv")
 
-    def _construct_metadata(self, field: typing.Any):
-        metadata: dict[str, typing.Any] = field.metadata(
-            namespace=["geography", "parameter"]
-        )
-        # https://codes.ecmwf.int/grib/format/grib2/ctables/3/3/
-        [vref_flag] = get_code_flag(field.metadata("resolutionAndComponentFlags"), [5])
-        level_type: str = field.metadata("typeOfLevel")
-        vcoord_type, zshift = VCOORD_TYPE.get(level_type, (level_type, 0.0))
-
-        metadata |= {
-            "vref": "native" if vref_flag else "geo",
-            "vcoord_type": vcoord_type,
-            "origin": {"z": zshift},
-            "message": field.message(),
-        }
-        return metadata
-
     def _load_param(
         self,
         req: Request,
@@ -164,7 +140,7 @@ class GribReader:
         fs = self.data_source.retrieve(req)
 
         hcoords: dict[str, xr.DataArray] = {}
-        metadata: dict[str, typing.Any] = {}
+        metadata_values: dict[str, typing.Any] = {}
         time_meta: dict[int, dict] = {}
         dims: tuple[str, ...] | None = None
         field_map: dict[tuple[int, ...], np.ndarray] = {}
@@ -186,8 +162,11 @@ class GribReader:
             if not dims:
                 dims = tuple(DIM_MAP[d] for d in dim_keys) + ("y", "x")
 
-            if not metadata:
-                metadata = self._construct_metadata(field)
+            if not metadata_values:
+                metadata_values = {
+                    "message": field.message(),
+                    **metadata.extract(field.metadata()),
+                }
 
             if not hcoords:
                 hcoords = {
@@ -205,7 +184,7 @@ class GribReader:
             np.array([field_map.pop(key) for key in sorted(field_map)]).reshape(shape),
             coords=coords | hcoords | tcoords,
             dims=dims,
-            attrs=metadata,
+            attrs=metadata_values,
         )
 
         return (
@@ -262,19 +241,6 @@ class GribReader:
         return self.load(reqs, extract_pv)
 
 
-def _get_type_of_level(field):
-    if field.vcoord_type == "model_level":
-        if field.origin["z"] == 0.0:
-            return "generalVerticalLayer"
-        elif field.origin["z"] == -0.5:
-            return "generalVertical"
-        else:
-            raise ValueError(f"Unsupported field origin in z: {field.origin['z']}")
-    else:
-        mapping = {vc: name for name, (vc, _) in VCOORD_TYPE.items()}
-        return mapping.get(field.vcoord_type, field.vcoord_type)
-
-
 def save(field: xr.DataArray, file_handle: io.BufferedWriter, bits_per_value: int = 16):
     """Write field to file in GRIB format.
 
@@ -307,8 +273,7 @@ def save(field: xr.DataArray, file_handle: io.BufferedWriter, bits_per_value: in
     }
 
     def to_grib(loc: dict[str, xr.DataArray]):
-        result = {INV_DIM_MAP[key]: value.item() for key, value in loc.items()}
-        return result | {"typeOfLevel": _get_type_of_level(field)}
+        return {INV_DIM_MAP[key]: value.item() for key, value in loc.items()}
 
     for idx_slice in product(*idx.values()):
         loc = {dim: value for dim, value in zip(idx.keys(), idx_slice)}

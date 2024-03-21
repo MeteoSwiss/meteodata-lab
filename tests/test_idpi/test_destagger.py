@@ -27,6 +27,6 @@ def test_destagger(data_dir, fieldextra):
     assert_allclose(fs_ds["V"], v, rtol=1e-12, atol=1e-9)
     assert_allclose(fs_ds["HFL"], hfl, rtol=1e-12, atol=1e-9)
 
-    assert u.origin["x"] == 0.0
-    assert v.origin["y"] == 0.0
-    assert hfl.origin["z"] == 0.0
+    assert u.origin_x == 0.0
+    assert v.origin_y == 0.0
+    assert hfl.origin_z == 0.0

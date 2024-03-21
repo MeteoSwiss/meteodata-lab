@@ -35,9 +35,7 @@ def speed(u: xr.DataArray, v: xr.DataArray) -> xr.DataArray:
         the horizontal wind speed [m/s].
 
     """
-    centered = {dim: 0.0 for dim in tuple("xyz")}
-
-    if u.origin != centered or v.origin != centered:
+    if u.origin_x != 0.0 or v.origin_y != 0.0:
         raise ValueError("The wind components should not be staggered.")
 
     name = {"U": "SP", "U_10M": "SP_10M"}[u.parameter["shortName"]]

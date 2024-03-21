@@ -76,7 +76,7 @@ def test_retrieve_fdb(mock_from_source, mock_grib_def_ctx):
     param = "U"
     template = {"date": "20200101", "time": "0000"}
 
-    source = data_source.DataSource(datafiles, template)
+    source = data_source.DataSource(datafiles, request_template=template)
     for _ in source.retrieve(param):
         pass
 

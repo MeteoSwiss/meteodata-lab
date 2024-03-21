@@ -12,6 +12,7 @@ from pathlib import Path
 # Third-party
 import earthkit.data as ekd  # type: ignore
 import eccodes  # type: ignore
+import polytope  # type: ignore
 
 # Local
 from . import config, mars
@@ -53,7 +54,13 @@ def grib_def_ctx(grib_def: str):
 @dc.dataclass
 class DataSource:
     datafiles: list[str] | None = None
+    polytope_collection: str | None = None
     request_template: dict[str, typing.Any] = dc.field(default_factory=dict)
+    polytope_client: polytope.api.Client = dc.field(init=False)
+
+    def __post_init__(self):
+        if self.polytope_collection is not None:
+            self.polytope_client = polytope.api.Client()
 
     @singledispatchmethod
     def retrieve(
@@ -100,6 +107,16 @@ class DataSource:
                 # fdb and file sources currently disagree on the type of the
                 # date and time fields.
                 # see: https://github.com/ecmwf/earthkit-data/issues/253
+            elif self.polytope_collection is not None:
+                pointers = self.polytope_client.retrieve(
+                    self.polytope_collection,
+                    req.to_fdb(),
+                    pointer=True,
+                    asynchronous=False,
+                )
+                urls = [p["location"] for p in pointers]
+                print(urls)
+                source = ekd.from_source("url", urls)
             else:
                 source = ekd.from_source("fdb", req.to_fdb())
             yield from source  # type: ignore

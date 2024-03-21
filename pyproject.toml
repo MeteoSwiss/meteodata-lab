@@ -21,6 +21,7 @@ dependencies = [
     "click",
     "earthkit-data",
     "eccodes",
+    "polytope-client",
     "pydantic",
     "pyyaml",
     "rasterio",

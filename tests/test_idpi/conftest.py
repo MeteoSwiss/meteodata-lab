@@ -61,7 +61,7 @@ def fieldextra_path(machine):
         "tsa": Path("/project/s83c/fieldextra/tsa"),
         "balfrin": Path("/users/tsm/proj.aare/fieldextra/v14.3.1/"),
     }
-    return conf[machine]
+    return conf.get(machine)
 
 
 @pytest.fixture(scope="session")

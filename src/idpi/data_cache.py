@@ -33,6 +33,10 @@ class DataCache:
             raise ValueError("fields keys must be a subset of files keys")
 
     @property
+    def populated_files(self) -> list[Path]:
+        return self._populated
+
+    @property
     def conf_files(self) -> dict[str, Path]:
         return {
             label: self.cache_dir / pattern for label, pattern in self.files.items()

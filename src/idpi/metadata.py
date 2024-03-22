@@ -42,7 +42,7 @@ def override(message: bytes, **kwargs: typing.Any) -> dict[str, typing.Any]:
 
     Note that no special consideration is made for maintaining consistency when
     overriding template definition keys such as productDefinitionTemplateNumber.
-    Note that the origin components in x and y will be unset.
+    Note that the origin components in x and y are left untouched.
 
     Parameters
     ----------

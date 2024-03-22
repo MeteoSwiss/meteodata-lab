@@ -98,7 +98,7 @@ def _update_grid(field: xr.DataArray, dim: Literal["x", "y"]) -> dict[str, Any]:
 
 def _update_vertical(field) -> dict[str, Any]:
     if field.vcoord_type != "model_level":
-        raise ValueError("Field.vcoord_type must model_level")
+        raise ValueError("typeOfLevel must equal generalVertical")
     return metadata.override(
         field.message,
         typeOfLevel="generalVerticalLayer",

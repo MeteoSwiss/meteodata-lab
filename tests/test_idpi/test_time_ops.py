@@ -48,7 +48,7 @@ def test_resample_average(data_dir, fieldextra):
     dd, hh = np.divmod(steps, 24)
     datafiles = [data_dir / f"lfff{d:02d}{h:02d}0000" for d, h in zip(dd, hh)]
 
-    reader = GribReader.from_files(datafiles, ref_param="ASWDIFD_S")
+    reader = GribReader.from_files(datafiles)
     ds = reader.load_fieldnames(["ASWDIFD_S", "ASWDIR_S"])
 
     direct = time_ops.resample_average(ds["ASWDIR_S"], np.timedelta64(1, "h"))
@@ -81,7 +81,7 @@ def test_max(data_dir, fieldextra):
     steps = np.arange(34)
     dd, hh = np.divmod(steps, 24)
     datafiles = [data_dir / f"lfff{d:02d}{h:02d}0000" for d, h in zip(dd, hh)]
-    reader = GribReader.from_files(datafiles, ref_param="VMAX_10M")
+    reader = GribReader.from_files(datafiles)
     ds = reader.load_fieldnames(["VMAX_10M"])
 
     f = ds["VMAX_10M"]
@@ -108,20 +108,20 @@ def test_max(data_dir, fieldextra):
 
 
 def test_get_nsteps():
-    values = pd.date_range("2000-01-01", freq="1H", periods=10)
+    values = pd.date_range("2000-01-01", freq="1h", periods=10)
     valid_time = xr.DataArray(values, dims=["time"])
     assert time_ops.get_nsteps(valid_time, np.timedelta64(5, "h")) == 5
 
 
 def test_get_nsteps_raises_non_uniform():
-    values = pd.date_range("2000-01-01", freq="1H", periods=10)
+    values = pd.date_range("2000-01-01", freq="1h", periods=10)
     valid_time = xr.DataArray(values[[0, 1, 3]], dims=["time"])
     with pytest.raises(ValueError):
         time_ops.get_nsteps(valid_time, np.timedelta64(3, "h"))
 
 
 def test_get_nsteps_raises_non_multiple():
-    values = pd.date_range("2000-01-01", freq="2H", periods=10)
+    values = pd.date_range("2000-01-01", freq="2h", periods=10)
     valid_time = xr.DataArray(values, dims=["time"])
     with pytest.raises(ValueError):
         time_ops.get_nsteps(valid_time, np.timedelta64(3, "h"))

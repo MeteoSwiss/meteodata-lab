@@ -27,7 +27,7 @@ def data(work_dir, request_template, setup_fdb):
     }
     cache = DataCache(cache_dir=work_dir, fields=fields, files=files)
     cache.populate(source)
-    reader = GribReader(source, ref_param=("HHL", "ml"))
+    reader = GribReader(source)
     yield reader, cache
     cache.clear()
 

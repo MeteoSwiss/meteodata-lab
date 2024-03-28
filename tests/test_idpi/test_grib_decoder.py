@@ -3,7 +3,19 @@ import pytest
 import xarray as xr
 
 # First-party
-from idpi import grib_decoder
+from idpi import data_source, grib_decoder
+
+
+@pytest.mark.parametrize(
+    "params,levtype", [(["P", "T", "HHL"], "ml"), (["U_10M", "V_10M"], "sfc")]
+)
+def test_load(params, levtype, request_template, setup_fdb):
+    source = data_source.DataSource()
+    request = request_template | {"param": params, "levtype": levtype}
+    ds = grib_decoder.load(source, request)
+    assert ds.keys() == set(params)
+    assert all(arr.size != 0 for arr in ds.values())
+    assert all(name == arr.parameter["shortName"] for name, arr in ds.items())
 
 
 def test_save(data_dir, tmp_path):

@@ -101,6 +101,7 @@ ignore = [
     "F811", # Allow redefinition of unused name (necessary for typing.overload)
     "I002", # Don't check for isort configuration
     "W503", # Allow line break before binary operator (PEP 8-compatible)
+    "E704", # Allow multiple statements on one line (def)
 ]
 per-file-ignores = [
     "__init__.py: F401", # Allow unused imports

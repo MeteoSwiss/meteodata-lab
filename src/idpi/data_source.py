@@ -17,13 +17,6 @@ import polytope  # type: ignore
 # Local
 from . import config, mars
 
-GRIB_DEF = {
-    mars.Model.COSMO_1E: "cosmo",
-    mars.Model.COSMO_2E: "cosmo",
-    mars.Model.ICON_CH1_EPS: "cosmo",
-    mars.Model.ICON_CH2_EPS: "cosmo",
-}
-
 
 @contextmanager
 def cosmo_grib_defs():
@@ -64,7 +57,7 @@ class DataSource:
 
     @singledispatchmethod
     def retrieve(
-        self, request: dict[str, typing.Any] | str | tuple[str, str]
+        self, request: dict[str, typing.Any] | str | tuple[str, str] | mars.Request
     ) -> Iterator:
         """Stream GRIB fields from files or FDB.
 
@@ -74,11 +67,12 @@ class DataSource:
         Simple strings are interpreted as `param` filters and pairs of strings
         are interpreted as `param` and `levtype` filters.
         Key value pairs from the `request_template` attribute are used as default
-        values.
+        values. Note that the default values in the mars request passed as an input
+        will take precedence on the template values.
 
         Parameters
         ----------
-        request : dict | str | tuple[str, str]
+        request : dict | str | tuple[str, str] | idpi.mars.Request
             Request for data from the source in the mars language.
 
         Yields
@@ -98,7 +92,7 @@ class DataSource:
         # validate the request
         req = mars.Request(**req_kwargs)
 
-        grib_def = config.get("data_scope", GRIB_DEF[req.model])
+        grib_def = config.get("data_scope", "cosmo")
         with grib_def_ctx(grib_def):
             if self.datafiles:
                 fs = ekd.from_source("file", self.datafiles)
@@ -115,11 +109,14 @@ class DataSource:
                     asynchronous=False,
                 )
                 urls = [p["location"] for p in pointers]
-                print(urls)
                 source = ekd.from_source("url", urls)
             else:
                 source = ekd.from_source("fdb", req.to_fdb())
             yield from source  # type: ignore
+
+    @retrieve.register
+    def _(self, request: mars.Request) -> Iterator:
+        yield from self.retrieve(request.dump())
 
     @retrieve.register
     def _(self, request: str) -> Iterator:

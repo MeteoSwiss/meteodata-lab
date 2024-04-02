@@ -18,7 +18,7 @@ import xarray as xr
 from numpy.typing import DTypeLike
 
 # Local
-from . import data_source, metadata, tasking
+from . import data_source, mars, metadata, tasking
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ DIM_MAP = {
 }
 INV_DIM_MAP = {v: k for k, v in DIM_MAP.items()}
 
-Request = str | tuple | dict
+Request = str | tuple | dict | mars.Request
 
 
 class GribField(typing.Protocol):

@@ -72,12 +72,27 @@ def test_retrieve_files_ifs(mock_from_source, mock_grib_def_ctx):
 
 
 def test_retrieve_fdb(mock_from_source, mock_grib_def_ctx):
-    datafiles = []
     param = "U"
     template = {"date": "20200101", "time": "0000"}
 
-    source = data_source.DataSource(datafiles, request_template=template)
+    source = data_source.DataSource(request_template=template)
     for _ in source.retrieve(param):
+        pass
+
+    assert mock_grib_def_ctx.mock_calls == [call("cosmo")]
+    assert mock_from_source.mock_calls == [
+        call("fdb", mars.Request(param, **template).to_fdb()),
+        call().__iter__(),
+    ]
+
+
+def test_retrieve_fdb_mars(mock_from_source, mock_grib_def_ctx):
+    param = "U"
+    request = mars.Request(param=param)
+    template = {"date": "20200101", "time": "0000"}
+
+    source = data_source.DataSource(request_template=template)
+    for _ in source.retrieve(request):
         pass
 
     assert mock_grib_def_ctx.mock_calls == [call("cosmo")]

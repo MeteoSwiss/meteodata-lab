@@ -76,3 +76,22 @@ def test_any_staggering(sample):
     }
 
     assert observed == expected
+
+
+def test_feature_timeseries(sample):
+    feature = mars.TimeseriesFeature(
+        points=[mars.Point(0.1, 0.2)],
+        start=0,
+        end=300,
+    )
+    observed = mars.Request("U", date="20200101", time="0000", feature=feature).to_fdb()
+    expected = sample | {
+        "feature": {
+            "type": "timeseries",
+            "points": [[0.1, 0.2]],
+            "start": 0,
+            "end": 300,
+        }
+    }
+
+    assert observed == expected

@@ -53,6 +53,30 @@ class Type(str, Enum):
     ENS_STD_DEV = "estdv"
 
 
+class FeatureType(str, Enum):
+    TIMESERIES = "timeseries"
+
+
+class Point(typing.NamedTuple):
+    lat: float
+    lon: float
+
+
+@dc.dataclass(frozen=True)
+class TimeseriesFeature:
+    type: FeatureType = FeatureType.TIMESERIES
+    points: list[Point] = dc.field(default_factory=list)
+    start: int = 0
+    end: int = 0
+
+    @pydantic.field_validator("type")
+    @classmethod
+    def validate_type(cls, v: str) -> str:
+        if v != FeatureType.TIMESERIES:
+            raise ValueError("Wrong type")
+        return v
+
+
 @cache
 def _load_mapping():
     mapping_path = files("idpi.data").joinpath("field_mappings.yml")
@@ -87,6 +111,8 @@ class Request:
     model: Model = Model.COSMO_1E
     stream: Stream = Stream.ENS_FORECAST
     type: Type = Type.ENS_MEMBER
+
+    feature: TimeseriesFeature | None = None
 
     def dump(self):
         if pydantic.__version__.startswith("1"):

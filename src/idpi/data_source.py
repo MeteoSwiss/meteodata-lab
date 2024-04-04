@@ -62,10 +62,15 @@ class DataSource:
         """Stream GRIB fields from files or FDB.
 
         Request for data from the source in the mars language.
-        The data source is defined by the `datafiles` attribute if provided otherwise
-        FDB is used.
+
+        The data source is defined by the defined attributes in order of precedence:
+        - `datafiles`: data is sourced from the provided files
+        - `polytope_collection`: data is sourced from the provided polytope collection
+        - otherwise, data is sourced from FDB.
+
         Simple strings are interpreted as `param` filters and pairs of strings
         are interpreted as `param` and `levtype` filters.
+
         Key value pairs from the `request_template` attribute are used as default
         values. Note that the default values in the mars request passed as an input
         will take precedence on the template values.

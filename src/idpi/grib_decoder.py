@@ -182,7 +182,7 @@ def load_single_param(
     ----------
     source : data_source.DataSource
         Source to request the data from.
-    request : str | tuple[str, str] | dict[str, Any]
+    request : str | tuple[str, str] | dict[str, Any] | idpi.mars.Request
         Request for data from the source in the mars language.
 
     Raises
@@ -220,7 +220,7 @@ def load(
     ----------
     source : data_source.DataSource
         Source to request the data from.
-    request : str | tuple[str, str] | dict[str, Any]
+    request : str | tuple[str, str] | dict[str, Any] | idpi.mars.Request
         Request for data from the source in the mars language.
 
     Raises

@@ -109,12 +109,12 @@ class DataSource:
             elif self.polytope_collection is not None:
                 pointers = self.polytope_client.retrieve(
                     self.polytope_collection,
-                    req.to_fdb(),
+                    req.to_polytope(),
                     pointer=True,
                     asynchronous=False,
                 )
                 urls = [p["location"] for p in pointers]
-                source = ekd.from_source("url", urls)
+                source = ekd.from_source("url", urls, stream=True)
             else:
                 source = ekd.from_source("fdb", req.to_fdb())
             yield from source  # type: ignore

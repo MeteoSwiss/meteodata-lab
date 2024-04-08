@@ -79,7 +79,9 @@ def get_from_polytope(request: mars.Request) -> dict[str, xr.DataArray]:
         logger.exception(msg)
         raise RuntimeError(msg)
     if request.feature is not None:
-        collection = "mchgj"
+        source = data_source.DataSource(polytope_collection="mchgj")
+        [result] = source.retrieve(request)
+        return result.to_xarray()
     else:
         collection = "mch"
     logger.info("Getting request %s from polytope collection %s", request, collection)

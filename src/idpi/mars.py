@@ -100,8 +100,8 @@ class Request:
 
     expver: str = "0001"
     levelist: int | tuple[int, ...] | None = None
-    number: int | tuple[int, ...] = 0
-    step: int | tuple[int, ...] = 0
+    number: int | tuple[int, ...] | None = None
+    step: int | tuple[int, ...] | None = None
 
     class_: Class = dc.field(
         default=Class.OPERATIONAL_DATA,
@@ -156,3 +156,11 @@ class Request:
         obj = dc.replace(self, levelist=levelist)
         out = typing.cast(dict[str, typing.Any], obj.dump())
         return out | {"param": self._param_id()}
+
+    def to_polytope(self) -> dict[str, typing.Any]:
+        result = self.to_fdb()
+        if isinstance(result["param"], list):
+            param: str | list[str] = [str(p) for p in result["param"]]
+        else:
+            param = str(result["param"])
+        return result | {"param": param, "model": result["model"].lower()}

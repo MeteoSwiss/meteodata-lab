@@ -25,7 +25,13 @@ def sample():
 
 
 def test_fdb_defaults(sample):
-    observed = mars.Request("U", date="20200101", time="0000").to_fdb()
+    observed = mars.Request(
+        "U",
+        date="20200101",
+        time="0000",
+        number=0,
+        step=0,
+    ).to_fdb()
     expected = sample
 
     assert observed == expected
@@ -36,6 +42,8 @@ def test_fdb_c2e(sample):
         "U",
         date="20200101",
         time="0000",
+        number=0,
+        step=0,
         model=mars.Model.COSMO_2E,
     ).to_fdb()
     expected = sample | {"model": "COSMO-2E", "levelist": list(range(1, 61))}
@@ -48,6 +56,8 @@ def test_fdb_sfc(sample):
         "HSURF",
         date="20200101",
         time="0000",
+        number=0,
+        step=0,
         levtype=mars.LevType.SURFACE,
     ).to_fdb()
     sample.pop("levelist")
@@ -62,14 +72,26 @@ def test_request_raises():
 
 
 def test_multiple_params(sample):
-    observed = mars.Request(("U", "V"), date="20200101", time="0000").to_fdb()
+    observed = mars.Request(
+        ("U", "V"),
+        date="20200101",
+        time="0000",
+        number=0,
+        step=0,
+    ).to_fdb()
     expected = sample | {"param": [500028, 500030]}
 
     assert observed == expected
 
 
 def test_any_staggering(sample):
-    observed = mars.Request(("U", "V", "W"), date="20200101", time="0000").to_fdb()
+    observed = mars.Request(
+        ("U", "V", "W"),
+        date="20200101",
+        time="0000",
+        number=0,
+        step=0,
+    ).to_fdb()
     expected = sample | {
         "param": [500028, 500030, 500032],
         "levelist": list(range(1, 82)),
@@ -84,14 +106,21 @@ def test_feature_timeseries(sample):
         start=0,
         end=300,
     )
-    observed = mars.Request("U", date="20200101", time="0000", feature=feature).to_fdb()
-    expected = sample | {
+    observed = mars.Request(
+        "U",
+        date="20200101",
+        time="0000",
+        number=1,
+        feature=feature,
+    ).to_fdb()
+    expected = {k: v for k, v in sample.items() if k != "step"} | {
+        "number": 1,
         "feature": {
             "type": "timeseries",
             "points": [[0.1, 0.2]],
             "start": 0,
             "end": 300,
-        }
+        },
     }
 
     assert observed == expected

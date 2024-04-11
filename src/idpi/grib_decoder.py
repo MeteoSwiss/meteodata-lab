@@ -353,8 +353,8 @@ def save(field: xr.DataArray, file_handle: io.BufferedWriter, bits_per_value: in
         Field to write into the output file.
     file_handle : io.BufferedWriter
         File handle for the output file.
-    bits_per_value : int
-        Bits per value encoded in the output file.
+    bits_per_value : int, optional
+        Bits per value encoded in the output file. (Default: 16)
 
     Raises
     ------

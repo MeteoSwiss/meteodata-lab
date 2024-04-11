@@ -344,7 +344,11 @@ class GribReader:
         return self.load(reqs, extract_pv)
 
 
-def save(field: xr.DataArray, file_handle: io.BufferedWriter, bits_per_value: int = 16):
+def save(
+    field: xr.DataArray,
+    file_handle: io.BufferedWriter | io.BytesIO,
+    bits_per_value: int = 16,
+):
     """Write field to file in GRIB format.
 
     Parameters

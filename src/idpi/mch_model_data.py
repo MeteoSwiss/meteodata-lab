@@ -11,7 +11,6 @@ import logging
 import os
 
 # Third-party
-import pyfdb  # type: ignore
 import xarray as xr
 
 # Local
@@ -116,9 +115,11 @@ def archive_to_fdb(
         Bits per value encoded in the archived data. (Default: 16)
 
     """
+    # Third-party
+    import pyfdb  # type: ignore
+
     buffer = io.BytesIO()
-    handle = io.BufferedWriter(buffer.raw)
-    grib_decoder.save(field, handle, bits_per_value)
+    grib_decoder.save(field, buffer, bits_per_value)
     fdb = pyfdb.FDB()
     req = request.to_fdb() if request is not None else None
     if request is not None:

@@ -5,15 +5,13 @@ import logging
 import sys
 
 # Third-party
-import numpy as np
 import xarray as xr
 
 # First-party
 from idpi.operators.destagger import destagger
-from idpi.operators.pot_vortic import fpotvortic
-from idpi.operators.rho import f_rho_tot
-from idpi.operators.theta import ftheta
-from idpi.operators.total_diff import TotalDiff
+from idpi.operators.pot_vortic import compute_pot_vortic
+from idpi.operators.rho import compute_rho_tot
+from idpi.operators.theta import compute_theta
 from idpi.operators.vertical_interpolation import interpolate_k2p, interpolate_k2theta
 from idpi.operators.vertical_reduction import integrate_k
 
@@ -34,17 +32,10 @@ def _compute_pot_vortic(
     theta: xr.DataArray,
 ) -> xr.DataArray:
     logger.info("Computing total density")
-    rho_tot = f_rho_tot(T, P, QV, QC, QI)
-
-    logger.info("Computing terrain following grid deformation factors")
-    geo = HHL.attrs["geography"]
-    dlon = geo["iDirectionIncrementInDegrees"]
-    dlat = geo["jDirectionIncrementInDegrees"]
-    deg2rad = np.pi / 180
-    total_diff = TotalDiff(dlon * deg2rad, dlat * deg2rad, HHL)
+    rho_tot = compute_rho_tot(T, P, QV, QC, QI)
 
     logger.info("Computing potential vorticity")
-    return fpotvortic(U, V, W, theta, rho_tot, total_diff)
+    return compute_pot_vortic(U, V, W, theta, rho_tot, HHL)
 
 
 def _compute_mean(
@@ -118,7 +109,7 @@ def ninjo_k2th(
 
     """
     logger.info("Computing potential temperature")
-    theta = ftheta(P, T)
+    theta = compute_theta(P, T)
 
     pot_vortic = _compute_pot_vortic(U, V, W, T, P, QV, QC, QI, HHL, theta)
 

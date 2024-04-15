@@ -7,31 +7,43 @@ import xarray as xr
 from .. import physical_constants as pc
 
 
-def f_rho_tot(
-    T: xr.DataArray,
-    P: xr.DataArray,
-    QV: xr.DataArray,
-    QC: xr.DataArray,
-    QI: xr.DataArray | None = None,
-    QP: xr.DataArray | None = None,
+def compute_rho_tot(
+    t: xr.DataArray,
+    p: xr.DataArray,
+    qv: xr.DataArray,
+    qc: xr.DataArray,
+    qi: xr.DataArray | None = None,
+    qp: xr.DataArray | None = None,
 ) -> xr.DataArray:
     """Total density of air mixture.
 
     Assumes perfect gas law, pressure as sum of partial pressures.
-    Result is in [kg/m**3].
 
-    Args:
-        T (xr.DataArray): Temperature [Kelvin]
-        P (xr.DataArray): Pressure [Pascal]
-        QV (xr.DataArray): Specific humidity [kg/kg]
-        QC (xr.DataArray): Specific cloud water content [kg/kg]
-        QI (xr.DataArray, optional): Specific cloud ice content [kg/kg].
-        QP (xr.DataArray, optional): Specific precipitable components content [kg/kg].
+    Parameters
+    ----------
+    t : xarray.DataArray
+        Temperature [Kelvin]
+    p : xarray.DataArray
+        Pressure [Pascal]
+    qv : xarray.DataArray
+        Specific humidity [kg/kg]
+    qc : xarray.DataArray
+        Specific cloud water content [kg/kg]
+    qi : xarray.DataArray, optional
+        Specific cloud ice content [kg/kg]
+    qp : xarray.DataArray, optional
+        Specific precipitable components content [kg/kg]
+
+    Returns
+    -------
+    xarray.DataArray
+        Total density of air mixture [kg/m**3]
 
     """
-    q = QC
-    if QI is not None:
-        q += QI
-    if QP is not None:
-        q += QP
-    return P / (pc.r_d * T * (1.0 + pc.rvd_o * QV - q))
+    q = qc
+    if qi is not None:
+        q += qi
+    if qp is not None:
+        q += qp
+
+    return p / (pc.r_d * t * (1.0 + pc.rvd_o * qv - q))

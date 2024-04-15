@@ -4,6 +4,7 @@
 import dataclasses as dc
 
 # Third-party
+import numpy as np
 import xarray as xr
 
 # Local
@@ -17,19 +18,25 @@ class TotalDiff:
 
     dlon: float
     dlat: float
-    hhl: dc.InitVar[xr.DataArray]
-    sqrtg_r_s: xr.DataArray = dc.field(init=False)
-    dzeta_dlam: xr.DataArray = dc.field(init=False)
-    dzeta_dphi: xr.DataArray = dc.field(init=False)
+    sqrtg_r_s: xr.DataArray
+    dzeta_dlam: xr.DataArray
+    dzeta_dphi: xr.DataArray
 
-    def __post_init__(self, hhl: xr.DataArray):
+    @classmethod
+    def from_hhl(cls, hhl: xr.DataArray):
+        deg2rad = np.pi / 180
+        dlon = hhl.geography["iDirectionIncrementInDegrees"] * deg2rad
+        dlat = hhl.geography["jDirectionIncrementInDegrees"] * deg2rad
+
         dh_dx = destagger(diff.dx(hhl), "z")  # order is important
         dh_dy = destagger(diff.dy(hhl), "z")  # diff then destagger
         dh_dz = diff.dz_staggered(hhl)
 
-        self.sqrtg_r_s = -1 / dh_dz
-        self.dzeta_dlam = self.sqrtg_r_s / self.dlon * dh_dx
-        self.dzeta_dphi = self.sqrtg_r_s / self.dlat * dh_dy
+        sqrtg_r_s = -1 / dh_dz
+        dzeta_dlam = sqrtg_r_s / dlon * dh_dx
+        dzeta_dphi = sqrtg_r_s / dlat * dh_dy
+
+        return cls(dlon, dlat, sqrtg_r_s, dzeta_dlam, dzeta_dphi)
 
     def d_dlam(self, df_dx: xr.DataArray, df_dz: xr.DataArray) -> xr.DataArray:
         """Compute the derivative along the lambda axis."""

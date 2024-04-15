@@ -5,20 +5,21 @@ import numpy as np
 import xarray as xr
 
 # Local
+from .. import metadata
 from .. import physical_constants as pc
 from . import diff
 from .curl import curl
-from .support_operators import get_grid_coords
+from .gis import get_grid
 from .total_diff import TotalDiff
 
 
-def fpotvortic(
+def compute_pot_vortic(
     u: xr.DataArray,
     v: xr.DataArray,
     w: xr.DataArray,
     theta: xr.DataArray,
     rho_tot: xr.DataArray,
-    total_diff: TotalDiff,
+    hhl: xr.DataArray,
 ) -> xr.DataArray:
     r"""Compute the potential vorticity.
 
@@ -36,34 +37,31 @@ def fpotvortic(
 
     Parameters
     ----------
-    u: xr.DataArray
+    u : xarray.DataArray
         Wind in x direction [m/s]
-    v: xr.DataArray
+    v : xarray.DataArray
         Wind in y direction [m/s]
-    w: xr.DataArray
+    w : xarray.DataArray
         Wind in z direction [m/s]
-    theta: xr.DataArray
+    theta : xarray.DataArray
         Potential Temperature [K]
-    rho_tot: xr.DataArray
+    rho_tot : xarray.DataArray
         Total density [kg m-3]
-    total_diff: TotalDiff
-        Terrain following grid derivative helper
+    hhl : xarray.DataArray
+        Height at half levels [m]
 
     Returns
     -------
-    xr.DataArray:
+    xarray.DataArray
         The potential vorticity
 
     """
     # target coordinates
     deg2rad = np.pi / 180
-    lat = (rho_tot["lat"] * deg2rad).astype(np.float32)
+    lat = (hhl.lat * deg2rad).astype(np.float32)
 
-    geo = w.attrs["geography"]
-    ny = geo["Nj"]
-    lat_min = geo["latitudeOfFirstGridPointInDegrees"]
-    dlat = geo["jDirectionIncrementInDegrees"]
-    rlat = get_grid_coords(ny, lat_min, dlat, "y") * deg2rad
+    rlat = get_grid(hhl.geography).rlat * deg2rad
+    total_diff = TotalDiff.from_hhl(hhl)
 
     # compute curl
     curl1, curl2, curl3 = curl(u, v, w, rlat, total_diff)
@@ -81,6 +79,6 @@ def fpotvortic(
         dt_dlam * curl1 + dt_dphi * (curl2 + cor2) - dt_dzeta * (curl3 + cor3)
     ) / rho_tot
 
-    out.attrs = theta.attrs
+    out.attrs = metadata.override(theta.message, shortName="POT_VORTIC")
 
     return out

@@ -182,3 +182,6 @@ DBZ_CMAX:
 DBZ:
   cosmo:
     paramId: 500174
+POT_VORTIC:
+  cosmo:
+    paramId: 500544

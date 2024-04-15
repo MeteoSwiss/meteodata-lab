@@ -5,7 +5,7 @@ from numpy.testing import assert_allclose
 # First-party
 from idpi.grib_decoder import GribReader
 from idpi.operators import diff
-from idpi.operators.theta import ftheta
+from idpi.operators.theta import compute_theta
 from idpi.operators.total_diff import TotalDiff
 
 
@@ -48,14 +48,14 @@ def test_total_diff(data_dir):
         )
     )
 
-    total_diff = TotalDiff(dlon, dlat, ds["HHL"].squeeze())
+    total_diff = TotalDiff.from_hhl(ds["HHL"].squeeze())
 
     assert_allclose(total_diff.sqrtg_r_s.values, sqrtg_r_s)
     assert_allclose(total_diff.dzeta_dlam.values, dzeta_dlam, rtol=1e-6)
     assert_allclose(total_diff.dzeta_dphi.values, dzeta_dphi, rtol=1e-6)
 
     ds = reader.load_fieldnames(["P", "T"])
-    theta = ftheta(ds["P"], ds["T"])
+    theta = compute_theta(ds["P"], ds["T"])
 
     padding = [(0, 0)] * 2 + [(1, 1)] * 3
     tp = np.pad(theta, padding, mode="edge")

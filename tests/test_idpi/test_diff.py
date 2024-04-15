@@ -5,7 +5,7 @@ from numpy.testing import assert_allclose
 # First-party
 from idpi.grib_decoder import GribReader
 from idpi.operators import diff
-from idpi.operators.theta import ftheta
+from idpi.operators.theta import compute_theta
 
 
 def test_masspoint_field(data_dir):
@@ -14,7 +14,7 @@ def test_masspoint_field(data_dir):
 
     ds = reader.load_fieldnames(["P", "T"])
 
-    theta = ftheta(ds["P"], ds["T"])
+    theta = compute_theta(ds["P"], ds["T"])
 
     padding = [(0, 0)] * 2 + [(1, 1)] * 3
     tp = np.pad(theta, padding, mode="edge")

@@ -5,7 +5,7 @@ from numpy.testing import assert_allclose
 # First-party
 from idpi.grib_decoder import GribReader
 from idpi.operators.destagger import destagger
-from idpi.operators.theta import ftheta
+from idpi.operators.theta import compute_theta
 from idpi.operators.vertical_interpolation import interpolate_k2theta
 
 
@@ -26,7 +26,7 @@ def test_intpl_k2theta(mode, data_dir, fieldextra):
 
     ds = reader.load_fieldnames(["P", "T", "HHL"])
 
-    theta = ftheta(ds["P"], ds["T"])
+    theta = compute_theta(ds["P"], ds["T"])
     hfl = destagger(ds["HHL"], "z")
 
     # call interpolation operator

@@ -27,8 +27,8 @@ def curl(
     tgrlat = cast(xr.DataArray, np.tan(rlat))
 
     # compute weighted derivatives for FD
-    u_f = destagger(u, "x")
-    v_f = destagger(v, "y")
+    u_f = destagger(u, "x") if u.origin_x != 0.0 else u
+    v_f = destagger(v, "y") if v.origin_y != 0.0 else v
     w_f = destagger(w, "z")
 
     du_dz = diff.dz(u_f)

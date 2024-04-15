@@ -3,10 +3,11 @@ import numpy as np
 from xarray.testing import assert_allclose
 
 # First-party
-from idpi.grib_decoder import GribReader
+from idpi.data_source import DataSource
+from idpi.grib_decoder import load
 from idpi.metadata import set_origin_xy
 from idpi.operators import curl
-from idpi.operators.support_operators import get_grid_coords
+from idpi.operators.gis import get_grid
 from idpi.operators.total_diff import TotalDiff
 
 
@@ -14,19 +15,13 @@ def test_curl(data_dir):
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
     cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
-    reader = GribReader.from_files([cdatafile, datafile])
-    ds = reader.load_fieldnames(["U", "V", "W", "HHL"])
+    source = DataSource(datafiles=[cdatafile, datafile])
+    ds = load(source, {"param": ["U", "V", "W", "HHL"]})
     set_origin_xy(ds, ref_param="HHL")
 
-    geo = ds["HHL"].attrs["geography"]
-    dlon = geo["iDirectionIncrementInDegrees"]
-    dlat = geo["jDirectionIncrementInDegrees"]
-    nj = geo["Nj"]
-    lat_min = geo["latitudeOfFirstGridPointInDegrees"]
-
     deg2rad = np.pi / 180
-    rlat = get_grid_coords(nj, lat_min, dlat, "y") * deg2rad
-    total_diff = TotalDiff(dlon * deg2rad, dlat * deg2rad, ds["HHL"])
+    rlat = get_grid(ds["HHL"].attrs["geography"]).rlat * deg2rad
+    total_diff = TotalDiff.from_hhl(ds["HHL"])
 
     a1, a2, a3 = curl.curl(ds["U"], ds["V"], ds["W"], rlat, total_diff)
     b1, b2, b3 = curl.curl_alt(ds["U"], ds["V"], ds["W"], rlat, total_diff)

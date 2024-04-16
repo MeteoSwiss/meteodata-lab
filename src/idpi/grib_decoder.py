@@ -72,14 +72,14 @@ class _FieldBuffer:
     time_meta: dict[int, dict] = dc.field(default_factory=dict)
     values: dict[tuple[int, ...], np.ndarray] = dc.field(default_factory=dict)
 
-    def load(self, field: GribField) -> None:
+    def load(self, field: GribField, name: str | None = None) -> None:
         dim_keys = (
             ("perturbationNumber", "step", "level")
             if _is_ensemble(field)
             else ("step", "level")
         )
         key = field.metadata(*dim_keys)
-        logger.debug("Received field for key: %s", key)
+        logger.debug("Received field for param: %s, key: %s", name, key)
         self.values[key] = field.to_numpy(dtype=np.float32)
 
         step = key[-2]  # assume all members share the same time steps
@@ -167,7 +167,7 @@ def _load_buffer_map(
     for field in fs:
         name = field.metadata("shortName")
         buffer = buffer_map.setdefault(name, _FieldBuffer())
-        buffer.load(field)
+        buffer.load(field, name=name)
 
     return buffer_map
 

@@ -27,7 +27,7 @@ def test_intpl_k2theta(mode, data_dir, fieldextra):
     ds = reader.load_fieldnames(["P", "T", "HHL"])
 
     theta = compute_theta(ds["P"], ds["T"])
-    hfl = destagger(ds["HHL"], "z")
+    hfl = destagger(ds["HHL"].squeeze(drop=True), "z")
 
     # call interpolation operator
     t = interpolate_k2theta(ds["T"], mode, theta, tc_values, tc_units, hfl)

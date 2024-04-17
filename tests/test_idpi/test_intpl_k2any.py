@@ -19,7 +19,7 @@ def test_intpl_k2theta(data_dir, fieldextra):
     reader = GribReader.from_files([cdatafile, datafile])
     ds = reader.load_fieldnames(["DBZ", "HHL"])
 
-    hfl = destagger(ds["HHL"], "z")
+    hfl = destagger(ds["HHL"].squeeze(drop=True), "z")
 
     # call interpolation operator
     echo_top = interpolate_k2any(hfl, "high_fold", ds["DBZ"], tc_values, hfl)

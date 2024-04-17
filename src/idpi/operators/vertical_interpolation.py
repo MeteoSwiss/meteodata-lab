@@ -101,18 +101,13 @@ def interpolate_k2p(
             "interpolate_k2p: pressure field must be defined on model levels"
         )
     # Check that dimensions are the same for field and p_field
-    if (
-        field.origin_z != p_field.origin_z
-        or field.dims != p_field.dims
-        or field.size != p_field.size
-    ):
+    if field.origin_z != p_field.origin_z:
         raise RuntimeError(
-            "interpolate_k2p: field and p_field must have equal "
-            "origin, dimensions and size"
+            "interpolate_k2p: field and p_field must have equal vertical staggering"
         )
 
     # Prepare output field field_on_tc on target coordinates
-    field_on_tc = init_field_with_vcoord(field, tc, np.nan)
+    field_on_tc = init_field_with_vcoord(field.broadcast_like(p_field), tc, np.nan)
 
     # Interpolate
     # ... prepare interpolation
@@ -268,7 +263,7 @@ def interpolate_k2theta(
         )
 
     # Prepare output field field_on_tc on target coordinates
-    field_on_tc = init_field_with_vcoord(field, tc, np.nan)
+    field_on_tc = init_field_with_vcoord(field.broadcast_like(th_field), tc, np.nan)
 
     # Interpolate
     # ... prepare interpolation
@@ -375,7 +370,7 @@ def interpolate_k2any(
     )
 
     # Prepare output field field_on_tc on target coordinates
-    field_on_tc = init_field_with_vcoord(field, tc, np.nan)
+    field_on_tc = init_field_with_vcoord(field.broadcast_like(tc_field), tc, np.nan)
 
     # Interpolate
     # ... prepare interpolation

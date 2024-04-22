@@ -15,7 +15,7 @@ tools/setup_env.sh -u -e -n <package_env_name>
 ```
 *Hint*: If you are the package administrator, it is a good idea to understand what this script does, you can do everything manually with `conda` instructions.
 
-*Hint*: Use the flag `-m` to speed up the installation using mamba. Of course you will have to install mamba first (we recommend to install mamba into your base
+*Hint*: Use the flag `-m` to speed up the installation using mamba. Of course you will have to install mamba first we recommend to install mamba into your base
 environment `conda install -c conda-forge mamba`. If you install mamba in another (maybe dedicated) environment, environments installed with mamba will be located
 in `<miniconda_root_dir>/envs/mamba/envs`, which is not very practical.
 
@@ -34,9 +34,6 @@ Once your package is installed, run the tests by typing:
 conda activate <package_env_name>
 pytest
 ```
-
-If the tests pass, you are good to go. If not, contact the package administrator Tobias Wicky. Make sure to update your requirement files and export your environments after installation
-every time you add new imports while developing. Check the next section to find some guidance on the development process if you are new to Python and/or APN.
 
 ## Credits
 

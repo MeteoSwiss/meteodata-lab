@@ -77,7 +77,7 @@ class DataSource:
 
         Parameters
         ----------
-        request : dict | str | tuple[str, str] | idpi.mars.Request
+        request : dict | str | tuple[str, str] | meteodatalab.mars.Request
             Request for data from the source in the mars language.
 
         Yields

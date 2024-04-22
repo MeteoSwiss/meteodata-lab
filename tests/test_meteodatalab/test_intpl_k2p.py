@@ -3,8 +3,8 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi.grib_decoder import GribReader
-from idpi.operators.vertical_interpolation import interpolate_k2p
+from meteodatalab.grib_decoder import GribReader
+from meteodatalab.operators.vertical_interpolation import interpolate_k2p
 
 
 @pytest.mark.parametrize(

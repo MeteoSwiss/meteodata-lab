@@ -3,9 +3,9 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi.grib_decoder import GribReader
-from idpi.operators.destagger import destagger
-from idpi.operators.vertical_reduction import minmax_k
+from meteodatalab.grib_decoder import GribReader
+from meteodatalab.operators.destagger import destagger
+from meteodatalab.operators.vertical_reduction import minmax_k
 
 
 @pytest.mark.parametrize("operator,fx_op", [("maximum", "max"), ("minimum", "min")])

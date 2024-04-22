@@ -1,4 +1,4 @@
-"""global configuration for idpi."""
+"""global configuration for meteodatalab."""
 
 # Standard library
 from contextlib import contextmanager

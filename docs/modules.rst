@@ -2,5 +2,5 @@
 Modules
 =======
 
-.. automodule:: idpi.mutable_number
+.. automodule:: meteodatalab.mutable_number
    :members:

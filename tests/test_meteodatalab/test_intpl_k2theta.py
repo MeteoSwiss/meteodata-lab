@@ -3,10 +3,10 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi.grib_decoder import GribReader
-from idpi.operators.destagger import destagger
-from idpi.operators.theta import compute_theta
-from idpi.operators.vertical_interpolation import interpolate_k2theta
+from meteodatalab.grib_decoder import GribReader
+from meteodatalab.operators.destagger import destagger
+from meteodatalab.operators.theta import compute_theta
+from meteodatalab.operators.vertical_interpolation import interpolate_k2theta
 
 
 # @pytest.mark.parametrize("mode", ["high_fold", "low_fold", "undef_fold"])

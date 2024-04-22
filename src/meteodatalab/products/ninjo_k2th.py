@@ -8,12 +8,12 @@ import sys
 import xarray as xr
 
 # First-party
-from idpi.operators.destagger import destagger
-from idpi.operators.pot_vortic import compute_pot_vortic
-from idpi.operators.rho import compute_rho_tot
-from idpi.operators.theta import compute_theta
-from idpi.operators.vertical_interpolation import interpolate_k2p, interpolate_k2theta
-from idpi.operators.vertical_reduction import integrate_k
+from meteodatalab.operators.destagger import destagger
+from meteodatalab.operators.pot_vortic import compute_pot_vortic
+from meteodatalab.operators.rho import compute_rho_tot
+from meteodatalab.operators.theta import compute_theta
+from meteodatalab.operators.vertical_interpolation import interpolate_k2p, interpolate_k2theta
+from meteodatalab.operators.vertical_reduction import integrate_k
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)

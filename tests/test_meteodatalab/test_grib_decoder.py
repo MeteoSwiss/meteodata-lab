@@ -3,7 +3,7 @@ import pytest
 import xarray as xr
 
 # First-party
-from idpi import data_source, grib_decoder
+from meteodatalab import data_source, grib_decoder
 
 
 @pytest.mark.parametrize(

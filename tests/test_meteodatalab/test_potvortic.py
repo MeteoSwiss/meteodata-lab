@@ -3,13 +3,13 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-import idpi.operators.pot_vortic as pv
-from idpi.data_cache import DataCache
-from idpi.data_source import DataSource
-from idpi.grib_decoder import load
-from idpi.metadata import set_origin_xy
-from idpi.operators.rho import compute_rho_tot
-from idpi.operators.theta import compute_theta
+import meteodatalab.operators.pot_vortic as pv
+from meteodatalab.data_cache import DataCache
+from meteodatalab.data_source import DataSource
+from meteodatalab.grib_decoder import load
+from meteodatalab.metadata import set_origin_xy
+from meteodatalab.operators.rho import compute_rho_tot
+from meteodatalab.operators.theta import compute_theta
 
 
 @pytest.fixture

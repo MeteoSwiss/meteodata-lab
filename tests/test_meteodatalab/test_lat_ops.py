@@ -4,9 +4,9 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-import idpi.operators.lateral_operators as lat_ops
-from idpi.grib_decoder import GribReader
-from idpi.operators.hzerocl import fhzerocl
+import meteodatalab.operators.lateral_operators as lat_ops
+from meteodatalab.grib_decoder import GribReader
+from meteodatalab.operators.hzerocl import fhzerocl
 
 
 @pytest.mark.data("original")

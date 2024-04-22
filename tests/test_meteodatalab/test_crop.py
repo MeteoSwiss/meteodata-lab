@@ -2,8 +2,8 @@
 from numpy.testing import assert_equal
 
 # First-party
-from idpi.grib_decoder import GribReader
-from idpi.operators import crop, gis
+from meteodatalab.grib_decoder import GribReader
+from meteodatalab.operators import crop, gis
 
 
 def test_crop(data_dir):

@@ -2,8 +2,8 @@
 from numpy.testing import assert_allclose
 
 # First-party
-import idpi.operators.thetav as mthetav
-from idpi.grib_decoder import GribReader
+import meteodatalab.operators.thetav as mthetav
+from meteodatalab.grib_decoder import GribReader
 
 
 def test_thetav(data_dir, fieldextra):

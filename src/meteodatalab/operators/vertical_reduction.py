@@ -5,7 +5,7 @@ import numpy as np
 import xarray as xr
 
 # First-party
-from idpi.operators.destagger import destagger
+from meteodatalab.operators.destagger import destagger
 
 
 def minmax_k(field, operator, mode, height, h_bounds, hsurf=None):

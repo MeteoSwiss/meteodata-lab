@@ -2,9 +2,9 @@
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi.grib_decoder import GribReader
-from idpi.metadata import set_origin_xy
-from idpi.operators.destagger import destagger
+from meteodatalab.grib_decoder import GribReader
+from meteodatalab.metadata import set_origin_xy
+from meteodatalab.operators.destagger import destagger
 
 
 def test_destagger(data_dir, fieldextra):

@@ -2,7 +2,7 @@
 import pytest
 
 # First-party
-from idpi import mars
+from meteodatalab import mars
 
 
 @pytest.fixture

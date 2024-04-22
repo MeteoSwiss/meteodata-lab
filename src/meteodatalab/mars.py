@@ -79,7 +79,7 @@ class TimeseriesFeature:
 
 @cache
 def _load_mapping():
-    mapping_path = files("idpi.data").joinpath("field_mappings.yml")
+    mapping_path = files("meteodatalab.data").joinpath("field_mappings.yml")
     return yaml.safe_load(mapping_path.open())
 
 

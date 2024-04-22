@@ -5,7 +5,7 @@ from unittest import mock
 import pytest
 
 # First-party
-from idpi import data_source, product
+from meteodatalab import data_source, product
 
 
 class ProductA(product.Product):

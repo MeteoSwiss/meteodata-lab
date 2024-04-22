@@ -8,7 +8,7 @@ import numpy as np
 import xarray as xr
 
 # First-party
-from idpi.operators.destagger import destagger
+from meteodatalab.operators.destagger import destagger
 
 
 def fhzerocl(

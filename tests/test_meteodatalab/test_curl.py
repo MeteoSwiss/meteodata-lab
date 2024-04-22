@@ -3,12 +3,12 @@ import numpy as np
 from xarray.testing import assert_allclose
 
 # First-party
-from idpi.data_source import DataSource
-from idpi.grib_decoder import load
-from idpi.metadata import set_origin_xy
-from idpi.operators import curl
-from idpi.operators.gis import get_grid
-from idpi.operators.total_diff import TotalDiff
+from meteodatalab.data_source import DataSource
+from meteodatalab.grib_decoder import load
+from meteodatalab.metadata import set_origin_xy
+from meteodatalab.operators import curl
+from meteodatalab.operators.gis import get_grid
+from meteodatalab.operators.total_diff import TotalDiff
 
 
 def test_curl(data_dir):

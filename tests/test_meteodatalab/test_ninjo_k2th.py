@@ -2,9 +2,9 @@
 from numpy.testing import assert_allclose
 
 # First-party
-import idpi.products.ninjo_k2th as ninjo
-from idpi.grib_decoder import GribReader
-from idpi.metadata import set_origin_xy
+import meteodatalab.products.ninjo_k2th as ninjo
+from meteodatalab.grib_decoder import GribReader
+from meteodatalab.metadata import set_origin_xy
 
 
 def test_ninjo_k2th(data_dir, fieldextra):

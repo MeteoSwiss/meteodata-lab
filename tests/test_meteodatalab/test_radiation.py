@@ -4,9 +4,9 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi import grib_decoder
-from idpi.operators import radiation
-from idpi.operators import time_operators as time_ops
+from meteodatalab import grib_decoder
+from meteodatalab.operators import radiation
+from meteodatalab.operators import time_operators as time_ops
 
 
 @pytest.mark.data("reduced-time")

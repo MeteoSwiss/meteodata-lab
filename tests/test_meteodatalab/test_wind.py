@@ -3,11 +3,11 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi.data_cache import DataCache
-from idpi.data_source import DataSource
-from idpi.grib_decoder import GribReader
-from idpi.metadata import set_origin_xy
-from idpi.operators import wind
+from meteodatalab.data_cache import DataCache
+from meteodatalab.data_source import DataSource
+from meteodatalab.grib_decoder import GribReader
+from meteodatalab.metadata import set_origin_xy
+from meteodatalab.operators import wind
 
 
 @pytest.fixture

@@ -2,9 +2,9 @@
 from numpy.testing import assert_allclose
 
 # First-party
-import idpi.operators.brn as mbrn
-from idpi.grib_decoder import GribReader
-from idpi.metadata import set_origin_xy
+import meteodatalab.operators.brn as mbrn
+from meteodatalab.grib_decoder import GribReader
+from meteodatalab.metadata import set_origin_xy
 
 
 def test_brn(data_dir, fieldextra):

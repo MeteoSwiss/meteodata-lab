@@ -5,9 +5,9 @@ import xarray as xr
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi import grib_decoder
-from idpi.metadata import set_origin_xy
-from idpi.operators import gis
+from meteodatalab import grib_decoder
+from meteodatalab.metadata import set_origin_xy
+from meteodatalab.operators import gis
 
 
 @pytest.fixture

@@ -6,9 +6,9 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi import grib_decoder
-from idpi.operators import regrid
-from idpi.operators.hzerocl import fhzerocl
+from meteodatalab import grib_decoder
+from meteodatalab.operators import regrid
+from meteodatalab.operators.hzerocl import fhzerocl
 
 
 @pytest.mark.data("original")

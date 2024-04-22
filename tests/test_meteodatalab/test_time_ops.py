@@ -6,9 +6,9 @@ import xarray as xr
 from numpy.testing import assert_allclose
 
 # First-party
-import idpi.operators.time_operators as time_ops
-from idpi.grib_decoder import GribReader
-from idpi.operators import radiation
+import meteodatalab.operators.time_operators as time_ops
+from meteodatalab.grib_decoder import GribReader
+from meteodatalab.operators import radiation
 
 
 @pytest.mark.data("reduced-time")

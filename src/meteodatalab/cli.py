@@ -1,4 +1,4 @@
-"""Command line interface of idpi."""
+"""Command line interface of meteodata-lab."""
 
 # Standard library
 from importlib.resources import files
@@ -31,7 +31,7 @@ def print_version(ctx, _, value: bool) -> None:
 )
 def main() -> None:
     """Console script for test_cli_project."""
-    print("CLI for IDPI")
+    print("CLI for meteodatalab")
 
 
 RESAMPLING = {
@@ -42,7 +42,7 @@ RESAMPLING = {
 
 
 def _load_mapping():
-    mapping_path = files("idpi.data").joinpath("field_mappings.yml")
+    mapping_path = files("meteodatalab.data").joinpath("field_mappings.yml")
     return yaml.safe_load(mapping_path.open())
 
 

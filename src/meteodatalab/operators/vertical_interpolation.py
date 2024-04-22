@@ -8,7 +8,7 @@ import numpy as np
 import xarray as xr
 
 # First-party
-from idpi.operators.support_operators import (
+from meteodatalab.operators.support_operators import (
     TargetCoordinates,
     TargetCoordinatesAttrs,
     init_field_with_vcoord,

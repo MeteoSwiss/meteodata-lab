@@ -4,8 +4,8 @@
 import numpy as np
 
 # First-party
-from idpi.operators.omega_slope import omega_slope
-from idpi.operators.time_operators import time_rate
+from meteodatalab.operators.omega_slope import omega_slope
+from meteodatalab.operators.time_operators import time_rate
 
 
 def fflexpart(ds):

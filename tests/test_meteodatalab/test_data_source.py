@@ -6,7 +6,7 @@ from unittest.mock import call, patch
 import pytest
 
 # First-party
-from idpi import config, data_source, mars
+from meteodatalab import config, data_source, mars
 
 
 @pytest.fixture

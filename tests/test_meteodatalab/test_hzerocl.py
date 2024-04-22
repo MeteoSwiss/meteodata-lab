@@ -3,8 +3,8 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi.grib_decoder import GribReader
-from idpi.operators.hzerocl import fhzerocl
+from meteodatalab.grib_decoder import GribReader
+from meteodatalab.operators.hzerocl import fhzerocl
 
 
 @pytest.mark.parametrize("extrapolate", [True, False])

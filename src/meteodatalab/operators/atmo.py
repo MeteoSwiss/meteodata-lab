@@ -4,7 +4,7 @@
 import numpy as np
 
 # First-party
-from idpi import physical_constants as pc
+from meteodatalab import physical_constants as pc
 
 
 def pv_sw(t):

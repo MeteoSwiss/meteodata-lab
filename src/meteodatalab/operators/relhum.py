@@ -7,7 +7,7 @@ from typing import Literal
 import xarray as xr
 
 # First-party
-from idpi.operators.atmo import pv_sw, qv_pvp
+from meteodatalab.operators.atmo import pv_sw, qv_pvp
 
 
 def relhum(

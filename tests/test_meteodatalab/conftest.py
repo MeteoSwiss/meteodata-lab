@@ -79,7 +79,7 @@ def setup_fdb(machine):
     os.environ["FDB5_DIR"] = str(root / "spack-env/.spack-env/view")
     os.environ["FDB_HOME"] = os.environ["FDB5_DIR"]
     os.environ["FDB5_CONFIG_FILE"] = str(
-        root / f"src/idpi/data/fdb_config_{machine}.yaml"
+        root / f"src/meteodatalab/data/fdb_config_{machine}.yaml"
     )
 
 

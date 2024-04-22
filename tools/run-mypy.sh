@@ -18,7 +18,7 @@ cd "${SCRIPT_DIR}/.."
 
 # Paths relative to project root
 paths=(
-    src/idpi
+    src/meteodatalab
     tests/test_meteodatalab
 )
 for path in "${paths[@]}"; do

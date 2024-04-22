@@ -3,10 +3,10 @@ import numpy as np
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi.grib_decoder import GribReader
-from idpi.operators import diff
-from idpi.operators.theta import compute_theta
-from idpi.operators.total_diff import TotalDiff
+from meteodatalab.grib_decoder import GribReader
+from meteodatalab.operators import diff
+from meteodatalab.operators.theta import compute_theta
+from meteodatalab.operators.total_diff import TotalDiff
 
 
 def test_total_diff(data_dir):

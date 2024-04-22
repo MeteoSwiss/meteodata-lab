@@ -2,8 +2,8 @@
 from numpy.testing import assert_allclose
 
 # First-party
-from idpi.grib_decoder import GribReader
-from idpi.operators.theta import compute_theta
+from meteodatalab.grib_decoder import GribReader
+from meteodatalab.operators.theta import compute_theta
 
 
 def test_theta(data_dir, fieldextra):

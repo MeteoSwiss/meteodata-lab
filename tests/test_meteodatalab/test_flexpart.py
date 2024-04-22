@@ -7,9 +7,9 @@ import xarray as xr
 from numpy.testing import assert_allclose
 
 # First-party
-import idpi.config
-import idpi.operators.flexpart as flx
-from idpi.grib_decoder import GribReader
+import meteodatalab.config
+import meteodatalab.operators.flexpart as flx
+from meteodatalab.grib_decoder import GribReader
 
 
 @pytest.fixture
@@ -42,7 +42,7 @@ def test_flexpart(data_dir, fieldextra):
         "nsss",
     )
 
-    with idpi.config.set_values(data_scope="ifs"):
+    with meteodatalab.config.set_values(data_scope="ifs"):
         reader = GribReader.from_files(datafiles, ref_param="t")
         ds = reader.load_fieldnames(list(inputf + constants), extract_pv="u")
 

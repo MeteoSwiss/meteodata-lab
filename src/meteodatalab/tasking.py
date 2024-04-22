@@ -8,7 +8,11 @@ import meteodatalab.config
 
 
 def delayed(fn):
-    return dask.delayed(fn, pure=True) if meteodatalab.config.get("enable_dask", False) else fn
+    return (
+        dask.delayed(fn, pure=True)
+        if meteodatalab.config.get("enable_dask", False)
+        else fn
+    )
 
 
 def compute(*delayed_objs):

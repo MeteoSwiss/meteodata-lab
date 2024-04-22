@@ -12,7 +12,7 @@ repos:
     -   id: end-of-file-fixer
         # Note that fieldextra namelists requires an empty newline at the end of the file
         # therefore we don't correct this here
-        exclude: ^tests/test_idpi/fieldextra_templates/.*
+        exclude: ^tests/test_meteodatalab/fieldextra_templates/.*
     -   id: trailing-whitespace
 -   repo: local
     hooks:

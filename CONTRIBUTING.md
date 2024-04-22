@@ -110,8 +110,8 @@ Before you submit a pull request, check that it meets these guidelines:
 For a subset of tests or a specific test, run:
 
 ```bash
-pytest tests.test_idpi
-pytest tests.test_idpi/test_feature::test_edge_case
+pytest tests.test_meteodatalab
+pytest tests.test_meteodatalab/test_feature::test_edge_case
 ```
 
 ## Versioning
@@ -133,7 +133,7 @@ Following is a description of the most important files and folders in the projec
     - `environment.yaml`: Full tree of runtime and development dependencies with fully specified ('pinned') version numbers; created with `conda env export`.
     - `requirements.yaml`: Top-level runtime and development dependencies with minimal version restrictions (typically a minimum version or a version range); kept manually.
 - `src/idpi/`: Source code of the project package.
-- `tests/test_idpi/`: Unit tests of the project package; run with `pytest`.
+- `tests/test_meteodatalab/`: Unit tests of the project package; run with `pytest`.
 - `tools/`: Scripts primarily for development
     - `run-mypy.sh`: Run script for the static type checker `mypy`.
     - `setup_env.sh`: Script to create new conda environments; see `tools/setup_env.sh -h` for all available options.

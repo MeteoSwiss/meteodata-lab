@@ -3,7 +3,7 @@ requires = ["setuptools>=65", "wheel>=0.38"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "idpi"
+name = "meteodatalab"
 version = "0.2.0-rc3"
 description = "Prototype for a data post-processing framework on the basis of xarray."
 readme = "README.md"
@@ -42,7 +42,7 @@ namespaces = true
 where = ["src"]
 
 [tool.setuptools.package-data]
-"idpi.data" = ["*.yml"]
+"meteodatalab.data" = ["*.yml"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -50,7 +50,7 @@ addopts = [
     "-ra",
     "--pdbcls=IPython.terminal.debugger:TerminalPdb",
     "--tb=short",
-    # "--cov=idpi",
+    # "--cov=meteodatalab",
     # "--mypy",
 ]
 markers = [
@@ -78,7 +78,7 @@ known_third_party = [
 ]
 known_first_party = [
     # Add first-party modules that may be misclassified by isort
-    "idpi",
+    "meteodatalab",
 ]
 
 [tool.mypy]

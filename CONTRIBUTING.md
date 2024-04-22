@@ -132,7 +132,7 @@ Following is a description of the most important files and folders in the projec
 - `requirements/`: Project dependencies and environment
     - `environment.yaml`: Full tree of runtime and development dependencies with fully specified ('pinned') version numbers; created with `conda env export`.
     - `requirements.yaml`: Top-level runtime and development dependencies with minimal version restrictions (typically a minimum version or a version range); kept manually.
-- `src/idpi/`: Source code of the project package.
+- `src/meteodatalab/`: Source code of the project package.
 - `tests/test_meteodatalab/`: Unit tests of the project package; run with `pytest`.
 - `tools/`: Scripts primarily for development
     - `run-mypy.sh`: Run script for the static type checker `mypy`.
@@ -176,8 +176,8 @@ _Note that the separation of unpinned runtime and development dependencies into 
 
 ## How to provide executable scripts
 
-By default, a single executable script called meteodata-lab is provided. It is created when the package is installed. When you call it, the main function (`cli`) in `src/idpi/cli.py` is called.
+By default, a single executable script called meteodata-lab is provided. It is created when the package is installed. When you call it, the main function (`cli`) in `src/meteodatalab/cli.py` is called.
 
-When the package is installed, a executable script named `meteodata-lab` is created in the bin folder of the active conda environment. Upon calling this script in the shell, the `main` function in `src/idpi/cli.py` is executed.
+When the package is installed, a executable script named `meteodata-lab` is created in the bin folder of the active conda environment. Upon calling this script in the shell, the `main` function in `src/meteodatalab/cli.py` is executed.
 
 The scripts, their names and entry points are specified in `pyproject.toml` in the `[project.scripts]` section. Just add additional entries to provide more scripts to the users of your package.

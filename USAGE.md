@@ -1,13 +1,13 @@
 # Usage
 
-Use Icon Data Processing Incubator in a project:
+Use meteodata-lab in a project:
 
 ```python
-import idpi
+import meteodatalab
 ```
 
 Before running, make sure to activate your project environment:
 
 ```bash
-conda activate icon-data-processing-incubator
+conda activate meteodata-lab
 ```

@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=.
 set BUILDDIR=_build
-set SPHINXPROJ=icon-data-processing-incubator
+set SPHINXPROJ=meteodata-lab
 
 if "%1" == "" goto help
 

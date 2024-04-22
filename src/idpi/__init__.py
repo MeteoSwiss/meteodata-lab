@@ -1,10 +1,10 @@
-"""Top-level package for Icon Data Processing Incubator."""
+"""Top-level package for meteodata-lab."""
 
 # Standard library
 import importlib.metadata
 
-__author__ = "Tobias Wicky"
-__email__ = "tobias.wicky@meteoswiss.ch"
+__author__ = "Carlos Osuna"
+__email__ = "carlos.osuna@meteoswiss.ch"
 __version__ = importlib.metadata.version(__package__)
 
 del importlib

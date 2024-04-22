@@ -1,1 +1,1 @@
-"""Top-level package for Icon Data Processing Incubator."""
+"""Top-level package for meteodata-lab."""

@@ -30,12 +30,12 @@ dependencies = [
 ]
 
 [project.urls]
-source = "https://github.com/MeteoSwiss-APN/icon-data-processing-incubator"
-documentation = "https://github.io/MeteoSwiss-APN/icon-data-processing-incubator"
+source = "https://github.com/MeteoSwiss/meteodata-lab"
+documentation = "https://github.io/MeteoSwiss/meteodata-lab"
 
 [project.scripts]
 # Format: <command> = "<package>.<module>:<function>"
-icon-data-processing-incubator = "idpi.cli:main"
+meteodata-lab = "meteodatalab.cli:main"
 
 [tool.setuptools.packages.find]
 namespaces = true

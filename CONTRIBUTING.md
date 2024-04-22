@@ -8,7 +8,7 @@ You can contribute in many ways.
 
 ### Report Bugs
 
-Report bugs as [GitHub issues](https://github.com/MeteoSwiss-APN/icon-data-processing-incubator/issues).
+Report bugs as [GitHub issues](https://github.com/MeteoSwiss/meteodata-lab/issues).
 
 If you are reporting a bug, please include
 
@@ -18,19 +18,19 @@ If you are reporting a bug, please include
 
 ### Fix Bugs
 
-Look through the [GitHub issues](https://github.com/MeteoSwiss-APN/icon-data-processing-incubator/issues) for bugs. Anything tagged with "bug" and "help wanted" is open to whoever wants to implement it.
+Look through the [GitHub issues](https://github.com/MeteoSwiss/meteodata-lab/issues) for bugs. Anything tagged with "bug" and "help wanted" is open to whoever wants to implement it.
 
 ### Implement Features
 
-Look through the  [GitHub issues](https://github.com/MeteoSwiss-APN/icon-data-processing-incubator/issues) for features. Anything tagged with "enhancement" and "help wanted" is open to whoever wants to implement it.
+Look through the  [GitHub issues](https://github.com/MeteoSwiss/meteodata-lab/issues) for features. Anything tagged with "enhancement" and "help wanted" is open to whoever wants to implement it.
 
 ### Write Documentation
 
-Icon Data Processing Incubator could always use more documentation, whether as part of the official Icon Data Processing Incubator docs, in docstrings --- or even on the web in blog posts, articles, and such.
+meteodata-lab could always use more documentation, whether as part of the official meteodata-lab docs, in docstrings --- or even on the web in blog posts, articles, and such.
 
 ### Submit Feedback
 
-The best way to send feedback is to file a [GitHub issue]( https://github.com/MeteoSwiss-APN/icon-data-processing-incubator/issues).
+The best way to send feedback is to file a [GitHub issue]( https://github.com/MeteoSwiss/meteodata-lab/issues).
 
 If you are proposing a feature,
 
@@ -40,28 +40,28 @@ If you are proposing a feature,
 
 ## Get Started!
 
-Ready to contribute? Here's how to set up `icon-data-processing-incubator` for local development.
+Ready to contribute? Here's how to set up `meteodata-lab` for local development.
 
-1. Fork the [`icon-data-processing-incubator` repo](https://github.com/) on GitHub.
+1. Fork the [`meteodata-lab` repo](https://github.com/) on GitHub.
 2. Clone your fork locally:
 
     ```bash
-    git clone git@github.com:your_name_here/icon-data-processing-incubator.git
+    git clone git@github.com:your_name_here/meteodata-lab.git
     ```
 
 3. Create a virtual environment and install the dependencies:
 
     ```bash
-    cd icon-data-processing-incubator/
+    cd meteodata-lab/
     ./tools/setup_env.sh
     ```
 
-    This will create a conda environment named `icon-data-processing-incubator` (change with `-n`) and install the pinned runtime and development dependencies in `requirements/environment.yaml`.
+    This will create a conda environment named `meteodata-lab` (change with `-n`) and install the pinned runtime and development dependencies in `requirements/environment.yaml`.
 
     Install the package itself in editable mode.
 
     ```bash
-    conda activate icon-data-processing-incubator
+    conda activate meteodata-lab
     pip install --editable .
     ```
 
@@ -151,7 +151,7 @@ Following is a description of the most important files and folders in the projec
 
 ## Managing dependencies
 
-Icon Data Processing Incubator uses [Conda](https://docs.conda.io/en/latest/) to manage dependencies. (Also check out [Mamba](https://mamba.readthedocs.io/en/latest/) if you like your package installations fast.) Dependencies are specified in YAML files, of which there are two:
+meteodata-lab uses [Conda](https://docs.conda.io/en/latest/) to manage dependencies. (Also check out [Mamba](https://mamba.readthedocs.io/en/latest/) if you like your package installations fast.) Dependencies are specified in YAML files, of which there are two:
 
 - `requirements/requirements.yaml`: Top-level runtime and development dependencies with minimal version restrictions (typically a minimum version or a version range); kept manually.
 - `requirements/environment.yaml`: Full tree of runtime and development dependencies with fully specified ('pinned') version numbers; created with `conda env export`.
@@ -176,8 +176,8 @@ _Note that the separation of unpinned runtime and development dependencies into 
 
 ## How to provide executable scripts
 
-By default, a single executable script called icon-data-processing-incubator is provided. It is created when the package is installed. When you call it, the main function (`cli`) in `src/idpi/cli.py` is called.
+By default, a single executable script called meteodata-lab is provided. It is created when the package is installed. When you call it, the main function (`cli`) in `src/idpi/cli.py` is called.
 
-When the package is installed, a executable script named `icon-data-processing-incubator` is created in the bin folder of the active conda environment. Upon calling this script in the shell, the `main` function in `src/idpi/cli.py` is executed.
+When the package is installed, a executable script named `meteodata-lab` is created in the bin folder of the active conda environment. Upon calling this script in the shell, the `main` function in `src/idpi/cli.py` is executed.
 
 The scripts, their names and entry points are specified in `pyproject.toml` in the `[project.scripts]` section. Just add additional entries to provide more scripts to the users of your package.

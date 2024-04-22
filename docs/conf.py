@@ -1,4 +1,4 @@
-"""icon-data-processing-incubator documentation build configuration file.
+"""meteodata-lab documentation build configuration file.
 
 Based on auto-generated file created by sphinx-quickstart on Fri Jun 9 2017.
 
@@ -47,9 +47,9 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "Icon Data Processing Incubator"
-copyright = "2023, Tobias Wicky"  # pylint: disable=W0622  # redefined-builtin
-author = "Tobias Wicky"
+project = "meteodata-lab"
+copyright = "2024, Carlos Osuna"  # pylint: disable=W0622  # redefined-builtin
+author = "Carlos Osuna"
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -101,7 +101,7 @@ html_theme = "alabaster"
 # -- Options for HTMLHelp output ---------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "icon-data-processing-incubatordoc"
+htmlhelp_basename = "meteodata-labdoc"
 
 
 # -- Options for LaTeX output ------------------------------------------
@@ -156,8 +156,8 @@ latex_elements: dict[str, str] = {
 man_pages = [
     (
         master_doc,
-        "icon-data-processing-incubator",
-        "Icon Data Processing Incubator Documentation",
+        "meteodata-lab",
+        "meteodata-lab Documentation",
         [author],
         1,
     )
@@ -172,10 +172,10 @@ man_pages = [
 texinfo_documents = [
     (
         master_doc,
-        "icon-data-processing-incubator",
-        "Icon Data Processing Incubator Documentation",
+        "meteodata-lab",
+        "meteodata-lab Documentation",
         author,
-        "icon-data-processing-incubator",
+        "meteodata-lab",
         "One line description of project.",
         "Miscellaneous",
     ),

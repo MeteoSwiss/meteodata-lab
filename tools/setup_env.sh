@@ -7,7 +7,7 @@
 #
 
 # Default env names
-DEFAULT_ENV_NAME="idpi"
+DEFAULT_ENV_NAME="meteodata-lab"
 
 # Default options
 ENV_NAME="${DEFAULT_ENV_NAME}"

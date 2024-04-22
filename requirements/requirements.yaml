@@ -1,4 +1,4 @@
-name: idpi
+name: meteodata-lab
 channels:
   - conda-forge
 dependencies:

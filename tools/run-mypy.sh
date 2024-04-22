@@ -18,8 +18,8 @@ cd "${SCRIPT_DIR}/.."
 
 # Paths relative to project root
 paths=(
-    src/idpi
-    tests/test_idpi
+    src/meteodatalab
+    tests/test_meteodatalab
 )
 for path in "${paths[@]}"; do
     ${VERBOSE} && echo "mypy \"${path}\""

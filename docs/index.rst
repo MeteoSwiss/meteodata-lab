@@ -1,4 +1,4 @@
-Welcome to Icon Data Processing Incubator's documentation!
+Welcome to meteodata-lab's documentation!
 ===========================================================
 
 .. toctree::

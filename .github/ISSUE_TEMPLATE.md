@@ -1,4 +1,4 @@
-* Icon Data Processing Incubator version:
+* meteodata-lab version:
 * Python version:
 * Operating System:
 

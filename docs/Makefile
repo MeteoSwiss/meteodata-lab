@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = icon-data-processing-incubator
+SPHINXPROJ    = meteodata-lab
 SOURCEDIR     = .
 BUILDDIR      = _build
 

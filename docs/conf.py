@@ -53,8 +53,8 @@ master_doc = "index"
 
 # General information about the project.
 project = "meteodata-lab"
-copyright = "2024, Meteoswiss"  # pylint: disable=W0622  # redefined-builtin
-author = "Meteoswiss"
+copyright = "2024, MeteoSwiss"  # pylint: disable=W0622  # redefined-builtin
+author = "MeteoSwiss"
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout

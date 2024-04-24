@@ -16,7 +16,14 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
 ]
 requires-python = ">=3.10"
-authors = [{ name = "Carlos Osuna", email = "carlos.osuna@meteoswiss.ch" }]
+authors = [
+    { name = "Carlos Osuna", email = "carlos.osuna@meteoswiss.ch" },
+    { name = "Petra Baumann", email = "petra.baumanna@meteoswiss.ch" },
+    { name = "Nina Burgdorfer", email = "nina.burgdorfer@meteoswiss.ch" },
+    { name = "Victoria Cherkas", email = "victoria.cherkas@meteoswiss.ch" },
+    { name = "Christian Kanesan", email = "christian.kanesan@meteoswiss.ch" },
+    { name = "Tobias Wicky", email = "tobias.wicky@meteoswiss.ch" },
+]
 dependencies = [
     "click",
     "earthkit-data",

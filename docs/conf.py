@@ -32,7 +32,12 @@ sys.path.insert(0, os.path.abspath(".."))
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named "sphinx.ext.*") or your custom ones.
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.viewcode", "sphinx_mdinclude"]
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",
+    "sphinx_mdinclude",
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -48,8 +53,8 @@ master_doc = "index"
 
 # General information about the project.
 project = "meteodata-lab"
-copyright = "2024, Carlos Osuna"  # pylint: disable=W0622  # redefined-builtin
-author = "Carlos Osuna"
+copyright = "2024, Meteoswiss"  # pylint: disable=W0622  # redefined-builtin
+author = "Meteoswiss"
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout

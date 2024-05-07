@@ -164,3 +164,32 @@ def set_origin_xy(ds: dict[str, xr.DataArray], ref_param: str) -> None:
     ref_grid = load_grid_reference(ds[ref_param].message)
     for field in ds.values():
         field.attrs |= compute_origin(ref_grid, field)
+
+
+def extract_pv(message: bytes) -> dict[str, xr.DataArray]:
+    """Extract hybrid level coefficients.
+
+    Parameters
+    ----------
+    message : bytes
+        GRIB message containing the pv metadata.
+
+    Returns
+    -------
+    dict[str, xarray.DataArray]
+        Hybrid level coefficients.
+
+    """
+    stream = io.BytesIO(message)
+    [grib_field] = ekd.from_source("stream", stream)
+
+    pv = grib_field.metadata("pv")
+
+    if pv is None:
+        return {}
+
+    i = len(pv) // 2
+    return {
+        "ak": xr.DataArray(pv[:i], dims="z"),
+        "bk": xr.DataArray(pv[i:], dims="z"),
+    }

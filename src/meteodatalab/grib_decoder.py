@@ -54,16 +54,6 @@ def _parse_datetime(date, time):
     return dt.datetime.strptime(f"{date}{time:04d}", "%Y%m%d%H%M")
 
 
-def _extract_pv(pv):
-    if pv is None:
-        return {}
-    i = len(pv) // 2
-    return {
-        "ak": xr.DataArray(pv[:i], dims="z"),
-        "bk": xr.DataArray(pv[i:], dims="z"),
-    }
-
-
 @dc.dataclass
 class _FieldBuffer:
     dims: tuple[str, ...] | None = None
@@ -288,12 +278,6 @@ class GribReader:
         """
         return cls(data_source.DataSource([str(p) for p in datafiles]), ref_param)
 
-    def _load_pv(self, pv_param: Request):
-        fs = self.data_source.retrieve(pv_param)
-
-        for field in fs:
-            return field.metadata("pv")
-
     def load(
         self,
         requests: Mapping[str, Request],
@@ -329,10 +313,7 @@ class GribReader:
             if extract_pv not in requests:
                 msg = f"{extract_pv=} was not a key of the given requests."
                 raise RuntimeError(msg)
-            return result | tasking.delayed(
-                _extract_pv(self._load_pv(requests[extract_pv]))
-            )
-
+            return result | metadata.extract_pv(result[extract_pv].message)
         return result
 
     def load_fieldnames(

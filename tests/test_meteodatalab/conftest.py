@@ -30,9 +30,12 @@ def machine():
 @pytest.fixture
 def data_dir(request, machine):
     """Base data dir."""
-    if machine != "tsa":
+    if machine == "tsa":
+        base_dir = Path("/project/s83c/rz+/icon_data_processing_incubator/")
+    elif machine == "balfrin":
+        base_dir = Path("/scratch/mch/ckanesan/")
+    else:
         return None
-    base_dir = Path("/project/s83c/rz+/icon_data_processing_incubator/")
     marker = request.node.get_closest_marker("data")
     if marker is None:
         return base_dir / "datasets/32_39x45_51"
@@ -45,6 +48,8 @@ def data_dir(request, machine):
             return base_dir / "datasets/32_39x45_51/COSMO-1E_time"
         case "reduced-ens":
             return base_dir / "datasets/32_39x45_51/COSMO-1E_ens"
+        case "flexpart":
+            return base_dir / "data/flexpart"
     raise RuntimeError(f"No match for data mark {marker.args[0]}")
 
 
@@ -59,7 +64,7 @@ def fieldextra_path(machine):
     """Fieldextra path."""
     conf = {
         "tsa": Path("/project/s83c/fieldextra/tsa"),
-        "balfrin": Path("/users/tsm/proj.aare/fieldextra/v14.3.1/"),
+        "balfrin": Path("/users/tsm/proj.aare/fieldextra/v14.4.0/"),
     }
     return conf.get(machine)
 

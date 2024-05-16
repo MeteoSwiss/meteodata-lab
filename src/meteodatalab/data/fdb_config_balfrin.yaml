@@ -5,4 +5,4 @@ schema: /scratch/mch/ckanesan/fdb-setup/fdb-schema
 spaces:
 - handler: Default
   roots:
-  - path: /scratch/mch/ckanesan/fdb-root/
+  - path: /scratch/mch/ckanesan/fdb_32_39x45_51/

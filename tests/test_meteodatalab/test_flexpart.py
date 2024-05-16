@@ -1,6 +1,3 @@
-# Standard library
-from pathlib import Path
-
 # Third-party
 import pytest
 import xarray as xr
@@ -12,12 +9,8 @@ import meteodatalab.operators.flexpart as flx
 from meteodatalab.grib_decoder import GribReader
 
 
-@pytest.fixture
-def data_dir(data_dir):
-    return Path("/project/s83c/rz+/icon_data_processing_incubator/data/flexpart/")
-
-
 @pytest.mark.ifs
+@pytest.mark.data("flexpart")
 def test_flexpart(data_dir, fieldextra):
     datafiles = list(data_dir.glob("efs*"))
     constants = ("z", "lsm", "sdor")

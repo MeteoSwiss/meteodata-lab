@@ -3,7 +3,8 @@ from numpy.testing import assert_allclose
 
 # First-party
 import meteodatalab.operators.brn as mbrn
-from meteodatalab.grib_decoder import GribReader
+from meteodatalab.data_source import DataSource
+from meteodatalab.grib_decoder import load
 from meteodatalab.metadata import set_origin_xy
 
 
@@ -11,8 +12,8 @@ def test_brn(data_dir, fieldextra):
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
     cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
-    reader = GribReader.from_files([cdatafile, datafile])
-    ds = reader.load_fieldnames(["P", "T", "QV", "U", "V", "HHL", "HSURF"])
+    source = DataSource(datafiles=[datafile, cdatafile])
+    ds = load(source, {"param": ["P", "T", "QV", "U", "V", "HHL", "HSURF"]})
     set_origin_xy(ds, "HHL")
 
     brn = mbrn.fbrn(

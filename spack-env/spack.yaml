@@ -4,10 +4,10 @@
 # configuration settings.
 spack:
   specs:
-  - fdb
-  - eckit@1.20.2 ~mpi
-  - eccodes@2.25 jp2k=none
-  - hdf5 ~mpi
+  - fdb@=5.11.116 +tools
+  - eckit@=1.26.2 ~mpi
+  - eccodes@=2.33.0 jp2k=none
+  - metkit@=1.11.9
   view: true
   concretizer:
     unify: true

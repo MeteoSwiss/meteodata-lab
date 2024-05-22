@@ -28,23 +28,44 @@ def machine():
 
 
 @pytest.fixture
-def data_dir(request, machine):
+def unpack(work_dir: Path):
+    def f(path: Path) -> Path:
+        src = path.with_suffix(".tar.gz")
+        if not src.exists():
+            return path
+        dst = work_dir
+        tgt = dst / path.name
+        if tgt.exists():
+            return tgt
+        subprocess.run(["tar", "-xf", str(src), "-C", str(dst)], check=True)
+        return tgt
+
+    return f
+
+
+@pytest.fixture
+def data_dir(request, machine, unpack):
     """Base data dir."""
-    if machine != "tsa":
+    if machine == "tsa":
+        base_dir = Path("/project/s83c/rz+/icon_data_processing_incubator/")
+    elif machine == "balfrin":
+        base_dir = Path("/store_new/mch/msopr/icon_workflow_2/")
+    else:
         return None
-    base_dir = Path("/project/s83c/rz+/icon_data_processing_incubator/")
     marker = request.node.get_closest_marker("data")
     if marker is None:
-        return base_dir / "datasets/32_39x45_51"
+        return unpack(base_dir / "datasets/32_39x45_51")
     match marker.args[0]:
         case "original":
             return base_dir / "datasets/original"
         case "reduced":
-            return base_dir / "datasets/32_39x45_51"
+            return unpack(base_dir / "datasets/32_39x45_51")
         case "reduced-time":
-            return base_dir / "datasets/32_39x45_51/COSMO-1E_time"
+            return unpack(base_dir / "datasets/32_39x45_51") / "COSMO-1E_time"
         case "reduced-ens":
-            return base_dir / "datasets/32_39x45_51/COSMO-1E_ens"
+            return unpack(base_dir / "datasets/32_39x45_51") / "COSMO-1E_ens"
+        case "flexpart":
+            return base_dir / "data/flexpart"
     raise RuntimeError(f"No match for data mark {marker.args[0]}")
 
 
@@ -59,7 +80,7 @@ def fieldextra_path(machine):
     """Fieldextra path."""
     conf = {
         "tsa": Path("/project/s83c/fieldextra/tsa"),
-        "balfrin": Path("/users/tsm/proj.aare/fieldextra/v14.3.1/"),
+        "balfrin": Path("/users/tsm/proj.aare/fieldextra/v14.4.0/"),
     }
     return conf.get(machine)
 

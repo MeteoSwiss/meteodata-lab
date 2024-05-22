@@ -1,8 +1,8 @@
 ---
 type: local
 engine: toc
-schema: /scratch/mch/ckanesan/fdb-setup/fdb-schema
+schema: /store_new/mch/msopr/icon_workflow_2/fdb-schema
 spaces:
 - handler: Default
   roots:
-  - path: /scratch/mch/ckanesan/fdb-root/
+  - path: /store_new/mch/msopr/icon_workflow_2/fdb_32_39x45_51/

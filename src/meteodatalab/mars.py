@@ -155,7 +155,7 @@ class Request:
 
         obj = dc.replace(self, levelist=levelist)
         out = typing.cast(dict[str, typing.Any], obj.dump())
-        return out | {"param": self._param_id()}
+        return out | {"param": self._param_id(), "model": out["model"].lower()}
 
     def to_polytope(self) -> dict[str, typing.Any]:
         result = self.to_fdb()
@@ -163,4 +163,4 @@ class Request:
             param: str | list[str] = [str(p) for p in result["param"]]
         else:
             param = str(result["param"])
-        return result | {"param": param, "model": result["model"].lower()}
+        return result | {"param": param}

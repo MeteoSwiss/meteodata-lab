@@ -175,5 +175,5 @@ ignore = [
 ignore_directives = ["automodule", "mdinclude"]
 
 [tool.codespell]
-ignore-words-list = "aare,inout"
+ignore-words-list = "aare,inout,THIRDPARTY"
 skip = "requirements/*"

@@ -19,12 +19,8 @@ documentation root, use os.path.abspath to make it absolute, like shown here.
 import os
 import sys
 
-import unittest.mock
-
-sys.modules["eccodes"] = unittest.mock.Mock()
-
 # First-party
-import meteodatalab  # noqa: E402
+import meteodatalab
 
 sys.path.insert(0, os.path.abspath(".."))
 
@@ -201,3 +197,5 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 # texinfo_no_detailmenu = False
+
+autodoc_mock_imports = ["eccodes"]

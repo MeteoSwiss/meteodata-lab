@@ -19,8 +19,12 @@ documentation root, use os.path.abspath to make it absolute, like shown here.
 import os
 import sys
 
+import unittest.mock
+
+sys.modules["eccodes"] = unittest.mock.Mock()
+
 # First-party
-import meteodatalab
+import meteodatalab  # noqa: E402
 
 sys.path.insert(0, os.path.abspath(".."))
 

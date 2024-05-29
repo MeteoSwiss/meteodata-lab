@@ -32,7 +32,7 @@ You can control the environment name with the flag `-n` and the Python version w
 
 
 Installation of meteodata-lab
------------------------------------------------
+-----------------------------
 
 After creating and activating your environment by running
 

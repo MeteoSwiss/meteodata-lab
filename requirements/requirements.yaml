@@ -46,4 +46,5 @@ dependencies:
     - copier>=7.0
     - flake8-pyproject>=1.2
     - sphinx-mdinclude>=0.5
+    - shibuya>=2024.5.15
     - pyfdb @ git+https://github.com/ecmwf/pyfdb.git@0.0.3

@@ -172,7 +172,7 @@ ignore = [
 ]
 
 [tool.rstcheck]
-ignore_directives = ["automodule", "mdinclude"]
+ignore_directives = ["automodule", "mdinclude", "autosummary"]
 
 [tool.codespell]
 ignore-words-list = "aare,inout,THIRDPARTY"

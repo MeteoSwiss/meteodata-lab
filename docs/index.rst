@@ -1,5 +1,5 @@
 Welcome to meteodata-lab's documentation!
-===========================================================
+=========================================
 
 .. toctree::
    :maxdepth: 2
@@ -8,7 +8,7 @@ Welcome to meteodata-lab's documentation!
    readme
    installation
    usage
-   modules
+   reference
    contributing
    authors
    history

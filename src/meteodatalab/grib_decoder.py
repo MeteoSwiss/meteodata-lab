@@ -361,12 +361,14 @@ def save(
     }
 
     def to_grib(loc: dict[str, xr.DataArray]):
-        return {INV_DIM_MAP[key]: value.item() for key, value in loc.items()}
+        return {INV_DIM_MAP[key]: value.item() for key, value in loc.items() if key != 'pressure'}
 
     for idx_slice in product(*idx.values()):
         loc = {dim: value for dim, value in zip(idx.keys(), idx_slice)}
         array = field.sel(loc).values
         metadata = md.override(to_grib(loc))
+        if 'pressure' in loc:
+            metadata = metadata.override({'scaledValueOfFirstFixedSurface': loc['pressure'].values})
 
         fs = ekd.FieldList.from_numpy(array, metadata)
         fs.write(file_handle, bits_per_value=bits_per_value)

@@ -69,7 +69,7 @@ class TimeseriesFeature:
     start: int = 0
     end: int = 0
 
-    @pydantic.field_validator("type")
+    @pydantic.validator("type")
     @classmethod
     def validate_type(cls, v: str) -> str:
         if v != FeatureType.TIMESERIES:

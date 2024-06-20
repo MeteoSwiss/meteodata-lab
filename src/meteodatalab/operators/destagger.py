@@ -139,17 +139,19 @@ def destagger(
     if dim == "x" or dim == "y":
         if field.attrs[f"origin_{dim}"] != 0.5:
             raise ValueError
+        attrs = _update_grid(field, dim)
         return (
             xr.apply_ufunc(
                 interpolate_midpoint,
-                field.reset_coords(drop=True),
+                field,
                 input_core_dims=[[dim]],
                 output_core_dims=[[dim]],
                 kwargs={"extend": "left"},
                 keep_attrs=True,
             )
             .transpose(*dims)
-            .assign_attrs({f"origin_{dim}": 0.0}, **_update_grid(field, dim))
+            .assign_attrs({f"origin_{dim}": 0.0}, **attrs)
+            .assign_coords(metadata.extract_hcoords(attrs["message"]))
         )
     elif dim == "z":
         if field.origin_z != -0.5:

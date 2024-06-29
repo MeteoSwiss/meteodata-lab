@@ -366,7 +366,7 @@ def save(
     for idx_slice in product(*idx.values()):
         loc = {dim: value for dim, value in zip(idx.keys(), idx_slice)}
         array = field.sel(loc).values
-        metadata = md.override(to_grib(loc))
+        metadata = md.override(to_grib(loc)) if to_grib(loc) else md
 
         fs = ekd.FieldList.from_numpy(array, metadata)
         fs.write(file_handle, bits_per_value=bits_per_value)

@@ -57,6 +57,8 @@ def override(message: bytes, **kwargs: typing.Any) -> dict[str, typing.Any]:
         Updated message byte string along with the geography and parameter namespaces
 
     """
+    if not kwargs:
+        return {"message": message, **extract(md)}
     stream = io.BytesIO(message)
     [grib_field] = ekd.from_source("stream", stream)
 

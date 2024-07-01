@@ -193,3 +193,26 @@ def extract_pv(message: bytes) -> dict[str, xr.DataArray]:
         "ak": xr.DataArray(pv[:i], dims="z"),
         "bk": xr.DataArray(pv[i:], dims="z"),
     }
+
+
+def extract_hcoords(message: bytes) -> dict[str, xr.DataArray]:
+    """Extract horizontal coordinates.
+
+    Parameters
+    ----------
+    message : bytes
+        GRIB message containing the grid definition.
+
+    Returns
+    -------
+    dict[str, xarray.DataArray]
+        Horizontal coordinates in geolatlon.
+
+    """
+    stream = io.BytesIO(message)
+    [grib_field] = ekd.from_source("stream", stream)
+
+    return {
+        dim: xr.DataArray(dims=("y", "x"), data=values)
+        for dim, values in grib_field.to_latlon().items()
+    }

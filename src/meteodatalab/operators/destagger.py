@@ -167,6 +167,7 @@ def destagger(
             )
             .transpose(*dims)
             .assign_attrs({f"origin_{dim}": 0.0}, **_update_vertical(field))
+            .assign_coords(z=field.z[:-1])
         )
 
     raise ValueError("Unknown dimension", dim)

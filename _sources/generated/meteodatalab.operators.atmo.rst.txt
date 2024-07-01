@@ -1,0 +1,32 @@
+﻿meteodatalab.operators.atmo
+===========================
+
+.. automodule:: meteodatalab.operators.atmo
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      pv_qp
+      pv_sw
+      qv_pvp
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

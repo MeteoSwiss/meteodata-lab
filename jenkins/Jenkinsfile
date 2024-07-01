@@ -6,9 +6,6 @@ pipeline {
     // Otherwise we should use stash/unstash for the miniconda installation
         disableConcurrentBuilds()
     }
-    environment {
-       PATH = "$WORKSPACE/miniconda/bin:$PATH"
-    }
     agent {
         label 'balfrin'
     }
@@ -20,14 +17,6 @@ pipeline {
         }
     }
     stages {
-        stage('setup miniconda') {
-            steps {
-                sh '''#!/usr/bin/env bash
-                set -e
-                bash tools/setup_miniconda.sh -p ${WORKSPACE}
-                '''
-            }
-        }
         stage('spack') {
             steps {
                 sh '''#!/usr/bin/env bash
@@ -43,32 +32,21 @@ pipeline {
                 '''
             }
         }
-        stage('build package') {
+        stage('setup env') {
             steps {
                 sh '''#!/usr/bin/env bash
-                set -e
-                source ${WORKSPACE}/miniconda/etc/profile.d/conda.sh
-                conda init bash --no-user --install --system
-                conda activate
-                bash tools/setup_env.sh -u -n no-deps
-                conda activate no-deps
-                pip install --no-deps .
+                set -x
+                bash tools/setup_poetry.sh
                 '''
             }
         }
         stage('test') {
             steps {
                 sh '''#!/usr/bin/env bash
-                source $WORKSPACE/miniconda/etc/profile.d/conda.sh
-                conda activate no-deps
-                cd ${WORKSPACE}
-                pytest -m "not ifs" tests
+                .venv/bin/pytest -m "not ifs" tests
                 '''
                 sh '''#!/usr/bin/env bash
-                source $WORKSPACE/miniconda/etc/profile.d/conda.sh
-                conda activate no-deps
-                cd ${WORKSPACE}
-                pytest -m ifs tests
+                .venv/bin/pytest -m ifs tests
                 '''
             }
         }

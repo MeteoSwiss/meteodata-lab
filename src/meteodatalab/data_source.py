@@ -21,16 +21,16 @@ from . import config, mars
 @contextmanager
 def cosmo_grib_defs():
     """Enable COSMO GRIB definitions."""
+    restore = eccodes.codes_definition_path()
     root_dir = Path(sys.prefix) / "share"
     paths = (
         root_dir / "eccodes-cosmo-resources/definitions",
-        root_dir / "eccodes/definitions",
+        Path(restore),
     )
     for path in paths:
         if not path.exists():
             raise RuntimeError(f"{path} does not exist")
     defs_path = ":".join(map(str, paths))
-    restore = eccodes.codes_definition_path()
     eccodes.codes_set_definitions_path(defs_path)
     try:
         yield

@@ -1,5 +1,6 @@
 # Third-party
-from numpy.testing import assert_allclose
+import numpy as np
+from numpy.testing import assert_allclose, assert_equal
 
 # First-party
 from meteodatalab.grib_decoder import GribReader
@@ -30,3 +31,5 @@ def test_destagger(data_dir, fieldextra):
     assert u.origin_x == 0.0
     assert v.origin_y == 0.0
     assert hfl.origin_z == 0.0
+
+    assert_equal(hfl.z, np.arange(1, 81))

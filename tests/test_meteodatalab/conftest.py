@@ -10,7 +10,6 @@ import pytest
 import xarray as xr
 from jinja2 import Environment, FileSystemLoader
 
-
 root = Path(__file__).parents[2]
 view_path = str(root / "spack-env/.spack-env/view")
 os.environ["ECCODES_DIR"] = view_path

@@ -48,6 +48,7 @@ pre-commit = "*"
 pydocstyle = "*"
 pytest = "*"
 rstcheck = "*"
+types-PyYAML = "*"
 
 [tool.poetry.urls]
 source = "https://github.com/MeteoSwiss/meteodata-lab"

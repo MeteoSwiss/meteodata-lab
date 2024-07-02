@@ -48,6 +48,9 @@ pipeline {
                 sh '''#!/usr/bin/env bash
                 .venv/bin/pytest -m ifs tests
                 '''
+                sh '''#!/usr/bin/env bash
+                .venv/bin/python -m mypy src tests
+                '''
             }
         }
     }

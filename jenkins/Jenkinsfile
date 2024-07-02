@@ -40,6 +40,13 @@ pipeline {
                 '''
             }
         }
+        stage('type check'){
+            steps {
+                sh '''#!/usr/bin/env bash
+                .venv/bin/python -m mypy src tests
+                '''
+            }
+        }
         stage('test') {
             steps {
                 sh '''#!/usr/bin/env bash
@@ -47,9 +54,6 @@ pipeline {
                 '''
                 sh '''#!/usr/bin/env bash
                 .venv/bin/pytest -m ifs tests
-                '''
-                sh '''#!/usr/bin/env bash
-                .venv/bin/python -m mypy src tests
                 '''
             }
         }

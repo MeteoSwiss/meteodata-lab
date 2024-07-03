@@ -339,7 +339,10 @@ files = [
 ]
 
 [package.dependencies]
-numpy = {version = ">1.13.3", markers = "python_version < \"3.12.0.rc1\""}
+numpy = [
+    {version = ">1.13.3", markers = "python_version < \"3.12.0.rc1\""},
+    {version = ">=1.26.0b1", markers = "python_version >= \"3.12.0.rc1\""},
+]
 
 [[package]]
 name = "charset-normalizer"
@@ -1564,6 +1567,7 @@ files = [
 numpy = [
     {version = ">=1.22.4", markers = "python_version < \"3.11\""},
     {version = ">=1.23.2", markers = "python_version == \"3.11\""},
+    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
 ]
 python-dateutil = ">=2.8.2"
 pytz = ">=2020.1"
@@ -3013,5 +3017,5 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 
 [metadata]
 lock-version = "2.0"
-python-versions = ">=3.9,<3.12"
-content-hash = "be3e19e9b1ccadf20ed4094aa6e0a889950467d4e7ce8a0c1bbc5350b7936724"
+python-versions = ">=3.9,<3.13"
+content-hash = "37034246e1b0aca1b769ff84bea94e875b99395a5762b30fe2d4033c02487a14"

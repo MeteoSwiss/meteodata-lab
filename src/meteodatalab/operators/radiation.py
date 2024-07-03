@@ -4,6 +4,7 @@
 import xarray as xr
 
 # Local
+from .. import metadata
 from .. import physical_constants as pc
 
 
@@ -23,7 +24,17 @@ def compute_athd_s(athb_s: xr.DataArray, tsurf: xr.DataArray) -> xr.DataArray:
         Average downward longwave radiation at the surface [W m-2]
 
     """
-    return athb_s / pc.emissivity_surface + pc.boltzman_cst * tsurf**4
+    return xr.DataArray(
+        data=athb_s / pc.emissivity_surface + pc.boltzman_cst * tsurf**4,
+        attrs=metadata.override(
+            athb_s.message,
+            discipline=0,
+            parameterCategory=5,
+            parameterNumber=5,
+            typeOfFirstFixedSurface=1,
+            typeOfStatisticalProcessing=0,
+        ),
+    )
 
 
 def compute_swdown(diffuse: xr.DataArray, direct: xr.DataArray) -> xr.DataArray:
@@ -42,4 +53,14 @@ def compute_swdown(diffuse: xr.DataArray, direct: xr.DataArray) -> xr.DataArray:
         downward shortwave radiation at surface level.
 
     """
-    return (diffuse + direct).clip(min=0)
+    return xr.DataArray(
+        data=(diffuse + direct).clip(min=0),
+        attrs=metadata.override(
+            diffuse.message,
+            discipline=0,
+            parameterCategory=4,
+            parameterNumber=7,
+            typeOfFirstFixedSurface=1,
+            typeOfStatisticalProcessing=0,
+        ),
+    )

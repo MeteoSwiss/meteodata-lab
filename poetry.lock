@@ -1911,8 +1911,9 @@ version = "0.0.3"
 description = "Python interface to FDB"
 optional = false
 python-versions = "*"
-files = []
-develop = false
+files = [
+    {file = "0.0.3.zip", hash = "sha256:9ae49204ddf6672d58776206d97eeb547e6898ed359e427f838ce9cece6d43cb"},
+]
 
 [package.dependencies]
 cffi = "*"
@@ -1920,10 +1921,8 @@ findlibs = "*"
 pyeccodes = "*"
 
 [package.source]
-type = "git"
-url = "https://github.com/ecmwf/pyfdb.git"
-reference = "0.0.3"
-resolved_reference = "02692523ae83b6667dbfa189bbc49d37c3a14a0f"
+type = "url"
+url = "https://github.com/ecmwf/pyfdb/archive/refs/tags/0.0.3.zip"
 
 [[package]]
 name = "pyflakes"
@@ -2967,4 +2966,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.12"
-content-hash = "8e90ce02eb7608335c8e8b65251354fff426c80e2cbc901f4a8e1334e636c961"
+content-hash = "a091058dc3f1a54a709982344fdf9a68a15e496b9af09105fb07433a6f575c1a"

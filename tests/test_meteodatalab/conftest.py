@@ -10,6 +10,10 @@ import pytest
 import xarray as xr
 from jinja2 import Environment, FileSystemLoader
 
+root = Path(__file__).parents[2]
+view_path = str(root / "spack-env/.spack-env/view")
+os.environ["ECCODES_DIR"] = view_path
+
 
 @pytest.fixture(scope="session")
 def machine():
@@ -95,9 +99,7 @@ def template_env():
 
 @pytest.fixture(scope="session")
 def setup_fdb(machine):
-    root = Path(__file__).parents[2]
-
-    os.environ["FDB5_DIR"] = str(root / "spack-env/.spack-env/view")
+    os.environ["FDB5_DIR"] = view_path
     os.environ["FDB_HOME"] = os.environ["FDB5_DIR"]
     os.environ["FDB5_CONFIG_FILE"] = str(
         root / f"src/meteodatalab/data/fdb_config_{machine}.yaml"

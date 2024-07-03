@@ -16,11 +16,6 @@ repos:
     -   id: trailing-whitespace
 -   repo: local
     hooks:
-    -   id: forbidden-files-copier-rej
-        name: find copier rejection files
-        language: fail
-        entry: "Found copier update rejection file(s): review and remove them"
-        files: "\\.rej$"
     -   id: forbidden-files-git-orig
         name: find git merge backup files
         language: fail
@@ -93,13 +88,10 @@ repos:
         types: [python]
 -   repo: local
     hooks:
-    -   id: mypy
-        name: mypy
-        description: Perform static type analysis of Python code
-        language: system
-        entry: bash tools/run-mypy.sh
-        require_serial: true
+    -   id: poetry-check
+        name: poetry-check
+        description: run poetry check to validate config
+        entry: poetry check
+        language: python
         pass_filenames: false
-        verbose: true
-        types: [python]
-        files: ^(src|tests)/
+        files: ^(.*/)?(poetry\.lock|pyproject\.toml)$

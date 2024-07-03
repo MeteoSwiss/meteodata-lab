@@ -1,5 +1,4 @@
-name: Run pre-commit in blueprint
-
+name: Run pre-commit
 on:
   push:
     branches:
@@ -9,32 +8,15 @@ on:
     - main
 
 jobs:
-  blueprint-pre-commit:
+  pre-commit:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@v4
+    - name: Install poetry
+      run: pipx install poetry
+    - uses: actions/setup-python@v5
       with:
-        python-version: 3.11.0
-    - uses: conda-incubator/setup-miniconda@v2
-      with:
-        miniconda-version: "latest"
-        channels: conda-forge
-        channel-priority: flexible
-        show-channel-urls: true
-    - name: Create env from unpinned reqs
-      run: |
-        conda env create --name dev_env --file requirements/requirements.yaml
-    - name: Install project into env
-      run: |
-        conda run --name dev_env pip install --no-deps .
-    - name: Install pre-commit hooks
-      run: |
-        conda run --name dev_env pre-commit install-hooks
-    - name: Run pre-commit hooks
-      run: |
-        conda run --name dev_env pre-commit run --all-files
+        python-version: '3.11'
+        cache: 'poetry'
+    - run: poetry install --only dev
+    - run: poetry run pre-commit run --all-files

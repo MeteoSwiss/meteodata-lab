@@ -1,11 +1,11 @@
 [build-system]
-requires = ["setuptools>=65", "wheel>=0.38"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
-[project]
+[tool.poetry]
 name = "meteodatalab"
 version = "0.2.0-rc3"
-description = "Prototype for a data post-processing framework on the basis of xarray."
+description = "A data post-processing framework on the basis of xarray."
 readme = "README.md"
 keywords = ["Icon", "Data Processing"]
 classifiers = [
@@ -15,41 +15,49 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
 ]
-requires-python = ">=3.10"
 authors = [
-    { name = "Carlos Osuna", email = "carlos.osuna@meteoswiss.ch" },
-    { name = "Petra Baumann", email = "petra.baumanna@meteoswiss.ch" },
-    { name = "Nina Burgdorfer", email = "nina.burgdorfer@meteoswiss.ch" },
-    { name = "Victoria Cherkas", email = "victoria.cherkas@meteoswiss.ch" },
-    { name = "Christian Kanesan", email = "christian.kanesan@meteoswiss.ch" },
-    { name = "Tobias Wicky", email = "tobias.wicky@meteoswiss.ch" },
-]
-dependencies = [
-    "click",
-    "earthkit-data",
-    "eccodes",
-    "polytope-client",
-    "pydantic",
-    "pyyaml",
-    "rasterio",
-    "numpy",
-    "xarray",
+    "Carlos Osuna <carlos.osuna@meteoswiss.ch>",
+    "Petra Baumann <petra.baumanna@meteoswiss.ch>",
+    "Nina Burgdorfer <nina.burgdorfer@meteoswiss.ch>",
+    "Victoria Cherkas <victoria.cherkas@meteoswiss.ch>",
+    "Christian Kanesan <christian.kanesan@meteoswiss.ch>",
+    "Tobias Wicky <tobias.wicky@meteoswiss.ch>",
 ]
 
-[project.urls]
+[tool.poetry.dependencies]
+python = ">=3.9,<3.12"
+click = "^8.1.7"
+earthkit-data = "^0.8.1"
+eccodes = "^1.7.0"
+numpy = "^1.26.4"
+polytope-client = "^0.7.4"
+pydantic = "*"
+pyfdb = { git = "https://github.com/ecmwf/pyfdb.git", tag = "0.0.3" }
+pyyaml = "^6.0.1"
+rasterio = "^1.3.10"
+xarray = ">=2024"
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+codespell = "*"
+flake8 = "*"
+Flake8-pyproject = "*"
+ipykernel = "*"
+isort = "*"
+mypy = "*"
+pre-commit = "*"
+pydocstyle = "*"
+pytest = "*"
+rstcheck = { version = "*", extras = ["sphinx"] }
+types-PyYAML = "*"
+
+[tool.poetry.urls]
 source = "https://github.com/MeteoSwiss/meteodata-lab"
-documentation = "https://github.io/MeteoSwiss/meteodata-lab"
+documentation = "https://meteoswiss.github.io/meteodata-lab/"
 
-[project.scripts]
+[tool.poetry.scripts]
 # Format: <command> = "<package>.<module>:<function>"
 meteodata-lab = "meteodatalab.cli:main"
-
-[tool.setuptools.packages.find]
-namespaces = true
-where = ["src"]
-
-[tool.setuptools.package-data]
-"meteodatalab.data" = ["*.yml"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -176,4 +184,4 @@ ignore_directives = ["automodule", "mdinclude", "autosummary"]
 
 [tool.codespell]
 ignore-words-list = "aare,inout,THIRDPARTY"
-skip = "requirements/*"
+skip = "poetry.lock"

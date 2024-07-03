@@ -86,6 +86,20 @@ tests-mypy = ["mypy (>=1.6)", "pytest-mypy-plugins"]
 tests-no-zope = ["attrs[tests-mypy]", "cloudpickle", "hypothesis", "pympler", "pytest (>=4.3.0)", "pytest-xdist[psutil]"]
 
 [[package]]
+name = "aws-requests-auth"
+version = "0.4.3"
+description = "AWS signature version 4 signing process for the python requests module"
+optional = false
+python-versions = "*"
+files = [
+    {file = "aws-requests-auth-0.4.3.tar.gz", hash = "sha256:33593372018b960a31dbbe236f89421678b885c35f0b6a7abfae35bb77e069b2"},
+    {file = "aws_requests_auth-0.4.3-py2.py3-none-any.whl", hash = "sha256:646bc37d62140ea1c709d20148f5d43197e6bd2d63909eb36fa4bb2345759977"},
+]
+
+[package.dependencies]
+requests = ">=0.14.0"
+
+[[package]]
 name = "babel"
 version = "2.15.0"
 description = "Internationalization utilities"
@@ -144,6 +158,39 @@ colorama = ["colorama (>=0.4.3)"]
 d = ["aiohttp (>=3.7.4)", "aiohttp (>=3.7.4,!=3.9.0)"]
 jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
 uvloop = ["uvloop (>=0.15.2)"]
+
+[[package]]
+name = "cads-api-client"
+version = "1.0.3"
+description = "CADS API Python client"
+optional = false
+python-versions = "*"
+files = [
+    {file = "cads_api_client-1.0.3-py3-none-any.whl", hash = "sha256:fff4e4501692ff25a1ef15896f93630ec444fd338473f710def87708a1cf0adf"},
+    {file = "cads_api_client-1.0.3.tar.gz", hash = "sha256:5b10f08ea559237e49ae1c742fea9aef48280cb786f346f6cacda224b9c204e0"},
+]
+
+[package.dependencies]
+attrs = "*"
+multiurl = "*"
+requests = "*"
+typing-extensions = "*"
+
+[[package]]
+name = "cdsapi"
+version = "0.7.0"
+description = "Climate Data Store API"
+optional = false
+python-versions = "*"
+files = [
+    {file = "cdsapi-0.7.0-py2.py3-none-any.whl", hash = "sha256:b78d871c13862095476986904e7d7224c2480a6670e1bfd46718e095eaaf9b19"},
+    {file = "cdsapi-0.7.0.tar.gz", hash = "sha256:293ba622f25a15c29c435763d0bbeff4c44d1ee71bc7df965e9d191160d39d59"},
+]
+
+[package.dependencies]
+cads-api-client = ">=0.9.2"
+requests = ">=2.5.0"
+tqdm = "*"
 
 [[package]]
 name = "certifi"
@@ -603,65 +650,43 @@ files = [
 
 [[package]]
 name = "earthkit-data"
-version = "0.8.1"
+version = "0.5.6"
 description = "A format-agnostic Python interface for geospatial data"
 optional = false
-python-versions = ">=3.8"
+python-versions = "*"
 files = [
-    {file = "earthkit_data-0.8.1-py3-none-any.whl", hash = "sha256:157e0f093deff68a6dc830db97c8346912292a0d3108e95c9a3a10bccb37a1ac"},
-    {file = "earthkit_data-0.8.1.tar.gz", hash = "sha256:27d3d5898da5129c5e4299be0977eb9875604577af096253d8550b65ac650351"},
+    {file = "earthkit-data-0.5.6.tar.gz", hash = "sha256:fa4de1704056874e0b501084229a43c9fbe4efbabf655f3604e6bae0e29d387b"},
+    {file = "earthkit_data-0.5.6-py3-none-any.whl", hash = "sha256:223653f1853b06d96258059323ad993eb2e40e6122561b69648b08db46da09b0"},
 ]
 
 [package.dependencies]
+aws-requests-auth = "*"
+cdsapi = "*"
 cfgrib = ">=0.9.10.1"
 dask = "*"
-earthkit-geo = ">=0.2.0"
 earthkit-meteo = ">=0.0.1"
-eccodes = ">=1.7.0"
+eccodes = ">=1.5.0"
+eccovjson = ">=0.0.5"
+ecmwf-api-client = ">=1.6.1"
+ecmwf-opendata = ">=0.1.2"
 entrypoints = "*"
 filelock = "*"
+hda = "*"
 jinja2 = "*"
-jsonschema = "*"
 markdown = "*"
 multiurl = "*"
 netcdf4 = "*"
-pandas = "*"
 pdbufr = ">=0.11.0"
+polytope-client = ">=0.7.2"
+pyfdb = "*"
+pyodc = "*"
 pyyaml = "*"
-tqdm = ">=4.63.0"
+scipy = "*"
+tqdm = "*"
 xarray = ">=0.19.0"
 
 [package.extras]
-all = ["earthkit-data[cds]", "earthkit-data[eccovjson]", "earthkit-data[ecmwf-opendata]", "earthkit-data[fdb]", "earthkit-data[geopandas]", "earthkit-data[mars]", "earthkit-data[odb]", "earthkit-data[polytope]", "earthkit-data[projection]", "earthkit-data[wekeo]"]
-cds = ["cdsapi"]
-eccovjson = ["eccovjson (>=0.0.5)"]
-ecmwf-opendata = ["ecmwf-opendata (>=0.3.3)"]
-fdb = ["pyfdb"]
-geopandas = ["geopandas"]
-mars = ["ecmwf-api-client (>=1.6.1)"]
-odb = ["pyodc"]
-polytope = ["polytope-client (>=0.7.4)"]
-projection = ["cartopy"]
-test = ["earthkit-data[all]", "nbconvert", "nbformat", "pytest", "pytest-cov", "pytest-forked", "pytest-timeout"]
-wekeo = ["hda"]
-
-[[package]]
-name = "earthkit-geo"
-version = "0.2.0"
-description = "Geospatial computations"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "earthkit_geo-0.2.0-py3-none-any.whl", hash = "sha256:f10aab0929fadb50f1bdecdd61d0e958e20ce1ba768f8bd8c870b9e9d657c92e"},
-    {file = "earthkit_geo-0.2.0.tar.gz", hash = "sha256:ea3755f07edc97466478b9c9f97390e887842f6fd8e749f6230b9270b51716e0"},
-]
-
-[package.dependencies]
-pyproj = "*"
-scipy = "*"
-
-[package.extras]
-test = ["pytest", "pytest-cov"]
+test = ["nbconvert", "nbformat", "pytest", "pytest-cov", "pytest-forked", "pytest-timeout"]
 
 [[package]]
 name = "earthkit-meteo"
@@ -696,6 +721,39 @@ attrs = "*"
 cffi = "*"
 findlibs = "*"
 numpy = "*"
+
+[[package]]
+name = "eccovjson"
+version = "0.0.5"
+description = "ECMWF library for encoding and decoding coerageJSON files/objects of meteorlogical features such as                    vertical profiles and time series."
+optional = false
+python-versions = "*"
+files = [
+    {file = "eccovjson-0.0.5.tar.gz", hash = "sha256:f922386c1a2900c898bb1a7860c4beee1d815be43d66e04b8bc4e46c8fd38d4c"},
+]
+
+[[package]]
+name = "ecmwf-api-client"
+version = "1.6.3"
+description = "Python client for ECMWF web services API."
+optional = false
+python-versions = "*"
+files = [
+    {file = "ecmwf-api-client-1.6.3.tar.gz", hash = "sha256:3a00bda34a72e2d5198c97399a4750b42a6633efdb5e1b3a5fd2b2bbaa5db0d6"},
+]
+
+[[package]]
+name = "ecmwf-opendata"
+version = "0.3.8"
+description = "A package to download ECMWF open data"
+optional = false
+python-versions = "*"
+files = [
+    {file = "ecmwf-opendata-0.3.8.tar.gz", hash = "sha256:8a9c29ba369088477f9db2a2dabdb8f5282f02f6756e83d4288b38ed4d663c29"},
+]
+
+[package.dependencies]
+multiurl = ">=0.2.1"
 
 [[package]]
 name = "entrypoints"
@@ -833,6 +891,20 @@ test = ["aiohttp (!=4.0.0a0,!=4.0.0a1)", "numpy", "pytest", "pytest-asyncio (!=0
 test-downstream = ["aiobotocore (>=2.5.4,<3.0.0)", "dask-expr", "dask[dataframe,test]", "moto[server] (>4,<5)", "pytest-timeout", "xarray"]
 test-full = ["adlfs", "aiohttp (!=4.0.0a0,!=4.0.0a1)", "cloudpickle", "dask", "distributed", "dropbox", "dropboxdrivefs", "fastparquet", "fusepy", "gcsfs", "jinja2", "kerchunk", "libarchive-c", "lz4", "notebook", "numpy", "ocifs", "pandas", "panel", "paramiko", "pyarrow", "pyarrow (>=1)", "pyftpdlib", "pygit2", "pytest", "pytest-asyncio (!=0.22.0)", "pytest-benchmark", "pytest-cov", "pytest-mock", "pytest-recording", "pytest-rerunfailures", "python-snappy", "requests", "smbprotocol", "tqdm", "urllib3", "zarr", "zstandard"]
 tqdm = ["tqdm"]
+
+[[package]]
+name = "hda"
+version = "2.17"
+description = "API to harmonised data access for DIAS/WEkEO"
+optional = false
+python-versions = "*"
+files = [
+    {file = "hda-2.17.tar.gz", hash = "sha256:eab2e8af25e230e2556fcf5eecce251da57507cfca1a19590ad2d2d6849768ef"},
+]
+
+[package.dependencies]
+requests = ">=2.5.0"
+tqdm = "*"
 
 [[package]]
 name = "identify"
@@ -1950,6 +2022,21 @@ files = [
 windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
+name = "pyodc"
+version = "1.4.1"
+description = "A Python interface to odc for encoding/decoding ODB-2 files."
+optional = false
+python-versions = "*"
+files = [
+    {file = "pyodc-1.4.1.tar.gz", hash = "sha256:faf5f348d053a0b5e8a4c14fe01f0fb2fbf8729bee1dcdadd660b23d01e4b8ab"},
+]
+
+[package.dependencies]
+cffi = "*"
+findlibs = ">=0.0.5"
+pandas = "*"
+
+[[package]]
 name = "pyparsing"
 version = "3.1.2"
 description = "pyparsing module - Classes and methods to define and execute parsing grammars"
@@ -1962,45 +2049,6 @@ files = [
 
 [package.extras]
 diagrams = ["jinja2", "railroad-diagrams"]
-
-[[package]]
-name = "pyproj"
-version = "3.6.1"
-description = "Python interface to PROJ (cartographic projections and coordinate transformations library)"
-optional = false
-python-versions = ">=3.9"
-files = [
-    {file = "pyproj-3.6.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:ab7aa4d9ff3c3acf60d4b285ccec134167a948df02347585fdd934ebad8811b4"},
-    {file = "pyproj-3.6.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:4bc0472302919e59114aa140fd7213c2370d848a7249d09704f10f5b062031fe"},
-    {file = "pyproj-3.6.1-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:5279586013b8d6582e22b6f9e30c49796966770389a9d5b85e25a4223286cd3f"},
-    {file = "pyproj-3.6.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:80fafd1f3eb421694857f254a9bdbacd1eb22fc6c24ca74b136679f376f97d35"},
-    {file = "pyproj-3.6.1-cp310-cp310-win32.whl", hash = "sha256:c41e80ddee130450dcb8829af7118f1ab69eaf8169c4bf0ee8d52b72f098dc2f"},
-    {file = "pyproj-3.6.1-cp310-cp310-win_amd64.whl", hash = "sha256:db3aedd458e7f7f21d8176f0a1d924f1ae06d725228302b872885a1c34f3119e"},
-    {file = "pyproj-3.6.1-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:ebfbdbd0936e178091309f6cd4fcb4decd9eab12aa513cdd9add89efa3ec2882"},
-    {file = "pyproj-3.6.1-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:447db19c7efad70ff161e5e46a54ab9cc2399acebb656b6ccf63e4bc4a04b97a"},
-    {file = "pyproj-3.6.1-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e7e13c40183884ec7f94eb8e0f622f08f1d5716150b8d7a134de48c6110fee85"},
-    {file = "pyproj-3.6.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:65ad699e0c830e2b8565afe42bd58cc972b47d829b2e0e48ad9638386d994915"},
-    {file = "pyproj-3.6.1-cp311-cp311-win32.whl", hash = "sha256:8b8acc31fb8702c54625f4d5a2a6543557bec3c28a0ef638778b7ab1d1772132"},
-    {file = "pyproj-3.6.1-cp311-cp311-win_amd64.whl", hash = "sha256:38a3361941eb72b82bd9a18f60c78b0df8408416f9340521df442cebfc4306e2"},
-    {file = "pyproj-3.6.1-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:1e9fbaf920f0f9b4ee62aab832be3ae3968f33f24e2e3f7fbb8c6728ef1d9746"},
-    {file = "pyproj-3.6.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:6d227a865356f225591b6732430b1d1781e946893789a609bb34f59d09b8b0f8"},
-    {file = "pyproj-3.6.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:83039e5ae04e5afc974f7d25ee0870a80a6bd6b7957c3aca5613ccbe0d3e72bf"},
-    {file = "pyproj-3.6.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:fffb059ba3bced6f6725961ba758649261d85ed6ce670d3e3b0a26e81cf1aa8d"},
-    {file = "pyproj-3.6.1-cp312-cp312-win32.whl", hash = "sha256:2d6ff73cc6dbbce3766b6c0bce70ce070193105d8de17aa2470009463682a8eb"},
-    {file = "pyproj-3.6.1-cp312-cp312-win_amd64.whl", hash = "sha256:7a27151ddad8e1439ba70c9b4b2b617b290c39395fa9ddb7411ebb0eb86d6fb0"},
-    {file = "pyproj-3.6.1-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:4ba1f9b03d04d8cab24d6375609070580a26ce76eaed54631f03bab00a9c737b"},
-    {file = "pyproj-3.6.1-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:18faa54a3ca475bfe6255156f2f2874e9a1c8917b0004eee9f664b86ccc513d3"},
-    {file = "pyproj-3.6.1-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:fd43bd9a9b9239805f406fd82ba6b106bf4838d9ef37c167d3ed70383943ade1"},
-    {file = "pyproj-3.6.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:50100b2726a3ca946906cbaa789dd0749f213abf0cbb877e6de72ca7aa50e1ae"},
-    {file = "pyproj-3.6.1-cp39-cp39-win32.whl", hash = "sha256:9274880263256f6292ff644ca92c46d96aa7e57a75c6df3f11d636ce845a1877"},
-    {file = "pyproj-3.6.1-cp39-cp39-win_amd64.whl", hash = "sha256:36b64c2cb6ea1cc091f329c5bd34f9c01bb5da8c8e4492c709bda6a09f96808f"},
-    {file = "pyproj-3.6.1-pp39-pypy39_pp73-macosx_10_9_x86_64.whl", hash = "sha256:fd93c1a0c6c4aedc77c0fe275a9f2aba4d59b8acf88cebfc19fe3c430cfabf4f"},
-    {file = "pyproj-3.6.1-pp39-pypy39_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6420ea8e7d2a88cb148b124429fba8cd2e0fae700a2d96eab7083c0928a85110"},
-    {file = "pyproj-3.6.1.tar.gz", hash = "sha256:44aa7c704c2b7d8fb3d483bbf75af6cb2350d30a63b144279a09b75fead501bf"},
-]
-
-[package.dependencies]
-certifi = "*"
 
 [[package]]
 name = "pytest"
@@ -2966,4 +3014,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.12"
-content-hash = "a091058dc3f1a54a709982344fdf9a68a15e496b9af09105fb07433a6f575c1a"
+content-hash = "be3e19e9b1ccadf20ed4094aa6e0a889950467d4e7ce8a0c1bbc5350b7936724"

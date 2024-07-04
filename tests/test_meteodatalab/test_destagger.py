@@ -1,5 +1,6 @@
 # Third-party
-from numpy.testing import assert_allclose
+import numpy as np
+from numpy.testing import assert_allclose, assert_equal
 
 # First-party
 from meteodatalab.grib_decoder import GribReader
@@ -27,6 +28,18 @@ def test_destagger(data_dir, fieldextra):
     assert_allclose(fs_ds["V"], v, rtol=1e-12, atol=1e-9)
     assert_allclose(fs_ds["HFL"], hfl, rtol=1e-12, atol=1e-9)
 
+    hhl = ds["HHL"]
+    assert_allclose(u.lon, hhl.lon)
+    assert_allclose(u.lat, hhl.lat)
+    assert_allclose(v.lon, hhl.lon)
+    assert_allclose(v.lat, hhl.lat)
+
+    assert u.geography == hhl.geography
+    assert v.geography == hhl.geography
+    assert hfl.geography == hhl.geography
+
     assert u.origin_x == 0.0
     assert v.origin_y == 0.0
     assert hfl.origin_z == 0.0
+
+    assert_equal(hfl.z, np.arange(1, 81))

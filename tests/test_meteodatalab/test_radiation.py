@@ -21,6 +21,14 @@ def test_athd_s(data_dir, fieldextra):
     athb_s = time_ops.resample_average(ds["ATHB_S"], np.timedelta64(1, "h"))
     observed = radiation.compute_athd_s(athb_s, ds["T_G"])
 
+    assert observed.parameter == {
+        "centre": "lssw",
+        "paramId": 503135,
+        "shortName": "ATHD_S",
+        "units": "W m-2 ",
+        "name": "Downward long-wave radiation flux avg",
+    }
+
     conf_files = {
         "inputi": data_dir / "lfff<DDHH>0000",
         "output": "00_outfile.nc",

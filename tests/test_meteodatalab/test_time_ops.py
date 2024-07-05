@@ -56,6 +56,14 @@ def test_resample_average(data_dir, fieldextra):
 
     observed = radiation.compute_swdown(diffuse, direct)
 
+    assert observed.parameter == {
+        "centre": "lssw",
+        "paramId": 503174,
+        "shortName": "ASOD_S",
+        "units": "W m-2",
+        "name": "Downward short wave radiation flux at surface (time average)",
+    }
+
     fx_ds_h = fieldextra(
         "time_ops_tdelta",
         load_output=[f"{i:02d}_time_ops_tdelta.nc" for i in steps],

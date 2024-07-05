@@ -81,7 +81,7 @@ def interpolate_k2p(
             f"(must be in interval [{p_tc_min}, {p_tc_max}]Pa)"
         )
     tc = TargetCoordinates(
-        type_of_level="pressure",
+        type_of_level="isobaricInPa",
         values=tc_values.tolist(),
         attrs=TargetCoordinatesAttrs(
             units="Pa",
@@ -151,7 +151,7 @@ def interpolate_k2p(
             ratio = xr.where(np.abs(p0 - p1) >= np.abs(p0 - p2), 1.0, 0.0)
 
         # ... interpolate and update field_on_tc
-        field_on_tc[{"pressure": tc_idx}] = (1.0 - ratio) * f1 + ratio * f2
+        field_on_tc[{"z": tc_idx}] = (1.0 - ratio) * f1 + ratio * f2
 
     return field_on_tc
 
@@ -306,7 +306,7 @@ def interpolate_k2theta(
         ratio = xr.where(np.abs(th2 - th1) > 0, (th0 - th1) / (th2 - th1), 0.0)
 
         # ... interpolate and update field_on_tc
-        field_on_tc[{"theta": tc_idx}] = xr.where(
+        field_on_tc[{"z": tc_idx}] = xr.where(
             folding_coord_exception, np.nan, (1.0 - ratio) * f1 + ratio * f2
         )
 
@@ -317,7 +317,7 @@ def interpolate_k2any(
     field: xr.DataArray,
     mode: Literal["low_fold", "high_fold"],
     tc_field: xr.DataArray,
-    tc_values: Sequence[float],
+    tc: TargetCoordinates,
     h_field: xr.DataArray,
 ) -> xr.DataArray:
     """Interpolate a field from model levels to coordinates w.r.t. an arbitrary field.
@@ -358,17 +358,6 @@ def interpolate_k2any(
     h_min = -1000.0
     h_max = 100000.0
 
-    tc = TargetCoordinates(
-        type_of_level=tc_field.parameter["shortName"],
-        values=list(tc_values),
-        attrs=TargetCoordinatesAttrs(
-            standard_name="",
-            long_name=tc_field.parameter["name"],
-            units=tc_field.parameter["units"],
-            positive="up",
-        ),
-    )
-
     # Prepare output field field_on_tc on target coordinates
     field_on_tc = init_field_with_vcoord(field.broadcast_like(tc_field), tc, np.nan)
 
@@ -405,6 +394,6 @@ def interpolate_k2any(
         ratio = xr.where(np.abs(t2 - t1) > 0, (value - t1) / (t2 - t1), 0.0)
 
         # ... interpolate and update field_on_tc
-        field_on_tc[{tc.type_of_level: tc_idx}] = (1.0 - ratio) * f1 + ratio * f2
+        field_on_tc[{"z": tc_idx}] = (1.0 - ratio) * f1 + ratio * f2
 
     return field_on_tc

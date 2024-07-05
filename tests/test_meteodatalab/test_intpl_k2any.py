@@ -4,12 +4,25 @@ from numpy.testing import assert_allclose
 # First-party
 from meteodatalab.grib_decoder import GribReader
 from meteodatalab.operators.destagger import destagger
-from meteodatalab.operators.vertical_interpolation import interpolate_k2any
+from meteodatalab.operators.vertical_interpolation import (
+    interpolate_k2any,
+    TargetCoordinates,
+    TargetCoordinatesAttrs,
+)
 
 
 def test_intpl_k2theta(data_dir, fieldextra):
     # define target coordinates
-    tc_values = [15.0]
+    tc = TargetCoordinates(
+        type_of_level="echoTopInM",
+        values=[15.0],
+        attrs=TargetCoordinatesAttrs(
+            standard_name="",
+            long_name="radar reflectivity",
+            units="dBZ",
+            positive="up",
+        ),
+    )
 
     # input data
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
@@ -22,7 +35,7 @@ def test_intpl_k2theta(data_dir, fieldextra):
     hfl = destagger(ds["HHL"].squeeze(drop=True), "z")
 
     # call interpolation operator
-    echo_top = interpolate_k2any(hfl, "high_fold", ds["DBZ"], tc_values, hfl)
+    echo_top = interpolate_k2any(hfl, "high_fold", ds["DBZ"], tc, hfl)
 
     fx_ds = fieldextra("intpl_k2any")
 

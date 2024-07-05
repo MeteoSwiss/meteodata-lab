@@ -49,7 +49,7 @@ def _compute_mean(
 ) -> xr.DataArray:
     logger.info("Computing mean potential vorticity between 700 and 900 hPa")
     isobars = interpolate_k2p(hfl, "linear_in_lnp", pressure, [700, 900], "hPa")
-    h700, h900 = isobars.transpose("pressure", ...)
+    h700, h900 = isobars.transpose("z", ...)
     return integrate_k(pot_vortic, "normed_integral", "z2z", hhl, (h900, h700))
 
 

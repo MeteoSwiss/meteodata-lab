@@ -4,6 +4,7 @@
 import xarray as xr
 
 # Local
+from .. import metadata
 from .. import physical_constants as pc
 
 
@@ -46,4 +47,7 @@ def compute_rho_tot(
     if qp is not None:
         q += qp
 
-    return p / (pc.r_d * t * (1.0 + pc.rvd_o * qv - q))
+    return xr.DataArray(
+        data=p / (pc.r_d * t * (1.0 + pc.rvd_o * qv - q)),
+        attrs=metadata.override(p.message, shortName="DEN"),
+    )

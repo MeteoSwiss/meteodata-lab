@@ -334,8 +334,8 @@ def interpolate_k2any(
     tc_field : xarray.DataArray
         target field
         (only typeOfLevel="generalVerticalLayer" is supported)
-    tc_values : list of float
-        target coordinate values
+    tc : TargetCoordinates
+        target coordinate definition
     h_field : xarray.DataArray
         height on k levels (only typeOfLevel="generalVerticalLayer" is supported)
 

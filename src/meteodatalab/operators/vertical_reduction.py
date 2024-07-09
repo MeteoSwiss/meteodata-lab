@@ -218,7 +218,7 @@ def integrate_k(field, operator, mode, height, h_bounds, hsurf=None):
     # typeOfFirstFixedSurface and typeOfSecondFixedSurface in GRIB2, and to set the
     # bounds attribute for the vertical
     # coordinates in NetCDF
-    h_bottom, h_top = (f.reset_coords("z", drop=True) for f in h_bounds)
+    h_bottom, h_top = h_bounds
     if mode in ["h2z", "h2h"]:
         # raise error as long as no unit test is available
         raise NotImplementedError(

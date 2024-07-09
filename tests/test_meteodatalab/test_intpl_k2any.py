@@ -5,9 +5,9 @@ from numpy.testing import assert_allclose
 from meteodatalab.grib_decoder import GribReader
 from meteodatalab.operators.destagger import destagger
 from meteodatalab.operators.vertical_interpolation import (
-    interpolate_k2any,
     TargetCoordinates,
     TargetCoordinatesAttrs,
+    interpolate_k2any,
 )
 
 

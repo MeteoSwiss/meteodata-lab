@@ -1,5 +1,6 @@
 """Definition of the thetav operator."""
 
+# Third-party
 import xarray as xr
 
 # Local

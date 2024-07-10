@@ -37,6 +37,14 @@ def test_pv(data, fieldextra):
     theta = compute_theta(ds["P"], ds["T"])
     rho_tot = compute_rho_tot(ds["T"], ds["P"], ds["QV"], ds["QC"], ds["QI"])
 
+    assert rho_tot.parameter == {
+        "centre": "lssw",
+        "name": "Density",
+        "paramId": 500545,
+        "shortName": "DEN",
+        "units": "kg m-3",
+    }
+
     observed = pv.compute_pot_vortic(
         ds["U"], ds["V"], ds["W"], theta, rho_tot, ds["HHL"]
     )

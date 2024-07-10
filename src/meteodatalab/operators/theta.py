@@ -27,7 +27,7 @@ def compute_theta(p: xr.DataArray, t: xr.DataArray) -> xr.DataArray:
     # Reference surface pressure for computation of potential temperature
     p0 = 1.0e5
 
-    result = (p0 / p) ** pc.rdocp * t
-    result.attrs = metadata.override(p.message, shortName="PT")
-
-    return result
+    return xr.DataArray(
+        data=(p0 / p) ** pc.rdocp * t,
+        attrs=metadata.override(p.message, shortName="PT"),
+    )

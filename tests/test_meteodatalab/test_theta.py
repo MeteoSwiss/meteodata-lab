@@ -14,6 +14,14 @@ def test_theta(data_dir, fieldextra):
 
     theta = compute_theta(ds["P"], ds["T"])
 
+    assert theta.parameter == {
+        "centre": "lssw",
+        "paramId": 502693,
+        "shortName": "PT",
+        "units": "K",
+        "name": "Potential temperature",
+    }
+
     fs_ds = fieldextra("THETA")
 
     assert_allclose(fs_ds["THETA"], theta, rtol=1e-6)

@@ -7,8 +7,9 @@ from typing import cast
 import numpy as np
 import xarray as xr
 
-# First-party
-from meteodatalab.operators.destagger import destagger
+# Local
+from .. import metadata
+from .destagger import destagger
 
 
 def fhzerocl(
@@ -72,4 +73,7 @@ def fhzerocl(
 
     hzerocl = height1 + (height2 - height1) * (t0 - t1) / (t2 - t1)
 
-    return hzerocl.where(hzerocl > 0)
+    return xr.DataArray(
+        data=hzerocl.where(hzerocl > 0),
+        attrs=metadata.override(t.message, shortName="HZEROCL"),
+    )

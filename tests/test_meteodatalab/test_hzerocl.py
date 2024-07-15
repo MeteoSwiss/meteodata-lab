@@ -19,6 +19,14 @@ def test_hzerocl(data_dir, fieldextra, extrapolate):
 
     hzerocl = fhzerocl(ds["T"], ds["HHL"], extrapolate)
 
+    assert hzerocl.parameter == {
+        "centre": "lssw",
+        "paramId": 500127,
+        "shortName": "HZEROCL",
+        "units": "m",
+        "name": "Height of 0 degree Celsius isotherm above msl",
+    }
+
     fs_ds = fieldextra(
         "hzerocl",
         h0cl_extrapolate=".true." if extrapolate else ".false.",

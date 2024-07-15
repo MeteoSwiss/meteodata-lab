@@ -12,7 +12,6 @@ from .. import metadata
 from .destagger import destagger
 
 
-
 def fhzerocl(
     t: xr.DataArray, hhl: xr.DataArray, extrapolate: bool = False
 ) -> xr.DataArray:

@@ -24,25 +24,25 @@ def fbrn(
 
     Parameters
     ----------
-    p : xr.DataArray
+    p : xarray.DataArray
         pressure in Pa
-    t : xr.DataArray
+    t : xarray.DataArray
         air temperature in K
-    qv : xr.DataArray
+    qv : xarray.DataArray
         specific humidity (dimensionless)
-    u : xr.DataArray
-        the x component of the wind velocity [m/s].
-    v : xr.DataArray
-        the y component of the wind velocity [m/s].
-    hhl : xr.DataArray
-        Heights of the interfaces between vertical layers in m amsl.
-    hsurf : xr.DataArray
+    u : xarray.DataArray
+        the x component of the wind velocity in m/s
+    v : xarray.DataArray
+        the y component of the wind velocity in m/s
+    hhl : xarray.DataArray
+        Heights of the interfaces between vertical layers in m amsl
+    hsurf : xarray.DataArray
         earth surface height in m amsl
 
 
     Returns
     -------
-    xr.DataArray
+    xarray.DataArray
         Bulk Richardson Number (dimensionless)
 
     """

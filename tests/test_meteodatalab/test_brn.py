@@ -20,6 +20,14 @@ def test_brn(data_dir, fieldextra):
         ds["P"], ds["T"], ds["QV"], ds["U"], ds["V"], ds["HHL"], ds["HSURF"]
     )
 
+    assert brn.parameter == {
+        "centre": "lssw",
+        "paramId": 503154,
+        "shortName": "BRN",
+        "units": "Numeric",
+        "name": "Bulk Richardson number",
+    }
+
     fs_ds = fieldextra("BRN")
 
     assert_allclose(fs_ds["BRN"], brn, rtol=5e-3, atol=5e-2)

@@ -11,7 +11,7 @@ from meteodatalab.operators.vertical_interpolation import (
 )
 
 
-def test_intpl_k2theta(data_dir, fieldextra):
+def test_intpl_k2any(data_dir, fieldextra):
     # define target coordinates
     tc = TargetCoordinates(
         type_of_level="echoTopInDBZ",

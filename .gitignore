@@ -114,3 +114,6 @@ venv_*/
 # spack
 spack-env/.spack-env
 spack-env/spack.lock
+
+# poetry
+poetry-*/

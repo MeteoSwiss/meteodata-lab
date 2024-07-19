@@ -4,6 +4,8 @@
 import numpy as np
 import xarray as xr
 
+from .. import metadata
+
 
 def time_rate(var: xr.DataArray, dtime: np.timedelta64):
     """Compute a time rate for a given delta in time.
@@ -85,8 +87,10 @@ def delta(field: xr.DataArray, dtime: np.timedelta64) -> xr.DataArray:
     """
     nsteps = get_nsteps(field.valid_time, dtime)
     result = field - field.shift(time=nsteps)
-    result.attrs = field.attrs
-    return result
+    return xr.DataArray(
+            data=result,
+            attrs=metadata.override(field.message, typeOfStatisticalProcessing=4),
+        )
 
 
 def resample_average(field: xr.DataArray, dtime: np.timedelta64) -> xr.DataArray:
@@ -123,8 +127,19 @@ def resample_average(field: xr.DataArray, dtime: np.timedelta64) -> xr.DataArray
     weights = (field.valid_time - field.ref_time) / dtime
     weighted = field * weights
     result = weighted - weighted.shift(time=nsteps)
+    # dtime must be in unit specfified in indicatorOfUnitForTimeRange
+    # thus dtime need to be converted depending on that value and
+    # dtime shouldn't be of type np.timedelta64
+    # lengthoftimerange = dtime.astype('timedelta64[m]') / np.timedelta64(1, 'm')
     result.attrs = field.attrs
     return result
+    """
+    return xr.DataArray(
+            data=result,
+            attrs=metadata.override(field.message, lengthOfTimeRange=lengthoftimerange),
+        )
+    """
+
 
 
 def resample(field: xr.DataArray, interval: np.timedelta64) -> xr.DataArray:
@@ -153,4 +168,15 @@ def resample(field: xr.DataArray, interval: np.timedelta64) -> xr.DataArray:
 
     """
     nsteps = get_nsteps(field.valid_time, interval)
-    return field.sel(time=slice(None, None, nsteps))
+    result.attrs = field.attrs
+    return result
+    # dtime must be in unit specfified in indicatorOfUnitForTimeRange
+    # thus dtime need to be converted depending on that value and
+    # dtime shouldn't be of type np.timedelta64
+    # lengthoftimerange = dtime.astype('timedelta64[m]') / np.timedelta64(1, 'm')
+    """
+    return xr.DataArray(
+            data=field.sel(time=slice(None, None, nsteps)),
+            attrs=metadata.override(field.message, lengthOfTimeRange=lengthoftimerange),
+        )
+    """

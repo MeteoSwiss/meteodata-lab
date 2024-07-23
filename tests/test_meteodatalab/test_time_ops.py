@@ -23,7 +23,7 @@ def test_delta(data_dir, fieldextra):
     tot_prec = time_ops.resample(ds["TOT_PREC"], np.timedelta64(3, "h"))
     tot_prec_03h = time_ops.delta(tot_prec, np.timedelta64(3, "h"))
 
-    # need function to retrieve one key from a field 
+    # need function to retrieve one key from a field
     # assert tot_prec_03h.message.get("typeOfStatisticalProcessing") == 4
 
     # Negative values are replaced by zero as these are due to numerical inaccuracies.

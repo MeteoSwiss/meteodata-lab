@@ -4,6 +4,7 @@
 import numpy as np
 import xarray as xr
 
+# Local
 from .. import metadata
 
 
@@ -88,9 +89,9 @@ def delta(field: xr.DataArray, dtime: np.timedelta64) -> xr.DataArray:
     nsteps = get_nsteps(field.valid_time, dtime)
     result = field - field.shift(time=nsteps)
     return xr.DataArray(
-            data=result,
-            attrs=metadata.override(field.message, typeOfStatisticalProcessing=4),
-        )
+        data=result,
+        attrs=metadata.override(field.message, typeOfStatisticalProcessing=4),
+    )
 
 
 def resample_average(field: xr.DataArray, dtime: np.timedelta64) -> xr.DataArray:
@@ -141,7 +142,6 @@ def resample_average(field: xr.DataArray, dtime: np.timedelta64) -> xr.DataArray
     """
 
 
-
 def resample(field: xr.DataArray, interval: np.timedelta64) -> xr.DataArray:
     """Resample field.
 
@@ -168,6 +168,7 @@ def resample(field: xr.DataArray, interval: np.timedelta64) -> xr.DataArray:
 
     """
     nsteps = get_nsteps(field.valid_time, interval)
+    result = field.sel(time=slice(None, None, nsteps))
     result.attrs = field.attrs
     return result
     # dtime must be in unit specfified in indicatorOfUnitForTimeRange

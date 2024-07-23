@@ -1,6 +1,8 @@
 # Third-party
 from numpy.testing import assert_allclose
 
+import pytest
+
 # First-party
 from meteodatalab.grib_decoder import GribReader
 from meteodatalab.operators.destagger import destagger
@@ -11,11 +13,12 @@ from meteodatalab.operators.vertical_interpolation import (
 )
 
 
+@pytest.mark.data("original")
 def test_intpl_k2any(data_dir, fieldextra):
     # define target coordinates
     tc = TargetCoordinates(
         type_of_level="echoTopInDBZ",
-        values=[15.0],
+        values=[15.0, 10.0],
         attrs=TargetCoordinatesAttrs(
             standard_name="",
             long_name="radar reflectivity",
@@ -36,8 +39,14 @@ def test_intpl_k2any(data_dir, fieldextra):
 
     # call interpolation operator
     echo_top = interpolate_k2any(hfl, "high_fold", ds["DBZ"], tc, hfl)
+    assert not echo_top.isnull().all()
 
     fx_ds = fieldextra("intpl_k2any")
 
     # compare numerical results
-    assert_allclose(fx_ds["ECHOTOPinM"], echo_top, rtol=1e-4, atol=1e-4)
+    assert_allclose(
+        fx_ds["ECHOTOPinM"].isel(z_1=0), echo_top.sel(z=15.0), rtol=1e-4, atol=1e-4
+    )
+    assert_allclose(
+        fx_ds["ECHOTOP10inM"].isel(z_2=0), echo_top.sel(z=10.0), rtol=1e-4, atol=1e-4
+    )

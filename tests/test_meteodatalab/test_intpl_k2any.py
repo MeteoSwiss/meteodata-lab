@@ -1,7 +1,6 @@
 # Third-party
-from numpy.testing import assert_allclose
-
 import pytest
+from numpy.testing import assert_allclose
 
 # First-party
 from meteodatalab.grib_decoder import GribReader

@@ -24,7 +24,7 @@ def test_delta(data_dir, fieldextra):
     tot_prec = time_ops.resample(ds["TOT_PREC"], np.timedelta64(3, "h"))
 
     observed_tr = extract_keys(tot_prec.message, "lengthOfTimeRange")
-    expected_tr = int(np.timedelta(3, "h") / np.timedelta(1, "m"))
+    expected_tr = int(np.timedelta64(3, "h") / np.timedelta64(1, "m"))
 
     assert observed_tr == expected_tr
     assert extract_keys(tot_prec.message, "indicatorOfUnitForTimeRange") == 0
@@ -65,7 +65,7 @@ def test_resample_average(data_dir, fieldextra):
     diffuse = time_ops.resample_average(ds["ASWDIFD_S"], np.timedelta64(1, "h"))
 
     observed_tr = extract_keys(diffuse.message, "lengthOfTimeRange")
-    expected_tr = int(np.timedelta(1, "h") / np.timedelta(1, "m"))
+    expected_tr = int(np.timedelta64(1, "h") / np.timedelta64(1, "m"))
 
     assert observed_tr == expected_tr
     assert extract_keys(diffuse.message, "typeOfStatisticalProcessing") == 0

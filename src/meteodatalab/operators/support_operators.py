@@ -8,6 +8,9 @@ from typing import Any, Literal, Optional, Sequence
 import numpy as np
 import xarray as xr
 
+# Local
+from .. import metadata
+
 
 @dc.dataclass
 class TargetCoordinatesAttrs:
@@ -68,26 +71,16 @@ def init_field_with_vcoord(
     #  one should separate these from coordinate properties
     #       in the interface
     # attrs
-    attrs = parent.attrs.copy()
-    attrs["vcoord_type"] = vcoord.type_of_level
-
+    attrs = parent.attrs | metadata.override(
+        parent.message, typeOfLevel=vcoord.type_of_level
+    )
     # dims
-    def replace_vertical(items):
-        for dim, size in items:
-            if dim == "z":
-                yield vcoord.type_of_level, vcoord.size
-            else:
-                yield dim, size
-
-    # ... make sure to maintain the ordering of the dims
-    sizes = {dim: size for dim, size in replace_vertical(parent.sizes.items())}
+    sizes = dict(parent.sizes.items()) | {"z": vcoord.size}
     # coords
     # ... inherit all except for the vertical coordinates
     coords = {c: v for c, v in parent.coords.items() if c != "z"}
     # ... initialize the vertical target coordinates
-    coords[vcoord.type_of_level] = xr.IndexVariable(
-        vcoord.type_of_level, vcoord.values, attrs=dc.asdict(vcoord.attrs)
-    )
+    coords["z"] = xr.IndexVariable("z", vcoord.values, attrs=dc.asdict(vcoord.attrs))
     # dtype
     if dtype is None:
         dtype = parent.data.dtype

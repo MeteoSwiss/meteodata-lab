@@ -19,6 +19,7 @@ if [ -d ${HOME}/.local/bin ]; then
     ln -sf ${poetry} ${HOME}/.local/bin/poetry
 fi
 
+${prefix}/bin/poetry config --list
 ${prefix}/bin/poetry install -vv --sync
 
 venv=$(${prefix}/bin/poetry run python -c "import sys; print(sys.prefix)")

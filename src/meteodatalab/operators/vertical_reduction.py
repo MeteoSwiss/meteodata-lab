@@ -75,8 +75,7 @@ def minmax_k(field, operator, mode, height, h_bounds, hsurf=None):
     # and upper_bound_type can be used to code typeOfFirstFixedSurface
     # and typeOfSecondFixedSurface in GRIB2, and to set the bounds attribute for
     # the vertical coordinates in NetCDF
-    h_bottom = h_bounds[0].copy()
-    h_top = h_bounds[1].copy()
+    h_bottom, h_top = h_bounds
     if mode in ["h2z", "h2h"]:
         # raise error as long as no unit test is available
         raise NotImplementedError(
@@ -218,8 +217,7 @@ def integrate_k(field, operator, mode, height, h_bounds, hsurf=None):
     # typeOfFirstFixedSurface and typeOfSecondFixedSurface in GRIB2, and to set the
     # bounds attribute for the vertical
     # coordinates in NetCDF
-    h_bottom = h_bounds[0].copy()
-    h_top = h_bounds[1].copy()
+    h_bottom, h_top = h_bounds
     if mode in ["h2z", "h2h"]:
         # raise error as long as no unit test is available
         raise NotImplementedError(

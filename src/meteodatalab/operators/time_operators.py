@@ -21,8 +21,15 @@ def time_rate(var: xr.DataArray, dtime: np.timedelta64):
     """
     coord = var.valid_time
     result = var.diff(dim="time") / (coord.diff(dim="time") / dtime)
-    result.attrs = var.attrs
-    return result
+    # TODO: Investigate updating GRIB key 'typeOfStatisticalProcessing' for operators
+    # executing both difference (4) and average (0)
+    # No equivalent codes found in Table 10
+    # (https://codes.ecmwf.int/grib/format/grib2/ctables/4/10/)
+    # For the moment, it is set as 'missing' (255)
+    return xr.DataArray(
+        data=result,
+        attrs=metadata.override(var.message, typeOfStatisticalProcessing=255),
+    )
 
 
 def get_nsteps(valid_time: xr.DataArray, dtime: np.timedelta64) -> int:
@@ -128,18 +135,15 @@ def resample_average(field: xr.DataArray, dtime: np.timedelta64) -> xr.DataArray
     weights = (field.valid_time - field.ref_time) / dtime
     weighted = field * weights
     result = weighted - weighted.shift(time=nsteps)
-    # dtime must be in unit specfified in indicatorOfUnitForTimeRange
-    # thus dtime need to be converted depending on that value and
-    # dtime shouldn't be of type np.timedelta64
-    # lengthoftimerange = dtime.astype('timedelta64[m]') / np.timedelta64(1, 'm')
-    result.attrs = field.attrs
-    return result
-    """
+    # TODO: Investigate updating GRIB key 'typeOfStatisticalProcessing' for operators
+    # executing both difference (4) and average (0)
+    # No equivalent codes found in Table 10
+    # (https://codes.ecmwf.int/grib/format/grib2/ctables/4/10/)
+    # For the moment, it is set as 'missing' (255)
     return xr.DataArray(
-            data=result,
-            attrs=metadata.override(field.message, lengthOfTimeRange=lengthoftimerange),
-        )
-    """
+        data=result,
+        attrs=metadata.override(field.message, typeOfStatisticalProcessing=255),
+    )
 
 
 def resample(field: xr.DataArray, interval: np.timedelta64) -> xr.DataArray:
@@ -168,16 +172,11 @@ def resample(field: xr.DataArray, interval: np.timedelta64) -> xr.DataArray:
 
     """
     nsteps = get_nsteps(field.valid_time, interval)
-    result = field.sel(time=slice(None, None, nsteps))
-    result.attrs = field.attrs
-    return result
-    # dtime must be in unit specfified in indicatorOfUnitForTimeRange
-    # thus dtime need to be converted depending on that value and
-    # dtime shouldn't be of type np.timedelta64
-    # lengthoftimerange = dtime.astype('timedelta64[m]') / np.timedelta64(1, 'm')
-    """
     return xr.DataArray(
-            data=field.sel(time=slice(None, None, nsteps)),
-            attrs=metadata.override(field.message, lengthOfTimeRange=lengthoftimerange),
-        )
-    """
+        data=field.sel(time=slice(None, None, nsteps)),
+        attrs=metadata.override(
+            field.message,
+            lengthOfTimeRange=interval.astype("m"),
+            indicatorOfUnitForTimeRange=0,
+        ),
+    )

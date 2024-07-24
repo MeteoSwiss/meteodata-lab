@@ -241,6 +241,7 @@ def extract_keys(message: bytes, keys: typing.Any) -> typing.Any:
         Single value if keys is a single value, tuple of values if
         keys is a tuple, list of values if keys is a list. The type of
         the value depends on the default type for the given key in eccodes.
+
     """
     if keys is None:
         raise ValueError("keys must be specified.")

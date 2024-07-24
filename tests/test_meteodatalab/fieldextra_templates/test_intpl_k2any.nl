@@ -62,6 +62,8 @@
 
 &Process tmp1_field="HEIGHT", tag="htop", levlist=1 /
 &Process tmp1_field="HEIGHT", tag="height", voper="find_value,dbz=15.,htop,down" /
+&Process tmp1_field="HEIGHT", tag="height2", voper="find_value,dbz=10.,htop,down" /
 &Process tmp1_field="DBZ", tag="dbz" /
 
 &Process out_field = "height", tag="ECHOTOPinM", new_field_id="ECHOTOPinM", set_level_property="echo_top[dBZ],15" /
+&Process out_field = "height2", tag="ECHOTOP10inM", new_field_id="ECHOTOPinM", set_level_property="echo_top[dBZ],10" /

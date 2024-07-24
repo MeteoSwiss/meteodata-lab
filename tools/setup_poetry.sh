@@ -19,10 +19,11 @@ if [ -d ${HOME}/.local/bin ]; then
     ln -sf ${poetry} ${HOME}/.local/bin/poetry
 fi
 
+${prefix}/bin/poetry config --list
 ${prefix}/bin/poetry install -vv --sync
 
 venv=$(${prefix}/bin/poetry run python -c "import sys; print(sys.prefix)")
 cosmo_resources=${venv}/share/eccodes-cosmo-resources
 if [ ! -d "${cosmo_resources}" ]; then
-    git clone --depth 1 --branch v2.25.0.3 https://github.com/COSMO-ORG/eccodes-cosmo-resources.git $cosmo_resources
+    git clone --depth 1 --branch v2.35.0.1dm1 https://github.com/COSMO-ORG/eccodes-cosmo-resources.git $cosmo_resources
 fi

@@ -176,7 +176,7 @@ def resample(field: xr.DataArray, interval: np.timedelta64) -> xr.DataArray:
         data=field.sel(time=slice(None, None, nsteps)),
         attrs=metadata.override(
             field.message,
-            lengthOfTimeRange=interval.astype("m"),
+            lengthOfTimeRange=interval.astype("timedelta64[m]").astype(int),
             indicatorOfUnitForTimeRange=0,
         ),
     )

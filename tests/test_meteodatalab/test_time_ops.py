@@ -8,6 +8,7 @@ from numpy.testing import assert_allclose
 # First-party
 import meteodatalab.operators.time_operators as time_ops
 from meteodatalab.grib_decoder import GribReader
+from meteodatalab.metadata import extract_keys
 from meteodatalab.operators import radiation
 
 
@@ -22,15 +23,16 @@ def test_delta(data_dir, fieldextra):
 
     tot_prec = time_ops.resample(ds["TOT_PREC"], np.timedelta64(3, "h"))
 
-    # need function to retrieve one key from a field
-    # assert (tot_prec.message.get("lengthOfTimeRange") ==
-    #    np.timedelta64(3, "h").astype("m"))
-    # assert tot_prec.message.get("indicatorOfUnitForTimeRange") == 0
+    observed = extract_keys(tot_prec.message, "lengthOfTimeRange")
+
+    assert extract_keys(tot_prec.message, "lengthOfTimeRange") == np.timedelta64(
+        3, "h"
+    ).astype("timedelta64[m]").astype(int)
+    assert extract_keys(tot_prec.message, "indicatorOfUnitForTimeRange") == 0
 
     tot_prec_03h = time_ops.delta(tot_prec, np.timedelta64(3, "h"))
 
-    # need function to retrieve one key from a field
-    # assert tot_prec_03h.message.get("typeOfStatisticalProcessing") == 4
+    assert extract_keys(tot_prec_03h.message, "typeOfStatisticalProcessing") == 4
 
     # Negative values are replaced by zero as these are due to numerical inaccuracies.
     cond = np.logical_or(tot_prec_03h > 0.0, tot_prec_03h.isnull())
@@ -62,8 +64,9 @@ def test_resample_average(data_dir, fieldextra):
 
     direct = time_ops.resample_average(ds["ASWDIR_S"], np.timedelta64(1, "h"))
     diffuse = time_ops.resample_average(ds["ASWDIFD_S"], np.timedelta64(1, "h"))
-    # need function to retrieve one key from a field
-    # assert diffuse.message.get("typeOfStatisticalProcessing") == 255
+
+    assert extract_keys(diffuse.message, "typeOfStatisticalProcessing") == 255
+
     observed = radiation.compute_swdown(diffuse, direct)
 
     assert observed.parameter == {

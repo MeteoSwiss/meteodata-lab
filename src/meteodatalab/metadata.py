@@ -216,3 +216,34 @@ def extract_hcoords(message: bytes) -> dict[str, xr.DataArray]:
         dim: xr.DataArray(dims=("y", "x"), data=values)
         for dim, values in grib_field.to_latlon().items()
     }
+
+
+def extract_keys(message: bytes, keys: typing.Any) -> typing.Any:
+    """Extract keys from the GRIB message.
+
+    Parameters
+    ----------
+    message : bytes
+        The GRIB message.
+    keys : Any
+        Keys for which to extract values from the message.
+
+    Raises
+    ------
+    ValueError
+        if keys is None because the resulting metadata would point
+        to an eccodes handle that no longer exists resulting in a
+        possible segmentation fault
+
+    Returns
+    -------
+    Any
+        Single value if keys is a single value, tuple of values if
+        keys is a tuple, list of values if keys is a list. The type of
+        the value depends on the default type for the given key in eccodes.
+    """
+    if keys is None:
+        raise ValueError("keys must be specified.")
+    stream = io.BytesIO(message)
+    [grib_field] = ekd.from_source("stream", stream)
+    return grib_field.metadata(keys)

@@ -21,6 +21,12 @@ def test_delta(data_dir, fieldextra):
     ds = reader.load_fieldnames(["TOT_PREC"])
 
     tot_prec = time_ops.resample(ds["TOT_PREC"], np.timedelta64(3, "h"))
+
+    # need function to retrieve one key from a field
+    # assert (tot_prec.message.get("lengthOfTimeRange") ==
+    #    np.timedelta64(3, "h").astype("m"))
+    # assert tot_prec.message.get("indicatorOfUnitForTimeRange") == 0
+
     tot_prec_03h = time_ops.delta(tot_prec, np.timedelta64(3, "h"))
 
     # need function to retrieve one key from a field
@@ -56,7 +62,8 @@ def test_resample_average(data_dir, fieldextra):
 
     direct = time_ops.resample_average(ds["ASWDIR_S"], np.timedelta64(1, "h"))
     diffuse = time_ops.resample_average(ds["ASWDIFD_S"], np.timedelta64(1, "h"))
-
+    # need function to retrieve one key from a field
+    # assert diffuse.message.get("typeOfStatisticalProcessing") == 255
     observed = radiation.compute_swdown(diffuse, direct)
 
     assert observed.parameter == {

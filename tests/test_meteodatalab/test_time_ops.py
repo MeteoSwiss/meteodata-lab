@@ -32,6 +32,11 @@ def test_delta(data_dir, fieldextra):
     tot_prec_03h = time_ops.delta(tot_prec, np.timedelta64(3, "h"))
 
     assert extract_keys(tot_prec_03h.message, "typeOfStatisticalProcessing") == 4
+    assert extract_keys(tot_prec_03h.message, "indicatorOfUnitForTimeRange") == 0
+    observed_tr = extract_keys(tot_prec_03h.message, "lengthOfTimeRange")
+    expected_tr = int(np.timedelta64(3, "h") / np.timedelta64(1, "m"))
+
+    assert observed_tr == expected_tr
 
     # Negative values are replaced by zero as these are due to numerical inaccuracies.
     cond = np.logical_or(tot_prec_03h > 0.0, tot_prec_03h.isnull())

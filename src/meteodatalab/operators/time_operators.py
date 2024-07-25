@@ -95,7 +95,12 @@ def delta(field: xr.DataArray, dtime: np.timedelta64) -> xr.DataArray:
     result = field - field.shift(time=nsteps)
     return xr.DataArray(
         data=result,
-        attrs=metadata.override(field.message, typeOfStatisticalProcessing=4),
+        attrs=metadata.override(
+            field.message,
+            lengthOfTimeRange=int(dtime / np.timedelta64(1, "m")),
+            indicatorOfUnitForTimeRange=0,
+            typeOfStatisticalProcessing=4,
+        ),
     )
 
 

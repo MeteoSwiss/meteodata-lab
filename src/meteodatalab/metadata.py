@@ -60,6 +60,12 @@ def override(message: bytes, **kwargs: typing.Any) -> dict[str, typing.Any]:
     stream = io.BytesIO(message)
     [grib_field] = ekd.from_source("stream", stream)
 
+    if grib_field.metadata("editionNumber") == 1:
+        return {
+            "message": message,
+            **extract(grib_field.metadata()),
+        }
+
     out = io.BytesIO()
     md = grib_field.metadata().override(**kwargs)
     write(out, grib_field.values, md)

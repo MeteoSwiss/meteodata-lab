@@ -9,7 +9,7 @@ import typing
 import earthkit.data as ekd  # type: ignore
 import numpy as np
 import xarray as xr
-from earthkit.data.writers import write  # type: ignore
+from earthkit.data.core.metadata import Metadata
 
 # Local
 from . import grib_decoder
@@ -41,7 +41,7 @@ def extract(metadata):
     }
 
 
-def override(message: bytes, **kwargs: typing.Any) -> dict[str, typing.Any]:
+def override(message: Metadata, **kwargs: typing.Any) -> dict[str, typing.Any]:
     """Override GRIB metadata contained in message.
 
     Note that no special consideration is made for maintaining consistency when
@@ -61,21 +61,17 @@ def override(message: bytes, **kwargs: typing.Any) -> dict[str, typing.Any]:
         Updated message byte string along with the geography and parameter namespaces
 
     """
-    stream = io.BytesIO(message)
-    [grib_field] = ekd.from_source("stream", stream)
 
-    if grib_field.metadata("editionNumber") == 1:
+    if message["editionNumber"] == 1:
         return {
             "message": message,
-            **extract(grib_field.metadata()),
+            **extract(message),
         }
 
-    out = io.BytesIO()
-    md = grib_field.metadata().override(**kwargs)
-    write(out, grib_field.values, md)
+    md = message.override(**kwargs)
 
     return {
-        "message": out.getvalue(),
+        "message": md,
         **extract(md),
     }
 
@@ -97,13 +93,13 @@ class Grid:
     lat_first_grid_point: float
 
 
-def load_grid_reference(message: bytes) -> Grid:
+def load_grid_reference(metadata) -> Grid:
     """Construct a grid from a reference parameter.
 
     Parameters
     ----------
-    message : bytes
-        GRIB message defining the reference grid.
+    metadata : bytes
+        GRIB metadata defining the reference grid.
 
     Returns
     -------
@@ -111,14 +107,9 @@ def load_grid_reference(message: bytes) -> Grid:
         reference grid
 
     """
-    stream = io.BytesIO(message)
-    [grib_field] = ekd.from_source("stream", stream)
-
     return Grid(
-        *grib_field.metadata(
-            "longitudeOfFirstGridPointInDegrees",
-            "latitudeOfFirstGridPointInDegrees",
-        ),
+        metadata["longitudeOfFirstGridPointInDegrees"],
+        metadata["latitudeOfFirstGridPointInDegrees"],
     )
 
 
@@ -205,13 +196,13 @@ def extract_pv(message: bytes) -> dict[str, xr.DataArray]:
     }
 
 
-def extract_hcoords(message: bytes) -> dict[str, xr.DataArray]:
+def extract_hcoords(metadata) -> dict[str, xr.DataArray]:
     """Extract horizontal coordinates.
 
     Parameters
     ----------
-    message : bytes
-        GRIB message containing the grid definition.
+    metadata : bytes
+        GRIB metadata containing the grid definition.
 
     Returns
     -------
@@ -219,12 +210,12 @@ def extract_hcoords(message: bytes) -> dict[str, xr.DataArray]:
         Horizontal coordinates in geolatlon.
 
     """
-    stream = io.BytesIO(message)
-    [grib_field] = ekd.from_source("stream", stream)
-
+    geo = metadata.geography
     return {
-        dim: xr.DataArray(dims=("y", "x"), data=values)
-        for dim, values in grib_field.to_latlon().items()
+        "lat": xr.DataArray(dims=("y", "x"), data=geo.latitudes().reshape(geo.shape())),
+        "lon": xr.DataArray(
+            dims=("y", "x"), data=geo.longitudes().reshape(geo.shape())
+        ),
     }
 
 

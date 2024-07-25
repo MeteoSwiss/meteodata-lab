@@ -106,9 +106,10 @@ class _FieldBuffer:
         self.values[key] = field.to_numpy(dtype=np.float32)
 
         if not self.metadata:
+            md = field.metadata()
             self.metadata = {
-                "message": field.message(),
-                **metadata.extract(field.metadata()),
+                "message": md,
+                **metadata.extract(md),
             }
 
         if not self.hcoords:
@@ -370,8 +371,7 @@ def save(
         msg = "The message attribute is required to write to the GRIB format."
         raise ValueError(msg)
 
-    stream = io.BytesIO(field.message)
-    [md] = (f.metadata() for f in ekd.from_source("stream", stream))
+    md = field.message
 
     idx = {
         dim: field.coords[key]

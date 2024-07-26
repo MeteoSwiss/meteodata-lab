@@ -89,6 +89,14 @@ def test_flexpart(data_dir, fieldextra):
         }
     )
 
+    assert ds_out["omega"].parameter == {
+        "centre": "ecmf",
+        "paramId": 135,
+        "shortName": "w",
+        "units": "Pa s**-1",
+        "name": "Vertical velocity",
+    }
+
     assert_allclose(fs_ds_o["ETADOT"], ds_out["omega"], rtol=3e-6, atol=5e-5)
     assert_allclose(fs_ds_o["U"], ds_out["u"], rtol=3e-7, atol=5e-7)
     assert_allclose(fs_ds_o["V"], ds_out["v"], rtol=3e-7, atol=5e-7)

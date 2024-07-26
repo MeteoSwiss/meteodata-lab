@@ -5,6 +5,7 @@ import numpy as np
 import xarray as xr
 
 # Local
+from .. import metadata
 from .. import physical_constants as pc
 
 
@@ -30,7 +31,15 @@ def cumdiff(A, axis):
 def omega_slope(
     ps: xr.DataArray, etadot: xr.DataArray, ak: xr.DataArray, bk: xr.DataArray
 ):
-    """Compute omega slope."""
+    """Compute the omega slope.
+
+    Converts ECMWF etadot (deta/dt) to etadot * dp/deta, required by FLEXPART.
+
+    Note:
+    ----
+    Fieldextra returns the parameter as ETADOT.
+
+    """
     dak_dz = ak.diff(dim="z")
     dbk_dz = bk.diff(dim="z")
 
@@ -42,5 +51,9 @@ def omega_slope(
         / (dak_dz / pc.surface_pressure_ref + dbk_dz)
     ).reduce(cumdiff, dim="z")
 
-    res.attrs = etadot.attrs
-    return res
+    return xr.DataArray(
+        data=res,
+        attrs=metadata.override(
+            etadot.message, discipline=0, parameterCategory=2, parameterNumber=8
+        ),
+    )

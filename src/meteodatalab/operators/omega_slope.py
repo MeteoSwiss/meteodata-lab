@@ -35,8 +35,25 @@ def omega_slope(
 
     Converts ECMWF etadot (deta/dt) to etadot * dp/deta, required by FLEXPART.
 
-    Note:
-    ----
+    Parameters
+    ----------
+    ps : xarray.DataArray
+        Pressure (S) (not reduced) in Pa.
+    etadot : xarray.DataArray
+        Eta-coordinate vertical velocity (deta/dt) in s**-1.
+    ak : xarray.DataArray
+        Hybrid level A coefficient.
+    bk : xarray.DataArray
+        Hybrid level B coefficient.
+
+
+    Returns
+    -------
+    xarray.DataArray
+        Vertical velocity (pressure) in Pa s**-1.
+
+    Notes
+    -----
     Fieldextra returns the parameter as ETADOT.
 
     """
@@ -54,6 +71,10 @@ def omega_slope(
     return xr.DataArray(
         data=res,
         attrs=metadata.override(
-            etadot.message, discipline=0, parameterCategory=2, parameterNumber=8
+            # Vertical velocity (pressure)
+            etadot.message,
+            discipline=0,
+            parameterCategory=2,
+            parameterNumber=8,
         ),
     )

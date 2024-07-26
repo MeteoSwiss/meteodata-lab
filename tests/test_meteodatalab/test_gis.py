@@ -1,4 +1,8 @@
+# Standard library
+import io
+
 # Third-party
+import earthkit.data as ekd
 import numpy as np
 import pytest
 import xarray as xr
@@ -50,6 +54,12 @@ def test_vref_rot2geolatlon(data_dir, fieldextra):
 
     u_g, v_g = gis.vref_rot2geolatlon(ds["U_10M"], ds["V_10M"])
 
+    stream = io.BytesIO(u_g.message)
+    [grib_field] = ekd.from_source("stream", stream)
+    assert grib_decoder.get_code_flag(
+        grib_field.metadata().get("resolutionAndComponentFlags"),
+        [3, 4, 5],
+    ) == [True, True, False]
     fx_ds = fieldextra("n2geog")
 
     assert_allclose(u_g.isel(z=0), fx_ds["U_10M"], atol=1e-5, rtol=1e-6)

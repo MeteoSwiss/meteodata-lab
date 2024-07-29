@@ -10,6 +10,8 @@ import numpy as np
 import xarray as xr
 
 # Local
+from .. import metadata
+from ..grib_decoder import set_code_flag
 from .support_operators import get_grid_coords
 
 
@@ -217,7 +219,25 @@ def vref_rot2geolatlon(
     grid = get_grid(u.geography)
     lon, lat = rot2geolatlon(grid)
     u_g, v_g = _vref_rot2geolatlon(u, v, lon, lat, grid)
-    return xr.DataArray(u_g, attrs=u.attrs), xr.DataArray(v_g, attrs=v.attrs)
+
+    # bit 5 left unset since u/v relative to grid in x (i) and y (j) directions,
+    # not defined grid; bits 3 and 4 set as i, j direction increments given
+    resolution_components_flags = set_code_flag([3, 4])
+
+    return (
+        xr.DataArray(
+            u_g,
+            attrs=metadata.override(
+                u.message, resolutionAndComponentFlags=resolution_components_flags
+            ),
+        ),
+        xr.DataArray(
+            v_g,
+            attrs=metadata.override(
+                v.message, resolutionAndComponentFlags=resolution_components_flags
+            ),
+        ),
+    )
 
 
 def _vref_rot2geolatlon(

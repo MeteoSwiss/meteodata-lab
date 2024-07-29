@@ -6,7 +6,7 @@ from numpy.testing import assert_allclose
 
 # First-party
 from meteodatalab import grib_decoder
-from meteodatalab.metadata import set_origin_xy
+from meteodatalab.metadata import extract_keys, set_origin_xy
 from meteodatalab.operators import gis
 
 
@@ -50,6 +50,10 @@ def test_vref_rot2geolatlon(data_dir, fieldextra):
 
     u_g, v_g = gis.vref_rot2geolatlon(ds["U_10M"], ds["V_10M"])
 
+    assert grib_decoder.get_code_flag(
+        extract_keys(u_g.message, "resolutionAndComponentFlags"),
+        [3, 4, 5],
+    ) == [True, True, False]
     fx_ds = fieldextra("n2geog")
 
     assert_allclose(u_g.isel(z=0), fx_ds["U_10M"], atol=1e-5, rtol=1e-6)

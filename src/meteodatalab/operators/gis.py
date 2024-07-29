@@ -221,7 +221,7 @@ def vref_rot2geolatlon(
     u_g, v_g = _vref_rot2geolatlon(u, v, lon, lat, grid)
 
     # bit 5 left unset since u/v relative to grid in x (i) and y (j) directions,
-    # not defined grid; bit 3 and 5 set as i, j direction increments given
+    # not defined grid; bits 3 and 4 set as i, j direction increments given
     resolution_components_flags = set_code_flag([3, 4])
 
     return (

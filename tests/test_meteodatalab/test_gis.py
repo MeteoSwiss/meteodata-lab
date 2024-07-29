@@ -1,8 +1,4 @@
-# Standard library
-import io
-
 # Third-party
-import earthkit.data as ekd
 import numpy as np
 import pytest
 import xarray as xr
@@ -10,7 +6,7 @@ from numpy.testing import assert_allclose
 
 # First-party
 from meteodatalab import grib_decoder
-from meteodatalab.metadata import set_origin_xy
+from meteodatalab.metadata import extract_keys, set_origin_xy
 from meteodatalab.operators import gis
 
 
@@ -54,10 +50,8 @@ def test_vref_rot2geolatlon(data_dir, fieldextra):
 
     u_g, v_g = gis.vref_rot2geolatlon(ds["U_10M"], ds["V_10M"])
 
-    stream = io.BytesIO(u_g.message)
-    [grib_field] = ekd.from_source("stream", stream)
     assert grib_decoder.get_code_flag(
-        grib_field.metadata().get("resolutionAndComponentFlags"),
+        extract_keys(u_g.message, "resolutionAndComponentFlags"),
         [3, 4, 5],
     ) == [True, True, False]
     fx_ds = fieldextra("n2geog")

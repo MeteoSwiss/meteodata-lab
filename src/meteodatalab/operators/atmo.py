@@ -24,6 +24,54 @@ def pv_sw(t):
     return pc.b1 * np.exp(pc.b2w * (t - pc.b3) / (t - pc.b4w))
 
 
+def pv_si(t):
+    """Pressure of water vapor at equilibrium over ice.
+
+    Parameters
+    ----------
+    t : xr.DataArray
+        temperature (in Kelvin)
+
+    Returns
+    -------
+    xr.DataArray
+        pressure of water vapor in Pascal
+
+    """
+    return pc.b1 * np.exp(pc.b2i * (t - pc.b3) / (t - pc.b4i))
+
+
+def pv_sm(t):
+    """Pressure of water vapor at equilibrium over mixed phase.
+
+    Parameters
+    ----------
+    t : xr.DataArray
+        temperature (in Kelvin)
+
+    Returns
+    -------
+    xr.DataArray
+        pressure of water vapor in Pascal
+
+    """
+    tice_only = pc.b3 - 23
+    dtice = pc.b3 - tice_only
+
+    if t > pc.b3:
+        # Liquid water only
+        pv_sm = pv_sw(t)
+    elif t < tice_only:
+        # Ice only
+        pv_sm = pv_si(t)
+    else:
+        #  Mixed phase
+        #  interpolation coefficient (function of T) between liquid and ice sat formula
+        alpha = ((t - tice_only) / dtice) ** 2
+        pv_sm = alpha * pv_sw(t) + (1.0 - alpha) * pv_si(t)
+    return pv_sm
+
+
 def qv_pvp(pv, p):
     """Specific water vapor content (from perfect gas law and approximating q~w).
 

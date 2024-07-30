@@ -8,7 +8,7 @@ import xarray as xr
 
 # Local
 from .. import metadata
-from .atmo import pv_sw, qv_pvp
+from .atmo import pv_si, pv_sm, pv_sw, qv_pvp
 
 
 def relhum(
@@ -40,11 +40,22 @@ def relhum(
         relative humidity field in %
 
     """
-    if phase != "water":
-        raise ValueError(f"{phase=} not implemented")
     max = 100 if clipping else None
 
+    phase_conditions = {
+        "water": {"func": pv_sw, "shortName": "RELHUM"},
+        "ice": {"func": pv_si, "shortName": "RH_ICE"},
+        "water+ice": {"func": pv_sm, "shortName": "RH_MIX_EC"},
+    }
+
+    if phase not in phase_conditions:
+        raise ValueError("Invalid phase. Phase must be 'water', 'ice', or 'water+ice'.")
+
+    result = (100.0 * qv / qv_pvp(phase_conditions[phase]["func"](t), p)).clip(0, max)
+
     return xr.DataArray(
-        data=(100.0 * qv / qv_pvp(pv_sw(t), p)).clip(0, max),
-        attrs=metadata.override(t.message, shortName="RELHUM"),
+        data=result,
+        attrs=metadata.override(
+            t.message, shortName=phase_conditions[phase]["shortName"]
+        ),
     )

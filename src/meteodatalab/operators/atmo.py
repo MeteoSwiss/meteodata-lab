@@ -12,12 +12,12 @@ def pv_sw(t):
 
     Parameters
     ----------
-    t : xr.DataArray
+    t : xarray.DataArray
         temperature (in Kelvin)
 
     Returns
     -------
-    xr.DataArray
+    xarray.DataArray
         pressure of water vapor in Pascal
 
     """
@@ -29,12 +29,12 @@ def pv_si(t):
 
     Parameters
     ----------
-    t : xr.DataArray
+    t : xarray.DataArray
         temperature (in Kelvin)
 
     Returns
     -------
-    xr.DataArray
+    xarray.DataArray
         pressure of water vapor in Pascal
 
     """
@@ -46,29 +46,24 @@ def pv_sm(t):
 
     Parameters
     ----------
-    t : xr.DataArray
+    t : xarray.DataArray
         temperature (in Kelvin)
 
     Returns
     -------
-    xr.DataArray
+    xarray.DataArray
         pressure of water vapor in Pascal
 
     """
     tice_only = pc.b3 - 23
     dtice = pc.b3 - tice_only
+    alpha = ((t - tice_only) / dtice) ** 2
 
-    if t > pc.b3:
-        # Liquid water only
-        pv_sm = pv_sw(t)
-    elif t < tice_only:
-        # Ice only
-        pv_sm = pv_si(t)
-    else:
-        #  Mixed phase
-        #  interpolation coefficient (function of T) between liquid and ice sat formula
-        alpha = ((t - tice_only) / dtice) ** 2
-        pv_sm = alpha * pv_sw(t) + (1.0 - alpha) * pv_si(t)
+    pv_sm = np.where(
+        t > pc.b3,
+        pv_sw(t),
+        np.where(t < tice_only, pv_si(t), alpha * pv_sw(t) + (1.0 - alpha) * pv_si(t)),
+    )
     return pv_sm
 
 
@@ -77,14 +72,14 @@ def qv_pvp(pv, p):
 
     Parameters
     ----------
-    pv : xr.DataArray
+    pv : xarray.DataArray
         pressure of water vapor
-    p : xr.DataArray
+    p : xarray.DataArray
         pressure
 
     Returns
     -------
-    xr.DataArray
+    xarray.DataArray
         specific water vapor (dimensionless)
 
     """
@@ -96,14 +91,14 @@ def pv_qp(qv, p):
 
     Parameters
     ----------
-    qv : xr.DataArray
+    qv : xarray.DataArray
         water vapor mixing ratio
-    p : xr.DataArray
+    p : xarray.DataArray
         pressure
 
     Returns
     -------
-    xr.DataArray
+    xarray.DataArray
         partial pressure of water vapor (same unit as p)
 
     """

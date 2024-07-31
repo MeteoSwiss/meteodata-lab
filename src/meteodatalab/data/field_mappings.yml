@@ -157,6 +157,9 @@ NSSS:
 OMEGA:
   cosmo:
     paramId: 500031
+  ifs:
+    name: w
+    paramId: 135
 HHL:
   cosmo:
     paramId: 500008

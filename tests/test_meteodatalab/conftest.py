@@ -70,6 +70,8 @@ def data_dir(request, machine, unpack):
             return unpack(base_dir / "datasets/32_39x45_51") / "COSMO-1E_ens"
         case "flexpart":
             return base_dir / "data/flexpart"
+        case "iconremap":
+            return base_dir / "datasets/iconremap"
     raise RuntimeError(f"No match for data mark {marker.args[0]}")
 
 

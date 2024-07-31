@@ -6,7 +6,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from meteodatalab import grib_decoder
+from meteodatalab import grib_decoder, data_source
 from meteodatalab.operators import regrid
 from meteodatalab.operators.hzerocl import fhzerocl
 
@@ -60,3 +60,22 @@ def test_to_crs():
 
     # There's a bit less than half a pixel error...
     assert_close_enough(observed, expected, rel=1e-3)
+
+
+@pytest.mark.data("iconremap")
+def test_icon2rotlatlon(data_dir, fieldextra):
+    datafiles = [str(data_dir / "ICON-CH1-EPS_lfff00000000_000")]
+    source = data_source.DataSource(datafiles=datafiles)
+    ds = grib_decoder.load(source, "T")
+
+    observed = regrid.icon2rotlatlon(ds["T"])
+
+    fx_ds = fieldextra(
+        "iconremap",
+        conf_files={
+            "inputi": data_dir / "ICON-CH1-EPS_lfff<DDHH>0000_000",
+            "output": "<HH>_outfile.nc",
+        },
+    )
+
+    assert_allclose(observed, fx_ds["T"], rtol=1e-3, atol=1e-3)

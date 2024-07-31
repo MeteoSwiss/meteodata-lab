@@ -56,3 +56,12 @@ def test_save_field(data_dir, tmp_path, param):
     ds_new[param].attrs.pop("message")
 
     xr.testing.assert_identical(ds[param], ds_new[param])
+
+
+@pytest.mark.data("iconremap")
+def test_load_icon(data_dir):
+    datafiles = [str(data_dir / "ICON-CH1-EPS_lfff00000000_000")]
+    source = data_source.DataSource(datafiles=datafiles)
+    ds = grib_decoder.load(source, "U")
+
+    print(ds)

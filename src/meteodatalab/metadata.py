@@ -22,9 +22,13 @@ VCOORD_TYPE = {
 
 
 def extract(metadata):
-    [vref_flag] = grib_decoder.get_code_flag(
-        metadata.get("resolutionAndComponentFlags"), [5]
-    )
+    if metadata.get("gridType") == "unstructured_grid":
+        vref_flag = False
+    else:
+        [vref_flag] = grib_decoder.get_code_flag(
+            metadata.get("resolutionAndComponentFlags"), [5]
+        )
+
     level_type = metadata.get("typeOfLevel")
     vcoord_type, zshift = VCOORD_TYPE.get(level_type, (level_type, 0.0))
 

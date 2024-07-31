@@ -11,7 +11,7 @@ from rasterio import transform, warp
 from rasterio.crs import CRS
 
 # Local
-from .. import metadata
+from .. import metadata, icon_grid
 from ..grib_decoder import set_code_flag
 
 Resampling: typing.TypeAlias = warp.Resampling
@@ -187,8 +187,8 @@ def _udeg(value):
 
 
 def _get_metadata(grid: RegularGrid):
-    # geolatlon
     if grid.crs.to_epsg() == 4326:
+        # geolatlon
         # https://codes.ecmwf.int/grib/format/grib2/ctables/3/4/
         scanning_mode = set_code_flag([2])  # positive y
         # i, j direction increments given
@@ -212,6 +212,33 @@ def _get_metadata(grid: RegularGrid):
             "iDirectionIncrement": _udeg(grid.dx),
             "jDirectionIncrement": _udeg(grid.dy),
             "scanningMode": scanning_mode,
+        }
+    elif grid.crs.get("proj") == "ob_tran":
+        # rotlatlon
+        # https://codes.ecmwf.int/grib/format/grib2/ctables/3/4/
+        scanning_mode = set_code_flag([2])  # positive y
+        # i, j direction increments given
+        resolution_components_flags = set_code_flag([3, 4])
+        return {
+            "numberOfDataPoints": grid.nx * grid.ny,
+            "sourceOfGridDefinition": 0,  # defined by template number
+            "numberOfOctectsForNumberOfPoints": 0,
+            "interpretationOfNumberOfPoints": 0,
+            "gridDefinitionTemplateNumber": 1,  # rotlatlon
+            "shapeOfTheEarth": 5,  # WGS 84
+            "Ni": grid.nx,
+            "Nj": grid.ny,
+            "latitudeOfFirstGridPoint": _udeg(grid.ymin),
+            "longitudeOfFirstGridPoint": _udeg(grid.xmin),
+            "resolutionAndComponentFlags": resolution_components_flags,
+            "latitudeOfLastGridPoint": _udeg(grid.ymax),
+            "longitudeOfLastGridPoint": _udeg(grid.xmax),
+            "iDirectionIncrement": _udeg(grid.dx),
+            "jDirectionIncrement": _udeg(grid.dy),
+            "scanningMode": scanning_mode,
+            "latitudeOfSouthernPole": _udeg(-1 * grid.crs.get("o_lat_p")),
+            "longitudeOfSouthernPole": _udeg(grid.crs.get("lon_0")),
+            "angleOfRotation": 0.0,
         }
 
 
@@ -271,6 +298,48 @@ def regrid(
         output_core_dims=[["y1", "x1"]],
         vectorize=True,
     ).rename({"x1": "x", "y1": "y"})
+
+    attrs = field.attrs
+    if md := _get_metadata(dst):
+        attrs |= metadata.override(field.message, **md)
+
+    return xr.DataArray(data, attrs=attrs)
+
+
+def icon2rotlatlon(field):
+    gid = metadata.extract_keys(field.message, "uuidOfHGrid")
+    model = {v.hex: k for k, v in icon_grid.GRID_ID.items()}[gid]
+    coeffs_path = f"/store_new/mch/msopr/icon_workflow_2/iconremap-weights/{model}.nc"
+    coeffs = xr.open_dataset(coeffs_path)
+    indices = coeffs["rbf_B_glbidx"].values
+    weights = coeffs["rbf_B_wgt"].values
+
+    geo = {
+        "gridType": "rotated_ll",
+        "longitudeOfSouthernPoleInDegrees": coeffs.north_pole_lon - 180,
+        "latitudeOfSouthernPoleInDegrees": -1 * coeffs.north_pole_lat,
+    }
+    dst = RegularGrid(
+        crs=_get_crs(geo),
+        nx=coeffs.nx,
+        ny=coeffs.ny,
+        xmin=coeffs.xmin,
+        ymin=coeffs.ymin,
+        xmax=coeffs.xmax,
+        ymax=coeffs.ymax,
+    )
+
+    def reproject_layer(field):
+        out_shape = field.shape[:-1] + (dst.ny, dst.nx)
+        values = np.take(field, indices, axis=-1)
+        return np.einsum("...ij,ij->...i", values, weights).reshape(out_shape)
+
+    data = xr.apply_ufunc(
+        reproject_layer,
+        field,
+        input_core_dims=[["cell"]],
+        output_core_dims=[["y", "x"]],
+    )
 
     attrs = field.attrs
     if md := _get_metadata(dst):

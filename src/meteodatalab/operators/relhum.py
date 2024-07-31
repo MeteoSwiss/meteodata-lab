@@ -43,15 +43,15 @@ def relhum(
     max = 100 if clipping else None
 
     phase_conditions = {
-        "water": {"func": pv_sw, "shortName": "RELHUM"},
-        "ice": {"func": pv_si, "shortName": "RH_ICE"},
-        "water+ice": {"func": pv_sm, "shortName": "RH_MIX_EC"},
+        "water": {"func": pv_sw(t), "shortName": "RELHUM"},
+        "ice": {"func": pv_si(t), "shortName": "RH_ICE"},
+        "water+ice": {"func": pv_sm(t), "shortName": "RH_MIX_EC"},
     }
 
     if phase not in phase_conditions:
         raise ValueError("Invalid phase. Phase must be 'water', 'ice', or 'water+ice'.")
 
-    result = (100.0 * qv / qv_pvp(phase_conditions[phase]["func"](t), p)).clip(0, max)
+    result = (100.0 * qv / qv_pvp(phase_conditions[phase]["func"], p)).clip(0, max)
 
     return xr.DataArray(
         data=result,

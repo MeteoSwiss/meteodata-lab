@@ -58,12 +58,10 @@ def pv_sm(t):
     tice_only = pc.b3 - 23
     dtice = pc.b3 - tice_only
     alpha = ((t - tice_only) / dtice) ** 2
-
-    pv_sm = np.where(
-        t > pc.b3,
-        pv_sw(t),
-        np.where(t < tice_only, pv_si(t), alpha * pv_sw(t) + (1.0 - alpha) * pv_si(t)),
-    )
+    water = pv_sw(t)
+    ice = pv_si(t)
+    mix = alpha * water + (1.0 - alpha) * ice
+    pv_sm = water.where(t > pc.b3, ice.where(t < tice_only, mix))
     return pv_sm
 
 

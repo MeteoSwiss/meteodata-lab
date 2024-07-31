@@ -46,10 +46,6 @@ def test_relhum(data_dir, fieldextra, phase, field, expected):
     ds = reader.load_fieldnames(["P", "T", "QV"])
 
     relhum_arr = relhum(ds["QV"], ds["T"], ds["P"], clipping=True, phase=phase)
-    if phase == "water+ice":
-        print("relhum_arr")
-        print(relhum_arr)
-        print(relhum_arr.parameter)
     assert relhum_arr.parameter == expected
 
     fs_ds = fieldextra("RELHUM", field=field)

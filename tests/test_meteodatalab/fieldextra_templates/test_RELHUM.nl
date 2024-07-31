@@ -47,5 +47,5 @@
 &Process in_field="P", levmin=1, levmax=80 /
 &Process in_field="T", levmin=1, levmax=80 /
 &Process in_field="QV", levmin=1, levmax=80 /
-&Process out_field="RELHUM", levmin=1, levmax=80 /
+&Process out_field="{{ field }}", levmin=1, levmax=80 /
 

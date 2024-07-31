@@ -16,9 +16,11 @@ rvd_o = rvd - 1.0
 # saturation vapour pressure (Tetens's formula, see
 # http://www.ecmwf.int/sites/default/files/elibrary/2015/9208-part-i-observation-processing.pdf)
 b1 = 611.21  # Pressure at triple point of water [Pa]
-b2w = 17.502
+b2w = 17.502  # over water
+b2i = 22.587  # over ice
 b3 = 273.16  # Temperature at triple point of water [K]
-b4w = 32.19  # [K]
+b4w = 32.19  # [K] over water
+b4i = -0.7  # [K] over ice
 
 # Surface pressure reference for omega slope
 surface_pressure_ref = 101325.0  # [Pa]

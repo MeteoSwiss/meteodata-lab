@@ -63,17 +63,33 @@ def test_to_crs():
 
 
 @pytest.mark.data("iconremap")
-def test_icon2rotlatlon(data_dir, fieldextra):
-    datafiles = [str(data_dir / "ICON-CH1-EPS_lfff00000000_000")]
+@pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
+def test_icon2rotlatlon(data_dir, fieldextra, model_name):
+    datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
     source = data_source.DataSource(datafiles=datafiles)
     ds = grib_decoder.load(source, "T")
 
     observed = regrid.icon2rotlatlon(ds["T"])
 
+    out_regrid_target = {
+        "icon-ch1-eps": "rotlatlon,353140000,-4460000,4830000,3390000,10000,10000,"
+        "190000000,43000000",
+        "icon-ch2-eps": "rotlatlon,353180000,-4420000,4800000,3360000,20000,20000,"
+        "190000000,43000000",
+    }
+    root = "/oprusers/osm/opr.emme/data/ICON_INPUT"
+    icon_grid_description = {
+        "icon-ch1-eps": f"{root}/ICON-CH1-EPS/icon_grid_0001_R19B08_mch.nc",
+        "icon-ch2-eps": f"{root}/ICON-CH2-EPS/icon_grid_0002_R19B07_mch.nc",
+    }
+
     fx_ds = fieldextra(
         "iconremap",
+        model_name=model_name,
+        out_regrid_target=out_regrid_target[model_name],
+        icon_grid_description=icon_grid_description[model_name],
         conf_files={
-            "inputi": data_dir / "ICON-CH1-EPS_lfff<DDHH>0000_000",
+            "inputi": data_dir / f"{model_name.upper()}_lfff<DDHH>0000_000",
             "output": "<HH>_outfile.nc",
         },
     )

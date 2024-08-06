@@ -4,7 +4,7 @@ from numpy.testing import assert_allclose
 
 # First-party
 from meteodatalab.data_cache import DataCache
-from meteodatalab.data_source import DataSource
+from meteodatalab.data_source import FDBDataSource
 from meteodatalab.grib_decoder import GribReader
 from meteodatalab.metadata import set_origin_xy
 from meteodatalab.operators import wind
@@ -12,7 +12,7 @@ from meteodatalab.operators import wind
 
 @pytest.fixture
 def data(work_dir, request_template, setup_fdb):
-    source = DataSource(request_template=request_template)
+    source = FDBDataSource(request_template=request_template)
     fields = {
         "inputi": [(p, "sfc") for p in ("U_10M", "V_10M")],
     }

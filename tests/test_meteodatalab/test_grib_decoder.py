@@ -10,7 +10,7 @@ from meteodatalab import data_source, grib_decoder
     "params,levtype", [(["P", "T", "HHL"], "ml"), (["U_10M", "V_10M"], "sfc")]
 )
 def test_load(params, levtype, request_template, setup_fdb):
-    source = data_source.DataSource()
+    source = data_source.FDBDataSource()
     request = request_template | {"param": params, "levtype": levtype}
     ds = grib_decoder.load(source, request)
     assert ds.keys() == set(params)

@@ -3,7 +3,7 @@ import numpy as np
 from xarray.testing import assert_allclose
 
 # First-party
-from meteodatalab.data_source import DataSource
+from meteodatalab.data_source import FileDataSource
 from meteodatalab.grib_decoder import load
 from meteodatalab.metadata import set_origin_xy
 from meteodatalab.operators import curl
@@ -15,7 +15,7 @@ def test_curl(data_dir):
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
     cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
-    source = DataSource(datafiles=[cdatafile, datafile])
+    source = FileDataSource(datafiles=[cdatafile, datafile])
     ds = load(source, {"param": ["U", "V", "W", "HHL"]})
     set_origin_xy(ds, ref_param="HHL")
 

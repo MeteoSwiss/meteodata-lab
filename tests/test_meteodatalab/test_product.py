@@ -54,7 +54,7 @@ def test_merge(mock_reader_cls):
     mock_reader_cls.return_value = m.reader
     m.reader.load.side_effect = load
 
-    source = data_source.DataSource()
+    source = data_source.FDBDataSource()
     product.run_products([product_a, product_b], source)
 
     # requests have been merged
@@ -83,6 +83,6 @@ class ProductC(product.Product):
 
 def test_raises_on_conflict():
     m = mock.Mock()
-    source = data_source.DataSource()
+    source = data_source.FDBDataSource()
     with pytest.raises(RuntimeError):
         product.run_products([ProductA(m.a), ProductB(m.b), ProductC(m.c)], source)

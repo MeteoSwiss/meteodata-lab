@@ -4,6 +4,7 @@
 import dataclasses as dc
 import sys
 import typing
+from abc import ABC, abstractmethod
 from collections.abc import Iterator
 from contextlib import contextmanager, nullcontext
 from functools import singledispatchmethod
@@ -45,15 +46,8 @@ def grib_def_ctx(grib_def: str):
 
 
 @dc.dataclass
-class DataSource:
-    datafiles: list[str] | None = None
-    polytope_collection: str | None = None
+class DataSource(ABC):
     request_template: dict[str, typing.Any] = dc.field(default_factory=dict)
-    polytope_client: polytope.api.Client = dc.field(init=False)
-
-    def __post_init__(self):
-        if self.polytope_collection is not None:
-            self.polytope_client = polytope.api.Client()
 
     @singledispatchmethod
     def retrieve(
@@ -62,11 +56,6 @@ class DataSource:
         """Stream GRIB fields from files or FDB.
 
         Request for data from the source in the mars language.
-
-        The data source is defined by the defined attributes in order of precedence:
-        - `datafiles`: data is sourced from the provided files
-        - `polytope_collection`: data is sourced from the provided polytope collection
-        - otherwise, data is sourced from FDB.
 
         Simple strings are interpreted as `param` filters and pairs of strings
         are interpreted as `param` and `levtype` filters.
@@ -93,31 +82,9 @@ class DataSource:
         # The presence of the yield keyword makes this def a generator.
         # As a result, the context manager will remain active until the
         # exhaustion of the data source iterator.
-        req_kwargs = self.request_template | request
-        # validate the request
-        req = mars.Request(**req_kwargs)
-
         grib_def = config.get("data_scope", "cosmo")
         with grib_def_ctx(grib_def):
-            if self.datafiles:
-                fs = ekd.from_source("file", self.datafiles)
-                source = fs.sel(req_kwargs)
-                # ideally, the sel would be done with the mars request but
-                # fdb and file sources currently disagree on the type of the
-                # date and time fields.
-                # see: https://github.com/ecmwf/earthkit-data/issues/253
-            elif self.polytope_collection is not None:
-                pointers = self.polytope_client.retrieve(
-                    self.polytope_collection,
-                    req.to_polytope(),
-                    pointer=True,
-                    asynchronous=False,
-                )
-                urls = [p["location"] for p in pointers]
-                source = ekd.from_source("url", urls, stream=True)
-            else:
-                source = ekd.from_source("fdb", req.to_fdb())
-            yield from source  # type: ignore
+            yield from self._retrieve(request)
 
     @retrieve.register
     def _(self, request: mars.Request) -> Iterator:
@@ -131,3 +98,57 @@ class DataSource:
     def _(self, request: tuple) -> Iterator:
         param, levtype = request
         yield from self.retrieve({"param": param, "levtype": levtype})
+
+    @abstractmethod
+    def _retrieve(self, request: dict):
+        pass
+
+
+@dc.dataclass
+class FDBDataSource(DataSource):
+    def _retrieve(self, request: dict):
+        req_kwargs = self.request_template | request
+        req = mars.Request(**req_kwargs)
+        yield from ekd.from_source("fdb", req.to_fdb())
+
+
+@dc.dataclass
+class FileDataSource(DataSource):
+    datafiles: list[str] | None = None
+
+    def _retrieve(self, request: dict):
+        req_kwargs = self.request_template | request
+        _ = mars.Request(**req_kwargs)
+        fs = ekd.from_source("file", self.datafiles)
+        yield from fs.sel(req_kwargs)
+
+
+@dc.dataclass
+class PolytopeDataSource(DataSource):
+    polytope_collection: str | None = None
+    polytope_client: polytope.api.Client = dc.field(init=False)
+
+    def __post_init__(self):
+        self.polytope_client = polytope.api.Client()
+
+    def _retrieve(self, request: dict):
+        req_kwargs = self.request_template | request
+        req = mars.Request(**req_kwargs)
+        pointers = self.polytope_client.retrieve(
+            self.polytope_collection,
+            req.to_polytope(),
+            pointer=True,
+            asynchronous=False,
+        )
+        urls = [p["location"] for p in pointers]
+        yield from ekd.from_source("url", urls, stream=True)
+
+
+@dc.dataclass
+class URLDataSource(DataSource):
+    urls: list[str] | None = None
+
+    def _retrieve(self, request: dict):
+        req_kwargs = self.request_template | request
+        fs = ekd.from_source("url", self.urls, stream=True)
+        yield from fs.sel(**req_kwargs)

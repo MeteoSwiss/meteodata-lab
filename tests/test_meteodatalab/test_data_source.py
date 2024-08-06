@@ -26,7 +26,7 @@ def test_retrieve_files(mock_from_source, mock_grib_def_ctx):
     datafiles = ["foo"]
     param = "bar"
 
-    source = data_source.DataSource(datafiles)
+    source = data_source.FileDataSource(datafiles)
     for _ in source.retrieve(param):
         pass
 
@@ -42,7 +42,7 @@ def test_retrieve_files_tuple(mock_from_source, mock_grib_def_ctx):
     datafiles = ["foo"]
     request = param, levtype = ("bar", "ml")
 
-    source = data_source.DataSource(datafiles)
+    source = data_source.FileDataSource(datafiles)
     for _ in source.retrieve(request):
         pass
 
@@ -59,7 +59,7 @@ def test_retrieve_files_ifs(mock_from_source, mock_grib_def_ctx):
     param = "bar"
 
     with config.set_values(data_scope="ifs"):
-        source = data_source.DataSource(datafiles)
+        source = data_source.FileDataSource(datafiles)
         for _ in source.retrieve(param):
             pass
 
@@ -75,7 +75,7 @@ def test_retrieve_fdb(mock_from_source, mock_grib_def_ctx):
     param = "U"
     template = {"date": "20200101", "time": "0000"}
 
-    source = data_source.DataSource(request_template=template)
+    source = data_source.FileDataSource(request_template=template)
     for _ in source.retrieve(param):
         pass
 
@@ -91,7 +91,7 @@ def test_retrieve_fdb_mars(mock_from_source, mock_grib_def_ctx):
     request = mars.Request(param=param)
     template = {"date": "20200101", "time": "0000"}
 
-    source = data_source.DataSource(request_template=template)
+    source = data_source.FileDataSource(request_template=template)
     for _ in source.retrieve(request):
         pass
 

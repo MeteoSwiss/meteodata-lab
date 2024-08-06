@@ -276,7 +276,9 @@ class GribReader:
             if the grid can not be constructed from the ref_param
 
         """
-        return cls(data_source.FileDataSource([str(p) for p in datafiles]), ref_param)
+        return cls(
+            data_source.FileDataSource(datafiles=[str(p) for p in datafiles]), ref_param
+        )
 
     def load(
         self,

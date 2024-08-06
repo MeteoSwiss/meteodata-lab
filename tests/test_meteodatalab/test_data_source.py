@@ -1,4 +1,6 @@
 # Standard library
+import http.server
+import threading
 from contextlib import nullcontext
 from unittest.mock import call, patch
 
@@ -100,3 +102,27 @@ def test_retrieve_fdb_mars(mock_from_source, mock_grib_def_ctx):
         call("fdb", mars.Request(param, **template).to_fdb()),
         call().__iter__(),
     ]
+
+
+PORT = 8787
+
+
+@pytest.fixture
+def server(data_dir):
+    class Handler(http.server.SimpleHTTPRequestHandler):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, directory=str(data_dir), **kwargs)
+
+    with http.server.HTTPServer(("", PORT), Handler) as httpd:
+        thread = threading.Thread(target=httpd.serve_forever)
+        thread.daemon = True
+        thread.start()
+        yield
+        httpd.shutdown()
+
+
+def test_retrieve_url(server):
+    urls = [f"http://localhost:{PORT}/COSMO-1E/1h/ml_sl/000/lfff00000000"]
+    source = data_source.URLDataSource(urls=urls)
+    for field in source.retrieve({"param": "T"}):
+        assert field.metadata("shortName") == "T"

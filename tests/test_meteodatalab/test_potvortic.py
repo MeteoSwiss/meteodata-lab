@@ -5,7 +5,7 @@ from numpy.testing import assert_allclose
 # First-party
 import meteodatalab.operators.pot_vortic as pv
 from meteodatalab.data_cache import DataCache
-from meteodatalab.data_source import DataSource
+from meteodatalab.data_source import FDBDataSource
 from meteodatalab.grib_decoder import load
 from meteodatalab.metadata import set_origin_xy
 from meteodatalab.operators.rho import compute_rho_tot
@@ -14,7 +14,7 @@ from meteodatalab.operators.theta import compute_theta
 
 @pytest.fixture
 def data(work_dir, request_template, setup_fdb):
-    source = DataSource(request_template=request_template)
+    source = FDBDataSource(request_template=request_template)
     fields = {
         "inputi": [(p, "ml") for p in ("U", "V", "W", "P", "T", "QV", "QC", "QI")],
         "inputc": [("HHL", "ml"), ("HSURF", "sfc"), ("FIS", "sfc")],

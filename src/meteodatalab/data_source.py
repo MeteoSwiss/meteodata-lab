@@ -150,5 +150,5 @@ class URLDataSource(DataSource):
 
     def _retrieve(self, request: dict):
         req_kwargs = self.request_template | request
-        fs = ekd.from_source("url", self.urls, stream=True)
+        fs = ekd.from_source("url", self.urls)
         yield from fs.sel(**req_kwargs)

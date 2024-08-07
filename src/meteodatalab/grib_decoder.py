@@ -6,6 +6,7 @@ import datetime as dt
 import io
 import logging
 import typing
+from collections import UserDict
 from collections.abc import Mapping, Sequence
 from itertools import product
 from pathlib import Path
@@ -14,6 +15,7 @@ from warnings import warn
 # Third-party
 import earthkit.data as ekd  # type: ignore
 import numpy as np
+import pandas as pd
 import xarray as xr
 from numpy.typing import DTypeLike
 
@@ -23,13 +25,27 @@ from . import data_source, mars, metadata, tasking
 logger = logging.getLogger(__name__)
 
 DIM_MAP = {
-    "level": "z",
-    "perturbationNumber": "eps",
-    "step": "time",
+    "eps": "perturbationNumber",
+    "ref_time": "ref_time",
+    "lead_time": "step",
+    "z": "level",
 }
-INV_DIM_MAP = {v: k for k, v in DIM_MAP.items()}
+NAME_KEY = "shortName"
 
 Request = str | tuple | dict | mars.Request
+
+
+class ChainMap(UserDict):
+    def __init__(self, *maps):
+        self._maps = maps
+
+    def __getitem__(self, key):
+        for mapping in self._maps:
+            try:
+                return mapping[key]
+            except KeyError:
+                pass
+        raise KeyError(f"{key} not found")
 
 
 class GribField(typing.Protocol):
@@ -43,41 +59,39 @@ class MissingData(RuntimeError):
     pass
 
 
-def _is_ensemble(field) -> bool:
-    try:
-        return field.metadata("typeOfEnsembleForecast") == 192
-    except KeyError:
-        return False
-
-
 def _parse_datetime(date, time):
     return dt.datetime.strptime(f"{date}{time:04d}", "%Y%m%d%H%M")
 
 
+def _get_key(field, dims):
+    md = field.metadata()
+    step = md["step"]
+    unit = "h" if isinstance(step, int) else None
+    extra = {
+        "ref_time": _parse_datetime(md["dataDate"], md["dataTime"]),
+        "step": pd.to_timedelta(step, unit),
+    }
+    dim_keys = (DIM_MAP[dim] for dim in dims)
+    mapping = ChainMap(extra, md)
+    return tuple(mapping[key] for key in dim_keys)
+
+
 @dc.dataclass
 class _FieldBuffer:
-    dims: tuple[str, ...] | None = None
+    dims: tuple[str, ...] = tuple(DIM_MAP)
     hcoords: dict[str, xr.DataArray] = dc.field(default_factory=dict)
     metadata: dict[str, typing.Any] = dc.field(default_factory=dict)
-    time_meta: dict[int, dict] = dc.field(default_factory=dict)
     values: dict[tuple[int, ...], np.ndarray] = dc.field(default_factory=dict)
 
-    def load(self, field: GribField, name: str | None = None) -> None:
-        dim_keys = (
-            ("perturbationNumber", "step", "level")
-            if _is_ensemble(field)
-            else ("step", "level")
-        )
-        key = field.metadata(*dim_keys)
+    def load(self, field: GribField) -> None:
+        key = _get_key(field, self.dims)
+        name = field.metadata(NAME_KEY)
         logger.debug("Received field for param: %s, key: %s", name, key)
+
+        if key in self.values:
+            logger.warn("Key collision for param: %s, key: %s", name, key)
+
         self.values[key] = field.to_numpy(dtype=np.float32)
-
-        step = key[-2]  # assume all members share the same time steps
-        if step not in self.time_meta:
-            self.time_meta[step] = field.metadata(namespace="time")
-
-        if not self.dims:
-            self.dims = tuple(DIM_MAP[d] for d in dim_keys) + ("y", "x")
 
         if not self.metadata:
             self.metadata = {
@@ -92,12 +106,9 @@ class _FieldBuffer:
             }
 
     def _gather_coords(self):
-        if self.dims is None:
-            raise RuntimeError("No dims.")
-
         coord_values = zip(*self.values)
         unique = (sorted(set(values)) for values in coord_values)
-        coords = {dim: c for dim, c in zip(self.dims[:-2], unique)}
+        coords = {dim: c for dim, c in zip(self.dims, unique)}
 
         if missing := [
             combination
@@ -112,30 +123,21 @@ class _FieldBuffer:
         shape = tuple(len(v) for v in coords.values()) + (ny, nx)
         return coords, shape
 
-    def _gather_tcoords(self):
-        time = None
-        valid_time = []
-        for step in sorted(self.time_meta):
-            tm = self.time_meta[step]
-            valid_time.append(_parse_datetime(tm["validityDate"], tm["validityTime"]))
-            if time is None:
-                time = _parse_datetime(tm["dataDate"], tm["dataTime"])
-
-        return {"valid_time": ("time", valid_time), "ref_time": time}
-
     def to_xarray(self) -> xr.DataArray:
         if not self.values:
             raise MissingData("No values.")
 
         coords, shape = self._gather_coords()
-        tcoords = self._gather_tcoords()
+        ref_time = xr.DataArray(coords["ref_time"], dims="ref_time")
+        lead_time = xr.DataArray(coords["lead_time"], dims="lead_time")
+        tcoords = {"valid_time": ref_time + lead_time}
 
         array = xr.DataArray(
             data=np.array(
                 [self.values.pop(key) for key in sorted(self.values)]
             ).reshape(shape),
             coords=coords | self.hcoords | tcoords,
-            dims=self.dims,
+            dims=self.dims + ("y", "x"),
             attrs=self.metadata,
         )
 
@@ -155,9 +157,9 @@ def _load_buffer_map(
     buffer_map: dict[str, _FieldBuffer] = {}
 
     for field in fs:
-        name = field.metadata("shortName")
+        name = field.metadata(NAME_KEY)
         buffer = buffer_map.setdefault(name, _FieldBuffer())
-        buffer.load(field, name=name)
+        buffer.load(field)
 
     return buffer_map
 
@@ -363,7 +365,15 @@ def save(
     }
 
     def to_grib(loc: dict[str, xr.DataArray]):
-        return {INV_DIM_MAP[key]: value.item() for key, value in loc.items()}
+        grib_loc = {
+            DIM_MAP[key]: value.item()
+            for key, value in loc.items()
+            if key != "ref_time"
+        }
+        return grib_loc | {
+            "dataDate": loc["ref_time"].dt.strftime("%Y%m%d").item(),
+            "dataTime": loc["ref_time"].dt.strftime("%H%M").item(),
+        }
 
     for idx_slice in product(*idx.values()):
         loc = {dim: value for dim, value in zip(idx.keys(), idx_slice)}

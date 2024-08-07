@@ -20,7 +20,7 @@ def test_destagger(data_dir, fieldextra):
 
     u = destagger(ds["U"], "x")
     v = destagger(ds["V"], "y")
-    hfl = destagger(ds["HHL"].isel(time=0), "z")
+    hfl = destagger(ds["HHL"].isel(lead_time=0), "z")
 
     fs_ds = fieldextra("destagger")
 

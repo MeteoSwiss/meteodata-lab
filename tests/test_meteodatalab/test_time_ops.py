@@ -52,9 +52,11 @@ def test_delta(data_dir, fieldextra):
         },
     )
 
-    expected = xr.concat([fx_ds["tot_prec_03h"] for fx_ds in fx_ds_h], dim="time")
+    expected = xr.concat(
+        [fx_ds["tot_prec_03h"] for fx_ds in fx_ds_h], dim="time"
+    ).transpose("epsd_1", "ref_time", "time", ...)
 
-    assert_allclose(observed, expected.transpose("epsd_1", "time", ...))
+    assert_allclose(observed, expected)
 
 
 @pytest.mark.data("reduced-time")
@@ -96,11 +98,13 @@ def test_resample_average(data_dir, fieldextra):
         },
     )
 
-    expected = xr.concat([fx_ds["GLOB"] for fx_ds in fx_ds_h], dim="time")
+    expected = xr.concat([fx_ds["GLOB"] for fx_ds in fx_ds_h], dim="time").transpose(
+        "epsd_1", "ref_time", "time", ...
+    )
 
     assert_allclose(
         observed,
-        expected.transpose("epsd_1", "time", ...),
+        expected,
         rtol=1e-5,
         atol=1e-5,
     )
@@ -116,11 +120,13 @@ def test_max(data_dir, fieldextra):
 
     f = ds["VMAX_10M"]
     nsteps = time_ops.get_nsteps(f.valid_time, np.timedelta64(24, "h"))
-    vmax_10m_24h = f.where(f.time > 0).rolling(time=nsteps).max()
+    zero = np.timedelta64(0, "h")
+    vmax_10m_24h = f.where(f.lead_time > zero).rolling(lead_time=nsteps).max()
 
     # Negative values are replaced by zero as these are due to numerical inaccuracies.
     cond = np.logical_or(vmax_10m_24h > 0.0, vmax_10m_24h.isnull())
-    observed = vmax_10m_24h.where(cond, 0.0).sel(time=steps[::3], z=10)
+    idx = pd.to_timedelta(steps[::3], "h")
+    observed = vmax_10m_24h.where(cond, 0.0).sel(lead_time=idx, z=10)
 
     fx_ds_h = fieldextra(
         "time_ops_max",
@@ -132,26 +138,28 @@ def test_max(data_dir, fieldextra):
         },
     )
 
-    expected = xr.concat([fx_ds["vmax_10m_24h"] for fx_ds in fx_ds_h], dim="time")
+    expected = xr.concat(
+        [fx_ds["vmax_10m_24h"] for fx_ds in fx_ds_h], dim="time"
+    ).transpose("epsd_1", "ref_time", "time", ...)
 
-    assert_allclose(observed, expected.transpose("epsd_1", "time", ...))
+    assert_allclose(observed, expected)
 
 
 def test_get_nsteps():
     values = pd.date_range("2000-01-01", freq="1h", periods=10)
-    valid_time = xr.DataArray(values, dims=["time"])
+    valid_time = xr.DataArray(values, dims=["lead_time"])
     assert time_ops.get_nsteps(valid_time, np.timedelta64(5, "h")) == 5
 
 
 def test_get_nsteps_raises_non_uniform():
     values = pd.date_range("2000-01-01", freq="1h", periods=10)
-    valid_time = xr.DataArray(values[[0, 1, 3]], dims=["time"])
+    valid_time = xr.DataArray(values[[0, 1, 3]], dims=["lead_time"])
     with pytest.raises(ValueError):
         time_ops.get_nsteps(valid_time, np.timedelta64(3, "h"))
 
 
 def test_get_nsteps_raises_non_multiple():
     values = pd.date_range("2000-01-01", freq="2h", periods=10)
-    valid_time = xr.DataArray(values, dims=["time"])
+    valid_time = xr.DataArray(values, dims=["lead_time"])
     with pytest.raises(ValueError):
         time_ops.get_nsteps(valid_time, np.timedelta64(3, "h"))

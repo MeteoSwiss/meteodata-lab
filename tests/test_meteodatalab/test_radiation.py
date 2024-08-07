@@ -34,6 +34,6 @@ def test_athd_s(data_dir, fieldextra):
         "output": "00_outfile.nc",
     }
     fx_ds = fieldextra("athd_s", conf_files=conf_files, hh=None)
-    expected = fx_ds["ATHD_S_TG"].transpose("epsd_1", "time", ...)
+    expected = fx_ds["ATHD_S_TG"].transpose("epsd_1", "ref_time", "time", ...)
 
     assert_allclose(observed, expected, rtol=1e-6, atol=1e-4)

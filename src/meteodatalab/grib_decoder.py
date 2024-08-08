@@ -59,6 +59,13 @@ class MissingData(RuntimeError):
     pass
 
 
+def _is_ensemble(field) -> bool:
+    try:
+        return field.metadata("typeOfEnsembleForecast") == 192
+    except KeyError:
+        return False
+
+
 def _parse_datetime(date, time):
     return dt.datetime.strptime(f"{date}{time:04d}", "%Y%m%d%H%M")
 
@@ -78,10 +85,15 @@ def _get_key(field, dims):
 
 @dc.dataclass
 class _FieldBuffer:
+    is_ensemble: dc.InitVar[bool]
     dims: tuple[str, ...] = tuple(DIM_MAP)
     hcoords: dict[str, xr.DataArray] = dc.field(default_factory=dict)
     metadata: dict[str, typing.Any] = dc.field(default_factory=dict)
     values: dict[tuple[int, ...], np.ndarray] = dc.field(default_factory=dict)
+
+    def __post_init__(self, is_ensemble: bool):
+        if not is_ensemble:
+            self.dims = self.dims[1:]
 
     def load(self, field: GribField) -> None:
         key = _get_key(field, self.dims)
@@ -158,7 +170,7 @@ def _load_buffer_map(
 
     for field in fs:
         name = field.metadata(NAME_KEY)
-        buffer = buffer_map.setdefault(name, _FieldBuffer())
+        buffer = buffer_map.setdefault(name, _FieldBuffer(_is_ensemble(field)))
         buffer.load(field)
 
     return buffer_map

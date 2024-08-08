@@ -54,9 +54,13 @@ def test_flexpart(data_dir, fieldextra):
     for f in ("FIS", "FR_LAND", "SDOR"):
         fs_ds_o[f] = fs_ds[f].isel(y_1=slice(None, None, -1))
 
-    assert_allclose(fs_ds_o["FIS"], ds["z"].squeeze(), rtol=3e-7, atol=5e-7)
-    assert_allclose(fs_ds_o["FR_LAND"], ds["lsm"].squeeze(), rtol=3e-7, atol=5e-7)
-    assert_allclose(fs_ds_o["SDOR"], ds["sdor"].squeeze(), rtol=3e-7, atol=5e-7)
+    assert_allclose(fs_ds_o["FIS"], ds["z"].squeeze("lead_time"), rtol=3e-7, atol=5e-7)
+    assert_allclose(
+        fs_ds_o["FR_LAND"], ds["lsm"].squeeze("lead_time"), rtol=3e-7, atol=5e-7
+    )
+    assert_allclose(
+        fs_ds_o["SDOR"], ds["sdor"].squeeze("lead_time"), rtol=3e-7, atol=5e-7
+    )
 
     for field in (
         "U",
@@ -84,7 +88,7 @@ def test_flexpart(data_dir, fieldextra):
 
     ds_out = flx.fflexpart(
         {
-            param: field.isel(time=slice(3), missing_dims="ignore")
+            param: field.isel(lead_time=slice(3), missing_dims="ignore")
             for param, field in ds.items()
         }
     )

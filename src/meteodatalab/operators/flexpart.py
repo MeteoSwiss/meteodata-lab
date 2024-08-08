@@ -23,7 +23,7 @@ def fflexpart(ds):
         "tcc",
         "sd",
     ):
-        ds_out[field] = ds[field].isel(time=slice(1, None))
+        ds_out[field] = ds[field].isel(lead_time=slice(1, None))
 
     ds_out["cp"] = time_rate(ds["cp"], np.timedelta64(1, "h"))
     ds_out["lsp"] = time_rate(ds["lsp"], np.timedelta64(1, "h"))
@@ -34,7 +34,7 @@ def fflexpart(ds):
     ds_out["nsss"] = time_rate(ds["nsss"], np.timedelta64(1, "s"))
 
     ds_out["omega"] = omega_slope(ds["sp"], ds["etadot"], ds["ak"], ds["bk"]).isel(
-        z=slice(39, 137), time=slice(1, None)
+        z=slice(39, 137), lead_time=slice(1, None)
     )
 
     return ds_out

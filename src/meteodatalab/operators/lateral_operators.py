@@ -158,7 +158,7 @@ def fill_undef(field: xr.DataArray, radius: int, frac_val: float) -> xr.DataArra
         field.assign_coords(xy_coords)
         .rolling({"x": n, "y": n}, center=True)
         .construct(dims)
-        .sel(idx)
+        .isel(idx)
     )
 
     # compute conditional mask

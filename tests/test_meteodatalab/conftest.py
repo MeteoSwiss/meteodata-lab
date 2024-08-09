@@ -147,7 +147,10 @@ def fieldextra(tmp_path, data_dir, template_env, fieldextra_path):
         subprocess.run([executable, str(nl_path)], check=True, cwd=tmp_path)
 
         if isinstance(load_output, str):
-            return xr.open_dataset(tmp_path / load_output)
-        return [xr.open_dataset(tmp_path / filename) for filename in load_output]
+            return xr.open_dataset(tmp_path / load_output).expand_dims("ref_time")
+        return [
+            xr.open_dataset(tmp_path / filename).expand_dims("ref_time")
+            for filename in load_output
+        ]
 
     return f

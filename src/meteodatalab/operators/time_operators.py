@@ -20,7 +20,7 @@ def time_rate(var: xr.DataArray, dtime: np.timedelta64):
 
     """
     coord = var.valid_time
-    result = var.diff(dim="time") / (coord.diff(dim="time") / dtime)
+    result = var.diff(dim="lead_time") / (coord.diff(dim="lead_time") / dtime)
     # No equivalent codes found in Table 10
     # (https://codes.ecmwf.int/grib/format/grib2/ctables/4/10/)
     # For the moment, it is set as 'missing' (255)
@@ -52,21 +52,20 @@ def get_nsteps(valid_time: xr.DataArray, dtime: np.timedelta64) -> int:
         Number of time steps.
 
     """
-    dt = valid_time.diff(dim="time")
-    uniform = np.all(dt == dt[0]).item()
+    dt = valid_time.diff(dim="lead_time")
+    dt0 = dt.values.flat[0]
+    uniform = np.all(dt == dt0).item()
 
     if not uniform:
         msg = "Given field has an irregular time step."
         raise ValueError(msg)
 
-    condition = valid_time - valid_time[0] == dtime
-    try:
-        [index] = np.nonzero(condition.values)
-    except ValueError:
+    n = dtime // dt0
+    if n * dt0 != dtime:
         msg = "Provided dtime is not a multiple of the time step."
         raise ValueError(msg)
 
-    return index.item()
+    return n
 
 
 def delta(field: xr.DataArray, dtime: np.timedelta64) -> xr.DataArray:
@@ -92,7 +91,7 @@ def delta(field: xr.DataArray, dtime: np.timedelta64) -> xr.DataArray:
 
     """
     nsteps = get_nsteps(field.valid_time, dtime)
-    result = field - field.shift(time=nsteps)
+    result = field - field.shift(lead_time=nsteps)
     return xr.DataArray(
         data=result,
         attrs=metadata.override(
@@ -137,7 +136,7 @@ def resample_average(field: xr.DataArray, dtime: np.timedelta64) -> xr.DataArray
     nsteps = get_nsteps(field.valid_time, dtime)
     weights = (field.valid_time - field.ref_time) / dtime
     weighted = field * weights
-    result = weighted - weighted.shift(time=nsteps)
+    result = weighted - weighted.shift(lead_time=nsteps)
     return xr.DataArray(
         data=result,
         attrs=metadata.override(
@@ -176,7 +175,7 @@ def resample(field: xr.DataArray, interval: np.timedelta64) -> xr.DataArray:
     """
     nsteps = get_nsteps(field.valid_time, interval)
     return xr.DataArray(
-        data=field.sel(time=slice(None, None, nsteps)),
+        data=field.sel(lead_time=slice(None, None, nsteps)),
         attrs=metadata.override(
             field.message,
             lengthOfTimeRange=int(interval / np.timedelta64(1, "m")),

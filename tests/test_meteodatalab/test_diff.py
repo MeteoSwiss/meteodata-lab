@@ -16,7 +16,7 @@ def test_masspoint_field(data_dir):
 
     theta = compute_theta(ds["P"], ds["T"])
 
-    padding = [(0, 0)] * 2 + [(1, 1)] * 3
+    padding = [(0, 0)] * 3 + [(1, 1)] * 3
     tp = np.pad(theta, padding, mode="edge")
     tp[..., :, :, 0] = tp[..., :, :, -1] = np.nan
     tp[..., :, 0, :] = tp[..., :, -1, :] = np.nan

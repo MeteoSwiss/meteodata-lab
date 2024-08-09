@@ -170,7 +170,10 @@ def _load_buffer_map(
 
     for field in fs:
         name = field.metadata(NAME_KEY)
-        buffer = buffer_map.setdefault(name, _FieldBuffer(_is_ensemble(field)))
+        if name in buffer_map:
+            buffer = buffer_map[name]
+        else:
+            buffer = buffer_map[name] = _FieldBuffer(_is_ensemble(field))
         buffer.load(field)
 
     return buffer_map

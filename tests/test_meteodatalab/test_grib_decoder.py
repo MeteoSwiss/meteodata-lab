@@ -39,7 +39,7 @@ def test_save(data_dir, tmp_path):
 
 @pytest.mark.parametrize("param", ("U", "V", "T"))
 def test_save_field(data_dir, tmp_path, param):
-    datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
+    datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00010000"
     cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
     reader = grib_decoder.GribReader.from_files([datafile, cdatafile])

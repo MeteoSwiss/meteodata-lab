@@ -8,6 +8,7 @@ import logging
 import typing
 from collections import UserDict
 from collections.abc import Mapping, Sequence
+from enum import Enum
 from itertools import product
 from pathlib import Path
 from warnings import warn
@@ -59,6 +60,20 @@ class MissingData(RuntimeError):
     pass
 
 
+class UnitOfTime(Enum):
+    MINUTE = 0
+    HOUR = 1
+    DAY = 2
+    SECOND = 13
+    MISSING = 255
+
+    @property
+    def unit(self):
+        if self.name == "MISSING":
+            return None
+        return self.name.lower()
+
+
 def _is_ensemble(field) -> bool:
     try:
         return field.metadata("typeOfEnsembleForecast") == 192
@@ -66,8 +81,12 @@ def _is_ensemble(field) -> bool:
         return False
 
 
-def _parse_datetime(date, time):
+def _parse_datetime(date, time) -> dt.datetime:
     return dt.datetime.strptime(f"{date}{time:04d}", "%Y%m%d%H%M")
+
+
+def _to_timedelta(value, unit) -> np.timedelta64:
+    return pd.to_timedelta(value, unit).to_numpy()
 
 
 def _get_key(field, dims):
@@ -76,7 +95,7 @@ def _get_key(field, dims):
     unit = "h" if isinstance(step, int) else None
     extra = {
         "ref_time": _parse_datetime(md["dataDate"], md["dataTime"]),
-        "step": pd.to_timedelta(step, unit),
+        "step": _to_timedelta(step, unit),
     }
     dim_keys = (DIM_MAP[dim] for dim in dims)
     mapping = ChainMap(extra, md)
@@ -379,13 +398,24 @@ def save(
         if (dim := str(key)) not in {"x", "y"}
     }
 
+    step_unit = UnitOfTime.MINUTE
+    time_range_unit = UnitOfTime(md.get("indicatorOfUnitForTimeRange", 255)).unit
+    time_range = _to_timedelta(md.get("lengthOfTimeRange", 0), unit=time_range_unit)
+
+    if md.get("numberOfTimeRange", 1) != 1:
+        raise NotImplementedError("Unsupported value for numberOfTimeRange")
+
     def to_grib(loc: dict[str, xr.DataArray]):
         grib_loc = {
             DIM_MAP[key]: value.item()
             for key, value in loc.items()
-            if key != "ref_time"
+            if key not in {"ref_time", "lead_time"}
         }
+        step_end = np.timedelta64(loc["lead_time"].item(), "ns")
+        step_begin = step_end - time_range
         return grib_loc | {
+            "indicatorOfUnitOfTimeRange": step_unit.value,
+            "forecastTime": step_begin / _to_timedelta(1, step_unit.unit),
             "dataDate": loc["ref_time"].dt.strftime("%Y%m%d").item(),
             "dataTime": loc["ref_time"].dt.strftime("%H%M").item(),
         }

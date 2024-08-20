@@ -1,3 +1,6 @@
+# Standard library
+import io
+
 # Third-party
 import numpy as np
 import pandas as pd  # type: ignore
@@ -7,9 +10,18 @@ from numpy.testing import assert_allclose
 
 # First-party
 import meteodatalab.operators.time_operators as time_ops
-from meteodatalab.grib_decoder import GribReader
+from meteodatalab.grib_decoder import GribReader, save
 from meteodatalab.metadata import extract_keys
 from meteodatalab.operators import radiation
+
+
+def _assert_keys(field, mapping):
+    handle = io.BytesIO()
+    save(field, handle)
+    observed = extract_keys(handle.getvalue(), list(mapping.keys()), single=False)
+    expected = list(mapping.values())
+    for values in observed:
+        assert values == expected
 
 
 @pytest.mark.data("reduced-time")
@@ -22,21 +34,7 @@ def test_delta(data_dir, fieldextra):
     ds = reader.load_fieldnames(["TOT_PREC"])
 
     tot_prec = time_ops.resample(ds["TOT_PREC"], np.timedelta64(3, "h"))
-
-    observed_tr = extract_keys(tot_prec.message, "lengthOfTimeRange")
-    expected_tr = int(np.timedelta64(3, "h") / np.timedelta64(1, "m"))
-
-    assert observed_tr == expected_tr
-    assert extract_keys(tot_prec.message, "indicatorOfUnitForTimeRange") == 0
-
     tot_prec_03h = time_ops.delta(tot_prec, np.timedelta64(3, "h"))
-
-    assert extract_keys(tot_prec_03h.message, "typeOfStatisticalProcessing") == 4
-    assert extract_keys(tot_prec_03h.message, "indicatorOfUnitForTimeRange") == 0
-    observed_tr = extract_keys(tot_prec_03h.message, "lengthOfTimeRange")
-    expected_tr = int(np.timedelta64(3, "h") / np.timedelta64(1, "m"))
-
-    assert observed_tr == expected_tr
 
     # Negative values are replaced by zero as these are due to numerical inaccuracies.
     cond = np.logical_or(tot_prec_03h > 0.0, tot_prec_03h.isnull())
@@ -58,6 +56,13 @@ def test_delta(data_dir, fieldextra):
 
     assert_allclose(observed, expected)
 
+    md = {
+        "typeOfStatisticalProcessing": 4,
+        "indicatorOfUnitForTimeRange": 0,
+        "lengthOfTimeRange": 3 * 60,
+    }
+    _assert_keys(observed, md)
+
 
 @pytest.mark.data("reduced-time")
 def test_resample_average(data_dir, fieldextra):
@@ -70,13 +75,6 @@ def test_resample_average(data_dir, fieldextra):
 
     direct = time_ops.resample_average(ds["ASWDIR_S"], np.timedelta64(1, "h"))
     diffuse = time_ops.resample_average(ds["ASWDIFD_S"], np.timedelta64(1, "h"))
-
-    observed_tr = extract_keys(diffuse.message, "lengthOfTimeRange")
-    expected_tr = int(np.timedelta64(1, "h") / np.timedelta64(1, "m"))
-
-    assert observed_tr == expected_tr
-    assert extract_keys(diffuse.message, "typeOfStatisticalProcessing") == 0
-    assert extract_keys(diffuse.message, "indicatorOfUnitForTimeRange") == 0
 
     observed = radiation.compute_swdown(diffuse, direct)
 
@@ -108,6 +106,13 @@ def test_resample_average(data_dir, fieldextra):
         rtol=1e-5,
         atol=1e-5,
     )
+
+    md = {
+        "typeOfStatisticalProcessing": 0,
+        "indicatorOfUnitForTimeRange": 0,
+        "lengthOfTimeRange": 60,
+    }
+    _assert_keys(observed, md)
 
 
 @pytest.mark.data("reduced-time")

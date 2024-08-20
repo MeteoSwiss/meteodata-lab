@@ -3,6 +3,7 @@
 # Standard library
 import dataclasses as dc
 import typing
+import warnings
 
 # Third-party
 import numpy as np
@@ -308,9 +309,7 @@ def regrid(
 
 def icon2rotlatlon(field):
     gid = metadata.extract_keys(field.message, "uuidOfHGrid")
-    model = {v.hex: k for k, v in icon_grid.GRID_ID.items()}[gid]
-    coeffs_path = f"/store_new/mch/msopr/icon_workflow_2/iconremap-weights/{model}.nc"
-    coeffs = xr.open_dataset(coeffs_path)
+    coeffs = icon_grid.get_remap_coeffs(gid)
     indices = coeffs["rbf_B_glbidx"].values
     weights = coeffs["rbf_B_wgt"].values
 
@@ -332,7 +331,12 @@ def icon2rotlatlon(field):
     def reproject_layer(field):
         out_shape = field.shape[:-1] + (dst.ny, dst.nx)
         values = np.take(field, indices, axis=-1)
-        return np.einsum("...ij,ij->...i", values, weights).reshape(out_shape)
+        if np.any(np.isnan(values)):
+            warnings.warn("Interpolation of missing values is not supported.")
+        vmin = np.nanmin(values, axis=-1)
+        vmax = np.nanmax(values, axis=-1)
+        result = np.einsum("...ij,ij->...i", values, weights)
+        return np.clip(result, vmin, vmax).reshape(out_shape)
 
     data = xr.apply_ufunc(
         reproject_layer,

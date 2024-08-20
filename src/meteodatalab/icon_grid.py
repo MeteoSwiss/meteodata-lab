@@ -26,3 +26,9 @@ def get_icon_grid(grid_uuid: str):
     rad2deg = 180 / np.pi
     result = ds[["clon", "clat"]].reset_coords() * rad2deg
     return {"lon": result.clon, "lat": result.clat}
+
+
+def get_remap_coeffs(grid_uuid: str):
+    model = {v.hex: k for k, v in GRID_ID.items()}[grid_uuid]
+    coeffs_path = f"/store_new/mch/msopr/icon_workflow_2/iconremap-weights/{model}.nc"
+    return xr.open_dataset(coeffs_path)

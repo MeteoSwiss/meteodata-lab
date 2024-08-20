@@ -94,4 +94,4 @@ def test_icon2rotlatlon(data_dir, fieldextra, model_name):
         },
     )
 
-    assert_allclose(observed, fx_ds["T"], rtol=1e-3, atol=1e-3)
+    assert_allclose(observed, fx_ds["T"], rtol=1e-4, atol=1e-4)

@@ -224,7 +224,7 @@ def extract_hcoords(message: bytes) -> dict[str, xr.DataArray]:
     }
 
 
-def extract_keys(message: bytes, keys: typing.Any) -> typing.Any:
+def extract_keys(message: bytes, keys: typing.Any, single: bool = True) -> typing.Any:
     """Extract keys from the GRIB message.
 
     Parameters
@@ -233,6 +233,8 @@ def extract_keys(message: bytes, keys: typing.Any) -> typing.Any:
         The GRIB message.
     keys : Any
         Keys for which to extract values from the message.
+    single : bool, optional
+        Whether a single GRIB message should be expected.
 
     Raises
     ------
@@ -247,10 +249,16 @@ def extract_keys(message: bytes, keys: typing.Any) -> typing.Any:
         Single value if keys is a single value, tuple of values if
         keys is a tuple, list of values if keys is a list. The type of
         the value depends on the default type for the given key in eccodes.
+        If single is false, the above is returned within a list.
 
     """
     if keys is None:
         raise ValueError("keys must be specified.")
     stream = io.BytesIO(message)
-    [grib_field] = ekd.from_source("stream", stream)
-    return grib_field.metadata(keys)
+    source = ekd.from_source("stream", stream)
+
+    if single:
+        [grib_field] = source
+        return grib_field.metadata(keys)
+
+    return [grib_field.metadata(keys) for grib_field in source]

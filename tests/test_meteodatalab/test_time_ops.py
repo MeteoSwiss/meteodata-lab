@@ -18,7 +18,7 @@ from meteodatalab.operators import radiation
 def _assert_keys(field, mapping):
     handle = io.BytesIO()
     save(field, handle)
-    observed = extract_keys(handle.getvalue(), list(mapping.keys()), multiple=True)
+    observed = extract_keys(handle.getvalue(), list(mapping.keys()), single=False)
     expected = list(mapping.values())
     for values in observed:
         assert values == expected

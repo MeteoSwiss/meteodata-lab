@@ -402,6 +402,9 @@ def save(
     time_range_unit = UnitOfTime(md.get("indicatorOfUnitForTimeRange", 255)).unit
     time_range = _to_timedelta(md.get("lengthOfTimeRange", 0), unit=time_range_unit)
 
+    if md.get("numberOfTimeRange", 1) != 1:
+        raise NotImplementedError("Unsupported value for numberOfTimeRange")
+
     def to_grib(loc: dict[str, xr.DataArray]):
         grib_loc = {
             DIM_MAP[key]: value.item()

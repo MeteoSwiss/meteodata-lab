@@ -1,0 +1,33 @@
+pipeline {
+    agent {
+        label 'balfrin'
+    }
+
+    post {
+        always{
+            echo 'Cleaning up workspace'
+            deleteDir()
+        }
+    }
+    stages {
+        stage('build') {
+            environment {
+                PATH="$SCRATCH/mch_jenkins_node/tools/micromamba/bin:$PATH"
+                MAMBA_ROOT_PREFIX="$WORKSPACE/micromamba"
+            }
+            steps {
+                sh '''#!/usr/bin/env bash
+                set -ex
+                micromamba_install_path=$SCRATCH/mch_jenkins_node/tools/micromamba
+                eval "$(${micromamba_install_path}/bin/micromamba shell hook -s posix)"
+                git clone --depth 1 git@gitlab.dkrz.de:dwd-sw/dwd_icon_tools.git
+                cd dwd_icon_tools
+                micromamba create -n icontools conda-build -c conda-forge
+                micromamba activate icontools
+                echo $CONDA_PREFIX
+                conda-build -c conda-forge config/conda
+                '''
+            }
+        }
+    }
+}

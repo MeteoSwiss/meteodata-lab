@@ -162,9 +162,6 @@ class _FieldBuffer:
         return coords, shape
 
     def to_xarray(self) -> xr.DataArray:
-        if self.dims is None:
-            raise RuntimeError("No dims.")
-
         if not self.values:
             raise MissingData("No values.")
 

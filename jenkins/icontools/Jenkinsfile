@@ -25,7 +25,7 @@ pipeline {
                 micromamba create -n icontools conda-build -c conda-forge
                 micromamba activate icontools
                 echo $CONDA_PREFIX
-                conda-build -c conda-forge config/conda
+                conda-build -c conda-forge config/conda -m $WORKSPACE/jenkins/icontools/conda_build_config.yaml
                 '''
             }
         }

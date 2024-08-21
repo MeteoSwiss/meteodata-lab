@@ -307,7 +307,20 @@ def regrid(
     return xr.DataArray(data, attrs=attrs)
 
 
-def icon2rotlatlon(field):
+def icon2rotlatlon(field: xr.DataArray) -> xr.DataArray:
+    """Remap ICON native grid data to the rotated latlon grid.
+
+    Parameters
+    ----------
+    field : xarray.DataArray
+        A field with data in the ICON native grid.
+
+    Returns
+    -------
+    xarray.DataArray
+        Field with data remapped to the rotated latlon grid.
+
+    """
     gid = metadata.extract_keys(field.message, "uuidOfHGrid")
     coeffs = icon_grid.get_remap_coeffs(gid)
     indices = coeffs["rbf_B_glbidx"].values
@@ -333,8 +346,8 @@ def icon2rotlatlon(field):
         values = np.take(field, indices, axis=-1)
         if np.any(np.isnan(values)):
             warnings.warn("Interpolation of missing values is not supported.")
-        vmin = np.nanmin(values, axis=-1)
-        vmax = np.nanmax(values, axis=-1)
+        vmin = np.min(values, axis=-1)
+        vmax = np.max(values, axis=-1)
         result = np.einsum("...ij,ij->...i", values, weights)
         return np.clip(result, vmin, vmax).reshape(out_shape)
 

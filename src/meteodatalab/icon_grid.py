@@ -17,7 +17,25 @@ GRID_MAP = {
 }
 
 
-def get_icon_grid(grid_uuid: str):
+def get_icon_grid(grid_uuid: str) -> dict[str, xr.DataArray]:
+    """Get ICON native grid coordinates.
+
+    Parameters
+    ----------
+    grid_uuid : str
+        The UUID of the horizontal grid.
+
+    Raises
+    ------
+    KeyError
+        If the UUID is not found in the GRID_MAP constant.
+
+    Returns
+    -------
+    dict[str, xarray.DataArray]
+        Geodectic coordinates of the ICON grid cell centers.
+
+    """
     grid_path = GRID_MAP.get(UUID(grid_uuid))
 
     if grid_path is None:
@@ -30,7 +48,25 @@ def get_icon_grid(grid_uuid: str):
     return {"lon": result.clon, "lat": result.clat}
 
 
-def get_remap_coeffs(grid_uuid: str):
+def get_remap_coeffs(grid_uuid: str) -> xr.Dataset:
+    """Get ICON native grid remap indices and weights.
+
+    Parameters
+    ----------
+    grid_uuid : str
+        The UUID of the horizontal grid in hex format.
+
+    Raises
+    ------
+    KeyError
+        If the UUID is not found in the GRID_ID constant.
+
+    Returns
+    -------
+    xarray.Dataset
+        Dataset of the remap indices and weights.
+
+    """
     model = {v.hex: k for k, v in GRID_ID.items()}[grid_uuid]
     coeffs_path = f"/store_new/mch/msopr/icon_workflow_2/iconremap-weights/{model}.nc"
     return xr.open_dataset(coeffs_path)

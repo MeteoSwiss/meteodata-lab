@@ -1,6 +1,8 @@
-from uuid import UUID
+# Standard library
 from pathlib import Path
+from uuid import UUID
 
+# Third-party
 import numpy as np
 import xarray as xr
 

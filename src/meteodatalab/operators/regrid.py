@@ -12,7 +12,7 @@ from rasterio import transform, warp
 from rasterio.crs import CRS
 
 # Local
-from .. import metadata, icon_grid
+from .. import icon_grid, metadata
 from ..grib_decoder import set_code_flag
 
 Resampling: typing.TypeAlias = warp.Resampling

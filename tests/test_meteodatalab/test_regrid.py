@@ -6,7 +6,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from meteodatalab import grib_decoder, data_source
+from meteodatalab import data_source, grib_decoder
 from meteodatalab.operators import regrid
 from meteodatalab.operators.hzerocl import fhzerocl
 
@@ -66,7 +66,7 @@ def test_to_crs():
 @pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
 def test_icon2rotlatlon(data_dir, fieldextra, model_name):
     datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
-    source = data_source.DataSource(datafiles=datafiles)
+    source = data_source.FileDataSource(datafiles=datafiles)
     ds = grib_decoder.load(source, "T")
 
     observed = regrid.icon2rotlatlon(ds["T"])

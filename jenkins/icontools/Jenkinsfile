@@ -5,6 +5,7 @@ pipeline {
 
     environment {
         MAMBA_ROOT_PREFIX="$WORKSPACE/micromamba"
+        MICROMAMBA_INSTALL_PATH="$SCRATCH/mch_jenkins_node/tools/micromamba"
     }
 
     post {
@@ -19,8 +20,7 @@ pipeline {
             steps {
                 sh '''#!/usr/bin/env bash
                 set -ex
-                micromamba_install_path=$SCRATCH/mch_jenkins_node/tools/micromamba
-                eval "$(${micromamba_install_path}/bin/micromamba shell hook -s posix)"
+                eval "$(${MICROMAMBA_INSTALL_PATH}/bin/micromamba shell hook -s posix)"
                 git clone --depth 1 --recurse-submodules git@gitlab.dkrz.de:dwd-sw/dwd_icon_tools.git
                 cd dwd_icon_tools
                 micromamba create -n icontools conda-build -c conda-forge
@@ -34,6 +34,7 @@ pipeline {
             steps {
                 sh '''#!/usr/bin/env bash
                 set -ex
+                eval "$(${MICROMAMBA_INSTALL_PATH}/bin/micromamba shell hook -s posix)"
                 micromamba run -n icontools python $WORKSPACE/jenkins/icontools/export_coeffs.py
                 '''
             }

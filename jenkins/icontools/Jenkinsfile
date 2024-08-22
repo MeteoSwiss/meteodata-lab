@@ -3,18 +3,19 @@ pipeline {
         label 'balfrin'
     }
 
+    environment {
+        MAMBA_ROOT_PREFIX="$WORKSPACE/micromamba"
+    }
+
     post {
         always{
             echo 'Cleaning up workspace'
             deleteDir()
         }
     }
+
     stages {
         stage('build') {
-            environment {
-                PATH="$SCRATCH/mch_jenkins_node/tools/micromamba/bin:$PATH"
-                MAMBA_ROOT_PREFIX="$WORKSPACE/micromamba"
-            }
             steps {
                 sh '''#!/usr/bin/env bash
                 set -ex
@@ -24,8 +25,16 @@ pipeline {
                 cd dwd_icon_tools
                 micromamba create -n icontools conda-build -c conda-forge
                 micromamba activate icontools
-                echo $CONDA_PREFIX
                 conda-build -c conda-forge config/conda -m $WORKSPACE/jenkins/icontools/conda_build_config.yaml
+                micromamba install -c file://${CONDA_PREFIX}/conda-bld -c conda-forge iconremap
+                '''
+            }
+        }
+        stage('export') {
+            steps {
+                sh '''#!/usr/bin/env bash
+                set -ex
+                micromamba run -n icontools python $WORKSPACE/jenkins/icontools/export_coeffs.py
                 '''
             }
         }

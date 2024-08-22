@@ -22,7 +22,7 @@ INPUT_GRIDS = {
 
 
 def split_arg(ctx, param, value: str):
-    return [item.strip() for item in value.split()]
+    return [item.strip() for item in value.split(",")]
 
 
 @click.command()

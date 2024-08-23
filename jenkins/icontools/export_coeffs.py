@@ -48,6 +48,7 @@ def split_arg(ctx, param, value: str):
     help="Path to the grid configuration file.",
 )
 def main(models, dst_grids, grid_config_path):
+    Path("output").mkdir(exist_ok=True)
     cfg = read_grid_config(grid_config_path)
     for model in models:
         for dst_grid in dst_grids:
@@ -65,8 +66,8 @@ class Grid:
     xmax: float
     ymin: float
     ymax: float
-    north_pole_lon: float | None = None
-    north_pole_lat: float | None = None
+    north_pole_lon: float = -180.0
+    north_pole_lat: float = 90.0
 
     @property
     def nx(self):
@@ -108,7 +109,12 @@ def write_coeffs(input_grid_path: Path, key: str, dst: Grid) -> None:
         for prefix in ("_", "_u_vn_", "_v_vn_")
         for suffix in ("_wgt", "_glbidx")
     ]
-    output = coeffs[names]
+    n = dst.nx * dst.ny
+    output = coeffs[names].isel(
+        rbf_B_stencil_size=slice(n),
+        rbf_u_vn_B_stencil_size=slice(n),
+        rbf_v_vn_B_stencil_size=slice(n),
+    )
     output.attrs = {
         "xmin": dst.xmin,
         "xmax": dst.xmax,

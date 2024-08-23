@@ -37,6 +37,8 @@ pipeline {
                 eval "$(${MICROMAMBA_INSTALL_PATH}/bin/micromamba shell hook -s posix)"
                 micromamba run -n icontools python $WORKSPACE/jenkins/icontools/export_coeffs.py
                 '''
+                echo 'Collecting artifacts'
+                archiveArtifacts artifacts: 'output/*.nc', fingerprint: true
             }
         }
     }

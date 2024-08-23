@@ -307,6 +307,68 @@ def regrid(
     return xr.DataArray(data, attrs=attrs)
 
 
+def _icon2regular(
+    field: xr.DataArray, dst: RegularGrid, indices: np.ndarray, weights: np.ndarray
+) -> xr.DataArray:
+    mask = np.all(indices != 0, axis=-1)
+
+    def reproject_layer(field):
+        out_shape = field.shape[:-1] + (dst.ny, dst.nx)
+        values = np.take(field, indices, axis=-1)
+        if np.any(np.isnan(values)):
+            warnings.warn("Interpolation of missing values is not supported.")
+        vmin = np.min(values, axis=-1)
+        vmax = np.max(values, axis=-1)
+        result = np.einsum("...ij,ij->...i", values, weights)
+        masked = np.where(mask, result, np.nan)
+        return np.clip(masked, vmin, vmax).reshape(out_shape)
+
+    data = xr.apply_ufunc(
+        reproject_layer,
+        field,
+        input_core_dims=[["cell"]],
+        output_core_dims=[["y", "x"]],
+    )
+
+    attrs = field.attrs
+    if md := _get_metadata(dst):
+        attrs |= metadata.override(field.message, **md)
+
+    return xr.DataArray(data, attrs=attrs)
+
+
+def icon2geolatlon(field: xr.DataArray) -> xr.DataArray:
+    """Remap ICON native grid data to the geolatlon grid.
+
+    Parameters
+    ----------
+    field : xarray.DataArray
+        A field with data in the ICON native grid.
+
+    Returns
+    -------
+    xarray.DataArray
+        Field with data remapped to the geolatlon grid.
+
+    """
+    gid = metadata.extract_keys(field.message, "uuidOfHGrid")
+    coeffs = icon_grid.get_remap_coeffs(gid, "geolatlon")
+    indices = coeffs["rbf_B_glbidx"].values
+    weights = coeffs["rbf_B_wgt"].values
+
+    dst = RegularGrid(
+        crs=CRS.from_string("epsg:4326"),
+        nx=coeffs.nx,
+        ny=coeffs.ny,
+        xmin=coeffs.xmin,
+        ymin=coeffs.ymin,
+        xmax=coeffs.xmax,
+        ymax=coeffs.ymax,
+    )
+
+    return _icon2regular(field, dst, indices, weights)
+
+
 def icon2rotlatlon(field: xr.DataArray) -> xr.DataArray:
     """Remap ICON native grid data to the rotated latlon grid.
 
@@ -322,7 +384,7 @@ def icon2rotlatlon(field: xr.DataArray) -> xr.DataArray:
 
     """
     gid = metadata.extract_keys(field.message, "uuidOfHGrid")
-    coeffs = icon_grid.get_remap_coeffs(gid)
+    coeffs = icon_grid.get_remap_coeffs(gid, "rotlatlon")
     indices = coeffs["rbf_B_glbidx"].values
     weights = coeffs["rbf_B_wgt"].values
 
@@ -341,25 +403,4 @@ def icon2rotlatlon(field: xr.DataArray) -> xr.DataArray:
         ymax=coeffs.ymax,
     )
 
-    def reproject_layer(field):
-        out_shape = field.shape[:-1] + (dst.ny, dst.nx)
-        values = np.take(field, indices, axis=-1)
-        if np.any(np.isnan(values)):
-            warnings.warn("Interpolation of missing values is not supported.")
-        vmin = np.min(values, axis=-1)
-        vmax = np.max(values, axis=-1)
-        result = np.einsum("...ij,ij->...i", values, weights)
-        return np.clip(result, vmin, vmax).reshape(out_shape)
-
-    data = xr.apply_ufunc(
-        reproject_layer,
-        field,
-        input_core_dims=[["cell"]],
-        output_core_dims=[["y", "x"]],
-    )
-
-    attrs = field.attrs
-    if md := _get_metadata(dst):
-        attrs |= metadata.override(field.message, **md)
-
-    return xr.DataArray(data, attrs=attrs)
+    return _icon2regular(field, dst, indices, weights)

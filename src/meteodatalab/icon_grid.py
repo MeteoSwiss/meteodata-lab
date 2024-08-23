@@ -3,6 +3,7 @@
 # Standard library
 from pathlib import Path
 from uuid import UUID
+from typing import Literal
 
 # Third-party
 import numpy as np
@@ -50,7 +51,9 @@ def get_icon_grid(grid_uuid: str) -> dict[str, xr.DataArray]:
     return {"lon": result.clon, "lat": result.clat}
 
 
-def get_remap_coeffs(grid_uuid: str) -> xr.Dataset:
+def get_remap_coeffs(
+    grid_uuid: str, grid_type: Literal["rotlatlon", "geolatlon"]
+) -> xr.Dataset:
     """Get ICON native grid remap indices and weights.
 
     Parameters
@@ -70,5 +73,7 @@ def get_remap_coeffs(grid_uuid: str) -> xr.Dataset:
 
     """
     model = {v.hex: k for k, v in GRID_ID.items()}[grid_uuid]
-    coeffs_path = f"/store_new/mch/msopr/icon_workflow_2/iconremap-weights/{model}.nc"
+    coeffs_path = (
+        f"/store_new/mch/msopr/icon_workflow_2/iconremap-weights/{model}-{grid_type}.nc"
+    )
     return xr.open_dataset(coeffs_path)

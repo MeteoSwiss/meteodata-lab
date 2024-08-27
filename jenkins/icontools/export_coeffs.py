@@ -3,11 +3,11 @@ import dataclasses as dc
 from pathlib import Path
 
 # Third-party
+import click
 import pyremap.iconremap as ir
 import pyremap.regular_grid as rg
 import xarray as xr
 import yaml
-import click
 
 DEFAULTS = {
     "models": "icon-ch1-eps,icon-ch2-eps",

@@ -2,8 +2,8 @@
 
 # Standard library
 from pathlib import Path
-from uuid import UUID
 from typing import Literal
+from uuid import UUID
 
 # Third-party
 import numpy as np
@@ -60,6 +60,8 @@ def get_remap_coeffs(
     ----------
     grid_uuid : str
         The UUID of the horizontal grid in hex format.
+    grid_type : str
+        Type of grid to remap to.
 
     Raises
     ------

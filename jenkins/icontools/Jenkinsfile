@@ -3,6 +3,10 @@ pipeline {
         label 'balfrin'
     }
 
+    options {
+        overrideIndexTriggers(false)
+    }
+
     environment {
         MAMBA_ROOT_PREFIX="$WORKSPACE/micromamba"
         MICROMAMBA_INSTALL_PATH="$SCRATCH/mch_jenkins_node/tools/micromamba"

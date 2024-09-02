@@ -1,0 +1,36 @@
+﻿meteodatalab.operators.crop
+===========================
+
+.. automodule:: meteodatalab.operators.crop
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      crop
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Bounds
+   
+   
+
+   
+   
+   
+
+
+

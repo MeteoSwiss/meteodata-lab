@@ -1,0 +1,38 @@
+﻿meteodatalab.operators.regrid
+=============================
+
+.. automodule:: meteodatalab.operators.regrid
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      icon2geolatlon
+      icon2rotlatlon
+      regrid
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      RegularGrid
+   
+   
+
+   
+   
+   
+
+
+

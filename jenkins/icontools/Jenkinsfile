@@ -1,0 +1,49 @@
+pipeline {
+    agent {
+        label 'balfrin'
+    }
+
+    options {
+        overrideIndexTriggers(false)
+    }
+
+    environment {
+        MAMBA_ROOT_PREFIX="$WORKSPACE/micromamba"
+        MICROMAMBA_INSTALL_PATH="$SCRATCH/mch_jenkins_node/tools/micromamba"
+    }
+
+    post {
+        always{
+            echo 'Cleaning up workspace'
+            deleteDir()
+        }
+    }
+
+    stages {
+        stage('build') {
+            steps {
+                sh '''#!/usr/bin/env bash
+                set -ex
+                eval "$(${MICROMAMBA_INSTALL_PATH}/bin/micromamba shell hook -s posix)"
+                git clone --depth 1 --recurse-submodules git@gitlab.dkrz.de:dwd-sw/dwd_icon_tools.git
+                cd dwd_icon_tools
+                micromamba create -n icontools conda-build -c conda-forge
+                micromamba activate icontools
+                conda-build -c conda-forge config/conda -m $WORKSPACE/jenkins/icontools/conda_build_config.yaml
+                micromamba install -c file://${CONDA_PREFIX}/conda-bld -c conda-forge iconremap
+                '''
+            }
+        }
+        stage('export') {
+            steps {
+                sh '''#!/usr/bin/env bash
+                set -ex
+                eval "$(${MICROMAMBA_INSTALL_PATH}/bin/micromamba shell hook -s posix)"
+                micromamba run -n icontools python $WORKSPACE/jenkins/icontools/export_coeffs.py
+                '''
+                echo 'Collecting artifacts'
+                archiveArtifacts artifacts: 'output/*.nc', fingerprint: true
+            }
+        }
+    }
+}

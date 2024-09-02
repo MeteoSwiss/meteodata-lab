@@ -21,7 +21,7 @@ import xarray as xr
 from numpy.typing import DTypeLike
 
 # Local
-from . import data_source, mars, metadata, tasking
+from . import data_source, icon_grid, mars, metadata, tasking
 
 logger = logging.getLogger(__name__)
 
@@ -81,6 +81,16 @@ def _is_ensemble(field) -> bool:
         return False
 
 
+def _get_hcoords(field):
+    if field.metadata("gridType") == "unstructured_grid":
+        grid_uuid = field.metadata("uuidOfHGrid")
+        return icon_grid.get_icon_grid(grid_uuid)
+    return {
+        dim: xr.DataArray(dims=("y", "x"), data=values)
+        for dim, values in field.to_latlon().items()
+    }
+
+
 def _parse_datetime(date, time) -> dt.datetime:
     return dt.datetime.strptime(f"{date}{time:04d}", "%Y%m%d%H%M")
 
@@ -126,15 +136,12 @@ class _FieldBuffer:
 
         if not self.metadata:
             self.metadata = {
-                "message": field.message(),
+                "message": field.message(),  # try field.metadata.override()
                 **metadata.extract(field.metadata()),
             }
 
         if not self.hcoords:
-            self.hcoords = {
-                dim: xr.DataArray(dims=("y", "x"), data=values)
-                for dim, values in field.to_latlon().items()
-            }
+            self.hcoords = _get_hcoords(field)
 
     def _gather_coords(self):
         coord_values = zip(*self.values)
@@ -150,8 +157,8 @@ class _FieldBuffer:
             logger.exception(msg)
             raise RuntimeError(msg)
 
-        ny, nx = next(iter(self.values.values())).shape
-        shape = tuple(len(v) for v in coords.values()) + (ny, nx)
+        field_shape = next(iter(self.values.values())).shape
+        shape = tuple(len(v) for v in coords.values()) + field_shape
         return coords, shape
 
     def to_xarray(self) -> xr.DataArray:
@@ -162,13 +169,14 @@ class _FieldBuffer:
         ref_time = xr.DataArray(coords["ref_time"], dims="ref_time")
         lead_time = xr.DataArray(coords["lead_time"], dims="lead_time")
         tcoords = {"valid_time": ref_time + lead_time}
+        hdims = self.hcoords["lon"].dims
 
         array = xr.DataArray(
             data=np.array(
                 [self.values.pop(key) for key in sorted(self.values)]
             ).reshape(shape),
             coords=coords | self.hcoords | tcoords,
-            dims=self.dims + ("y", "x"),
+            dims=self.dims + hdims,
             attrs=self.metadata,
         )
 

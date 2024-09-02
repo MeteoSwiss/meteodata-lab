@@ -6,7 +6,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from meteodatalab import grib_decoder
+from meteodatalab import data_source, grib_decoder
 from meteodatalab.operators import regrid
 from meteodatalab.operators.hzerocl import fhzerocl
 
@@ -60,3 +60,72 @@ def test_to_crs():
 
     # There's a bit less than half a pixel error...
     assert_close_enough(observed, expected, rel=1e-3)
+
+
+@pytest.mark.data("iconremap")
+@pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
+def test_icon2geolatlon(data_dir, fieldextra, model_name):
+    datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
+    source = data_source.FileDataSource(datafiles=datafiles)
+    ds = grib_decoder.load(source, "T")
+
+    observed = regrid.icon2geolatlon(ds["T"])
+
+    out_regrid_target = {
+        "icon-ch1-eps": "geolatlon,5500000,43600000,16900000,50000000,10000,10000",
+        "icon-ch2-eps": "geolatlon,5500000,43600000,16900000,50000000,20000,20000",
+    }
+    root = "/oprusers/osm/opr.emme/data/ICON_INPUT"
+    icon_grid_description = {
+        "icon-ch1-eps": f"{root}/ICON-CH1-EPS/icon_grid_0001_R19B08_mch.nc",
+        "icon-ch2-eps": f"{root}/ICON-CH2-EPS/icon_grid_0002_R19B07_mch.nc",
+    }
+
+    fx_ds = fieldextra(
+        "iconremap",
+        model_name=model_name,
+        out_regrid_target=out_regrid_target[model_name],
+        icon_grid_description=icon_grid_description[model_name],
+        conf_files={
+            "inputi": data_dir / f"{model_name.upper()}_lfff<DDHH>0000_000",
+            "output": "<HH>_outfile.nc",
+        },
+    )
+
+    mask = ~observed.isnull().values
+    assert_allclose(observed, fx_ds["T"].where(mask), rtol=1e-4, atol=1e-4)
+
+
+@pytest.mark.data("iconremap")
+@pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
+def test_icon2rotlatlon(data_dir, fieldextra, model_name):
+    datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
+    source = data_source.FileDataSource(datafiles=datafiles)
+    ds = grib_decoder.load(source, "T")
+
+    observed = regrid.icon2rotlatlon(ds["T"])
+
+    out_regrid_target = {
+        "icon-ch1-eps": "rotlatlon,353140000,-4460000,4830000,3390000,10000,10000,"
+        "190000000,43000000",
+        "icon-ch2-eps": "rotlatlon,353180000,-4420000,4800000,3360000,20000,20000,"
+        "190000000,43000000",
+    }
+    root = "/oprusers/osm/opr.emme/data/ICON_INPUT"
+    icon_grid_description = {
+        "icon-ch1-eps": f"{root}/ICON-CH1-EPS/icon_grid_0001_R19B08_mch.nc",
+        "icon-ch2-eps": f"{root}/ICON-CH2-EPS/icon_grid_0002_R19B07_mch.nc",
+    }
+
+    fx_ds = fieldextra(
+        "iconremap",
+        model_name=model_name,
+        out_regrid_target=out_regrid_target[model_name],
+        icon_grid_description=icon_grid_description[model_name],
+        conf_files={
+            "inputi": data_dir / f"{model_name.upper()}_lfff<DDHH>0000_000",
+            "output": "<HH>_outfile.nc",
+        },
+    )
+
+    assert_allclose(observed, fx_ds["T"], rtol=1e-4, atol=1e-4)

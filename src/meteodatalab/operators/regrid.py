@@ -3,6 +3,7 @@
 # Standard library
 import dataclasses as dc
 import typing
+import warnings
 
 # Third-party
 import numpy as np
@@ -11,7 +12,7 @@ from rasterio import transform, warp
 from rasterio.crs import CRS
 
 # Local
-from .. import metadata
+from .. import icon_grid, metadata
 from ..grib_decoder import set_code_flag
 
 Resampling: typing.TypeAlias = warp.Resampling
@@ -187,8 +188,8 @@ def _udeg(value):
 
 
 def _get_metadata(grid: RegularGrid):
-    # geolatlon
     if grid.crs.to_epsg() == 4326:
+        # geolatlon
         # https://codes.ecmwf.int/grib/format/grib2/ctables/3/4/
         scanning_mode = set_code_flag([2])  # positive y
         # i, j direction increments given
@@ -212,6 +213,33 @@ def _get_metadata(grid: RegularGrid):
             "iDirectionIncrement": _udeg(grid.dx),
             "jDirectionIncrement": _udeg(grid.dy),
             "scanningMode": scanning_mode,
+        }
+    elif grid.crs.get("proj") == "ob_tran":
+        # rotlatlon
+        # https://codes.ecmwf.int/grib/format/grib2/ctables/3/4/
+        scanning_mode = set_code_flag([2])  # positive y
+        # i, j direction increments given
+        resolution_components_flags = set_code_flag([3, 4])
+        return {
+            "numberOfDataPoints": grid.nx * grid.ny,
+            "sourceOfGridDefinition": 0,  # defined by template number
+            "numberOfOctectsForNumberOfPoints": 0,
+            "interpretationOfNumberOfPoints": 0,
+            "gridDefinitionTemplateNumber": 1,  # rotlatlon
+            "shapeOfTheEarth": 5,  # WGS 84
+            "Ni": grid.nx,
+            "Nj": grid.ny,
+            "latitudeOfFirstGridPoint": _udeg(grid.ymin),
+            "longitudeOfFirstGridPoint": _udeg(grid.xmin),
+            "resolutionAndComponentFlags": resolution_components_flags,
+            "latitudeOfLastGridPoint": _udeg(grid.ymax),
+            "longitudeOfLastGridPoint": _udeg(grid.xmax),
+            "iDirectionIncrement": _udeg(grid.dx),
+            "jDirectionIncrement": _udeg(grid.dy),
+            "scanningMode": scanning_mode,
+            "latitudeOfSouthernPole": _udeg(-1 * grid.crs.get("o_lat_p")),
+            "longitudeOfSouthernPole": _udeg(grid.crs.get("lon_0")),
+            "angleOfRotation": 0.0,
         }
 
 
@@ -277,3 +305,102 @@ def regrid(
         attrs |= metadata.override(field.message, **md)
 
     return xr.DataArray(data, attrs=attrs)
+
+
+def _icon2regular(
+    field: xr.DataArray, dst: RegularGrid, indices: np.ndarray, weights: np.ndarray
+) -> xr.DataArray:
+    mask = np.all(indices != 0, axis=-1)
+
+    def reproject_layer(field):
+        out_shape = field.shape[:-1] + (dst.ny, dst.nx)
+        values = np.take(field, indices, axis=-1)
+        if np.any(np.isnan(values)):
+            warnings.warn("Interpolation of missing values is not supported.")
+        vmin = np.min(values, axis=-1)
+        vmax = np.max(values, axis=-1)
+        result = np.einsum("...ij,ij->...i", values, weights)
+        masked = np.where(mask, result, np.nan)
+        return np.clip(masked, vmin, vmax).reshape(out_shape)
+
+    data = xr.apply_ufunc(
+        reproject_layer,
+        field,
+        input_core_dims=[["cell"]],
+        output_core_dims=[["y", "x"]],
+    )
+
+    attrs = field.attrs
+    if md := _get_metadata(dst):
+        attrs |= metadata.override(field.message, **md)
+
+    return xr.DataArray(data, attrs=attrs)
+
+
+def icon2geolatlon(field: xr.DataArray) -> xr.DataArray:
+    """Remap ICON native grid data to the geolatlon grid.
+
+    Parameters
+    ----------
+    field : xarray.DataArray
+        A field with data in the ICON native grid.
+
+    Returns
+    -------
+    xarray.DataArray
+        Field with data remapped to the geolatlon grid.
+
+    """
+    gid = metadata.extract_keys(field.message, "uuidOfHGrid")
+    coeffs = icon_grid.get_remap_coeffs(gid, "geolatlon")
+    indices = coeffs["rbf_B_glbidx"].values
+    weights = coeffs["rbf_B_wgt"].values
+
+    dst = RegularGrid(
+        crs=CRS.from_string("epsg:4326"),
+        nx=coeffs.nx,
+        ny=coeffs.ny,
+        xmin=coeffs.xmin,
+        ymin=coeffs.ymin,
+        xmax=coeffs.xmax,
+        ymax=coeffs.ymax,
+    )
+
+    return _icon2regular(field, dst, indices, weights)
+
+
+def icon2rotlatlon(field: xr.DataArray) -> xr.DataArray:
+    """Remap ICON native grid data to the rotated latlon grid.
+
+    Parameters
+    ----------
+    field : xarray.DataArray
+        A field with data in the ICON native grid.
+
+    Returns
+    -------
+    xarray.DataArray
+        Field with data remapped to the rotated latlon grid.
+
+    """
+    gid = metadata.extract_keys(field.message, "uuidOfHGrid")
+    coeffs = icon_grid.get_remap_coeffs(gid, "rotlatlon")
+    indices = coeffs["rbf_B_glbidx"].values
+    weights = coeffs["rbf_B_wgt"].values
+
+    geo = {
+        "gridType": "rotated_ll",
+        "longitudeOfSouthernPoleInDegrees": coeffs.north_pole_lon - 180,
+        "latitudeOfSouthernPoleInDegrees": -1 * coeffs.north_pole_lat,
+    }
+    dst = RegularGrid(
+        crs=_get_crs(geo),
+        nx=coeffs.nx,
+        ny=coeffs.ny,
+        xmin=coeffs.xmin,
+        ymin=coeffs.ymin,
+        xmax=coeffs.xmax,
+        ymax=coeffs.ymax,
+    )
+
+    return _icon2regular(field, dst, indices, weights)

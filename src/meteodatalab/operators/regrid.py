@@ -10,6 +10,8 @@ import numpy as np
 import xarray as xr
 from rasterio import transform, warp
 from rasterio.crs import CRS
+from scipy.interpolate import griddata
+from pyproj import Transformer
 
 # Local
 from .. import icon_grid, metadata
@@ -404,3 +406,26 @@ def icon2rotlatlon(field: xr.DataArray) -> xr.DataArray:
     )
 
     return _icon2regular(field, dst, indices, weights)
+
+
+def linear(field: xr.DataArray, dst: RegularGrid) -> xr.DataArray:
+    transformer = Transformer.from_crs("epsg:4326", dst.crs.wkt)
+    points = transformer.transform(field.lat, field.lon)
+    gx, gy = np.meshgrid(dst.x, dst.y)
+
+    def reproject_layer(values):
+        return griddata(points, values, (gx, gy), method="linear")
+
+    data = xr.apply_ufunc(
+        reproject_layer,
+        field,
+        input_core_dims=[["cell"]],
+        output_core_dims=[["y", "x"]],
+        vectorize=True,
+    )
+
+    attrs = field.attrs
+    if md := _get_metadata(dst):
+        attrs |= metadata.override(field.message, **md)
+
+    return xr.DataArray(data, attrs=attrs)

@@ -11,6 +11,7 @@ import xarray as xr
 from rasterio import transform, warp
 from rasterio.crs import CRS
 from scipy.interpolate import griddata
+from scipy.spatial import Delaunay
 from pyproj import Transformer
 
 # Local
@@ -404,6 +405,28 @@ def icon2rotlatlon(field: xr.DataArray) -> xr.DataArray:
         xmax=coeffs.xmax,
         ymax=coeffs.ymax,
     )
+
+    return _icon2regular(field, dst, indices, weights)
+
+
+def _linear_weights(xy, uv):
+    tri = Delaunay(xy)
+    simplex = tri.find_simplex(uv)
+    vertices = np.take(tri.simplices, simplex, axis=0)
+    temp = np.take(tri.transform, simplex, axis=0)
+    delta = uv - temp[:, 2]
+    bary = np.einsum("njk,nk->nj", temp[:, :2, :], delta)
+    return vertices, np.hstack((bary, 1 - bary.sum(axis=1, keepdims=True)))
+
+
+def icon2swiss(field, dst):
+    transformer = Transformer.from_crs("epsg:4326", dst.crs.wkt)
+    points = transformer.transform(field.lat, field.lon)
+    gx, gy = np.meshgrid(dst.x, dst.y)
+    xy = np.array(points).T
+    uv = np.array((gx.flat, gy.flat)).T
+
+    indices, weights = _linear_weights(xy, uv)
 
     return _icon2regular(field, dst, indices, weights)
 

@@ -419,6 +419,16 @@ def _linear_weights(xy, uv):
     return vertices, np.hstack((bary, 1 - bary.sum(axis=1, keepdims=True)))
 
 
+def _cropped_domain(xy, uv, buffer=1000):
+    xmin, ymin = np.min(uv, axis=0) - buffer
+    xmax, ymax = np.max(uv, axis=0) + buffer
+    x, y = xy.T
+    mask = (xmin < x) & (x < xmax) & (ymin < y) & (y < ymax)
+    [idx] = np.nonzero(mask)
+    indices, weights = _linear_weights(xy[mask], uv)
+    return idx[indices], weights
+
+
 def icon2swiss(field, dst):
     transformer = Transformer.from_crs("epsg:4326", dst.crs.wkt)
     points = transformer.transform(field.lat, field.lon)
@@ -426,7 +436,7 @@ def icon2swiss(field, dst):
     xy = np.array(points).T
     uv = np.array((gx.flat, gy.flat)).T
 
-    indices, weights = _linear_weights(xy, uv)
+    indices, weights = _cropped_domain(xy, uv)
 
     return _icon2regular(field, dst, indices, weights)
 

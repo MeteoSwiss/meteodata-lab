@@ -410,16 +410,28 @@ def icon2rotlatlon(field: xr.DataArray) -> xr.DataArray:
 
 
 def _linear_weights(xy, uv):
+    """Compute indices and weights for barycentric linear interpolation."""
     tri = Delaunay(xy)
     simplex = tri.find_simplex(uv)
+    isfound = simplex != -1
     vertices = np.take(tri.simplices, simplex, axis=0)
+    indices = np.where(isfound[:, None], vertices, 0)
+
+    # note that zero is a valid index
+    # however, a full line of zeros is interpreted as out of bounds
+    # in the interpolation step
+
     temp = np.take(tri.transform, simplex, axis=0)
     delta = uv - temp[:, 2]
     bary = np.einsum("njk,nk->nj", temp[:, :2, :], delta)
-    return vertices, np.hstack((bary, 1 - bary.sum(axis=1, keepdims=True)))
+    wgts = np.hstack((bary, 1 - bary.sum(axis=1, keepdims=True)))
+    weights = np.where(isfound[:, None], wgts, 0)
+
+    return indices, weights
 
 
 def _cropped_domain(xy, uv, buffer=1000):
+    """Crop the grid to output domain."""
     xmin, ymin = np.min(uv, axis=0) - buffer
     xmax, ymax = np.max(uv, axis=0) + buffer
     x, y = xy.T
@@ -429,7 +441,26 @@ def _cropped_domain(xy, uv, buffer=1000):
     return idx[indices], weights
 
 
-def icon2swiss(field, dst):
+def icon2swiss(field: xr.DataArray, dst: RegularGrid) -> xr.DataArray:
+    """Remap ICON native grid data to the swiss grid.
+
+    Note that the interpolation method is linear.
+
+    Parameters
+    ----------
+    field : xarray.DataArray
+        A field with data in the ICON native grid.
+    dst : RegularGrid
+        A regular grid in the swiss coordinate system.
+
+    Returns
+    -------
+    xarray.DataArray
+        Field with data remapped to the given swiss grid.
+
+    """
+    if dst.crs.to_epsg() not in (21781, 2056):
+        warnings.warn("icon2swiss is intended to be used with projected crs")
     transformer = Transformer.from_crs("epsg:4326", dst.crs.wkt)
     points = transformer.transform(field.lat, field.lon)
     gx, gy = np.meshgrid(dst.x, dst.y)
@@ -439,26 +470,3 @@ def icon2swiss(field, dst):
     indices, weights = _cropped_domain(xy, uv)
 
     return _icon2regular(field, dst, indices, weights)
-
-
-def linear(field: xr.DataArray, dst: RegularGrid) -> xr.DataArray:
-    transformer = Transformer.from_crs("epsg:4326", dst.crs.wkt)
-    points = transformer.transform(field.lat, field.lon)
-    gx, gy = np.meshgrid(dst.x, dst.y)
-
-    def reproject_layer(values):
-        return griddata(points, values, (gx, gy), method="linear")
-
-    data = xr.apply_ufunc(
-        reproject_layer,
-        field,
-        input_core_dims=[["cell"]],
-        output_core_dims=[["y", "x"]],
-        vectorize=True,
-    )
-
-    attrs = field.attrs
-    if md := _get_metadata(dst):
-        attrs |= metadata.override(field.message, **md)
-
-    return xr.DataArray(data, attrs=attrs)

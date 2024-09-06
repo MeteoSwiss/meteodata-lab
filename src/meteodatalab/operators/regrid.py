@@ -11,7 +11,7 @@ import xarray as xr
 from pyproj import Transformer
 from rasterio import transform, warp
 from rasterio.crs import CRS
-from scipy.spatial import Delaunay
+from scipy.spatial import Delaunay  # type: ignore
 
 # Local
 from .. import icon_grid, metadata

@@ -8,11 +8,10 @@ import warnings
 # Third-party
 import numpy as np
 import xarray as xr
+from pyproj import Transformer
 from rasterio import transform, warp
 from rasterio.crs import CRS
-from scipy.interpolate import griddata
 from scipy.spatial import Delaunay
-from pyproj import Transformer
 
 # Local
 from .. import icon_grid, metadata

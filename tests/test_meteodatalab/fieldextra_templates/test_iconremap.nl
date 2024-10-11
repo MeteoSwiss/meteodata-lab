@@ -36,7 +36,7 @@
   in_file  = "{{ file.inputi }}"
   tstart = 0, tstop = 0, tincr = 1
   out_regrid_target = "{{ out_regrid_target }}"
-  out_regrid_method = "icontools,rbf"
+  out_regrid_method = "{{ out_regrid_method }}"
   out_file = "{{ file.output }}"
   out_type = "NETCDF"
 /

@@ -4,11 +4,14 @@
 import dataclasses as dc
 import typing
 import warnings
+from typing import Literal
 
 # Third-party
 import numpy as np
 import xarray as xr
 from pyproj import Transformer
+from pyproj.aoi import AreaOfInterest
+from pyproj.database import query_utm_crs_info
 from rasterio import transform, warp
 from rasterio.crs import CRS
 from scipy.spatial import Delaunay  # type: ignore
@@ -440,7 +443,9 @@ def _cropped_domain(xy, uv, buffer=1000):
     return idx[indices], weights
 
 
-def icon2swiss(field: xr.DataArray, dst: RegularGrid) -> xr.DataArray:
+def iconremap(
+    field: xr.DataArray, dst: RegularGrid, method: Literal["byc"] = "byc"
+) -> xr.DataArray:
     """Remap ICON native grid data to the swiss grid.
 
     Note that the interpolation method is linear.
@@ -451,6 +456,8 @@ def icon2swiss(field: xr.DataArray, dst: RegularGrid) -> xr.DataArray:
         A field with data in the ICON native grid.
     dst : RegularGrid
         A regular grid in the swiss coordinate system.
+    method : Literal["byc"]
+        Method used to perform the interpolation.
 
     Returns
     -------
@@ -458,14 +465,22 @@ def icon2swiss(field: xr.DataArray, dst: RegularGrid) -> xr.DataArray:
         Field with data remapped to the given swiss grid.
 
     """
-    if dst.crs.to_epsg() not in (21781, 2056):
-        warnings.warn("icon2swiss is intended to be used with projected crs")
-    transformer = Transformer.from_crs("epsg:4326", dst.crs.wkt)
-    points = transformer.transform(field.lat, field.lon)
-    gx, gy = np.meshgrid(dst.x, dst.y)
-    xy = np.array(points).T
-    uv = np.array((gx.flat, gy.flat)).T
 
-    indices, weights = _cropped_domain(xy, uv)
+    utm_crs = "epsg:32632"  # UTM zone 32N
+
+    transformer_src = Transformer.from_crs("epsg:4326", utm_crs)
+    points_src = transformer_src.transform(field.lat, field.lon)
+
+    gx, gy = np.meshgrid(dst.x, dst.y)
+    transformer_dst = Transformer.from_crs(dst.crs.wkt, utm_crs)
+    points_dst = transformer_dst.transform(gx.flat, gy.flat)
+
+    xy = np.array(points_src).T
+    uv = np.array(points_dst).T
+
+    if method == "byc":
+        indices, weights = _cropped_domain(xy, uv)
+    else:
+        raise NotImplementedError(f"method: {method} is not implemented")
 
     return _icon2regular(field, dst, indices, weights)

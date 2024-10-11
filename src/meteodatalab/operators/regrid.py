@@ -463,7 +463,6 @@ def iconremap(
         Field with data remapped to the given swiss grid.
 
     """
-
     utm_crs = "epsg:32632"  # UTM zone 32N
 
     transformer_src = Transformer.from_crs("epsg:4326", utm_crs)

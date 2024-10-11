@@ -10,8 +10,6 @@ from typing import Literal
 import numpy as np
 import xarray as xr
 from pyproj import Transformer
-from pyproj.aoi import AreaOfInterest
-from pyproj.database import query_utm_crs_info
 from rasterio import transform, warp
 from rasterio.crs import CRS
 from scipy.spatial import Delaunay  # type: ignore

@@ -13,6 +13,7 @@ from pyproj import Transformer
 from rasterio import transform, warp
 from rasterio.crs import CRS
 from scipy.spatial import Delaunay  # type: ignore
+from numpy.typing import ArrayLike, NDArray
 
 # Local
 from .. import icon_grid, metadata
@@ -409,10 +410,10 @@ def icon2rotlatlon(field: xr.DataArray) -> xr.DataArray:
     return _icon2regular(field, dst, indices, weights)
 
 
-def _linear_weights(xy, uv):
+def _linear_weights(pts_src: ArrayLike, pts_dst: ArrayLike) -> tuple[NDArray, NDArray]:
     """Compute indices and weights for barycentric linear interpolation."""
-    tri = Delaunay(xy)
-    simplex = tri.find_simplex(uv)
+    tri = Delaunay(pts_src)
+    simplex = tri.find_simplex(pts_dst)
     isfound = simplex != -1
     vertices = np.take(tri.simplices, simplex, axis=0)
     indices = np.where(isfound[:, None], vertices, 0)
@@ -422,7 +423,7 @@ def _linear_weights(xy, uv):
     # in the interpolation step
 
     temp = np.take(tri.transform, simplex, axis=0)
-    delta = uv - temp[:, 2]
+    delta = pts_dst - temp[:, 2]
     bary = np.einsum("njk,nk->nj", temp[:, :2, :], delta)
     wgts = np.hstack((bary, 1 - bary.sum(axis=1, keepdims=True)))
     weights = np.where(isfound[:, None], wgts, 0)
@@ -430,14 +431,16 @@ def _linear_weights(xy, uv):
     return indices, weights
 
 
-def _cropped_domain(xy, uv, buffer=1000):
+def _cropped_domain(
+    pts_src: ArrayLike, pts_dst: ArrayLike, buffer: float = 1e3
+) -> tuple[NDArray, NDArray]:
     """Crop the grid to output domain."""
-    xmin, ymin = np.min(uv, axis=0) - buffer
-    xmax, ymax = np.max(uv, axis=0) + buffer
-    x, y = xy.T
+    xmin, ymin = np.min(pts_dst, axis=0) - buffer
+    xmax, ymax = np.max(pts_dst, axis=0) + buffer
+    x, y = np.transpose(pts_src)
     mask = (xmin < x) & (x < xmax) & (ymin < y) & (y < ymax)
     [idx] = np.nonzero(mask)
-    indices, weights = _linear_weights(xy[mask], uv)
+    indices, weights = _linear_weights(np.extract(mask, pts_src), pts_dst)
     return idx[indices], weights
 
 

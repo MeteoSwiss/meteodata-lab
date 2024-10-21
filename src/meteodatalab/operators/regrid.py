@@ -431,8 +431,8 @@ def _linear_weights(pts_src: ArrayLike, pts_dst: ArrayLike) -> tuple[NDArray, ND
     return indices, weights
 
 
-def _cropped_domain(
-    pts_src: ArrayLike, pts_dst: ArrayLike, buffer: float = 1e3
+def _linear_weights_cropped_domain(
+    pts_src: ArrayLike, pts_dst: ArrayLike, buffer: float = 4e3
 ) -> tuple[NDArray, NDArray]:
     """Crop the grid to output domain."""
     xmin, ymin = np.min(pts_dst, axis=0) - buffer
@@ -479,7 +479,7 @@ def iconremap(
     uv = np.array(points_dst).T
 
     if method == "byc":
-        indices, weights = _cropped_domain(xy, uv)
+        indices, weights = _linear_weights_cropped_domain(xy, uv)
     else:
         raise NotImplementedError(f"method: {method} is not implemented")
 

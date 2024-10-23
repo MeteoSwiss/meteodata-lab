@@ -344,6 +344,9 @@ def _icon2regular(
 def icon2geolatlon(field: xr.DataArray) -> xr.DataArray:
     """Remap ICON native grid data to the geolatlon grid.
 
+    The interpolation is done with pre-computed weights based on the RBF
+    interpolation method as implemented in icon-tools from the DWD.
+
     Parameters
     ----------
     field : xarray.DataArray
@@ -375,6 +378,9 @@ def icon2geolatlon(field: xr.DataArray) -> xr.DataArray:
 
 def icon2rotlatlon(field: xr.DataArray) -> xr.DataArray:
     """Remap ICON native grid data to the rotated latlon grid.
+
+    The interpolation is done with pre-computed weights based on the RBF
+    interpolation method as implemented in icon-tools from the DWD.
 
     Parameters
     ----------
@@ -447,7 +453,7 @@ def _linear_weights_cropped_domain(
 def iconremap(
     field: xr.DataArray, dst: RegularGrid, method: Literal["byc"] = "byc"
 ) -> xr.DataArray:
-    """Remap ICON native grid data to the swiss grid.
+    """Remap ICON native grid data to a regular grid.
 
     Note that the interpolation method is linear.
 
@@ -456,9 +462,12 @@ def iconremap(
     field : xarray.DataArray
         A field with data in the ICON native grid.
     dst : RegularGrid
-        A regular grid in the swiss coordinate system.
+        A regular grid in any coordinate system.
     method : Literal["byc"]
         Method used to perform the interpolation.
+
+        Available methods:
+        - byc: Barycentric linear interpolation.
 
     Returns
     -------
@@ -466,6 +475,9 @@ def iconremap(
         Field with data remapped to the given swiss grid.
 
     """
+    if method not in {"byc"}:
+        raise NotImplementedError(f"method: {method} is not implemented")
+
     utm_crs = "epsg:32632"  # UTM zone 32N
 
     transformer_src = Transformer.from_crs("epsg:4326", utm_crs)
@@ -478,9 +490,6 @@ def iconremap(
     xy = np.array(points_src).T
     uv = np.array(points_dst).T
 
-    if method == "byc":
-        indices, weights = _linear_weights_cropped_domain(xy, uv)
-    else:
-        raise NotImplementedError(f"method: {method} is not implemented")
+    indices, weights = _linear_weights_cropped_domain(xy, uv)
 
     return _icon2regular(field, dst, indices, weights)

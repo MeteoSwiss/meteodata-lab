@@ -82,9 +82,9 @@ def interpolate_k2p(
         )
     tc = TargetCoordinates(
         type_of_level="isobaricInPa",
-        values=tc_values.tolist(),
+        values=[val * 1e-2 for val in tc_values.tolist()],
         attrs=TargetCoordinatesAttrs(
-            units="Pa",
+            units="hPa",
             positive="down",
             standard_name="air_pressure",
             long_name="pressure",

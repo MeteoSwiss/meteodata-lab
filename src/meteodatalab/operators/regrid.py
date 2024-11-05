@@ -306,7 +306,7 @@ def regrid(
 
     attrs = field.attrs
     if md := _get_metadata(dst):
-        attrs |= metadata.override(field.message, **md)
+        attrs = attrs | metadata.override(field.message, **md)
 
     return xr.DataArray(data, attrs=attrs)
 
@@ -336,7 +336,7 @@ def _icon2regular(
 
     attrs = field.attrs
     if md := _get_metadata(dst):
-        attrs |= metadata.override(field.message, **md)
+        attrs = attrs | metadata.override(field.message, **md)
 
     return xr.DataArray(data, attrs=attrs)
 

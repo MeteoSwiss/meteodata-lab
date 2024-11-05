@@ -68,8 +68,11 @@ def test_icon2geolatlon(data_dir, fieldextra, model_name):
     datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
     source = data_source.FileDataSource(datafiles=datafiles)
     ds = grib_decoder.load(source, "T")
+    original = ds["T"].attrs.copy()
 
     observed = regrid.icon2geolatlon(ds["T"])
+
+    assert ds["T"].attrs == original
 
     out_regrid_target = {
         "icon-ch1-eps": "geolatlon,5500000,43600000,16900000,50000000,10000,10000",

@@ -71,10 +71,10 @@ def omega_slope(
     return xr.DataArray(
         data=res,
         attrs=metadata.override(
-            # Vertical velocity (pressure)
+            # Eta-coordinate vertical velocity
             etadot.message,
             discipline=0,
             parameterCategory=2,
-            parameterNumber=8,
+            parameterNumber=32,
         ),
     )

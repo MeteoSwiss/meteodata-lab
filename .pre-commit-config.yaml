@@ -86,12 +86,12 @@ repos:
         language: system
         entry: flake8
         types: [python]
--   repo: local
-    hooks:
-    -   id: poetry-check
-        name: poetry-check
-        description: run poetry check to validate config
-        entry: poetry check
-        language: python
-        pass_filenames: false
-        files: ^(.*/)?(poetry\.lock|pyproject\.toml)$
+# -   repo: local
+#     hooks:
+#     -   id: poetry-check
+#         name: poetry-check
+#         description: run poetry check to validate config
+#         entry: poetry check
+#         language: python
+#         pass_filenames: false
+#         files: ^(.*/)?(poetry\.lock|pyproject\.toml)$

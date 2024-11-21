@@ -4,13 +4,15 @@
 # configuration settings.
 spack:
   specs:
-  - fdb@=5.13.103 +tools
-  - eckit@=1.28.2 ~mpi
-  - eccodes@=2.38.3 jp2k=none
-  - metkit@=1.11.21
+  - fdb@=5.11.126 +tools
+  - eckit@=1.26.3 ~mpi
+  - eccodes@=2.35.0 jp2k=none
+  - metkit@=1.11.14
   view: true
   concretizer:
     unify: true
   config:
     install_tree:
       padded_length: 128
+  mirrors:
+    iwf2-mirror: /store_new/mch/msopr/icon_workflow_2/spack-mirror

@@ -26,6 +26,8 @@ fi
 if [ -z "$SPACK_ENV" ]; then
     echo "📦 Activating and installing Spack environment..."
     spack env activate -p ./spack-env
+
+    # write log to a file
     spack install --no-check-signature --no-checksum &> /dev/null
 fi
 
@@ -36,18 +38,24 @@ fi
 
 venv_dir=$(realpath .venv)
 echo "📦 Syncing python dependencies for venv in ${venv_dir}"
+# NOTE: important! Eccodes python bindings must be installed
+# without the binary package, otherwise it will conflict with the
+# installation in the spack environment.
+poetry config --local installer.no-binary eccodes
 poetry install &> /dev/null
 
 
-clone_dir=./.venv/share/eccodes-cosmo-resources
+clone_dir=$(realpath ./.venv/share/eccodes-cosmo-resources)
 if [ ! -d "$clone_dir" ]; then
-    echo "🌐 Cloning eccodes-cosmo-resources..."
-    git clone git@github.com:COSMO-ORG/eccodes-cosmo-resources -b v2.35.0.1dm1 $clone_dir
+    echo "🌐 Cloning eccodes-cosmo-resources to ${clone_dir}"
+    git clone git@github.com:COSMO-ORG/eccodes-cosmo-resources -b v2.35.0.1 $clone_dir &> /dev/null
+else
+    echo "⏩ eccodes-cosmo-resources already cloned to ${clone_dir}, skipping."
 fi
 
 # resolve path from relative to this file
 echo "📚 Setting up ECCODES environment variables..."
 export ECCODES_DIR=$(realpath ./spack-env/.spack-env/view)
 
-echo 
+echo
 echo "✅ Environment ready!"

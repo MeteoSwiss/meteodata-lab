@@ -59,7 +59,6 @@ def override(metadata: Metadata, **kwargs: typing.Any) -> dict[str, typing.Any]:
         Updated metadata along with the geography and parameter namespaces
 
     """
-
     if metadata["editionNumber"] == 1:
         return {
             "metadata": metadata,
@@ -170,7 +169,7 @@ def extract_pv(metadata: Metadata) -> dict[str, xr.DataArray]:
 
     Parameters
     ----------
-    message : Metadata
+    metadata : Metadata
         GRIB metadata containing the pv metadata.
 
     Returns

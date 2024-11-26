@@ -135,9 +135,9 @@ class _FieldBuffer:
         self.values[key] = field.to_numpy(dtype=np.float32)
 
         if not self.metadata:
-            md = field.metadata()
+            md = field.metadata().override()
             self.metadata = {
-                "message": md,
+                "metadata": md,
                 **metadata.extract(md),
             }
 
@@ -360,7 +360,7 @@ class GribReader:
             if extract_pv not in requests:
                 msg = f"{extract_pv=} was not a key of the given requests."
                 raise RuntimeError(msg)
-            return result | metadata.extract_pv(result[extract_pv].message)
+            return result | metadata.extract_pv(result[extract_pv].metadata)
         return result
 
     def load_fieldnames(
@@ -394,11 +394,11 @@ def save(
         If the field does not have a message attribute.
 
     """
-    if not hasattr(field, "message"):
-        msg = "The message attribute is required to write to the GRIB format."
+    if not hasattr(field, "metadata"):
+        msg = "The metadata attribute is required to write to the GRIB format."
         raise ValueError(msg)
 
-    md = field.message
+    md = field.metadata
 
     idx = {
         dim: field.coords[key]

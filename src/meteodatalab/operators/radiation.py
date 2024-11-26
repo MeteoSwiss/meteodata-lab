@@ -26,7 +26,7 @@ def compute_athd_s(athb_s: xr.DataArray, tsurf: xr.DataArray) -> xr.DataArray:
     """
     return xr.DataArray(
         data=athb_s / pc.emissivity_surface + pc.boltzman_cst * tsurf**4,
-        attrs=metadata.override(athb_s.message, shortName="ATHD_S"),
+        attrs=metadata.override(athb_s.metadata, shortName="ATHD_S"),
     )
 
 
@@ -48,5 +48,5 @@ def compute_swdown(diffuse: xr.DataArray, direct: xr.DataArray) -> xr.DataArray:
     """
     return xr.DataArray(
         data=(diffuse + direct).clip(min=0),
-        attrs=metadata.override(diffuse.message, shortName="ASOD_S"),
+        attrs=metadata.override(diffuse.metadata, shortName="ASOD_S"),
     )

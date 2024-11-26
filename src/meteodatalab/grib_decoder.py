@@ -391,7 +391,7 @@ def save(
     Raises
     ------
     ValueError
-        If the field does not have a message attribute.
+        If the field does not have a metadata attribute.
 
     """
     if not hasattr(field, "metadata"):

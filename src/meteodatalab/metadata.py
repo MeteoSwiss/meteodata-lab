@@ -7,7 +7,7 @@ import typing
 # Third-party
 import numpy as np
 import xarray as xr
-from earthkit.data.core.metadata import Metadata
+from earthkit.data.core.metadata import Metadata  # type: ignore
 
 # Local
 from . import grib_decoder

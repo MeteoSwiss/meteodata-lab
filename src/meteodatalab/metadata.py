@@ -19,7 +19,7 @@ VCOORD_TYPE = {
 }
 
 
-def extract(metadata: Metadata):
+def extract(metadata: Metadata) -> dict[str, typing.Any]:
     if metadata.get("gridType") == "unstructured_grid":
         vref_flag = False
     else:
@@ -90,7 +90,7 @@ class Grid:
     lat_first_grid_point: float
 
 
-def load_grid_reference(metadata) -> Grid:
+def load_grid_reference(metadata: Metadata) -> Grid:
     """Construct a grid from a reference parameter.
 
     Parameters

@@ -306,7 +306,7 @@ def regrid(
 
     attrs = field.attrs
     if md := _get_metadata(dst):
-        attrs = attrs | metadata.override(field.message, **md)
+        attrs = attrs | metadata.override(field.metadata, **md)
 
     return xr.DataArray(data, attrs=attrs)
 
@@ -336,7 +336,7 @@ def _icon2regular(
 
     attrs = field.attrs
     if md := _get_metadata(dst):
-        attrs = attrs | metadata.override(field.message, **md)
+        attrs = attrs | metadata.override(field.metadata, **md)
 
     return xr.DataArray(data, attrs=attrs)
 
@@ -358,7 +358,7 @@ def icon2geolatlon(field: xr.DataArray) -> xr.DataArray:
         Field with data remapped to the geolatlon grid.
 
     """
-    gid = metadata.extract_keys(field.message, "uuidOfHGrid")
+    gid = field.metadata.get("uuidOfHGrid")
     coeffs = icon_grid.get_remap_coeffs(gid, "geolatlon")
     indices = coeffs["rbf_B_glbidx"].values
     weights = coeffs["rbf_B_wgt"].values
@@ -393,7 +393,7 @@ def icon2rotlatlon(field: xr.DataArray) -> xr.DataArray:
         Field with data remapped to the rotated latlon grid.
 
     """
-    gid = metadata.extract_keys(field.message, "uuidOfHGrid")
+    gid = field.metadata.get("uuidOfHGrid")
     coeffs = icon_grid.get_remap_coeffs(gid, "rotlatlon")
     indices = coeffs["rbf_B_glbidx"].values
     weights = coeffs["rbf_B_wgt"].values

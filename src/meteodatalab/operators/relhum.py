@@ -56,6 +56,6 @@ def relhum(
     return xr.DataArray(
         data=result,
         attrs=metadata.override(
-            t.message, shortName=phase_conditions[phase]["shortName"]
+            t.metadata, shortName=phase_conditions[phase]["shortName"]
         ),
     )

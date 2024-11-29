@@ -72,7 +72,7 @@ def init_field_with_vcoord(
     #       in the interface
     # attrs
     attrs = parent.attrs | metadata.override(
-        parent.message, typeOfLevel=vcoord.type_of_level
+        parent.metadata, typeOfLevel=vcoord.type_of_level
     )
     # dims
     sizes = dict(parent.sizes.items()) | {"z": vcoord.size}

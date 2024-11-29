@@ -26,7 +26,7 @@ def time_rate(var: xr.DataArray, dtime: np.timedelta64):
     # For the moment, it is set as 'missing' (255)
     return xr.DataArray(
         data=result,
-        attrs=metadata.override(var.message, typeOfStatisticalProcessing=255),
+        attrs=metadata.override(var.metadata, typeOfStatisticalProcessing=255),
     )
 
 
@@ -95,7 +95,7 @@ def delta(field: xr.DataArray, dtime: np.timedelta64) -> xr.DataArray:
     return xr.DataArray(
         data=result,
         attrs=metadata.override(
-            field.message,
+            field.metadata,
             lengthOfTimeRange=int(dtime / np.timedelta64(1, "m")),
             indicatorOfUnitForTimeRange=0,
             typeOfStatisticalProcessing=4,
@@ -140,7 +140,7 @@ def resample_average(field: xr.DataArray, dtime: np.timedelta64) -> xr.DataArray
     return xr.DataArray(
         data=result,
         attrs=metadata.override(
-            field.message,
+            field.metadata,
             lengthOfTimeRange=int(dtime / np.timedelta64(1, "m")),
             indicatorOfUnitForTimeRange=0,
             typeOfStatisticalProcessing=0,
@@ -177,7 +177,7 @@ def resample(field: xr.DataArray, interval: np.timedelta64) -> xr.DataArray:
     return xr.DataArray(
         data=field.sel(lead_time=slice(None, None, nsteps)),
         attrs=metadata.override(
-            field.message,
+            field.metadata,
             lengthOfTimeRange=int(interval / np.timedelta64(1, "m")),
             indicatorOfUnitForTimeRange=0,
         ),

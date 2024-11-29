@@ -31,8 +31,8 @@ def test_save(data_dir, tmp_path):
     reader = grib_decoder.GribReader.from_files([outfile])
     ds_new = reader.load_fieldnames(["HHL"])
 
-    ds["HHL"].attrs.pop("message")
-    ds_new["HHL"].attrs.pop("message")
+    ds["HHL"].attrs.pop("metadata")
+    ds_new["HHL"].attrs.pop("metadata")
 
     xr.testing.assert_identical(ds["HHL"], ds_new["HHL"])
 
@@ -52,7 +52,7 @@ def test_save_field(data_dir, tmp_path, param):
     reader = grib_decoder.GribReader.from_files([outfile, cdatafile])
     ds_new = reader.load_fieldnames([param])
 
-    ds[param].attrs.pop("message")
-    ds_new[param].attrs.pop("message")
+    ds[param].attrs.pop("metadata")
+    ds_new[param].attrs.pop("metadata")
 
     xr.testing.assert_identical(ds[param], ds_new[param])

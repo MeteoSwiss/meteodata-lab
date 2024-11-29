@@ -79,6 +79,6 @@ def compute_pot_vortic(
         dt_dlam * curl1 + dt_dphi * (curl2 + cor2) - dt_dzeta * (curl3 + cor3)
     ) / rho_tot
 
-    out.attrs = metadata.override(theta.message, shortName="POT_VORTIC")
+    out.attrs = metadata.override(theta.metadata, shortName="POT_VORTIC")
 
     return out

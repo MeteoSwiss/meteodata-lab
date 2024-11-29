@@ -1,6 +1,3 @@
-# Standard library
-import io
-
 # Third-party
 import numpy as np
 import pandas as pd  # type: ignore
@@ -10,18 +7,13 @@ from numpy.testing import assert_allclose
 
 # First-party
 import meteodatalab.operators.time_operators as time_ops
-from meteodatalab.grib_decoder import GribReader, save
-from meteodatalab.metadata import extract_keys
+from meteodatalab.grib_decoder import GribReader
 from meteodatalab.operators import radiation
 
 
 def _assert_keys(field, mapping):
-    handle = io.BytesIO()
-    save(field, handle)
-    observed = extract_keys(handle.getvalue(), list(mapping.keys()), single=False)
-    expected = list(mapping.values())
-    for values in observed:
-        assert values == expected
+    for key, value in mapping.items():
+        assert field.metadata.get(key) == value
 
 
 @pytest.mark.data("reduced-time")

@@ -2,14 +2,12 @@
 
 # Standard library
 import dataclasses as dc
-import io
 import typing
 
 # Third-party
-import earthkit.data as ekd  # type: ignore
 import numpy as np
 import xarray as xr
-from earthkit.data.writers import write  # type: ignore
+from earthkit.data.core.metadata import Metadata  # type: ignore
 
 # Local
 from . import grib_decoder
@@ -21,7 +19,7 @@ VCOORD_TYPE = {
 }
 
 
-def extract(metadata):
+def extract(metadata: Metadata) -> dict[str, typing.Any]:
     if metadata.get("gridType") == "unstructured_grid":
         vref_flag = False
     else:
@@ -41,8 +39,8 @@ def extract(metadata):
     }
 
 
-def override(message: bytes, **kwargs: typing.Any) -> dict[str, typing.Any]:
-    """Override GRIB metadata contained in message.
+def override(metadata: Metadata, **kwargs: typing.Any) -> dict[str, typing.Any]:
+    """Override GRIB metadata.
 
     Note that no special consideration is made for maintaining consistency when
     overriding template definition keys such as productDefinitionTemplateNumber.
@@ -50,32 +48,27 @@ def override(message: bytes, **kwargs: typing.Any) -> dict[str, typing.Any]:
 
     Parameters
     ----------
-    message : bytes
-        Byte string of the input GRIB message
+    metadata : Metadata
+        Metadata of the input GRIB metadata
     kwargs : Any
         Keyword arguments forwarded to earthkit-data GribMetadata override method
 
     Returns
     -------
     dict[str, Any]
-        Updated message byte string along with the geography and parameter namespaces
+        Updated metadata along with the geography and parameter namespaces
 
     """
-    stream = io.BytesIO(message)
-    [grib_field] = ekd.from_source("stream", stream)
-
-    if grib_field.metadata("editionNumber") == 1:
+    if metadata["editionNumber"] == 1:
         return {
-            "message": message,
-            **extract(grib_field.metadata()),
+            "metadata": metadata,
+            **extract(metadata),
         }
 
-    out = io.BytesIO()
-    md = grib_field.metadata().override(**kwargs)
-    write(out, grib_field.values, md)
+    md = metadata.override(**kwargs)
 
     return {
-        "message": out.getvalue(),
+        "metadata": md,
         **extract(md),
     }
 
@@ -97,13 +90,13 @@ class Grid:
     lat_first_grid_point: float
 
 
-def load_grid_reference(message: bytes) -> Grid:
+def load_grid_reference(metadata: Metadata) -> Grid:
     """Construct a grid from a reference parameter.
 
     Parameters
     ----------
-    message : bytes
-        GRIB message defining the reference grid.
+    metadata : Metadata
+        GRIB metadata defining the reference grid.
 
     Returns
     -------
@@ -111,14 +104,9 @@ def load_grid_reference(message: bytes) -> Grid:
         reference grid
 
     """
-    stream = io.BytesIO(message)
-    [grib_field] = ekd.from_source("stream", stream)
-
     return Grid(
-        *grib_field.metadata(
-            "longitudeOfFirstGridPointInDegrees",
-            "latitudeOfFirstGridPointInDegrees",
-        ),
+        metadata["longitudeOfFirstGridPointInDegrees"],
+        metadata["latitudeOfFirstGridPointInDegrees"],
     )
 
 
@@ -171,18 +159,18 @@ def set_origin_xy(ds: dict[str, xr.DataArray], ref_param: str) -> None:
     if ref_param not in ds:
         raise KeyError(f"ref_param {ref_param} not present in dataset.")
 
-    ref_grid = load_grid_reference(ds[ref_param].message)
+    ref_grid = load_grid_reference(ds[ref_param].metadata)
     for field in ds.values():
         field.attrs |= compute_origin(ref_grid, field)
 
 
-def extract_pv(message: bytes) -> dict[str, xr.DataArray]:
+def extract_pv(metadata: Metadata) -> dict[str, xr.DataArray]:
     """Extract hybrid level coefficients.
 
     Parameters
     ----------
-    message : bytes
-        GRIB message containing the pv metadata.
+    metadata : Metadata
+        GRIB metadata containing the pv metadata.
 
     Returns
     -------
@@ -190,10 +178,7 @@ def extract_pv(message: bytes) -> dict[str, xr.DataArray]:
         Hybrid level coefficients.
 
     """
-    stream = io.BytesIO(message)
-    [grib_field] = ekd.from_source("stream", stream)
-
-    pv = grib_field.metadata("pv")
+    pv = metadata.get("pv")
 
     if pv is None:
         return {}
@@ -205,13 +190,13 @@ def extract_pv(message: bytes) -> dict[str, xr.DataArray]:
     }
 
 
-def extract_hcoords(message: bytes) -> dict[str, xr.DataArray]:
+def extract_hcoords(metadata: Metadata) -> dict[str, xr.DataArray]:
     """Extract horizontal coordinates.
 
     Parameters
     ----------
-    message : bytes
-        GRIB message containing the grid definition.
+    metadata : Metadata
+        GRIB metadata containing the grid definition.
 
     Returns
     -------
@@ -219,50 +204,10 @@ def extract_hcoords(message: bytes) -> dict[str, xr.DataArray]:
         Horizontal coordinates in geolatlon.
 
     """
-    stream = io.BytesIO(message)
-    [grib_field] = ekd.from_source("stream", stream)
-
+    geo = metadata.geography
     return {
-        dim: xr.DataArray(dims=("y", "x"), data=values)
-        for dim, values in grib_field.to_latlon().items()
+        "lat": xr.DataArray(dims=("y", "x"), data=geo.latitudes().reshape(geo.shape())),
+        "lon": xr.DataArray(
+            dims=("y", "x"), data=geo.longitudes().reshape(geo.shape())
+        ),
     }
-
-
-def extract_keys(message: bytes, keys: typing.Any, single: bool = True) -> typing.Any:
-    """Extract keys from the GRIB message.
-
-    Parameters
-    ----------
-    message : bytes
-        The GRIB message.
-    keys : Any
-        Keys for which to extract values from the message.
-    single : bool, optional
-        Whether a single GRIB message should be expected.
-
-    Raises
-    ------
-    ValueError
-        if keys is None because the resulting metadata would point
-        to an eccodes handle that no longer exists resulting in a
-        possible segmentation fault
-
-    Returns
-    -------
-    Any
-        Single value if keys is a single value, tuple of values if
-        keys is a tuple, list of values if keys is a list. The type of
-        the value depends on the default type for the given key in eccodes.
-        If single is false, the above is returned within a list.
-
-    """
-    if keys is None:
-        raise ValueError("keys must be specified.")
-    stream = io.BytesIO(message)
-    source = ekd.from_source("stream", stream)
-
-    if single:
-        [grib_field] = source
-        return grib_field.metadata(keys)
-
-    return [grib_field.metadata(keys) for grib_field in source]

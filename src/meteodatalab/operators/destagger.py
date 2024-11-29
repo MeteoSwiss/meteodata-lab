@@ -81,7 +81,7 @@ def _update_grid(field: xr.DataArray, dim: Literal["x", "y"]) -> dict[str, Any]:
         lon_max = np.round(geo["longitudeOfLastGridPointInDegrees"] * 1e6)
         dx = np.round(geo["iDirectionIncrementInDegrees"] * 1e6)
         return metadata.override(
-            field.message,
+            field.metadata,
             longitudeOfFirstGridPoint=lon_min - dx / 2,
             longitudeOfLastGridPoint=lon_max - dx / 2,
         )
@@ -90,7 +90,7 @@ def _update_grid(field: xr.DataArray, dim: Literal["x", "y"]) -> dict[str, Any]:
         lat_max = np.round(geo["latitudeOfLastGridPointInDegrees"] * 1e6)
         dy = np.round(geo["jDirectionIncrementInDegrees"] * 1e6)
         return metadata.override(
-            field.message,
+            field.metadata,
             latitudeOfFirstGridPoint=lat_min - dy / 2,
             latitudeOfLastGridPoint=lat_max - dy / 2,
         )
@@ -100,7 +100,7 @@ def _update_vertical(field) -> dict[str, Any]:
     if field.vcoord_type != "model_level":
         raise ValueError("typeOfLevel must equal generalVertical")
     return metadata.override(
-        field.message,
+        field.metadata,
         typeOfLevel="generalVerticalLayer",
     )
 
@@ -151,7 +151,7 @@ def destagger(
             )
             .transpose(*dims)
             .assign_attrs({f"origin_{dim}": 0.0}, **attrs)
-            .assign_coords(metadata.extract_hcoords(attrs["message"]))
+            .assign_coords(metadata.extract_hcoords(attrs["metadata"]))
         )
     elif dim == "z":
         if field.origin_z != -0.5:

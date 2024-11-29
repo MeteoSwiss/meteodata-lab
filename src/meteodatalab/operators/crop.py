@@ -68,7 +68,7 @@ def crop(field: xr.DataArray, bounds: Bounds) -> xr.DataArray:
     return xr.DataArray(
         field.isel(x=slice(xmin, xmax + 1), y=slice(ymin, ymax + 1)),
         attrs=metadata.override(
-            field.message,
+            field.metadata,
             longitudeOfFirstGridPoint=lon_min,
             longitudeOfLastGridPoint=lon_max,
             Ni=ni,

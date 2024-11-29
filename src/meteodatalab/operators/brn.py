@@ -70,5 +70,5 @@ def fbrn(
 
     return xr.DataArray(
         data=brn,
-        attrs=metadata.override(p.message, shortName="BRN"),
+        attrs=metadata.override(p.metadata, shortName="BRN"),
     )

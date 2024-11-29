@@ -31,5 +31,5 @@ def fthetav(p: xr.DataArray, t: xr.DataArray, qv: xr.DataArray) -> xr.DataArray:
 
     return xr.DataArray(
         data=(p0 / p) ** pc.rdocp * t * (1.0 + (pc.rvd_o * qv / (1.0 - qv))),
-        attrs=metadata.override(t.message, shortName="THETA_V"),
+        attrs=metadata.override(t.metadata, shortName="THETA_V"),
     )

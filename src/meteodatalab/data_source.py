@@ -4,6 +4,7 @@
 import dataclasses as dc
 import sys
 import typing
+import os
 from abc import ABC, abstractmethod
 from collections.abc import Iterator
 from contextlib import contextmanager, nullcontext
@@ -22,6 +23,9 @@ from . import config, mars
 @contextmanager
 def cosmo_grib_defs():
     """Enable COSMO GRIB definitions."""
+    if "ECCODES_DEFINITION_PATH" in os.environ or "GRIB_DEFINITION_PATH" in os.environ:
+        return nullcontext()
+
     restore = eccodes.codes_definition_path()
     root_dir = Path(sys.prefix) / "share"
     paths = (

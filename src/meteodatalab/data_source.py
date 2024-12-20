@@ -2,9 +2,9 @@
 
 # Standard library
 import dataclasses as dc
+import os
 import sys
 import typing
-import os
 from abc import ABC, abstractmethod
 from collections.abc import Iterator
 from contextlib import contextmanager, nullcontext

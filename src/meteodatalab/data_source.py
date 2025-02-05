@@ -26,21 +26,22 @@ def cosmo_grib_defs():
     if "ECCODES_DEFINITION_PATH" in os.environ or "GRIB_DEFINITION_PATH" in os.environ:
         return nullcontext()
 
-    restore = eccodes.codes_definition_path()
     root_dir = Path(sys.prefix) / "share"
     paths = (
         root_dir / "eccodes-cosmo-resources/definitions",
-        Path(restore),
+        root_dir / "eccodes/definitions",
     )
+
     for path in paths:
         if not path.exists():
             raise RuntimeError(f"{path} does not exist")
-    defs_path = ":".join(map(str, paths))
+        defs_path = ":".join(map(str, paths))
     eccodes.codes_set_definitions_path(defs_path)
+
     try:
         yield
     finally:
-        eccodes.codes_set_definitions_path(restore)
+        eccodes.codes_set_definitions_path(str(root_dir / "eccodes/definitions"))
 
 
 def grib_def_ctx(grib_def: str):

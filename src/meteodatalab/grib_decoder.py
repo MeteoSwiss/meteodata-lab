@@ -83,6 +83,7 @@ def _is_ensemble(field) -> bool:
 
 def _get_hcoords(field):
     if field.metadata("gridType") == "unstructured_grid":
+        return {}
         grid_uuid = field.metadata("uuidOfHGrid")
         return icon_grid.get_icon_grid(grid_uuid)
     return {
@@ -124,7 +125,7 @@ class _FieldBuffer:
         if not is_ensemble:
             self.dims = self.dims[1:]
 
-    def load(self, field: GribField) -> None:
+    def load(self, field: GribField, hcoords=None) -> None:
         key = _get_key(field, self.dims)
         name = field.metadata(NAME_KEY)
         logger.debug("Received field for param: %s, key: %s", name, key)
@@ -142,7 +143,7 @@ class _FieldBuffer:
             }
 
         if not self.hcoords:
-            self.hcoords = _get_hcoords(field)
+            self.hcoords = hcoords if hcoords else _get_hcoords(field)
 
     def _gather_coords(self):
         coord_values = zip(*self.values)
@@ -170,8 +171,7 @@ class _FieldBuffer:
         ref_time = xr.DataArray(coords["ref_time"], dims="ref_time")
         lead_time = xr.DataArray(coords["lead_time"], dims="lead_time")
         tcoords = {"valid_time": ref_time + lead_time}
-        hdims = self.hcoords["lon"].dims
-
+        hdims = self.hcoords["lon"].dims if "lon" in self.hcoords else ("cell",)
         array = xr.DataArray(
             data=np.array(
                 [self.values.pop(key) for key in sorted(self.values)]
@@ -188,8 +188,7 @@ class _FieldBuffer:
 
 
 def _load_buffer_map(
-    source: data_source.DataSource,
-    request: Request,
+    source: data_source.DataSource, request: Request, hcoords=None
 ) -> dict[str, _FieldBuffer]:
     logger.info("Retrieving request: %s", request)
     fs = source.retrieve(request)
@@ -202,7 +201,7 @@ def _load_buffer_map(
             buffer = buffer_map[name]
         else:
             buffer = buffer_map[name] = _FieldBuffer(_is_ensemble(field))
-        buffer.load(field)
+        buffer.load(field, hcoords)
 
     return buffer_map
 
@@ -246,8 +245,7 @@ def load_single_param(
 
 
 def load(
-    source: data_source.DataSource,
-    request: Request,
+    source: data_source.DataSource, request: Request, hcoords=None
 ) -> dict[str, xr.DataArray]:
     """Request data from a data source.
 
@@ -269,7 +267,7 @@ def load(
         A mapping of shortName to data arrays of the requested fields.
 
     """
-    buffer_map = _load_buffer_map(source, request)
+    buffer_map = _load_buffer_map(source, request, hcoords)
     result = {}
     for name, buffer in buffer_map.items():
         try:

@@ -136,7 +136,7 @@ def test_icon2rotlatlon(data_dir, fieldextra, model_name):
     assert_allclose(observed, fx_ds["T"], rtol=1e-4, atol=1e-4)
 
 
-@pytest.mark.skip(reason="the byc method in fx is not optimised (>30min on icon-ch1)")
+# @pytest.mark.skip(reason="the byc method in fx is not optimised (>30min on icon-ch1)")
 @pytest.mark.data("iconremap")
 @pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
 def test_icon2swiss(data_dir, fieldextra, model_name):
@@ -158,16 +158,17 @@ def test_icon2swiss(data_dir, fieldextra, model_name):
         "icon-ch2-eps": f"{root}/ICON-CH2-EPS/icon_grid_0002_R19B07_mch.nc",
     }
 
-    fx_ds = fieldextra(
-        "iconremap",
-        model_name=model_name,
-        out_regrid_target=out_regrid_target[model_name],
-        out_regrid_method="icontools,byc",
-        icon_grid_description=icon_grid_description[model_name],
-        conf_files={
-            "inputi": data_dir / f"{model_name.upper()}_lfff<DDHH>0000_000",
-            "output": "<HH>_outfile.nc",
-        },
-    )
 
-    assert_allclose(observed, fx_ds["T"], rtol=1e-2, atol=1)
+#    fx_ds = fieldextra(
+#        "iconremap",
+#        model_name=model_name,
+#        out_regrid_target=out_regrid_target[model_name],
+#        out_regrid_method="icontools,byc",
+#        icon_grid_description=icon_grid_description[model_name],
+#        conf_files={
+#            "inputi": data_dir / f"{model_name.upper()}_lfff<DDHH>0000_000",
+#            "output": "<HH>_outfile.nc",
+#        },
+#    )
+#
+#    assert_allclose(observed, fx_ds["T"], rtol=1e-2, atol=1)

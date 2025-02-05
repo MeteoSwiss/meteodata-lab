@@ -443,10 +443,11 @@ def _linear_weights_cropped_domain(
     """Crop the grid to output domain."""
     xmin, ymin = np.min(pts_dst, axis=0) - buffer
     xmax, ymax = np.max(pts_dst, axis=0) + buffer
+
     x, y = np.transpose(pts_src)
     mask = (xmin < x) & (x < xmax) & (ymin < y) & (y < ymax)
     [idx] = np.nonzero(mask)
-    indices, weights = _linear_weights(np.extract(mask, pts_src), pts_dst)
+    indices, weights = _linear_weights(pts_src[mask], pts_dst)
     return idx[indices], weights
 
 
@@ -485,11 +486,13 @@ def iconremap(
 
     gx, gy = np.meshgrid(dst.x, dst.y)
     transformer_dst = Transformer.from_crs(dst.crs.wkt, utm_crs)
-    points_dst = transformer_dst.transform(gx.flat, gy.flat)
+    points_dst = transformer_dst.transform(gy.flat, gx.flat)
 
     xy = np.array(points_src).T
     uv = np.array(points_dst).T
 
     indices, weights = _linear_weights_cropped_domain(xy, uv)
 
-    return _icon2regular(field, dst, indices, weights)
+    return _icon2regular(field, dst, indices, weights).assign_coords(
+        lon=(("y", "x"), gx), lat=(("y", "x"), gy)
+    )

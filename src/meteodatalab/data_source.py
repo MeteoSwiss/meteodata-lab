@@ -23,9 +23,6 @@ from . import config, mars
 @contextmanager
 def cosmo_grib_defs():
     """Enable COSMO GRIB definitions."""
-    if "ECCODES_DEFINITION_PATH" in os.environ or "GRIB_DEFINITION_PATH" in os.environ:
-        return nullcontext()
-
     restore = eccodes.codes_definition_path()
     root_dir = Path(sys.prefix) / "share"
     paths = (
@@ -33,7 +30,7 @@ def cosmo_grib_defs():
         Path(restore),
     )
     for path in paths:
-        if not path.exists():
+        if not path.exists() and not str(path).startswith("/MEMFS"):
             raise RuntimeError(f"{path} does not exist")
     defs_path = ":".join(map(str, paths))
     eccodes.codes_set_definitions_path(defs_path)
@@ -44,6 +41,8 @@ def cosmo_grib_defs():
 
 
 def grib_def_ctx(grib_def: str):
+    if "ECCODES_DEFINITION_PATH" in os.environ or "GRIB_DEFINITION_PATH" in os.environ:
+        return nullcontext()
     if grib_def == "cosmo":
         return cosmo_grib_defs()
     return nullcontext()

@@ -499,9 +499,9 @@ def iconremap(
 
     indices, weights = _linear_weights_cropped_domain(xy, uv)
 
-    transformer_geoll = Transformer.from_crs(dst.crs.wkt, "epsg:4326", always_xy=True)
-    points_ll = transformer_geoll.transform(gx, gy)
+    transformer_geo = Transformer.from_crs(dst.crs.wkt, "epsg:4326", always_xy=True)
+    lon, lat = transformer_geo.transform(gx, gy).T
 
     return _icon2regular(field, dst, indices, weights).assign_coords(
-        lon=(("y", "x"), points_ll[0]), lat=(("y", "x"), points_ll[1])
+        lon=(("y", "x"), lon), lat=(("y", "x"), lat)
     )

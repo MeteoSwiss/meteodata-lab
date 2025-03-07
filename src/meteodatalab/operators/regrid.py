@@ -440,12 +440,13 @@ def _linear_weights(pts_src: ArrayLike, pts_dst: ArrayLike) -> tuple[NDArray, ND
 def _linear_weights_cropped_domain(
     pts_src: ArrayLike, pts_dst: ArrayLike, buffer: float = 4e3
 ) -> tuple[NDArray, NDArray]:
-    """Computes the linear interpolation weights from pts_src to pts_dst
+    """Compute linear interpolation weights from a cropped source grid.
 
-    Both pts_src and pts_dst are expected to be rank 2 arrays representing a list of points
-    using the same coordinate system. The source grid is first cropped to the domain with a
-    buffer outside of the destination. The default buffer provides a 4 km buffer when using
-    a meter-based coordinate system.
+    Crops the source grid to a box with a buffer outside of the destination grid. The
+    default buffer is 4 km when using a meter-based coordinate system.
+
+    Both pts_src and pts_dst are expected to be rank 2 arrays representing a list of
+    points using the same coordinate system.
     """
     xmin, ymin = np.min(pts_dst, axis=0) - buffer
     xmax, ymax = np.max(pts_dst, axis=0) + buffer

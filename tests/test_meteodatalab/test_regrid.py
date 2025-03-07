@@ -7,8 +7,12 @@ from numpy.testing import assert_allclose
 
 # First-party
 from meteodatalab import data_source, grib_decoder
-from meteodatalab.operators import regrid
 from meteodatalab.operators.hzerocl import fhzerocl
+
+try:
+    from meteodatalab.operators import regrid
+except ImportError:
+    pytest.skip("skipping regrid tests due to missing imports", allow_module_level=True)
 
 
 @pytest.mark.data("original")

@@ -14,7 +14,11 @@ from pathlib import Path
 # Third-party
 import earthkit.data as ekd  # type: ignore
 import eccodes  # type: ignore
-import polytope  # type: ignore
+
+try:
+    from polytope.api import Client as PolytopeClient  # type: ignore
+except ImportError:
+    PolytopeClient = None
 
 # Local
 from . import config, mars
@@ -129,10 +133,14 @@ class FileDataSource(DataSource):
 @dc.dataclass
 class PolytopeDataSource(DataSource):
     polytope_collection: str | None = None
-    polytope_client: polytope.api.Client = dc.field(init=False)
+    polytope_client: PolytopeClient = dc.field(init=False)
 
     def __post_init__(self):
-        self.polytope_client = polytope.api.Client()
+        if PolytopeClient is None:
+            raise ImportError(
+                "Please install polytope-client to use the polytope data source"
+            )
+        self.polytope_client = PolytopeClient()
 
     def _retrieve(self, request: dict):
         req_kwargs = self.request_template | request

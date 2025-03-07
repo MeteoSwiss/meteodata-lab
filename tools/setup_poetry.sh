@@ -20,7 +20,7 @@ if [ -d ${HOME}/.local/bin ]; then
 fi
 
 ${prefix}/bin/poetry config --list
-${prefix}/bin/poetry install -vv --sync
+${prefix}/bin/poetry install -vv --sync --all-extras
 
 venv=$(${prefix}/bin/poetry run python -c "import sys; print(sys.prefix)")
 cosmo_resources=${venv}/share/eccodes-cosmo-resources

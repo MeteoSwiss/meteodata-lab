@@ -101,6 +101,7 @@ def template_env():
 
 @pytest.fixture(scope="session")
 def setup_fdb(machine):
+    pytest.importorskip("pyfdb")
     os.environ["FDB5_DIR"] = view_path
     os.environ["FDB_HOME"] = os.environ["FDB5_DIR"]
     os.environ["FDB5_CONFIG_FILE"] = str(

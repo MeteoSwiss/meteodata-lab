@@ -438,7 +438,7 @@ def _linear_weights(pts_src: ArrayLike, pts_dst: ArrayLike) -> tuple[NDArray, ND
 
 
 def _linear_weights_cropped_domain(
-    pts_src: ArrayLike, pts_dst: ArrayLike, buffer: float = 4e3
+    pts_src: NDArray, pts_dst: NDArray, buffer: float = 4e3
 ) -> tuple[NDArray, NDArray]:
     """Compute linear interpolation weights from a cropped source grid.
 
@@ -453,7 +453,7 @@ def _linear_weights_cropped_domain(
     x, y = np.transpose(pts_src)
     mask = (xmin < x) & (x < xmax) & (ymin < y) & (y < ymax)
     [idx] = np.nonzero(mask)
-    indices, weights = _linear_weights(pts_src[mask], pts_dst)
+    indices, weights = _linear_weights(pts_src[idx], pts_dst)
     return idx[indices], weights
 
 

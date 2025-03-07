@@ -440,13 +440,19 @@ def _linear_weights(pts_src: ArrayLike, pts_dst: ArrayLike) -> tuple[NDArray, ND
 def _linear_weights_cropped_domain(
     pts_src: ArrayLike, pts_dst: ArrayLike, buffer: float = 4e3
 ) -> tuple[NDArray, NDArray]:
-    """Crop the grid to output domain."""
+    """Computes the linear interpolation weights from pts_src to pts_dst
+
+    Both pts_src and pts_dst are expected to be rank 2 arrays representing a list of points
+    using the same coordinate system. The source grid is first cropped to the domain with a
+    buffer outside of the destination. The default buffer provides a 4 km buffer when using
+    a meter-based coordinate system.
+    """
     xmin, ymin = np.min(pts_dst, axis=0) - buffer
     xmax, ymax = np.max(pts_dst, axis=0) + buffer
     x, y = np.transpose(pts_src)
     mask = (xmin < x) & (x < xmax) & (ymin < y) & (y < ymax)
     [idx] = np.nonzero(mask)
-    indices, weights = _linear_weights(np.extract(mask, pts_src), pts_dst)
+    indices, weights = _linear_weights(pts_src[mask], pts_dst)
     return idx[indices], weights
 
 
@@ -480,11 +486,11 @@ def iconremap(
 
     utm_crs = "epsg:32632"  # UTM zone 32N
 
-    transformer_src = Transformer.from_crs("epsg:4326", utm_crs)
-    points_src = transformer_src.transform(field.lat, field.lon)
+    transformer_src = Transformer.from_crs("epsg:4326", utm_crs, always_xy=True)
+    points_src = transformer_src.transform(field.lon, field.lat)
 
     gx, gy = np.meshgrid(dst.x, dst.y)
-    transformer_dst = Transformer.from_crs(dst.crs.wkt, utm_crs)
+    transformer_dst = Transformer.from_crs(dst.crs.wkt, utm_crs, always_xy=True)
     points_dst = transformer_dst.transform(gx.flat, gy.flat)
 
     xy = np.array(points_src).T
@@ -492,4 +498,8 @@ def iconremap(
 
     indices, weights = _linear_weights_cropped_domain(xy, uv)
 
-    return _icon2regular(field, dst, indices, weights)
+    transformer_geoll = Transformer.from_crs(dst.crs.wkt, "epsg:4326", always_xy=True) 
+    points_ll = transformer_geoll.transform(gx, gy)
+
+    return _icon2regular(field, dst, indices, weights).assign_coords(
+        lon=(("y", "x"), points_ll[0]), lat=(("y", "x"), points_ll[1]))

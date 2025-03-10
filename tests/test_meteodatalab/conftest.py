@@ -6,6 +6,7 @@ import subprocess
 from pathlib import Path
 
 # Third-party
+import numpy as np
 import pytest
 import xarray as xr
 from jinja2 import Environment, FileSystemLoader
@@ -92,6 +93,15 @@ def fieldextra_path(machine):
 
 
 @pytest.fixture(scope="session")
+def icon_grid_paths():
+    grid_dir = Path("/scratch/mch/jenkins/icon/pool/data/ICON/mch/grids/")
+    return {
+        "icon-ch1-eps": grid_dir / "icon-1/icon_grid_0001_R19B08_mch.nc",
+        "icon-ch2-eps": grid_dir / "icon-2/icon_grid_0002_R19B07_mch.nc",
+    }
+
+
+@pytest.fixture(scope="session")
 def template_env():
     """Jinja input namelist template environment."""
     test_dir = Path(__file__).parent
@@ -121,6 +131,25 @@ def request_template():
         "time": "0300",
         "type": "ememb",
     }
+
+
+@pytest.fixture(scope="session")
+def icon_grid(icon_grid_paths):
+    """Load the ICON native grid for a given model."""
+
+    def f(model_name: str) -> dict[str, xr.DataArray]:
+        grid_path = icon_grid_paths.get(model_name)
+
+        if grid_path is None:
+            raise KeyError
+
+        ds = xr.open_dataset(grid_path)
+
+        rad2deg = 180 / np.pi
+        result = ds[["clon", "clat"]].reset_coords() * rad2deg
+        return {"lon": result.clon, "lat": result.clat}
+
+    return f
 
 
 @pytest.fixture

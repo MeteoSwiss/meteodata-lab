@@ -65,10 +65,10 @@ def test_to_crs():
 
 @pytest.mark.data("iconremap")
 @pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
-def test_icon2geolatlon(data_dir, fieldextra, model_name):
+def test_icon2geolatlon(data_dir, fieldextra, model_name, icon_grid):
     datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
     source = data_source.FileDataSource(datafiles=datafiles)
-    ds = grib_decoder.load(source, "T")
+    ds = grib_decoder.load(source, "T", icon_grid(model_name))
     original = ds["T"].attrs.copy()
 
     observed = regrid.icon2geolatlon(ds["T"])
@@ -103,10 +103,10 @@ def test_icon2geolatlon(data_dir, fieldextra, model_name):
 
 @pytest.mark.data("iconremap")
 @pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
-def test_icon2rotlatlon(data_dir, fieldextra, model_name):
+def test_icon2rotlatlon(data_dir, fieldextra, model_name, icon_grid):
     datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
     source = data_source.FileDataSource(datafiles=datafiles)
-    ds = grib_decoder.load(source, "T")
+    ds = grib_decoder.load(source, "T", icon_grid(model_name))
 
     observed = regrid.icon2rotlatlon(ds["T"])
 
@@ -139,10 +139,10 @@ def test_icon2rotlatlon(data_dir, fieldextra, model_name):
 
 @pytest.mark.data("iconremap")
 @pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
-def test_icon2swiss_small(data_dir, fieldextra, model_name):
+def test_icon2swiss_small(data_dir, fieldextra, model_name, icon_grid):
     datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
     source = data_source.FileDataSource(datafiles=datafiles)
-    ds = grib_decoder.load(source, "T")
+    ds = grib_decoder.load(source, "T", icon_grid(model_name))
 
     # Use a small rectangular area centered around Bern
     regrid_target = "swiss,595000,191000,605000,209000,1000,1000"
@@ -174,10 +174,10 @@ def test_icon2swiss_small(data_dir, fieldextra, model_name):
 @pytest.mark.skip(reason="the byc method in fx is not optimised (>30min on icon-ch1)")
 @pytest.mark.data("iconremap")
 @pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
-def test_icon2swiss(data_dir, fieldextra, model_name):
+def test_icon2swiss(data_dir, fieldextra, model_name, icon_grid):
     datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
     source = data_source.FileDataSource(datafiles=datafiles)
-    ds = grib_decoder.load(source, "T")
+    ds = grib_decoder.load(source, "T", icon_grid(model_name))
 
     out_regrid_target = {
         "icon-ch1-eps": "swiss,255500,-159500,964500,479500,1000,1000",

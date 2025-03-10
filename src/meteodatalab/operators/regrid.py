@@ -12,6 +12,7 @@ import xarray as xr
 from numpy.typing import ArrayLike, NDArray
 
 try:
+    # Third-party
     from pyproj import Transformer
     from rasterio import transform, warp
     from rasterio.crs import CRS

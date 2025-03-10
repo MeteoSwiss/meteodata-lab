@@ -16,6 +16,7 @@ import earthkit.data as ekd  # type: ignore
 import eccodes  # type: ignore
 
 try:
+    # Third-party
     from polytope.api import Client as PolytopeClient  # type: ignore
 except ImportError:
     PolytopeClient = None

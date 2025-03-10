@@ -11,14 +11,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
     - uses: C2SM/sphinx-action@sphinx-latest
       with:
         pre-build-command: "pip install ."
         docs-folder: "docs/"
     # Great extra actions to compose with:
     # Create an artifact of the html output.
-    - uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v4
       with:
         name: DocumentationHTML
         path: docs/_build/

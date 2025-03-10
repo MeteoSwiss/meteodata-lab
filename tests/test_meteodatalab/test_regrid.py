@@ -2,8 +2,9 @@
 import dataclasses as dc
 
 # Third-party
+import numpy as np
 import pytest
-from numpy.testing import assert_allclose
+from numpy.testing import assert_allclose, assert_array_less
 
 # First-party
 from meteodatalab import data_source, grib_decoder
@@ -134,6 +135,40 @@ def test_icon2rotlatlon(data_dir, fieldextra, model_name):
     )
 
     assert_allclose(observed, fx_ds["T"], rtol=1e-4, atol=1e-4)
+
+
+@pytest.mark.data("iconremap")
+@pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
+def test_icon2swiss_small(data_dir, fieldextra, model_name):
+    datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
+    source = data_source.FileDataSource(datafiles=datafiles)
+    ds = grib_decoder.load(source, "T")
+
+    # Use a small rectangular area centered around Bern
+    regrid_target = "swiss,595000,191000,605000,209000,1000,1000"
+    dst = regrid.RegularGrid.parse_regrid_operator(regrid_target)
+    observed = regrid.iconremap(ds["T"], dst)
+
+    # Sanity check the temperature values.
+    extreme_low = np.full(observed.shape, 150)
+    extreme_high = np.full(observed.shape, 350)
+    assert_array_less(extreme_low, observed.values)
+    assert_array_less(observed.values, extreme_high)
+
+    assert observed.y.shape == (19,)
+    assert observed.x.shape == (11,)
+    # Verify that geolatlon coordinates match expected values on the corners and center.
+    # Values are from https://epsg.io/transform#s_srs=21781&t_srs=4326
+    assert observed.sel(y=9, x=5).lon == pytest.approx(7.438632, 1e-5)
+    assert observed.sel(y=9, x=5).lat == pytest.approx(46.951082, 1e-5)
+    assert observed.sel(y=0, x=0).lon == pytest.approx(7.373052, 1e-5)
+    assert observed.sel(y=0, x=0).lat == pytest.approx(46.870106, 1e-5)
+    assert observed.sel(y=18, x=0).lon == pytest.approx(7.372851, 1e-5)
+    assert observed.sel(y=18, x=0).lat == pytest.approx(47.032019, 1e-5)
+    assert observed.sel(y=0, x=10).lon == pytest.approx(7.504215, 1e-5)
+    assert observed.sel(y=0, x=10).lat == pytest.approx(46.870107, 1e-5)
+    assert observed.sel(y=18, x=10).lon == pytest.approx(7.504410, 1e-5)
+    assert observed.sel(y=18, x=10).lat == pytest.approx(47.032020, 1e-5)
 
 
 @pytest.mark.skip(reason="the byc method in fx is not optimised (>30min on icon-ch1)")

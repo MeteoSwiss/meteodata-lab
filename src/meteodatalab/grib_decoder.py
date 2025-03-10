@@ -21,7 +21,7 @@ import xarray as xr
 from numpy.typing import DTypeLike
 
 # Local
-from . import data_source, icon_grid, mars, metadata, tasking
+from . import data_source, mars, metadata, tasking
 
 logger = logging.getLogger(__name__)
 
@@ -81,10 +81,9 @@ def _is_ensemble(field) -> bool:
         return False
 
 
-def _get_hcoords(field):
+def _get_hcoords(field) -> dict[str, xr.DataArray]:
     if field.metadata("gridType") == "unstructured_grid":
-        grid_uuid = field.metadata("uuidOfHGrid")
-        return icon_grid.get_icon_grid(grid_uuid)
+        return {}
     return {
         dim: xr.DataArray(dims=("y", "x"), data=values)
         for dim, values in field.to_latlon().items()
@@ -188,8 +187,7 @@ class _FieldBuffer:
 
 
 def _load_buffer_map(
-    source: data_source.DataSource,
-    request: Request,
+    source: data_source.DataSource, request: Request, hcoords: dict[str, xr.DataArray]
 ) -> dict[str, _FieldBuffer]:
     logger.info("Retrieving request: %s", request)
     fs = source.retrieve(request)
@@ -201,7 +199,9 @@ def _load_buffer_map(
         if name in buffer_map:
             buffer = buffer_map[name]
         else:
-            buffer = buffer_map[name] = _FieldBuffer(_is_ensemble(field))
+            buffer = buffer_map[name] = _FieldBuffer(
+                _is_ensemble(field), hcoords=hcoords
+            )
         buffer.load(field)
 
     return buffer_map
@@ -210,6 +210,7 @@ def _load_buffer_map(
 def load_single_param(
     source: data_source.DataSource,
     request: Request,
+    hcoords: dict[str, xr.DataArray] = dict(),
 ) -> xr.DataArray:
     """Request data from a data source for a single parameter.
 
@@ -219,6 +220,9 @@ def load_single_param(
         Source to request the data from.
     request : str | tuple[str, str] | dict[str, Any] | meteodatalab.mars.Request
         Request for data from the source in the mars language.
+    hcoords: dict[str, xr.DataArray]
+        Optional dictionary containing the horizontal coordinates (e.g. lon/lat) of the
+        data. If provided, this will override any coordinates from the source.
 
     Raises
     ------
@@ -240,7 +244,7 @@ def load_single_param(
     ):
         raise ValueError("Only one param is supported.")
 
-    buffer_map = _load_buffer_map(source, request)
+    buffer_map = _load_buffer_map(source, request, hcoords)
     [buffer] = buffer_map.values()
     return buffer.to_xarray()
 
@@ -248,6 +252,7 @@ def load_single_param(
 def load(
     source: data_source.DataSource,
     request: Request,
+    hcoords: dict[str, xr.DataArray] = dict(),
 ) -> dict[str, xr.DataArray]:
     """Request data from a data source.
 
@@ -257,6 +262,9 @@ def load(
         Source to request the data from.
     request : str | tuple[str, str] | dict[str, Any] | meteodatalab.mars.Request
         Request for data from the source in the mars language.
+    hcoords: dict[str, xr.DataArray]
+        Optional dictionary containing the horizontal coordinates (e.g. lon/lat) of the
+        data. If provided, this will override any coordinates from the source.
 
     Raises
     ------
@@ -269,7 +277,7 @@ def load(
         A mapping of shortName to data arrays of the requested fields.
 
     """
-    buffer_map = _load_buffer_map(source, request)
+    buffer_map = _load_buffer_map(source, request, hcoords)
     result = {}
     for name, buffer in buffer_map.items():
         try:
@@ -329,6 +337,7 @@ class GribReader:
         self,
         requests: Mapping[str, Request],
         extract_pv: str | None = None,
+        hcoords: dict[str, xr.DataArray] = dict(),
     ) -> dict[str, xr.DataArray]:
         """Load a dataset with the requested parameters.
 
@@ -339,6 +348,9 @@ class GribReader:
         extract_pv: str | None
             Optionally extract hybrid level coefficients from the field referenced by
             the given label.
+        hcoords: dict[str, xr.DataArray]
+            Optional dictionary containing the horizontal coordinates (e.g. lon/lat) of
+            the data. If provided, this will override any coordinates from the source.
 
         Raises
         ------
@@ -352,7 +364,7 @@ class GribReader:
 
         """
         result = {
-            name: tasking.delayed(load_single_param)(self.data_source, req)
+            name: tasking.delayed(load_single_param)(self.data_source, req, hcoords)
             for name, req in requests.items()
         }
 
@@ -367,9 +379,10 @@ class GribReader:
         self,
         params: list[str],
         extract_pv: str | None = None,
+        hcoords: dict[str, xr.DataArray] = dict(),
     ) -> dict[str, xr.DataArray]:
         reqs = {param: param for param in params}
-        return self.load(reqs, extract_pv)
+        return self.load(reqs, extract_pv, hcoords)
 
 
 def save(

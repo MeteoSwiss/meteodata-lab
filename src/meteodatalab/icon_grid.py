@@ -1,12 +1,10 @@
 """ICON native grid helper functions."""
 
 # Standard library
-from pathlib import Path
 from typing import Literal
 from uuid import UUID
 
 # Third-party
-import numpy as np
 import xarray as xr
 
 GRID_ID = {

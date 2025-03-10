@@ -144,7 +144,7 @@ def test_icon2rotlatlon(data_dir, fieldextra, model_name, icon_grid):
 
 @pytest.mark.data("iconremap")
 @pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
-def test_icon2swiss_small(data_dir, fieldextra, model_name, icon_grid):
+def test_icon2swiss_small(data_dir, model_name, icon_grid):
     datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
     source = data_source.FileDataSource(datafiles=datafiles)
     ds = grib_decoder.load(source, "T", icon_grid(model_name))

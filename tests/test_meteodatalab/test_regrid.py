@@ -144,8 +144,8 @@ def test_icon2swiss_small(data_dir, fieldextra, model_name):
     source = data_source.FileDataSource(datafiles=datafiles)
     ds = grib_decoder.load(source, "T")
 
-    # Use a small area centered around Bern
-    regrid_target = "swiss,590000,190000,610000,210000,1000,1000"
+    # Use a small rectangular area centered around Bern
+    regrid_target = "swiss,595000,191000,605000,209000,1000,1000"
     dst = regrid.RegularGrid.parse_regrid_operator(regrid_target)
     observed = regrid.iconremap(ds["T"], dst)
 
@@ -155,11 +155,20 @@ def test_icon2swiss_small(data_dir, fieldextra, model_name):
     assert_array_less(extreme_low, observed.values)
     assert_array_less(observed.values, extreme_high)
 
-    # Verify that geolatlon coordinates are set and centered correctly.
-    assert observed.lat.shape == (21, 21)
-    assert observed.lon.shape == (21, 21)
-    assert observed.lon[10][10] == pytest.approx(7.4386325, 1e-4)
-    assert observed.lat[10][10] == pytest.approx(46.9510828, 1e-4)
+    assert observed.y.shape == (19,)
+    assert observed.x.shape == (11,)
+    # Verify that geolatlon coordinates match expected values on the corners and center.
+    # Values are from https://epsg.io/transform#s_srs=21781&t_srs=4326
+    assert observed.sel(y=9, x=5).lon == pytest.approx(7.438632, 1e-5)
+    assert observed.sel(y=9, x=5).lat == pytest.approx(46.951082, 1e-5)
+    assert observed.sel(y=0, x=0).lon == pytest.approx(7.373052, 1e-5)
+    assert observed.sel(y=0, x=0).lat == pytest.approx(46.870106, 1e-5)
+    assert observed.sel(y=18, x=0).lon == pytest.approx(7.372851, 1e-5)
+    assert observed.sel(y=18, x=0).lat == pytest.approx(47.032019, 1e-5)
+    assert observed.sel(y=0, x=10).lon == pytest.approx(7.504215, 1e-5)
+    assert observed.sel(y=0, x=10).lat == pytest.approx(46.870107, 1e-5)
+    assert observed.sel(y=18, x=10).lon == pytest.approx(7.504410, 1e-5)
+    assert observed.sel(y=18, x=10).lat == pytest.approx(47.032020, 1e-5)
 
 
 @pytest.mark.skip(reason="the byc method in fx is not optimised (>30min on icon-ch1)")

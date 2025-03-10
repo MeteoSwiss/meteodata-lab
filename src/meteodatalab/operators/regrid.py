@@ -10,10 +10,15 @@ from typing import Literal
 import numpy as np
 import xarray as xr
 from numpy.typing import ArrayLike, NDArray
-from pyproj import Transformer
-from rasterio import transform, warp
-from rasterio.crs import CRS
-from scipy.spatial import Delaunay  # type: ignore
+
+try:
+    # Third-party
+    from pyproj import Transformer
+    from rasterio import transform, warp
+    from rasterio.crs import CRS
+    from scipy.spatial import Delaunay  # type: ignore
+except ImportError:
+    raise ImportError("The regrid operator requires extra dependencies.")
 
 # Local
 from .. import icon_grid, metadata

@@ -115,8 +115,11 @@ def archive_to_fdb(
         Bits per value encoded in the archived data. (Default: 16)
 
     """
-    # Third-party
-    import pyfdb  # type: ignore
+    try:
+        # Third-party
+        import pyfdb  # type: ignore
+    except ImportError:
+        raise ImportError("archive_to_fdb requires the pyfdb package")
 
     buffer = io.BytesIO()
     grib_decoder.save(field, buffer, bits_per_value)

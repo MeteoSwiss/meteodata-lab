@@ -116,6 +116,7 @@ def setup_fdb(machine):
     os.environ["FDB5_CONFIG_FILE"] = str(
         root / f"src/meteodatalab/data/fdb_config_{machine}.yaml"
     )
+    pytest.importorskip("pyfdb")
 
 
 @pytest.fixture(scope="session")

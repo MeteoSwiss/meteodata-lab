@@ -10,6 +10,9 @@ import pytest
 import xarray as xr
 from jinja2 import Environment, FileSystemLoader
 
+# First-party
+from meteodatalab.icon_grid import CSCSGridSource
+
 root = Path(__file__).parents[2]
 view_path = str(root / "spack-env/.spack-env/view")
 os.environ["ECCODES_DIR"] = view_path
@@ -122,6 +125,11 @@ def request_template():
         "time": "0300",
         "type": "ememb",
     }
+
+
+@pytest.fixture
+def grid_source():
+    return CSCSGridSource()
 
 
 @pytest.fixture

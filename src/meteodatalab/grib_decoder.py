@@ -81,10 +81,16 @@ def _is_ensemble(field) -> bool:
         return False
 
 
-def _get_hcoords(field):
+def _get_hcoords(field, grid_source: icon_grid.ICONGridSource | None):
     if field.metadata("gridType") == "unstructured_grid":
+        if grid_source is None:
+            logger.warning(
+                "No grid source provided when loading data with unstructured grid."
+            )
+            return {}
         grid_uuid = field.metadata("uuidOfHGrid")
-        return icon_grid.get_icon_grid(grid_uuid)
+        return grid_source.load(grid_uuid)
+
     return {
         dim: xr.DataArray(dims=("y", "x"), data=values)
         for dim, values in field.to_latlon().items()
@@ -124,7 +130,9 @@ class _FieldBuffer:
         if not is_ensemble:
             self.dims = self.dims[1:]
 
-    def load(self, field: GribField) -> None:
+    def load(
+        self, field: GribField, grid_source: icon_grid.ICONGridSource | None
+    ) -> None:
         key = _get_key(field, self.dims)
         name = field.metadata(NAME_KEY)
         logger.debug("Received field for param: %s, key: %s", name, key)
@@ -142,7 +150,7 @@ class _FieldBuffer:
             }
 
         if not self.hcoords:
-            self.hcoords = _get_hcoords(field)
+            self.hcoords = _get_hcoords(field, grid_source=grid_source)
 
     def _gather_coords(self):
         coord_values = zip(*self.values)
@@ -190,6 +198,7 @@ class _FieldBuffer:
 def _load_buffer_map(
     source: data_source.DataSource,
     request: Request,
+    grid_source: icon_grid.ICONGridSource | None,
 ) -> dict[str, _FieldBuffer]:
     logger.info("Retrieving request: %s", request)
     fs = source.retrieve(request)
@@ -202,7 +211,7 @@ def _load_buffer_map(
             buffer = buffer_map[name]
         else:
             buffer = buffer_map[name] = _FieldBuffer(_is_ensemble(field))
-        buffer.load(field)
+        buffer.load(field, grid_source=grid_source)
 
     return buffer_map
 
@@ -210,6 +219,7 @@ def _load_buffer_map(
 def load_single_param(
     source: data_source.DataSource,
     request: Request,
+    grid_source: icon_grid.ICONGridSource | None = None,
 ) -> xr.DataArray:
     """Request data from a data source for a single parameter.
 
@@ -219,6 +229,8 @@ def load_single_param(
         Source to request the data from.
     request : str | tuple[str, str] | dict[str, Any] | meteodatalab.mars.Request
         Request for data from the source in the mars language.
+    grid_source: icon_grid.ICONGridSource | None
+        Source to load the native ICON grid from.
 
     Raises
     ------
@@ -240,7 +252,7 @@ def load_single_param(
     ):
         raise ValueError("Only one param is supported.")
 
-    buffer_map = _load_buffer_map(source, request)
+    buffer_map = _load_buffer_map(source, request, grid_source)
     [buffer] = buffer_map.values()
     return buffer.to_xarray()
 
@@ -248,6 +260,7 @@ def load_single_param(
 def load(
     source: data_source.DataSource,
     request: Request,
+    grid_source: icon_grid.ICONGridSource | None = None,
 ) -> dict[str, xr.DataArray]:
     """Request data from a data source.
 
@@ -257,6 +270,8 @@ def load(
         Source to request the data from.
     request : str | tuple[str, str] | dict[str, Any] | meteodatalab.mars.Request
         Request for data from the source in the mars language.
+    grid_source: icon_grid.ICONGridSource | None
+        Source to load the native ICON grid from.
 
     Raises
     ------
@@ -269,7 +284,7 @@ def load(
         A mapping of shortName to data arrays of the requested fields.
 
     """
-    buffer_map = _load_buffer_map(source, request)
+    buffer_map = _load_buffer_map(source, request, grid_source=grid_source)
     result = {}
     for name, buffer in buffer_map.items():
         try:
@@ -283,6 +298,7 @@ class GribReader:
     def __init__(
         self,
         source: data_source.DataSource,
+        grid_source: icon_grid.ICONGridSource | None = None,
         ref_param: Request | None = None,
     ):
         """Initialize a grib reader from a data source.
@@ -291,6 +307,8 @@ class GribReader:
         ----------
         source : data_source.DataSource
             Data source from which to retrieve the grib fields
+        grid_source: icon_grid.ICONGridSource | None
+            Source to load the native ICON grid from.
         ref_param : str
             name of parameter used to construct a reference grid
 
@@ -301,17 +319,25 @@ class GribReader:
 
         """
         self.data_source = source
+        self.grid_source = grid_source
         if ref_param is not None:
             warn("GribReader: ref_param is deprecated.")
 
     @classmethod
-    def from_files(cls, datafiles: list[Path], ref_param: Request | None = None):
+    def from_files(
+        cls,
+        datafiles: list[Path],
+        grid_source: icon_grid.ICONGridSource | None = None,
+        ref_param: Request | None = None,
+    ):
         """Initialize a grib reader from a list of grib files.
 
         Parameters
         ----------
         datafiles : list[Path]
             List of grib input filenames
+        grid_source: icon_grid.ICONGridSource | None
+            Source to load the native ICON grid from.
         ref_param : str
             name of parameter used to construct a reference grid
 
@@ -322,7 +348,9 @@ class GribReader:
 
         """
         return cls(
-            data_source.FileDataSource(datafiles=[str(p) for p in datafiles]), ref_param
+            data_source.FileDataSource(datafiles=[str(p) for p in datafiles]),
+            grid_source,
+            ref_param,
         )
 
     def load(
@@ -352,7 +380,9 @@ class GribReader:
 
         """
         result = {
-            name: tasking.delayed(load_single_param)(self.data_source, req)
+            name: tasking.delayed(load_single_param)(
+                self.data_source, req, self.grid_source
+            )
             for name, req in requests.items()
         }
 

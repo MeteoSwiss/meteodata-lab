@@ -7,10 +7,11 @@ import io
 import logging
 import typing
 from collections import UserDict
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from enum import Enum
 from itertools import product
 from pathlib import Path
+from uuid import UUID
 from warnings import warn
 
 # Third-party
@@ -81,16 +82,18 @@ def _is_ensemble(field) -> bool:
         return False
 
 
-def _get_hcoords(field, grid_source: icon_grid.ICONGridSource | None):
+def _get_hcoords(field, grid_source: Callable[[UUID], xr.DataArray] | None):
     if field.metadata("gridType") == "unstructured_grid":
-        grid_uuid = field.metadata("uuidOfHGrid")
+        grid_uuid = UUID(field.metadata("uuidOfHGrid"))
         if grid_source is None:
             logger.warning(
                 "No grid source provided when loading data with unstructured grid, "
                 "falling back to balfrin grid file locations."
             )
-            return icon_grid.get_balfrin_grid_source().load(grid_uuid)
-        return grid_source.load(grid_uuid)
+            ds = icon_grid.load_grid_from_balfrin()(grid_uuid)
+        else:
+            ds = grid_source(grid_uuid)
+        return {"lon": ds.clon, "lat": ds.clat}
 
     return {
         dim: xr.DataArray(dims=("y", "x"), data=values)
@@ -132,7 +135,7 @@ class _FieldBuffer:
             self.dims = self.dims[1:]
 
     def load(
-        self, field: GribField, grid_source: icon_grid.ICONGridSource | None
+        self, field: GribField, grid_source: Callable[[UUID], xr.DataArray] | None
     ) -> None:
         key = _get_key(field, self.dims)
         name = field.metadata(NAME_KEY)
@@ -199,7 +202,7 @@ class _FieldBuffer:
 def _load_buffer_map(
     source: data_source.DataSource,
     request: Request,
-    grid_source: icon_grid.ICONGridSource | None,
+    grid_source: Callable[[UUID], xr.DataArray] | None,
 ) -> dict[str, _FieldBuffer]:
     logger.info("Retrieving request: %s", request)
     fs = source.retrieve(request)
@@ -220,7 +223,7 @@ def _load_buffer_map(
 def load_single_param(
     source: data_source.DataSource,
     request: Request,
-    grid_source: icon_grid.ICONGridSource | None = None,
+    grid_source: Callable[[UUID], xr.DataArray] | None = None,
 ) -> xr.DataArray:
     """Request data from a data source for a single parameter.
 
@@ -230,8 +233,9 @@ def load_single_param(
         Source to request the data from.
     request : str | tuple[str, str] | dict[str, Any] | meteodatalab.mars.Request
         Request for data from the source in the mars language.
-    grid_source: icon_grid.ICONGridSource | None
-        Source to load the native ICON grid from.
+    grid_source: Callable[[UUID], xr.DataArray] | None
+        Callable that returns an xarray containing clat and clon coordinates for the
+        horizontal grid defined by the given UUID.
 
     Raises
     ------
@@ -261,7 +265,7 @@ def load_single_param(
 def load(
     source: data_source.DataSource,
     request: Request,
-    grid_source: icon_grid.ICONGridSource | None = None,
+    grid_source: Callable[[UUID], xr.DataArray] | None = None,
 ) -> dict[str, xr.DataArray]:
     """Request data from a data source.
 
@@ -271,8 +275,9 @@ def load(
         Source to request the data from.
     request : str | tuple[str, str] | dict[str, Any] | meteodatalab.mars.Request
         Request for data from the source in the mars language.
-    grid_source: icon_grid.ICONGridSource | None
-        Source to load the native ICON grid from.
+    grid_source: Callable[[UUID], xr.DataArray] | None
+        Callable that returns an xarray containing clat and clon coordinates for the
+        horizontal grid defined by the given UUID.
 
     Raises
     ------
@@ -299,7 +304,7 @@ class GribReader:
     def __init__(
         self,
         source: data_source.DataSource,
-        grid_source: icon_grid.ICONGridSource | None = None,
+        grid_source: Callable[[UUID], xr.DataArray] | None = None,
         ref_param: Request | None = None,
     ):
         """Initialize a grib reader from a data source.
@@ -308,8 +313,9 @@ class GribReader:
         ----------
         source : data_source.DataSource
             Data source from which to retrieve the grib fields
-        grid_source: icon_grid.ICONGridSource | None
-            Source to load the native ICON grid from.
+        grid_source: Callable[[UUID], xr.DataArray] | None
+            Callable that returns an xarray containing clat and clon coordinates for
+            the horizontal grid defined by the given UUID.
         ref_param : str
             name of parameter used to construct a reference grid
 
@@ -328,7 +334,7 @@ class GribReader:
     def from_files(
         cls,
         datafiles: list[Path],
-        grid_source: icon_grid.ICONGridSource | None = None,
+        grid_source: Callable[[UUID], xr.DataArray] | None = None,
         ref_param: Request | None = None,
     ):
         """Initialize a grib reader from a list of grib files.
@@ -337,8 +343,9 @@ class GribReader:
         ----------
         datafiles : list[Path]
             List of grib input filenames
-        grid_source: icon_grid.ICONGridSource | None
-            Source to load the native ICON grid from.
+        grid_source: Callable[[UUID], xr.DataArray] | None
+            Callable that returns an xarray containing clat and clon coordinates for
+            the horizontal grid defined by the given UUID.
         ref_param : str
             name of parameter used to construct a reference grid
 

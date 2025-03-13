@@ -83,12 +83,13 @@ def _is_ensemble(field) -> bool:
 
 def _get_hcoords(field, grid_source: icon_grid.ICONGridSource | None):
     if field.metadata("gridType") == "unstructured_grid":
+        grid_uuid = field.metadata("uuidOfHGrid")
         if grid_source is None:
             logger.warning(
-                "No grid source provided when loading data with unstructured grid."
+                "No grid source provided when loading data with unstructured grid, "
+                "falling back to balfrin grid file locations."
             )
-            return {}
-        grid_uuid = field.metadata("uuidOfHGrid")
+            return icon_grid.get_balfrin_grid_source().load(grid_uuid)
         return grid_source.load(grid_uuid)
 
     return {

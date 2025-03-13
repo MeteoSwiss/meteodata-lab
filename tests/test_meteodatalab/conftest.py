@@ -11,7 +11,7 @@ import xarray as xr
 from jinja2 import Environment, FileSystemLoader
 
 # First-party
-from meteodatalab.icon_grid import CSCSGridSource
+from meteodatalab.icon_grid import get_balfrin_grid_source
 
 root = Path(__file__).parents[2]
 view_path = str(root / "spack-env/.spack-env/view")
@@ -129,7 +129,7 @@ def request_template():
 
 @pytest.fixture
 def grid_source():
-    return CSCSGridSource()
+    return get_balfrin_grid_source()
 
 
 @pytest.fixture

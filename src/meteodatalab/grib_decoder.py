@@ -235,7 +235,7 @@ def load_single_param(
         Request for data from the source in the mars language.
     grid_source: Callable[[UUID], xr.DataArray] | None
         Callable that returns an xarray containing clat and clon coordinates for the
-        horizontal grid defined by the given UUID.
+        horizontal ICON grid defined by the given UUID.
 
     Raises
     ------
@@ -277,7 +277,7 @@ def load(
         Request for data from the source in the mars language.
     grid_source: Callable[[UUID], xr.DataArray] | None
         Callable that returns an xarray containing clat and clon coordinates for the
-        horizontal grid defined by the given UUID.
+        horizontal ICON grid defined by the given UUID.
 
     Raises
     ------
@@ -315,7 +315,7 @@ class GribReader:
             Data source from which to retrieve the grib fields
         grid_source: Callable[[UUID], xr.DataArray] | None
             Callable that returns an xarray containing clat and clon coordinates for
-            the horizontal grid defined by the given UUID.
+            the horizontal ICON grid defined by the given UUID.
         ref_param : str
             name of parameter used to construct a reference grid
 
@@ -345,7 +345,7 @@ class GribReader:
             List of grib input filenames
         grid_source: Callable[[UUID], xr.DataArray] | None
             Callable that returns an xarray containing clat and clon coordinates for
-            the horizontal grid defined by the given UUID.
+            the horizontal ICON grid defined by the given UUID.
         ref_param : str
             name of parameter used to construct a reference grid
 

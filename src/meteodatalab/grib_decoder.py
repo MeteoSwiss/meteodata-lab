@@ -82,7 +82,9 @@ def _is_ensemble(field) -> bool:
         return False
 
 
-def _get_hcoords(field, geo_coords: Callable[[UUID], xr.DataArray] | None):
+def _get_hcoords(
+    field: GribField, geo_coords: Callable[[UUID], xr.Dataset] | None
+) -> dict[str, xr.DataArray]:
     if field.metadata("gridType") == "unstructured_grid":
         grid_uuid = UUID(field.metadata("uuidOfHGrid"))
         if geo_coords is None:
@@ -135,7 +137,7 @@ class _FieldBuffer:
             self.dims = self.dims[1:]
 
     def load(
-        self, field: GribField, geo_coords: Callable[[UUID], xr.DataArray] | None
+        self, field: GribField, geo_coords: Callable[[UUID], xr.Dataset] | None
     ) -> None:
         key = _get_key(field, self.dims)
         name = field.metadata(NAME_KEY)
@@ -202,7 +204,7 @@ class _FieldBuffer:
 def _load_buffer_map(
     source: data_source.DataSource,
     request: Request,
-    geo_coords: Callable[[UUID], xr.DataArray] | None,
+    geo_coords: Callable[[UUID], xr.Dataset] | None,
 ) -> dict[str, _FieldBuffer]:
     logger.info("Retrieving request: %s", request)
     fs = source.retrieve(request)
@@ -223,7 +225,7 @@ def _load_buffer_map(
 def load_single_param(
     source: data_source.DataSource,
     request: Request,
-    geo_coords: Callable[[UUID], xr.DataArray] | None = None,
+    geo_coords: Callable[[UUID], xr.Dataset] | None = None,
 ) -> xr.DataArray:
     """Request data from a data source for a single parameter.
 
@@ -233,9 +235,9 @@ def load_single_param(
         Source to request the data from.
     request : str | tuple[str, str] | dict[str, Any] | meteodatalab.mars.Request
         Request for data from the source in the mars language.
-    geo_coords: Callable[[UUID], xr.DataArray] | None
-        Callable that returns an xarray containing clat and clon coordinates for the
-        horizontal ICON grid defined by the given UUID.
+    geo_coords: Callable[[UUID], xr.Dataset] | None
+        Callable that returns a Dataset of xarrays with the clat and clon coordinates
+        of the ICON grid defined by the given UUID.
 
     Raises
     ------
@@ -265,7 +267,7 @@ def load_single_param(
 def load(
     source: data_source.DataSource,
     request: Request,
-    geo_coords: Callable[[UUID], xr.DataArray] | None = None,
+    geo_coords: Callable[[UUID], xr.Dataset] | None = None,
 ) -> dict[str, xr.DataArray]:
     """Request data from a data source.
 
@@ -275,9 +277,9 @@ def load(
         Source to request the data from.
     request : str | tuple[str, str] | dict[str, Any] | meteodatalab.mars.Request
         Request for data from the source in the mars language.
-    geo_coords: Callable[[UUID], xr.DataArray] | None
-        Callable that returns an xarray containing clat and clon coordinates for the
-        horizontal ICON grid defined by the given UUID.
+    geo_coords: Callable[[UUID], xr.Dataset] | None
+        Callable that returns a Dataset of xarrays with the clat and clon coordinates
+        of the ICON grid defined by the given UUID.
 
     Raises
     ------
@@ -304,7 +306,7 @@ class GribReader:
     def __init__(
         self,
         source: data_source.DataSource,
-        geo_coords: Callable[[UUID], xr.DataArray] | None = None,
+        geo_coords: Callable[[UUID], xr.Dataset] | None = None,
         ref_param: Request | None = None,
     ):
         """Initialize a grib reader from a data source.
@@ -313,9 +315,9 @@ class GribReader:
         ----------
         source : data_source.DataSource
             Data source from which to retrieve the grib fields
-        geo_coords: Callable[[UUID], xr.DataArray] | None
-            Callable that returns an xarray containing clat and clon coordinates for
-            the horizontal ICON grid defined by the given UUID.
+        geo_coords: Callable[[UUID], xr.Dataset] | None
+            Callable that returns a Dataset of xarrays with the clat and clon
+            coordinates of the ICON grid defined by the given UUID.
         ref_param : str
             name of parameter used to construct a reference grid
 
@@ -334,7 +336,7 @@ class GribReader:
     def from_files(
         cls,
         datafiles: list[Path],
-        geo_coords: Callable[[UUID], xr.DataArray] | None = None,
+        geo_coords: Callable[[UUID], xr.Dataset] | None = None,
         ref_param: Request | None = None,
     ):
         """Initialize a grib reader from a list of grib files.
@@ -343,9 +345,9 @@ class GribReader:
         ----------
         datafiles : list[Path]
             List of grib input filenames
-        geo_coords: Callable[[UUID], xr.DataArray] | None
-            Callable that returns an xarray containing clat and clon coordinates for
-            the horizontal ICON grid defined by the given UUID.
+        geo_coords: Callable[[UUID], xr.Dataset] | None
+            Callable that returns a Dataset of xarrays with the clat and clon
+            coordinates of the ICON grid defined by the given UUID.
         ref_param : str
             name of parameter used to construct a reference grid
 

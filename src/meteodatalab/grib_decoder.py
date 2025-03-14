@@ -7,10 +7,11 @@ import io
 import logging
 import typing
 from collections import UserDict
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from enum import Enum
 from itertools import product
 from pathlib import Path
+from uuid import UUID
 from warnings import warn
 
 # Third-party
@@ -81,10 +82,21 @@ def _is_ensemble(field) -> bool:
         return False
 
 
-def _get_hcoords(field):
+def _get_hcoords(
+    field: GribField, geo_coords: Callable[[UUID], xr.Dataset] | None
+) -> dict[str, xr.DataArray]:
     if field.metadata("gridType") == "unstructured_grid":
-        grid_uuid = field.metadata("uuidOfHGrid")
-        return icon_grid.get_icon_grid(grid_uuid)
+        grid_uuid = UUID(field.metadata("uuidOfHGrid"))
+        if geo_coords is None:
+            logger.info(
+                "No grid source provided when loading data with unstructured grid, "
+                "falling back to balfrin grid file locations."
+            )
+            ds = icon_grid.load_grid_from_balfrin()(grid_uuid)
+        else:
+            ds = geo_coords(grid_uuid)
+        return {"lon": ds.clon, "lat": ds.clat}
+
     return {
         dim: xr.DataArray(dims=("y", "x"), data=values)
         for dim, values in field.to_latlon().items()
@@ -124,7 +136,9 @@ class _FieldBuffer:
         if not is_ensemble:
             self.dims = self.dims[1:]
 
-    def load(self, field: GribField) -> None:
+    def load(
+        self, field: GribField, geo_coords: Callable[[UUID], xr.Dataset] | None
+    ) -> None:
         key = _get_key(field, self.dims)
         name = field.metadata(NAME_KEY)
         logger.debug("Received field for param: %s, key: %s", name, key)
@@ -142,7 +156,7 @@ class _FieldBuffer:
             }
 
         if not self.hcoords:
-            self.hcoords = _get_hcoords(field)
+            self.hcoords = _get_hcoords(field, geo_coords=geo_coords)
 
     def _gather_coords(self):
         coord_values = zip(*self.values)
@@ -190,6 +204,7 @@ class _FieldBuffer:
 def _load_buffer_map(
     source: data_source.DataSource,
     request: Request,
+    geo_coords: Callable[[UUID], xr.Dataset] | None,
 ) -> dict[str, _FieldBuffer]:
     logger.info("Retrieving request: %s", request)
     fs = source.retrieve(request)
@@ -202,7 +217,7 @@ def _load_buffer_map(
             buffer = buffer_map[name]
         else:
             buffer = buffer_map[name] = _FieldBuffer(_is_ensemble(field))
-        buffer.load(field)
+        buffer.load(field, geo_coords=geo_coords)
 
     return buffer_map
 
@@ -210,6 +225,7 @@ def _load_buffer_map(
 def load_single_param(
     source: data_source.DataSource,
     request: Request,
+    geo_coords: Callable[[UUID], xr.Dataset] | None = None,
 ) -> xr.DataArray:
     """Request data from a data source for a single parameter.
 
@@ -219,6 +235,9 @@ def load_single_param(
         Source to request the data from.
     request : str | tuple[str, str] | dict[str, Any] | meteodatalab.mars.Request
         Request for data from the source in the mars language.
+    geo_coords: Callable[[UUID], xr.Dataset] | None
+        Callable that returns a Dataset of xarrays with the clat and clon coordinates
+        of the ICON grid defined by the given UUID.
 
     Raises
     ------
@@ -240,7 +259,7 @@ def load_single_param(
     ):
         raise ValueError("Only one param is supported.")
 
-    buffer_map = _load_buffer_map(source, request)
+    buffer_map = _load_buffer_map(source, request, geo_coords)
     [buffer] = buffer_map.values()
     return buffer.to_xarray()
 
@@ -248,6 +267,7 @@ def load_single_param(
 def load(
     source: data_source.DataSource,
     request: Request,
+    geo_coords: Callable[[UUID], xr.Dataset] | None = None,
 ) -> dict[str, xr.DataArray]:
     """Request data from a data source.
 
@@ -257,6 +277,9 @@ def load(
         Source to request the data from.
     request : str | tuple[str, str] | dict[str, Any] | meteodatalab.mars.Request
         Request for data from the source in the mars language.
+    geo_coords: Callable[[UUID], xr.Dataset] | None
+        Callable that returns a Dataset of xarrays with the clat and clon coordinates
+        of the ICON grid defined by the given UUID.
 
     Raises
     ------
@@ -269,7 +292,7 @@ def load(
         A mapping of shortName to data arrays of the requested fields.
 
     """
-    buffer_map = _load_buffer_map(source, request)
+    buffer_map = _load_buffer_map(source, request, geo_coords=geo_coords)
     result = {}
     for name, buffer in buffer_map.items():
         try:
@@ -283,6 +306,7 @@ class GribReader:
     def __init__(
         self,
         source: data_source.DataSource,
+        geo_coords: Callable[[UUID], xr.Dataset] | None = None,
         ref_param: Request | None = None,
     ):
         """Initialize a grib reader from a data source.
@@ -291,6 +315,9 @@ class GribReader:
         ----------
         source : data_source.DataSource
             Data source from which to retrieve the grib fields
+        geo_coords: Callable[[UUID], xr.Dataset] | None
+            Callable that returns a Dataset of xarrays with the clat and clon
+            coordinates of the ICON grid defined by the given UUID.
         ref_param : str
             name of parameter used to construct a reference grid
 
@@ -301,17 +328,26 @@ class GribReader:
 
         """
         self.data_source = source
+        self.geo_coords = geo_coords
         if ref_param is not None:
             warn("GribReader: ref_param is deprecated.")
 
     @classmethod
-    def from_files(cls, datafiles: list[Path], ref_param: Request | None = None):
+    def from_files(
+        cls,
+        datafiles: list[Path],
+        geo_coords: Callable[[UUID], xr.Dataset] | None = None,
+        ref_param: Request | None = None,
+    ):
         """Initialize a grib reader from a list of grib files.
 
         Parameters
         ----------
         datafiles : list[Path]
             List of grib input filenames
+        geo_coords: Callable[[UUID], xr.Dataset] | None
+            Callable that returns a Dataset of xarrays with the clat and clon
+            coordinates of the ICON grid defined by the given UUID.
         ref_param : str
             name of parameter used to construct a reference grid
 
@@ -322,7 +358,9 @@ class GribReader:
 
         """
         return cls(
-            data_source.FileDataSource(datafiles=[str(p) for p in datafiles]), ref_param
+            data_source.FileDataSource(datafiles=[str(p) for p in datafiles]),
+            geo_coords,
+            ref_param,
         )
 
     def load(
@@ -352,7 +390,9 @@ class GribReader:
 
         """
         result = {
-            name: tasking.delayed(load_single_param)(self.data_source, req)
+            name: tasking.delayed(load_single_param)(
+                self.data_source, req, self.geo_coords
+            )
             for name, req in requests.items()
         }
 

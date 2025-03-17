@@ -133,23 +133,29 @@ def _get_geo_coord_url(uuid: UUID) -> str:
     return urls[model]["horizontal"]
 
 
-def _no_coords(uuid: UUID) -> xr.Dataset:
-    return xr.Dataset({"clon": [], "clat": []})
+def _no_coords(uuid: UUID) -> dict[str, xr.DataArray]:
+    return {}
 
 
-def _geo_coords(uuid: UUID) -> xr.Dataset:
+def _geo_coords(uuid: UUID) -> dict[str, xr.DataArray]:
     url = _get_geo_coord_url(uuid)
     source = data_source.URLDataSource(urls=[url])
     ds = grib_decoder.load(source, {"param": ["CLON", "CLAT"]}, geo_coords=_no_coords)
-    return xr.Dataset({key.lower(): value for key, value in ds.items()})
+    return {"lon": ds["CLON"].squeeze(), "lat": ds["CLAT"].squeeze()}
 
 
 def get_from_ogd(request: Request) -> xr.DataArray:
     if ekd.settings.get("cache-policy") == "off":
         doc = "https://earthkit-data.readthedocs.io/en/latest/examples/cache.html"
-        logger.info("Earthkit-data caching is recommended. See: %s", doc)
+        logger.warn("Earthkit-data caching is recommended. See: %s", doc)
 
     asset_url = get_asset_url(request)
+
+    # https://meteoswiss.atlassian.net/browse/OG-62
+    if asset_url.startswith("https://sys-data.int.bgdi.ch"):
+        asset_url = asset_url[29:]
+        # potentially encoding errors left, try again until it works
+
     source = data_source.URLDataSource(urls=[asset_url])
     return grib_decoder.load(
         source,

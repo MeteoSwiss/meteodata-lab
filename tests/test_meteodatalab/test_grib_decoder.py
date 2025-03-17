@@ -18,6 +18,16 @@ def test_load(params, levtype, request_template, setup_fdb):
     assert all(name == arr.parameter["shortName"] for name, arr in ds.items())
 
 
+@pytest.mark.data("iconremap")
+def test_load_icon_grid_balfrin_fallback(data_dir):
+    datafiles = [str(data_dir / "ICON-CH1-EPS_lfff00000000_000")]
+    source = data_source.FileDataSource(datafiles=datafiles)
+    ds = grib_decoder.load(source, "T")
+    assert ds.keys() == set(["T"])
+    assert "lon" in ds["T"].coords
+    assert "lat" in ds["T"].coords
+
+
 def test_save(data_dir, tmp_path):
     datafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 

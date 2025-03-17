@@ -1,16 +1,22 @@
+# Standard library
 import dataclasses as dc
 import datetime as dt
 import enum
 import logging
+import os
 import typing
+from importlib.resources import files
+from uuid import UUID
 
+# Third-party
 import earthkit.data as ekd  # type: ignore
 import pydantic
 import pydantic.dataclasses as pdc
 import xarray as xr
+import yaml
 
-from . import data_source, grib_decoder, util
-
+# Local
+from . import data_source, grib_decoder, icon_grid, util
 
 URL = "https://sys-data.int.bgdi.ch/api/stac/v1/search"
 
@@ -113,6 +119,31 @@ def get_asset_url(request: Request):
     return asset
 
 
+def _get_geo_coord_url(uuid: UUID) -> str:
+    if (var := os.environ.get("MDL_GEO_COORD_URL")) is not None:
+        return var
+
+    model = icon_grid.GRID_UUID_TO_MODEL.get(uuid)
+
+    if model is None:
+        raise KeyError("Grid uuid not found")
+
+    config_path = files("meteodatalab.data").joinpath("geo_coords_urls.yaml")
+    urls = yaml.safe_load(config_path.open())
+    return urls[model]["horizontal"]
+
+
+def _no_coords(uuid: UUID) -> xr.Dataset:
+    return xr.Dataset({"clon": [], "clat": []})
+
+
+def _geo_coords(uuid: UUID) -> xr.Dataset:
+    url = _get_geo_coord_url(uuid)
+    source = data_source.URLDataSource(urls=[url])
+    ds = grib_decoder.load(source, {"param": ["CLON", "CLAT"]}, geo_coords=_no_coords)
+    return xr.Dataset({key.lower(): value for key, value in ds.items()})
+
+
 def get_from_ogd(request: Request) -> xr.DataArray:
     if ekd.settings.get("cache-policy") == "off":
         doc = "https://earthkit-data.readthedocs.io/en/latest/examples/cache.html"
@@ -120,4 +151,8 @@ def get_from_ogd(request: Request) -> xr.DataArray:
 
     asset_url = get_asset_url(request)
     source = data_source.URLDataSource(urls=[asset_url])
-    return grib_decoder.load(source, {"param": request.variable})[request.variable]
+    return grib_decoder.load(
+        source,
+        {"param": request.variable},
+        geo_coords=_geo_coords,
+    )[request.variable]

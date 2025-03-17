@@ -2,6 +2,7 @@ import dataclasses as dc
 import datetime as dt
 import enum
 import logging
+import typing
 
 import earthkit.data as ekd  # type: ignore
 import pydantic
@@ -33,6 +34,10 @@ def _forecast_prefix(field_name):
     return field_name
 
 
+def _parse_datetime(value: str) -> dt.datetime:
+    return dt.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S%z")
+
+
 @pdc.dataclass(
     frozen=True,
     config=pydantic.ConfigDict(
@@ -44,7 +49,7 @@ def _forecast_prefix(field_name):
 class Request:
     collection: Collection = dc.field(metadata=dict(exclude=True))
     variable: str
-    reference_datetime: dt.datetime
+    reference_datetime: str
     perturbed: bool
     horizon: dt.timedelta
 
@@ -52,6 +57,31 @@ class Request:
     @property
     def collections(self) -> list[str]:
         return ["ch.meteoschweiz." + str(self.collection)]
+
+    @pydantic.field_validator("reference_datetime", mode="wrap")
+    @classmethod
+    def valid_reference_datetime(
+        cls, value: typing.Any, handler: pydantic.ValidatorFunctionWrapHandler
+    ) -> str:
+        if isinstance(value, dt.datetime):
+            if value.tzinfo is None:
+                logger.warn("Converting naive datetime from local time to UTC")
+            return value.astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+        parts = handler(value).split("/")
+        match parts:
+            case [v, ".."] | ["..", v] | [v]:
+                # open ended or single value
+                _parse_datetime(v)
+            case [v1, v2]:
+                # range
+                d1 = _parse_datetime(v1)
+                d2 = _parse_datetime(v2)
+                if d2 < d1:
+                    raise ValueError("reference_datetime bounds inverted")
+            case _:
+                raise ValueError(f"Unable to parse reference_datetime: {value}")
+        return value
 
     def dump(self):
         root = pydantic.RootModel(self)

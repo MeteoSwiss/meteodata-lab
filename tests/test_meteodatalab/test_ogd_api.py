@@ -1,4 +1,6 @@
 # Standard library
+import datetime as dt
+from contextlib import nullcontext
 from pathlib import Path
 from unittest import mock
 
@@ -43,6 +45,41 @@ def test_request_invalid(key):
     kwargs[key] = "invalid"
     with pytest.raises(pydantic.ValidationError):
         ogd_api.Request(**kwargs)
+
+
+@pytest.mark.parametrize(
+    "value,valid",
+    [
+        ("2025-04-08T08:00:00Z", True),
+        ("../2025-04-08T08:00:00Z", True),
+        ("2025-04-08T08:00:00Z/..", True),
+        ("2025-04-08T08:00:00Z/2025-04-09T08:00:00Z", True),
+        (dt.datetime.now(dt.timezone.utc), True),
+        (dt.datetime.now(), True),
+        ("not a date", False),
+        (1744786857, False),
+        ("2025-04-08T08:00:00Z/2025-04-07T08:00:00Z", False),
+        ("2025-04-08T08:00:00Z/2025-04-09T08:00:00Z/2025-04-10T08:00:00Z", False),
+    ],
+)
+def test_reference_datetime(value, valid):
+    cm = nullcontext() if valid else pytest.raises(pydantic.ValidationError)
+    with cm:
+        observed = ogd_api.Request(
+            collection="ogd-forecasting-icon-ch1",
+            variable="T",
+            reference_datetime=value,
+            perturbed=False,
+            horizon="P0DT1H",
+        )
+
+    if valid:
+        expected = (
+            value
+            if not isinstance(value, dt.datetime)
+            else value.strftime("%Y-%m-%dT%H:%M:%SZ")
+        )
+        assert observed.reference_datetime == expected
 
 
 @mock.patch.object(ogd_api, "session", autospec=True)

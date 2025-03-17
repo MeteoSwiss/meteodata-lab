@@ -61,14 +61,16 @@ class Request:
     @pydantic.field_validator("reference_datetime", mode="wrap")
     @classmethod
     def valid_reference_datetime(
-        cls, value: typing.Any, handler: pydantic.ValidatorFunctionWrapHandler
+        cls, input_value: typing.Any, handler: pydantic.ValidatorFunctionWrapHandler
     ) -> str:
-        if isinstance(value, dt.datetime):
-            if value.tzinfo is None:
+        if isinstance(input_value, dt.datetime):
+            if input_value.tzinfo is None:
                 logger.warn("Converting naive datetime from local time to UTC")
-            return value.astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+            fmt = "%Y-%m-%dT%H:%M:%SZ"  # Zulu isoformat
+            return input_value.astimezone(dt.timezone.utc).strftime(fmt)
 
-        parts = handler(value).split("/")
+        value = handler(input_value)
+        parts = value.split("/")
         match parts:
             case [v, ".."] | ["..", v] | [v]:
                 # open ended or single value

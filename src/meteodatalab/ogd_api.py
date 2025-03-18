@@ -1,3 +1,5 @@
+"""Open Government Data API helpers."""
+
 # Standard library
 import dataclasses as dc
 import datetime as dt
@@ -18,7 +20,7 @@ import yaml
 # Local
 from . import data_source, grib_decoder, icon_grid, util
 
-URL = "https://sys-data.int.bgdi.ch/api/stac/v1/search"
+SEARCH_URL = "https://sys-data.int.bgdi.ch/api/stac/v1/search"
 
 logger = logging.getLogger(__name__)
 session = util.init_session(logger)
@@ -114,9 +116,30 @@ def _search(url: str, request: Request):
 
 
 def get_asset_url(request: Request):
-    result = _search(URL, request)
-    [asset] = result  # expect only one asset
-    return asset
+    """Get asset URL from OGD.
+
+    The request attributes define filters for the STAC search API according
+    to the forecast extension.
+
+    Parameters
+    ----------
+    request : Request
+        Asset search filters, must select a single asset.
+
+    Returns
+    -------
+    str
+        URL of the selected asset.
+
+    """
+    result = _search(SEARCH_URL, request)
+    [asset_url] = result  # expect only one asset
+
+    # https://meteoswiss.atlassian.net/browse/OG-62
+    if asset_url.startswith("https://sys-data.int.bgdi.ch"):
+        asset_url = asset_url[29:]
+
+    return asset_url
 
 
 def _get_geo_coord_url(uuid: UUID) -> str:
@@ -145,16 +168,28 @@ def _geo_coords(uuid: UUID) -> dict[str, xr.DataArray]:
 
 
 def get_from_ogd(request: Request) -> xr.DataArray:
+    """Get data from OGD.
+
+    The request attributes define filters for the STAC search API according
+    to the forecast extension. It is recommended to enable caching through
+    earthkit-data. A warning message is emitted if the cache is disabled.
+
+    Parameters
+    ----------
+    request : Request
+        Asset search filters, must select a single asset.
+
+    Returns
+    -------
+    xarray.DataArray
+        A data array of the selected asset including GRIB metadata and coordinates.
+
+    """
     if ekd.settings.get("cache-policy") == "off":
         doc = "https://earthkit-data.readthedocs.io/en/latest/examples/cache.html"
         logger.warn("Earthkit-data caching is recommended. See: %s", doc)
 
     asset_url = get_asset_url(request)
-
-    # https://meteoswiss.atlassian.net/browse/OG-62
-    if asset_url.startswith("https://sys-data.int.bgdi.ch"):
-        asset_url = asset_url[29:]
-        # potentially encoding errors left, try again until it works
 
     source = data_source.URLDataSource(urls=[asset_url])
     return grib_decoder.load(

@@ -86,6 +86,7 @@ def _is_ensemble(field) -> bool:
 def _get_hcoords(
     field: GribField, geo_coords: GeoCoordsCbk | None
 ) -> tuple[dict[str, xr.DataArray], tuple[str, ...]]:
+    hdims: tuple[str, ...]
     if field.metadata("gridType") == "unstructured_grid":
         hdims = ("cell",)
         grid_uuid = UUID(field.metadata("uuidOfHGrid"))

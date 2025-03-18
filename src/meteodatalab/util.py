@@ -1,3 +1,5 @@
+"""Util module."""
+
 # Standard library
 import logging
 

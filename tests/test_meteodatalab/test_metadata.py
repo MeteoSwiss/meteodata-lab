@@ -2,10 +2,9 @@
 import pytest
 
 # First-party
-from meteodatalab.grib_decoder import load
 from meteodatalab.data_source import FileDataSource
-from meteodatalab.metadata import set_origin_xy, is_staggered
-from meteodatalab.operators.destagger import destagger
+from meteodatalab.grib_decoder import load
+from meteodatalab.metadata import is_staggered, set_origin_xy
 
 
 def test_staggered_cosmo_data(data_dir):
@@ -14,7 +13,7 @@ def test_staggered_cosmo_data(data_dir):
 
     source = FileDataSource(datafiles=[cdatafile, datafile])
     ds = load(source, {"param": ["U", "V", "HHL", "T"]})
-    
+
     with pytest.raises(ValueError, match="run set_origin_xy"):
         is_staggered(ds["U"])
 

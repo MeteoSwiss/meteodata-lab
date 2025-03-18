@@ -90,6 +90,7 @@ def test_wind_icon(data_dir, fieldextra, model_name, geo_coords):
     )
 
     assert_allclose(ff_10m, fx_ds["FF_10M"], rtol=1e-6)
+    assert_allclose(dd_10m, fx_ds["DD_10M"], atol=1e-4)
 
     assert ff_10m.parameter == {
         "centre": "lssw",

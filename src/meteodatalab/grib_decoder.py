@@ -95,8 +95,8 @@ def _get_hcoords(
                 "No grid source provided when loading data with unstructured grid, "
                 "falling back to balfrin grid file locations."
             )
-            ds = icon_grid.load_grid_from_balfrin()(grid_uuid)
-            return {"lon": ds.clon, "lat": ds.clat}, hdims
+            hcoords = icon_grid.load_grid_from_balfrin()(grid_uuid)
+            return hcoords, hdims
         else:
             return geo_coords(grid_uuid), hdims
 

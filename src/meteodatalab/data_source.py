@@ -25,7 +25,7 @@ except ImportError:
 # Local
 from . import config, mars
 
-definitions = ContextVar("defintions", default="vendor")
+definitions = ContextVar("definitions", default="vendor")
 
 
 @contextmanager

@@ -61,6 +61,10 @@ class Request:
     perturbed: bool
     horizon: dt.timedelta
 
+    if typing.TYPE_CHECKING:
+        # https://github.com/pydantic/pydantic/issues/10266
+        def __init__(self, *args: typing.Any, **kwargs: typing.Any): ...
+
     @pydantic.computed_field  # type: ignore[misc]
     @property
     def collections(self) -> list[str]:

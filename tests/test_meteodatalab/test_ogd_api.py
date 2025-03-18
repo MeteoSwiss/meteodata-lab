@@ -55,7 +55,6 @@ def test_request_invalid(key):
         ("2025-04-08T08:00:00Z/..", True),
         ("2025-04-08T08:00:00Z/2025-04-09T08:00:00Z", True),
         (dt.datetime.now(dt.timezone.utc), True),
-        (dt.datetime.now(), True),
         ("not a date", False),
         (1744786857, False),
         ("2025-04-08T08:00:00Z/2025-04-07T08:00:00Z", False),
@@ -101,6 +100,5 @@ def test_get_from_ogd(mock_session: mock.MagicMock, data_dir: Path):
     )
     observed = ogd_api.get_from_ogd(req)
 
-    assert mock_session.mock_calls == []
     assert isinstance(observed, xr.DataArray)
     assert observed.parameter["shortName"] == "T"

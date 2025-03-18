@@ -207,13 +207,18 @@ def vref_rot2geolatlon(
     v : xarray.DataArray
         y component of the vector field w.r.t. a rotated lat lon grid.
 
+    Raises
+    ------
+    ValueError
+        if either field is on a staggered grid.
+
     Returns
     -------
     tuple[xarray.DataArray, xarray.DataArray]
         x and y components of the vector field w.r.t. the geo lat lon coords.
 
     """
-    if u.origin_x != 0.0 or v.origin_y != 0.0:
+    if metadata.is_staggered(u) or metadata.is_staggered(v):
         raise ValueError("The vector fields must be destaggered.")
 
     grid = get_grid(u.geography)

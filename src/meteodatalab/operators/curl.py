@@ -9,6 +9,7 @@ import xarray as xr
 
 # Local
 from .. import physical_constants as pc
+from ..metadata import is_staggered
 from . import diff
 from .destagger import destagger
 from .total_diff import TotalDiff
@@ -27,8 +28,8 @@ def curl(
     tgrlat = cast(xr.DataArray, np.tan(rlat))
 
     # compute weighted derivatives for FD
-    u_f = destagger(u, "x") if u.origin_x != 0.0 else u
-    v_f = destagger(v, "y") if v.origin_y != 0.0 else v
+    u_f = destagger(u, "x") if is_staggered(u) else u
+    v_f = destagger(v, "y") if is_staggered(v) else v
     w_f = destagger(w, "z")
 
     du_dz = diff.dz(u_f)
@@ -64,8 +65,8 @@ def curl_alt(
     acrlat = 1 / (np.cos(rlat) * pc.earth_radius)
     tgrlat = np.tan(rlat)
 
-    u_f = destagger(u, "x")
-    v_f = destagger(v, "y")
+    u_f = destagger(u, "x") if is_staggered(u) else u
+    v_f = destagger(v, "y") if is_staggered(v) else v
     w_f = destagger(w, "z")
 
     du_dphi = np.gradient(u_f, td.dlat, axis=-2)

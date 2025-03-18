@@ -7,7 +7,7 @@ import pytest
 from numpy.testing import assert_allclose, assert_array_less
 
 # First-party
-from meteodatalab import data_source, grib_decoder, icon_grid
+from meteodatalab import data_source, grib_decoder
 from meteodatalab.operators.hzerocl import fhzerocl
 
 try:
@@ -15,11 +15,6 @@ try:
     from meteodatalab.operators import regrid
 except ImportError:
     pytest.skip("skipping regrid tests due to missing imports", allow_module_level=True)
-
-
-@pytest.fixture
-def geo_coords():
-    return icon_grid.load_grid_from_balfrin()
 
 
 @pytest.mark.data("original")

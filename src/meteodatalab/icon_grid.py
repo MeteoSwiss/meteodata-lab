@@ -51,12 +51,12 @@ def load_grid_from_file(uuid: UUID, grid_paths: dict[UUID, Path]) -> xr.Dataset:
 
 def load_grid_from_balfrin() -> Callable[[UUID], xr.Dataset]:
     """Return a grid source to load grid files when running on balfrin."""
-    grid_dir = Path("/scratch/mch/jenkins/icon/pool/data/ICON/mch/grids/")
+    grid_dir = Path("/oprusers/osm/opr.emme/data/ICON_INPUT")
     grid_paths = {
         UUID("17643da2-5749-59b6-44d2-54a3cd6e2bc0"): grid_dir
-        / "icon-1/icon_grid_0001_R19B08_mch.nc",
+        / "ICON-CH1-EPS/icon_grid_0001_R19B08_mch.nc",
         UUID("bbbd5a09-8554-9924-3c7a-4aa4c8762920"): grid_dir
-        / "icon-2/icon_grid_0002_R19B07_mch.nc",
+        / "ICON-CH2-EPS/icon_grid_0002_R19B07_mch.nc",
     }
     return partial(load_grid_from_file, grid_paths=grid_paths)
 

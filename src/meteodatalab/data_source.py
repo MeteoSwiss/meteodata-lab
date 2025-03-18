@@ -8,6 +8,7 @@ import typing
 from abc import ABC, abstractmethod
 from collections.abc import Iterator
 from contextlib import contextmanager, nullcontext
+from contextvars import ContextVar
 from functools import singledispatchmethod
 from pathlib import Path
 
@@ -24,10 +25,17 @@ except ImportError:
 # Local
 from . import config, mars
 
+definitions = ContextVar("defintions", default="vendor")
+
 
 @contextmanager
 def cosmo_grib_defs():
     """Enable COSMO GRIB definitions."""
+    if definitions.get() == "cosmo":
+        yield
+        return
+
+    token = definitions.set("cosmo")
     restore = eccodes.codes_definition_path()
     root_dir = Path(sys.prefix) / "share"
     paths = (
@@ -42,6 +50,7 @@ def cosmo_grib_defs():
     try:
         yield
     finally:
+        definitions.reset(token)
         eccodes.codes_set_definitions_path(restore)
 
 

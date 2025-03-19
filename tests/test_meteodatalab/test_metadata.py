@@ -4,7 +4,7 @@ import pytest
 # First-party
 from meteodatalab.data_source import FileDataSource
 from meteodatalab.grib_decoder import load
-from meteodatalab.metadata import is_staggered, set_origin_xy
+from meteodatalab.metadata import is_staggered_horizontal, set_origin_xy
 
 
 def test_staggered_cosmo_data(data_dir):
@@ -15,14 +15,14 @@ def test_staggered_cosmo_data(data_dir):
     ds = load(source, {"param": ["U", "V", "HHL", "T"]})
 
     with pytest.raises(ValueError, match="run set_origin_xy"):
-        is_staggered(ds["U"])
+        is_staggered_horizontal(ds["U"])
 
     set_origin_xy(ds, ref_param="HHL")
 
-    assert is_staggered(ds["U"])
-    assert is_staggered(ds["V"])
-    assert not is_staggered(ds["HHL"])
-    assert not is_staggered(ds["T"])
+    assert is_staggered_horizontal(ds["U"])
+    assert is_staggered_horizontal(ds["V"])
+    assert not is_staggered_horizontal(ds["HHL"])
+    assert not is_staggered_horizontal(ds["T"])
 
 
 @pytest.mark.data("iconremap")
@@ -31,6 +31,6 @@ def test_icon_data_not_staggered(data_dir, geo_coords):
     source = FileDataSource(datafiles=datafiles)
     ds = load(source, {"param": ["U", "V", "T"]}, geo_coords=geo_coords)
 
-    assert not is_staggered(ds["U"])
-    assert not is_staggered(ds["V"])
-    assert not is_staggered(ds["T"])
+    assert not is_staggered_horizontal(ds["U"])
+    assert not is_staggered_horizontal(ds["V"])
+    assert not is_staggered_horizontal(ds["T"])

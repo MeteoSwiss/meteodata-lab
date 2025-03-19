@@ -5,7 +5,7 @@ import numpy as np
 import xarray as xr
 
 # Local
-from ..metadata import is_staggered, override
+from ..metadata import is_staggered_horizontal, override
 from .gis import vref_rot2geolatlon
 
 
@@ -35,7 +35,7 @@ def speed(u: xr.DataArray, v: xr.DataArray) -> xr.DataArray:
         the horizontal wind speed [m/s].
 
     """
-    if is_staggered(u) or is_staggered(v):
+    if is_staggered_horizontal(u) or is_staggered_horizontal(v):
         raise ValueError("The wind components should not be staggered.")
 
     name = {"U": "SP", "U_10M": "SP_10M"}[u.parameter["shortName"]]
@@ -73,12 +73,17 @@ def direction(u: xr.DataArray, v: xr.DataArray) -> xr.DataArray:
         the horizontal wind direction with respect to geographic North [deg].
 
     """
+    if is_staggered_horizontal(u) or is_staggered_horizontal(v):
+        raise ValueError("The wind components should not be staggered.")
+
     rad2deg = 180 / np.pi
-    if u.vref == "geo" and v.vref == "geo":
+    if u.vref == "native" and v.vref == "native":
+        u_g, v_g = vref_rot2geolatlon(u, v)
+    elif u.vref == "geo" and v.vref == "geo":
         u_g = u
         v_g = v
     else:
-        u_g, v_g = vref_rot2geolatlon(u, v)
+        ValueError(f"Differing or unknown vector references ({u.vref=}, {v.vref=})")
     name = {"U": "DD", "U_10M": "DD_10M"}[u.parameter["shortName"]]
     return xr.DataArray(
         rad2deg * np.arctan2(u_g, v_g) + 180,

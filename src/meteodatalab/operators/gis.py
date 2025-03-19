@@ -218,7 +218,7 @@ def vref_rot2geolatlon(
         x and y components of the vector field w.r.t. the geo lat lon coords.
 
     """
-    if metadata.is_staggered(u) or metadata.is_staggered(v):
+    if metadata.is_staggered_horizontal(u) or metadata.is_staggered_horizontal(v):
         raise ValueError("The vector fields must be destaggered.")
 
     grid = get_grid(u.geography)

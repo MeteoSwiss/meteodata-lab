@@ -10,7 +10,7 @@ import yaml
 
 # Local
 from . import __version__, grib_decoder
-from .metadata import is_staggered
+from .metadata import is_staggered_horizontal
 from .operators import destagger, gis, regrid
 
 
@@ -70,9 +70,9 @@ def handle_vector_fields(ds):
     for u_name, v_name in pairs:
         click.echo(f"Rotating vector field components {u_name}, {v_name} to geolatlon")
         u, v = ds[u_name], ds[v_name]
-        if is_staggered(u):
+        if is_staggered_horizontal(u):
             u = destagger.destagger(u, "x")
-        if is_staggered(v):
+        if is_staggered_horizontal(v):
             v = destagger.destagger(v, "y")
         if u.vref == "native" and v.vref == "native":
             u_g, v_g = gis.vref_rot2geolatlon(u, v)

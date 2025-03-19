@@ -161,7 +161,7 @@ def _uses_icon_grid(metadata: Metadata) -> bool:
     return metadata.get("centre", default="") == "lssw" and (
         metadata.get("generatingProcessIdentifier", default=0) == 141
         or metadata.get("generatingProcessIdentifier", default=0) == 142
-    )
+    ) and metadata("gridType") == "unstructured_grid"
 
 
 def set_origin_xy(ds: dict[str, xr.DataArray], ref_param: str) -> None:
@@ -245,8 +245,8 @@ def extract_hcoords(metadata: Metadata) -> dict[str, xr.DataArray]:
     }
 
 
-def is_staggered(field: xr.DataArray) -> bool:
-    """Determine if the field is on a staggered grid.
+def is_staggered_horizontal(field: xr.DataArray) -> bool:
+    """Determine if the field is on a staggered horizontal grid.
 
     Parameters
     ----------
@@ -261,7 +261,7 @@ def is_staggered(field: xr.DataArray) -> bool:
     Returns
     -------
     bool
-        True if the field is on a staggered grid.
+        True if the field is on a staggered horizontal grid.
 
     """
     if _uses_icon_grid(field.metadata):

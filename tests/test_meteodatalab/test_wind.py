@@ -77,10 +77,10 @@ def test_wind_icon(data_dir, fieldextra, model_name, geo_coords):
         "inputi": data_dir / f"{model_name.upper()}_lfff<DDHH>0000_000",
         "output": "<HH>_outfile.nc",
     }
-    root = "/oprusers/osm/opr.emme/data/ICON_INPUT"
+    root = "/oprusers/osm/opr/data/grid_descriptions"
     icon_grid_description = {
-        "icon-ch1-eps": f"{root}/ICON-CH1-EPS/icon_grid_0001_R19B08_mch.nc",
-        "icon-ch2-eps": f"{root}/ICON-CH2-EPS/icon_grid_0002_R19B07_mch.nc",
+        "icon-ch1-eps": f"{root}/icon_grid_0001_R19B08_mch.nc",
+        "icon-ch2-eps": f"{root}/icon_grid_0002_R19B07_mch.nc",
     }
     fx_ds = fieldextra(
         "wind_icon",

@@ -164,7 +164,7 @@ def _uses_icon_grid(metadata: Metadata) -> bool:
             metadata.get("generatingProcessIdentifier", default=0) == 141
             or metadata.get("generatingProcessIdentifier", default=0) == 142
         )
-        and metadata("gridType") == "unstructured_grid"
+        and metadata.get("gridType") == "unstructured_grid"
     )
 
 

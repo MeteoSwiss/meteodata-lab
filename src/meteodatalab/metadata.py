@@ -158,10 +158,14 @@ def _uses_icon_grid(metadata: Metadata) -> bool:
         True if the data was created by an MCH ICON forecast.
 
     """
-    return metadata.get("centre", default="") == "lssw" and (
-        metadata.get("generatingProcessIdentifier", default=0) == 141
-        or metadata.get("generatingProcessIdentifier", default=0) == 142
-    ) and metadata("gridType") == "unstructured_grid"
+    return (
+        metadata.get("centre", default="") == "lssw"
+        and (
+            metadata.get("generatingProcessIdentifier", default=0) == 141
+            or metadata.get("generatingProcessIdentifier", default=0) == 142
+        )
+        and metadata("gridType") == "unstructured_grid"
+    )
 
 
 def set_origin_xy(ds: dict[str, xr.DataArray], ref_param: str) -> None:

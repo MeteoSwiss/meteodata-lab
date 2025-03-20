@@ -130,6 +130,11 @@ def get_asset_url(request: Request):
     request : Request
         Asset search filters, must select a single asset.
 
+    Raises
+    ------
+    ValueError
+        when the request does not select exactly one asset.
+
     Returns
     -------
     str
@@ -153,7 +158,7 @@ def _get_geo_coord_url(uuid: UUID) -> str:
     model = icon_grid.GRID_UUID_TO_MODEL.get(uuid)
 
     if model is None:
-        raise KeyError("Grid uuid not found")
+        raise KeyError("Grid UUID not found")
 
     config_path = files("meteodatalab.data").joinpath("geo_coords_urls.yaml")
     urls = yaml.safe_load(config_path.open())
@@ -182,6 +187,11 @@ def get_from_ogd(request: Request) -> xr.DataArray:
     ----------
     request : Request
         Asset search filters, must select a single asset.
+
+    Raises
+    ------
+    ValueError
+        when the request does not select exactly one asset.
 
     Returns
     -------

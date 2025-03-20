@@ -17,7 +17,9 @@ GRID_UUID_TO_MODEL = {
 }
 
 
-def load_grid_from_file(uuid: UUID, grid_paths: dict[UUID, Path]) -> xr.Dataset:
+def load_grid_from_file(
+    uuid: UUID, grid_paths: dict[UUID, Path]
+) -> dict[str, xr.DataArray]:
     """Load the clat and clon grid coordinates from .nc format file.
 
     Parameters
@@ -34,7 +36,7 @@ def load_grid_from_file(uuid: UUID, grid_paths: dict[UUID, Path]) -> xr.Dataset:
 
     Returns
     -------
-    xarray.Dataset
+    dict[str, xr.DataArray]
         Dataset containing clon and clat coordinates of the ICON grid cell centers for
         the model.
 
@@ -46,10 +48,11 @@ def load_grid_from_file(uuid: UUID, grid_paths: dict[UUID, Path]) -> xr.Dataset:
         )
     rad2deg = 180 / np.pi
     ds = xr.open_dataset(grid_path)
-    return ds[["clon", "clat"]].reset_coords() * rad2deg
+    result = ds[["clon", "clat"]].reset_coords() * rad2deg
+    return {"lon": result.clon, "lat": result.clat}
 
 
-def load_grid_from_balfrin() -> Callable[[UUID], xr.Dataset]:
+def load_grid_from_balfrin() -> Callable[[UUID], dict[str, xr.DataArray]]:
     """Return a grid source to load grid files when running on balfrin."""
     grid_dir = Path("/scratch/mch/jenkins/icon/pool/data/ICON/mch/grids/")
     grid_paths = {

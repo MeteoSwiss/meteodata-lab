@@ -58,6 +58,7 @@ pre-commit = "*"
 pydocstyle = "*"
 pytest = "*"
 rstcheck = { version = "*", extras = ["sphinx"] }
+types-requests = "*"
 types-PyYAML = "*"
 
 [tool.poetry.urls]
@@ -106,6 +107,7 @@ known_first_party = [
 ]
 
 [tool.mypy]
+plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]
 # Note: Only globally ignore missing imports as a matter of last resort!

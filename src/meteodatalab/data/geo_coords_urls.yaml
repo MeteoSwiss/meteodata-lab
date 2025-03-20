@@ -1,0 +1,6 @@
+icon-ch1-eps:
+  vertical: https://rgw.cscs.ch/cscs.meteoswiss.ogd.nwp.static/vertical_constants_ICON-CH1-EPS.grib2?AWSAccessKeyId=13GC1T4NT2CY1N0L92YC&Signature=iJcbSbcxhg9D1fa4QY6q0tI2dIQ%3D&Expires=1744787114
+  horizontal: https://rgw.cscs.ch/cscs.meteoswiss.ogd.nwp.static/horizontal_constants_ICON-CH1-EPS.grib2?AWSAccessKeyId=13GC1T4NT2CY1N0L92YC&Signature=UGsmyVq7GDG014nkMT2KHEis09o%3D&Expires=1744787111
+icon-ch2-eps:
+  vertical: https://rgw.cscs.ch/cscs.meteoswiss.ogd.nwp.static/vertical_constants_ICON-CH2-EPS.grib2?AWSAccessKeyId=13GC1T4NT2CY1N0L92YC&Signature=OOS5%2BcuRNre8qTRBgqK5Vf29BuU%3D&Expires=1744786857
+  horizontal: https://rgw.cscs.ch/cscs.meteoswiss.ogd.nwp.static/horizontal_constants_ICON-CH2-EPS.grib2?AWSAccessKeyId=13GC1T4NT2CY1N0L92YC&Signature=qbZhFGwKFFP%2Bo5ScS%2FMW4H1IvWI%3D&Expires=1744786856

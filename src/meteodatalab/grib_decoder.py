@@ -34,6 +34,7 @@ DIM_MAP = {
 }
 NAME_KEY = "shortName"
 
+GeoCoordsCbk = Callable[[UUID], dict[str, xr.DataArray]]
 Request = str | tuple | dict | mars.Request
 
 
@@ -83,24 +84,28 @@ def _is_ensemble(field) -> bool:
 
 
 def _get_hcoords(
-    field: GribField, geo_coords: Callable[[UUID], xr.Dataset] | None
-) -> dict[str, xr.DataArray]:
+    field: GribField, geo_coords: GeoCoordsCbk | None
+) -> tuple[dict[str, xr.DataArray], tuple[str, ...]]:
+    hdims: tuple[str, ...]
     if field.metadata("gridType") == "unstructured_grid":
+        hdims = ("cell",)
         grid_uuid = UUID(field.metadata("uuidOfHGrid"))
         if geo_coords is None:
             logger.info(
                 "No grid source provided when loading data with unstructured grid, "
                 "falling back to balfrin grid file locations."
             )
-            ds = icon_grid.load_grid_from_balfrin()(grid_uuid)
+            hcoords = icon_grid.load_grid_from_balfrin()(grid_uuid)
+            return hcoords, hdims
         else:
-            ds = geo_coords(grid_uuid)
-        return {"lon": ds.clon, "lat": ds.clat}
+            return geo_coords(grid_uuid), hdims
 
-    return {
+    hcoords = {
         dim: xr.DataArray(dims=("y", "x"), data=values)
         for dim, values in field.to_latlon().items()
     }
+    hdims = ("y", "x")
+    return hcoords, hdims
 
 
 def _parse_datetime(date, time) -> dt.datetime:
@@ -128,6 +133,7 @@ def _get_key(field, dims):
 class _FieldBuffer:
     is_ensemble: dc.InitVar[bool]
     dims: tuple[str, ...] = tuple(DIM_MAP)
+    hdims: tuple[str, ...] = ("y", "x")
     hcoords: dict[str, xr.DataArray] = dc.field(default_factory=dict)
     metadata: dict[str, typing.Any] = dc.field(default_factory=dict)
     values: dict[tuple[int, ...], np.ndarray] = dc.field(default_factory=dict)
@@ -136,9 +142,7 @@ class _FieldBuffer:
         if not is_ensemble:
             self.dims = self.dims[1:]
 
-    def load(
-        self, field: GribField, geo_coords: Callable[[UUID], xr.Dataset] | None
-    ) -> None:
+    def load(self, field: GribField, geo_coords: GeoCoordsCbk | None) -> None:
         key = _get_key(field, self.dims)
         name = field.metadata(NAME_KEY)
         logger.debug("Received field for param: %s, key: %s", name, key)
@@ -156,7 +160,7 @@ class _FieldBuffer:
             }
 
         if not self.hcoords:
-            self.hcoords = _get_hcoords(field, geo_coords=geo_coords)
+            self.hcoords, self.hdims = _get_hcoords(field, geo_coords=geo_coords)
 
     def _gather_coords(self):
         coord_values = zip(*self.values)
@@ -184,14 +188,13 @@ class _FieldBuffer:
         ref_time = xr.DataArray(coords["ref_time"], dims="ref_time")
         lead_time = xr.DataArray(coords["lead_time"], dims="lead_time")
         tcoords = {"valid_time": ref_time + lead_time}
-        hdims = self.hcoords["lon"].dims
 
         array = xr.DataArray(
             data=np.array(
                 [self.values.pop(key) for key in sorted(self.values)]
             ).reshape(shape),
             coords=coords | self.hcoords | tcoords,
-            dims=self.dims + hdims,
+            dims=self.dims + self.hdims,
             attrs=self.metadata,
         )
 
@@ -204,7 +207,7 @@ class _FieldBuffer:
 def _load_buffer_map(
     source: data_source.DataSource,
     request: Request,
-    geo_coords: Callable[[UUID], xr.Dataset] | None,
+    geo_coords: GeoCoordsCbk | None,
 ) -> dict[str, _FieldBuffer]:
     logger.info("Retrieving request: %s", request)
     fs = source.retrieve(request)
@@ -225,7 +228,7 @@ def _load_buffer_map(
 def load_single_param(
     source: data_source.DataSource,
     request: Request,
-    geo_coords: Callable[[UUID], xr.Dataset] | None = None,
+    geo_coords: GeoCoordsCbk | None = None,
 ) -> xr.DataArray:
     """Request data from a data source for a single parameter.
 
@@ -235,9 +238,9 @@ def load_single_param(
         Source to request the data from.
     request : str | tuple[str, str] | dict[str, Any] | meteodatalab.mars.Request
         Request for data from the source in the mars language.
-    geo_coords: Callable[[UUID], xr.Dataset] | None
-        Callable that returns a Dataset of xarrays with the clat and clon coordinates
-        of the ICON grid defined by the given UUID.
+    geo_coords: Callable[[UUID], dict[str, xr.DataArray]] | None
+        Callable that returns the horizontal coordinates
+        of the grid defined by the given UUID. The dimension must be "cell".
 
     Raises
     ------
@@ -267,7 +270,7 @@ def load_single_param(
 def load(
     source: data_source.DataSource,
     request: Request,
-    geo_coords: Callable[[UUID], xr.Dataset] | None = None,
+    geo_coords: GeoCoordsCbk | None = None,
 ) -> dict[str, xr.DataArray]:
     """Request data from a data source.
 
@@ -277,9 +280,9 @@ def load(
         Source to request the data from.
     request : str | tuple[str, str] | dict[str, Any] | meteodatalab.mars.Request
         Request for data from the source in the mars language.
-    geo_coords: Callable[[UUID], xr.Dataset] | None
-        Callable that returns a Dataset of xarrays with the clat and clon coordinates
-        of the ICON grid defined by the given UUID.
+    geo_coords: Callable[[UUID], dict[str, xr.DataArray]] | None
+        Callable that returns the horizontal coordinates
+        of the grid defined by the given UUID. The dimension must be "cell".
 
     Raises
     ------
@@ -306,7 +309,7 @@ class GribReader:
     def __init__(
         self,
         source: data_source.DataSource,
-        geo_coords: Callable[[UUID], xr.Dataset] | None = None,
+        geo_coords: GeoCoordsCbk | None = None,
         ref_param: Request | None = None,
     ):
         """Initialize a grib reader from a data source.
@@ -315,9 +318,9 @@ class GribReader:
         ----------
         source : data_source.DataSource
             Data source from which to retrieve the grib fields
-        geo_coords: Callable[[UUID], xr.Dataset] | None
-            Callable that returns a Dataset of xarrays with the clat and clon
-            coordinates of the ICON grid defined by the given UUID.
+        geo_coords: Callable[[UUID], dict[str, xr.DataArray]] | None
+            Callable that returns the horizontal coordinates
+            of the grid defined by the given UUID. The dimension must be "cell".
         ref_param : str
             name of parameter used to construct a reference grid
 
@@ -336,7 +339,7 @@ class GribReader:
     def from_files(
         cls,
         datafiles: list[Path],
-        geo_coords: Callable[[UUID], xr.Dataset] | None = None,
+        geo_coords: GeoCoordsCbk | None = None,
         ref_param: Request | None = None,
     ):
         """Initialize a grib reader from a list of grib files.
@@ -345,9 +348,9 @@ class GribReader:
         ----------
         datafiles : list[Path]
             List of grib input filenames
-        geo_coords: Callable[[UUID], xr.Dataset] | None
-            Callable that returns a Dataset of xarrays with the clat and clon
-            coordinates of the ICON grid defined by the given UUID.
+        geo_coords: Callable[[UUID], dict[str, xr.DataArray]] | None
+            Callable that returns the horizontal coordinates
+            of the grid defined by the given UUID. The dimension must be "cell".
         ref_param : str
             name of parameter used to construct a reference grid
 

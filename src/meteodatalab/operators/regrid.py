@@ -250,6 +250,16 @@ def _get_metadata(grid: RegularGrid):
             "longitudeOfSouthernPole": _udeg(grid.crs.get("lon_0")),
             "angleOfRotation": 0.0,
         }
+    else:
+        # Rather than attempt to populate the GRIB definition in the general case, we
+        # just set the sourceOfGridDefinition to 255. Ideally we would also set
+        # gridDefinitionTemplateNumber to 65535, but eccodes attempts and fails to find
+        # a template by this number.
+        return {
+            "sourceOfGridDefinition": 255,  # grid definition does not apply
+            "numberOfDataPoints": grid.nx * grid.ny,
+            "numberOfOctectsForNumberOfPoints": 0,
+        }
 
 
 def regrid(

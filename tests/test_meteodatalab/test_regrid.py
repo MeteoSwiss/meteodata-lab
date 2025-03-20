@@ -182,6 +182,10 @@ def test_icon2swiss_small(data_dir, fieldextra, model_name, geo_coords):
     assert observed.sel(y=18, x=10).lon == pytest.approx(7.504410, 1e-5)
     assert observed.sel(y=18, x=10).lat == pytest.approx(47.032020, 1e-5)
 
+    # Verify that the metadata grid fields that we can override are correct.
+    assert observed.metadata["sourceOfGridDefinition"] == 255
+    assert observed.metadata["numberOfDataPoints"] == 19 * 11
+
 
 @pytest.mark.skip(reason="the byc method in fx is not optimised (>30min on icon-ch1)")
 @pytest.mark.data("iconremap")

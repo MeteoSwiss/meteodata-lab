@@ -10,6 +10,9 @@ import pytest
 import xarray as xr
 from jinja2 import Environment, FileSystemLoader
 
+# First-party
+from meteodatalab import icon_grid
+
 root = Path(__file__).parents[2]
 view_path = str(root / "spack-env/.spack-env/view")
 os.environ["ECCODES_DIR"] = view_path
@@ -157,3 +160,8 @@ def fieldextra(tmp_path, data_dir, template_env, fieldextra_path):
         ]
 
     return f
+
+
+@pytest.fixture
+def geo_coords():
+    return icon_grid.load_grid_from_balfrin()

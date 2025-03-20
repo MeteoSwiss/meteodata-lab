@@ -2,6 +2,7 @@
 
 # Standard library
 import dataclasses as dc
+import logging
 import typing
 
 # Third-party
@@ -11,6 +12,9 @@ from earthkit.data.core.metadata import Metadata  # type: ignore
 
 # Local
 from . import grib_decoder
+
+_logger = logging.getLogger(__name__)
+
 
 VCOORD_TYPE = {
     "generalVertical": ("model_level", -0.5),
@@ -140,6 +144,30 @@ def compute_origin(ref_grid: Grid, field: xr.DataArray) -> dict[str, float]:
     }
 
 
+def _uses_icon_grid(metadata: Metadata) -> bool:
+    """Determine if the data is on a MeteoSwiss ICON grid.
+
+    Parameters
+    ----------
+    metadata : Metadata
+        GRIB metadata containing the grid definition.
+
+    Returns
+    -------
+    bool
+        True if the data was created by an MCH ICON forecast.
+
+    """
+    return (
+        metadata.get("centre", default="") == "lssw"
+        and (
+            metadata.get("generatingProcessIdentifier", default=0) == 141
+            or metadata.get("generatingProcessIdentifier", default=0) == 142
+        )
+        and metadata.get("gridType") == "unstructured_grid"
+    )
+
+
 def set_origin_xy(ds: dict[str, xr.DataArray], ref_param: str) -> None:
     """Set horizontal components of the origin attribute.
 
@@ -158,6 +186,14 @@ def set_origin_xy(ds: dict[str, xr.DataArray], ref_param: str) -> None:
     """
     if ref_param not in ds:
         raise KeyError(f"ref_param {ref_param} not present in dataset.")
+
+    if _uses_icon_grid(ds[ref_param].metadata):
+        _logger.warning(
+            "Data is on the ICON grid, not setting origin values. "
+            "Setting the origin components is intended for support with horizontal "
+            "grid staggering, which is not used in the output of the ICON model."
+        )
+        return
 
     ref_grid = load_grid_reference(ds[ref_param].metadata)
     for field in ds.values():
@@ -211,3 +247,30 @@ def extract_hcoords(metadata: Metadata) -> dict[str, xr.DataArray]:
             dims=("y", "x"), data=geo.longitudes().reshape(geo.shape())
         ),
     }
+
+
+def is_staggered_horizontal(field: xr.DataArray) -> bool:
+    """Determine if the field is on a staggered horizontal grid.
+
+    Parameters
+    ----------
+    field: xr.DataArray
+        Field containing the grid definition.
+
+    Raises
+    ------
+    ValueError
+        if the field is a on regular grid without origin_x and origin_y set.
+
+    Returns
+    -------
+    bool
+        True if the field is on a staggered horizontal grid.
+
+    """
+    if _uses_icon_grid(field.metadata):
+        return False
+
+    if "origin_x" not in field.attrs or "origin_y" not in field.attrs:
+        raise ValueError("Field is missing origin, run set_origin_xy on the data set.")
+    return field.origin_x != 0.0 or field.origin_y != 0.0

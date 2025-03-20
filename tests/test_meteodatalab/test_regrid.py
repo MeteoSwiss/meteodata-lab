@@ -7,7 +7,7 @@ import pytest
 from numpy.testing import assert_allclose, assert_array_less
 
 # First-party
-from meteodatalab import data_source, grib_decoder, icon_grid
+from meteodatalab import data_source, grib_decoder
 from meteodatalab.operators.hzerocl import fhzerocl
 
 try:
@@ -15,11 +15,6 @@ try:
     from meteodatalab.operators import regrid
 except ImportError:
     pytest.skip("skipping regrid tests due to missing imports", allow_module_level=True)
-
-
-@pytest.fixture
-def geo_coords():
-    return icon_grid.load_grid_from_balfrin()
 
 
 @pytest.mark.data("original")
@@ -91,10 +86,10 @@ def test_icon2geolatlon(data_dir, fieldextra, model_name, geo_coords):
         "icon-ch1-eps": "geolatlon,5500000,43600000,16900000,50000000,10000,10000",
         "icon-ch2-eps": "geolatlon,5500000,43600000,16900000,50000000,20000,20000",
     }
-    root = "/oprusers/osm/opr.emme/data/ICON_INPUT"
+    root = "/oprusers/osm/opr/data/grid_descriptions"
     icon_grid_description = {
-        "icon-ch1-eps": f"{root}/ICON-CH1-EPS/icon_grid_0001_R19B08_mch.nc",
-        "icon-ch2-eps": f"{root}/ICON-CH2-EPS/icon_grid_0002_R19B07_mch.nc",
+        "icon-ch1-eps": f"{root}/icon_grid_0001_R19B08_mch.nc",
+        "icon-ch2-eps": f"{root}/icon_grid_0002_R19B07_mch.nc",
     }
 
     fx_ds = fieldextra(
@@ -128,10 +123,10 @@ def test_icon2rotlatlon(data_dir, fieldextra, model_name, geo_coords):
         "icon-ch2-eps": "rotlatlon,353180000,-4420000,4800000,3360000,20000,20000,"
         "190000000,43000000",
     }
-    root = "/oprusers/osm/opr.emme/data/ICON_INPUT"
+    root = "/oprusers/osm/opr/data/grid_descriptions"
     icon_grid_description = {
-        "icon-ch1-eps": f"{root}/ICON-CH1-EPS/icon_grid_0001_R19B08_mch.nc",
-        "icon-ch2-eps": f"{root}/ICON-CH2-EPS/icon_grid_0002_R19B07_mch.nc",
+        "icon-ch1-eps": f"{root}/icon_grid_0001_R19B08_mch.nc",
+        "icon-ch2-eps": f"{root}/icon_grid_0002_R19B07_mch.nc",
     }
 
     fx_ds = fieldextra(
@@ -199,10 +194,10 @@ def test_icon2swiss(data_dir, fieldextra, model_name, geo_coords):
     dst = regrid.RegularGrid.parse_regrid_operator(out_regrid_target[model_name])
     observed = regrid.iconremap(ds["T"], dst)
 
-    root = "/oprusers/osm/opr.emme/data/ICON_INPUT"
+    root = "/oprusers/osm/opr/data/grid_descriptions"
     icon_grid_description = {
-        "icon-ch1-eps": f"{root}/ICON-CH1-EPS/icon_grid_0001_R19B08_mch.nc",
-        "icon-ch2-eps": f"{root}/ICON-CH2-EPS/icon_grid_0002_R19B07_mch.nc",
+        "icon-ch1-eps": f"{root}/icon_grid_0001_R19B08_mch.nc",
+        "icon-ch2-eps": f"{root}/icon_grid_0002_R19B07_mch.nc",
     }
 
     fx_ds = fieldextra(

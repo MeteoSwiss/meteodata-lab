@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: C2SM/sphinx-action@sphinx-latest
+    - uses: ammaraskar/sphinx-action@7.4.7
       with:
         pre-build-command: "pip install ."
         docs-folder: "docs/"

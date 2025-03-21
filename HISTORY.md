@@ -1,5 +1,43 @@
 # History
 
+## [0.2.0] (2025-03-20)
+
+### Additions
+
+- `cli`: Added subcommand for the regrid operator
+- `data_source`
+  - Added `URLDataSource`, `FDBDataSource`, `FileDataSource`, `PolytopeDataSource` as implementations of `DataSource`
+  - `retrieve` accepts an argument of type `mars.Request`
+- `grib_decoder`
+  - Added `save` function
+  - `load` supports the ICON native grid
+  - Added `geo_coords` optional argument to the `load` function
+- `mars`: Added `feature` attribute to the `mars.Request` class
+- `mch_model_data`: Added `archive_to_fdb` function
+- `ogd_api`
+  - Added `get_from_ogd` function
+  - Added `ogd_api.Request` class
+- `operators`
+  - `regrid`: Added `icon2rotlatlon`, `icon2geolatlon` and `iconremap` functions
+  - Added `crop` module
+
+### Breaking Changes
+
+- The constants module is renamed to physical constants and the `pc_` prefix is dropped in favour of aliasing the module to `pc` at the call sites
+- The grib definitions context is no longer derived from the request model attribute.
+  In practice, all defined models required the cosmo definitions as IFS grib data does not define the model mars key.
+  Setting `data_scope` config to `ifs` to disable the cosmo definitions context remains possible.
+- `data_source.DataSource` is now an abstract base class
+- Renamed dimension `time` to `lead_time` and changed its type from `int` to `numpy.timedelta64[ns]`
+- Added dimension `ref_time` with type `numpy.datetime64[ns]`
+- `DataArray` objects representing a field no longer have the `message`
+  attribute but now have a `metadata` attribute that is an instance of
+  `StandAloneGribMetadata` from earthkit-data.
+- `FDBDataSource`, `mch_model_data.get_from_fdb` and `mch_model_data.archive_to_fdb` require the `fdb` extra dependency
+- `PolytopeDataSource` and `mch_mode_data.get_from_polytope` requires the `polytope` extra dependency
+- The `operators.regrid` module now requires the `regrid` extra dependencies
+
+
 ## [0.2.0-rc3] (2023-12-18)
 
 - Added vertical interpolation operator `interpolate_k2any`
@@ -61,6 +99,7 @@
 - Added ninjo_k2th product
 - Added GRIB data loader based on earthkit-data
 
+[0.2.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.2.0-rc3..v0.2.0
 [0.2.0-rc3]: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.2.0-rc2..v0.2.0-rc3
 [0.2.0-rc2]: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.2.0-rc1..v0.2.0-rc2
 [0.2.0-rc1]: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.1.0..v0.2.0-rc1

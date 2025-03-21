@@ -3,7 +3,6 @@
 # Standard library
 import dataclasses as dc
 import os
-import sys
 import typing
 from abc import ABC, abstractmethod
 from collections.abc import Iterator
@@ -15,6 +14,7 @@ from pathlib import Path
 # Third-party
 import earthkit.data as ekd  # type: ignore
 import eccodes  # type: ignore
+import eccodes_cosmo_resources
 
 try:
     # Third-party
@@ -37,9 +37,8 @@ def cosmo_grib_defs():
 
     token = definitions.set("cosmo")
     restore = eccodes.codes_definition_path()
-    root_dir = Path(sys.prefix) / "share"
     paths = (
-        root_dir / "eccodes-cosmo-resources/definitions",
+        eccodes_cosmo_resources.get_definitions_path(),
         Path(restore),
     )
     for path in paths:

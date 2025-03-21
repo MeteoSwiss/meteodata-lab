@@ -29,6 +29,7 @@ python = ">=3.9,<3.13"
 click = "^8.1.7"
 earthkit-data = ">=0.5.6,<1"
 eccodes = "^1.5.0"
+eccodes-cosmo-resources-python = "==2.36.*"
 numpy = "^1.26.4"
 polytope-client = { version = "^0.7.4", optional = true}
 pydantic = "*"

@@ -4,34 +4,38 @@
 
 ### Additions
 
-- Added `save` function to `grib_decoder` module
-- Added `operators.crop` module
-- Added `feature` attribute to the `mars.Request` class
-- Added `archive_to_fdb` function to the `mch_model_data` module
-- Added `URLDataSource` to `data_source` module
-- The CLI includes a subcommand for the regrid operator
-- `data_source.DataSource.retrieve` accepts an argument of type `mars.Request`
-- Added `FDBDataSource`, `FileDataSource`, `PolytopeDataSource` that inherit from `DataSource`
-- Added dimension `ref_time` with type `datetime64[ns]`
-- `grib_decoder.load` is able to read GRIB containing data in the ICON native grid
-- Added `regrid.icon2rotlatlon`, `regrid.icon2geolatlon` and `regrid.iconremap` functions
-- Added `geo_coords` optional argument to the `grib_decoder.load` function
-- Added `ogd_api.get_from_ogd` function
+- `cli`: Added subcommand for the regrid operator
+- `data_source`
+  - Added `URLDataSource`, `FDBDataSource`, `FileDataSource`, `PolytopeDataSource` as implementations of `DataSource`
+  - `retrieve` accepts an argument of type `mars.Request`
+- `grib_decoder`
+  - Added `save` function
+  - `load` supports the ICON native grid
+  - Added `geo_coords` optional argument to the `load` function
+- `mars`: Added `feature` attribute to the `mars.Request` class
+- `mch_model_data`: Added `archive_to_fdb` function
+- `ogd_api`
+  - Added `get_from_ogd` function
+  - Added `ogd_api.Request` class
+- `operators`
+  - `regrid`: Added `icon2rotlatlon`, `icon2geolatlon` and `iconremap` functions
+  - Added `crop` module
 
-### Changes
+### Breaking Changes
 
 - The constants module is renamed to physical constants and the `pc_` prefix is dropped in favour of aliasing the module to `pc` at the call sites
 - The grib definitions context is no longer derived from the request model attribute.
   In practice, all defined models required the cosmo definitions as IFS grib data does not define the model mars key.
   Setting `data_scope` config to `ifs` to disable the cosmo definitions context remains possible.
 - `data_source.DataSource` is now an abstract base class
-- dimension `time` renamed to `lead_time` and type changed from `int` to `timedelta64[ns]`
+- Renamed dimension `time` to `lead_time` and changed its type from `int` to `numpy.timedelta64[ns]`
+- Added dimension `ref_time` with type `numpy.datetime64[ns]`
 - `DataArray` objects representing a field no longer have the `message`
   attribute but now have a `metadata` attribute that is an instance of
   `StandAloneGribMetadata` from earthkit-data.
 - `FDBDataSource`, `mch_model_data.get_from_fdb` and `mch_model_data.archive_to_fdb` require the `fdb` extra dependency
 - `PolytopeDataSource` and `mch_mode_data.get_from_polytope` requires the `polytope` extra dependency
-- The `regrid` module now requires the `regrid` extra dependencies
+- The `operators.regrid` module now requires the `regrid` extra dependencies
 
 
 ## [0.2.0-rc3] (2023-12-18)

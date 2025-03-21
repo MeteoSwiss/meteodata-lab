@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="violet" data-content_root="./">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Contributing - meteodata-lab 0.2.0 documentation</title><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Credits" href="authors.html" /><link rel="prev" title="meteodatalab.operators.vertical_reduction" href="generated/meteodatalab.operators.vertical_reduction.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="_static/pygments.css?v=397bb51e" />
+    <link rel="stylesheet" type="text/css" href="_static/shibuya.css?v=3b41e830" />
+    <link media="print" rel="stylesheet" type="text/css" href="_static/print.css?v=20ff2c19" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="Contributing"/>
+<meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="index.html">
+      
+      
+      <strong>meteodata-lab</strong>
+    </a>
+    <div class="sy-head-nav" id="HeadNav">
+      <nav class="sy-head-links"></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials"></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="HeadNav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2 -translate-x-2"></span>
+          <span class="hamburger_3 -translate-x-1"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">meteodata-lab</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.config.html">meteodatalab.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.data_cache.html">meteodatalab.data_cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.data_source.html">data_source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.grib_decoder.html">meteodatalab.grib_decoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.mars.html">mars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.crop.html">meteodatalab.operators.crop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.gis.html">gis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.lateral_operators.html">meteodatalab.operators.lateral_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.atmo.html">meteodatalab.operators.atmo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.brn.html">meteodatalab.operators.brn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.hzerocl.html">meteodatalab.operators.hzerocl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.pot_vortic.html">meteodatalab.operators.pot_vortic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.radiation.html">meteodatalab.operators.radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.relhum.html">meteodatalab.operators.relhum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.rho.html">meteodatalab.operators.rho</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.theta.html">meteodatalab.operators.theta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.thetav.html">thetav</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.wind.html">meteodatalab.operators.wind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.time_operators.html">meteodatalab.operators.time_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.vertical_interpolation.html">meteodatalab.operators.vertical_interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.vertical_reduction.html">meteodatalab.operators.vertical_reduction</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#types-of-contributions">Types of Contributions</a><ul>
+<li><a class="reference internal" href="#report-bugs">Report Bugs</a></li>
+<li><a class="reference internal" href="#fix-bugs">Fix Bugs</a></li>
+<li><a class="reference internal" href="#implement-features">Implement Features</a></li>
+<li><a class="reference internal" href="#write-documentation">Write Documentation</a></li>
+<li><a class="reference internal" href="#submit-feedback">Submit Feedback</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#get-started">Get Started!</a></li>
+<li><a class="reference internal" href="#pull-request-guidelines">Pull Request Guidelines</a></li>
+<li><a class="reference internal" href="#tips">Tips</a></li>
+<li><a class="reference internal" href="#versioning">Versioning</a></li>
+<li><a class="reference internal" href="#project-structure">Project Structure</a></li>
+<li><a class="reference internal" href="#managing-dependencies">Managing dependencies</a></li>
+<li><a class="reference internal" href="#how-to-provide-executable-scripts">How to provide executable scripts</a></li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6"><div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">meteodata-lab</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Contributing</strong>
+        <meta itemprop="position" content="2" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <section id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">¶</a></h1>
+<p>Contributions are welcome, and they are greatly appreciated! Every little bit helps, and credit will always be given.</p>
+<section id="types-of-contributions">
+<h2>Types of Contributions<a class="headerlink" href="#types-of-contributions" title="Link to this heading">¶</a></h2>
+<p>You can contribute in many ways.</p>
+<section id="report-bugs">
+<h3>Report Bugs<a class="headerlink" href="#report-bugs" title="Link to this heading">¶</a></h3>
+<p>Report bugs as <a class="reference external" href="https://github.com/MeteoSwiss/meteodata-lab/issues">GitHub issues</a>.</p>
+<p>If you are reporting a bug, please include</p>
+<ul class="simple">
+<li><p>your operating system name and version,</p></li>
+<li><p>any details about your local setup that might be helpful in troubleshooting, and</p></li>
+<li><p>detailed steps to reproduce the bug.</p></li>
+</ul>
+</section>
+<section id="fix-bugs">
+<h3>Fix Bugs<a class="headerlink" href="#fix-bugs" title="Link to this heading">¶</a></h3>
+<p>Look through the <a class="reference external" href="https://github.com/MeteoSwiss/meteodata-lab/issues">GitHub issues</a> for bugs. Anything tagged with “bug” and “help wanted” is open to whoever wants to implement it.</p>
+</section>
+<section id="implement-features">
+<h3>Implement Features<a class="headerlink" href="#implement-features" title="Link to this heading">¶</a></h3>
+<p>Look through the  <a class="reference external" href="https://github.com/MeteoSwiss/meteodata-lab/issues">GitHub issues</a> for features. Anything tagged with “enhancement” and “help wanted” is open to whoever wants to implement it.</p>
+</section>
+<section id="write-documentation">
+<h3>Write Documentation<a class="headerlink" href="#write-documentation" title="Link to this heading">¶</a></h3>
+<p>meteodata-lab could always use more documentation, whether as part of the official meteodata-lab docs, in docstrings — or even on the web in blog posts, articles, and such.</p>
+</section>
+<section id="submit-feedback">
+<h3>Submit Feedback<a class="headerlink" href="#submit-feedback" title="Link to this heading">¶</a></h3>
+<p>The best way to send feedback is to file a <a class="reference external" href="https://github.com/MeteoSwiss/meteodata-lab/issues">GitHub issue</a>.</p>
+<p>If you are proposing a feature,</p>
+<ul class="simple">
+<li><p>explain in detail how it would work;</p></li>
+<li><p>keep the scope as narrow as possible, to make it easier to implement; and</p></li>
+<li><p>remember that this is a volunteer-driven project, and that contributions are welcome! :)</p></li>
+</ul>
+</section>
+</section>
+<section id="get-started">
+<h2>Get Started!<a class="headerlink" href="#get-started" title="Link to this heading">¶</a></h2>
+<p>Ready to contribute? Here’s how to set up <code class="docutils literal notranslate"><span class="pre">meteodata-lab</span></code> for local development.</p>
+<ol class="arabic">
+<li><p>Fork the <code class="docutils literal notranslate"><span class="pre">`meteodata-lab</span></code> repo &lt;<a class="reference external" href="https://github.com/">https://github.com/</a>&gt;`_ on GitHub.</p></li>
+<li><p>Clone your fork locally:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">git<span class="w"> </span>clone<span class="w"> </span>git@github.com:your_name_here/meteodata-lab.git
+</span></pre></div>
+</div>
+</li>
+<li><p>Create a virtual environment and install the dependencies:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nb">cd</span><span class="w"> </span>meteodata-lab/
+</span><span data-line="2">./tools/setup_env.sh
+</span></pre></div>
+</div>
+<p>This will create a conda environment named <code class="docutils literal notranslate"><span class="pre">meteodata-lab</span></code> (change with <code class="docutils literal notranslate"><span class="pre">-n</span></code>) and install the pinned runtime and development dependencies in <code class="docutils literal notranslate"><span class="pre">requirements/environment.yaml</span></code>.</p>
+<p>Install the package itself in editable mode.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">conda<span class="w"> </span>activate<span class="w"> </span>meteodata-lab
+</span><span data-line="2">pip<span class="w"> </span>install<span class="w"> </span>--editable<span class="w"> </span>.
+</span></pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">-u</span></code> to get the newest package versions (unpinned dependencies in <code class="docutils literal notranslate"><span class="pre">requirements/requirements.yaml</span></code>), and additionally <code class="docutils literal notranslate"><span class="pre">-e</span></code> to update the environment files.</p>
+</li>
+<li><p>Create a branch for local development:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </span>name-of-your-bugfix-or-feature
+</span></pre></div>
+</div>
+<p>Now you can make your changes locally.</p>
+</li>
+<li><p>When you’re done with a change, format and check the code using various installed tools like <code class="docutils literal notranslate"><span class="pre">black</span></code>, <code class="docutils literal notranslate"><span class="pre">isort</span></code>, <code class="docutils literal notranslate"><span class="pre">mypy</span></code>, <code class="docutils literal notranslate"><span class="pre">flake8</span></code> or <code class="docutils literal notranslate"><span class="pre">pylint</span></code>. Those that are set up as pre-commit hooks can be run together with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">pre-commit<span class="w"> </span>run<span class="w"> </span>-a
+</span></pre></div>
+</div>
+<p>Next, ensure that the code does what it is supposed to do by running the tests with pytest:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">pytest
+</span></pre></div>
+</div>
+</li>
+<li><p>Commit your changes and push your branch to GitHub:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">git<span class="w"> </span>add<span class="w"> </span>.
+</span><span data-line="2">git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;fixed this and did that&quot;</span>
+</span><span data-line="3">git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>name-of-your-bugfix-or-feature
+</span></pre></div>
+</div>
+</li>
+<li><p>Submit a pull request through the GitHub website.</p></li>
+</ol>
+</section>
+<section id="pull-request-guidelines">
+<h2>Pull Request Guidelines<a class="headerlink" href="#pull-request-guidelines" title="Link to this heading">¶</a></h2>
+<p>Before you submit a pull request, check that it meets these guidelines:</p>
+<ol class="arabic simple">
+<li><p>The pull request should include tests.</p></li>
+<li><p>If the pull request adds functionality, the docs should be updated. Put your new functionality into a function with a docstring, and add the feature to the list in <code class="docutils literal notranslate"><span class="pre">README.md</span></code>.</p></li>
+<li><p>The pull request should work for Python 3.6 and 3.7, and for PyPy. Make sure that the tests pass for all supported Python versions.</p></li>
+</ol>
+</section>
+<section id="tips">
+<h2>Tips<a class="headerlink" href="#tips" title="Link to this heading">¶</a></h2>
+<p>For a subset of tests or a specific test, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">pytest<span class="w"> </span>tests.test_meteodatalab
+</span><span data-line="2">pytest<span class="w"> </span>tests.test_meteodatalab/test_feature::test_edge_case
+</span></pre></div>
+</div>
+</section>
+<section id="versioning">
+<h2>Versioning<a class="headerlink" href="#versioning" title="Link to this heading">¶</a></h2>
+<p>In order to release a new version of your project, follow these steps:</p>
+<ul class="simple">
+<li><p>Make sure everything is committed, cleaned up and validating (duh!). Don’t forget to keep track of the changes in <code class="docutils literal notranslate"><span class="pre">HISTORY.md</span></code>.</p></li>
+<li><p>Increase the version number that is hardcoded in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> (and only there) and commit.</p></li>
+<li><p>Either create a (preferentially annotated) tag with <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">tag</span></code>, or directly create a release on GitHub.</p></li>
+</ul>
+</section>
+<section id="project-structure">
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading">¶</a></h2>
+<p>Following is a description of the most important files and folders in the project in alphabetic order.</p>
+<ul class="simple">
+<li><p><cite>.github/workflows/</cite>: [GitHub Actions](<a class="reference external" href="https://docs.github.com/en/actions">https://docs.github.com/en/actions</a>) workflows, e.g., checks that are run when certain branches are pushed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/</span></code>: Documentation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jenkins/</span></code>: Jenkins setup.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">requirements/</span></code>: Project dependencies and environment</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">environment.yaml</span></code>: Full tree of runtime and development dependencies with fully specified (‘pinned’) version numbers; created with <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">env</span> <span class="pre">export</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">requirements.yaml</span></code>: Top-level runtime and development dependencies with minimal version restrictions (typically a minimum version or a version range); kept manually.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">src/meteodatalab/</span></code>: Source code of the project package.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tests/test_meteodatalab/</span></code>: Unit tests of the project package; run with <code class="docutils literal notranslate"><span class="pre">pytest</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tools/</span></code>: Scripts primarily for development</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">run-mypy.sh</span></code>: Run script for the static type checker <code class="docutils literal notranslate"><span class="pre">mypy</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setup_env.sh</span></code>: Script to create new conda environments; see <code class="docutils literal notranslate"><span class="pre">tools/setup_env.sh</span> <span class="pre">-h</span></code> for all available options.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setup_miniconda.sh</span></code>: Script to install miniconda.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.gitignore</span></code>: Files and folders ignored by <code class="docutils literal notranslate"><span class="pre">git</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.pre-commit-config.yaml</span></code>: Configuration of pre-commit hooks, which are formatters and checkers run before a successful commit.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AUTHORS.md</span></code>: Project authors.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CONTRIBUTING.md</span></code>: Instructions on how to contribute to the project.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HISTORY.md</span></code>: List of changes for each version of the project.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LICENSE</span></code>: License of the project.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MANIFEST.in</span></code>: Files installed alongside the source code.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>: Main package specification file, including build dependencies, metadata and the configurations of development tools like <code class="docutils literal notranslate"><span class="pre">black</span></code>, <code class="docutils literal notranslate"><span class="pre">pytest</span></code>, <code class="docutils literal notranslate"><span class="pre">mypy</span></code> etc.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">README.md</span></code>: Description of the project.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">USAGE.md</span></code>: Information on how to use the package.</p></li>
+</ul>
+</section>
+<section id="managing-dependencies">
+<h2>Managing dependencies<a class="headerlink" href="#managing-dependencies" title="Link to this heading">¶</a></h2>
+<p>meteodata-lab uses <a class="reference external" href="https://docs.conda.io/en/latest/">Conda</a> to manage dependencies. (Also check out <a class="reference external" href="https://mamba.readthedocs.io/en/latest/">Mamba</a> if you like your package installations fast.) Dependencies are specified in YAML files, of which there are two:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">requirements/requirements.yaml</span></code>: Top-level runtime and development dependencies with minimal version restrictions (typically a minimum version or a version range); kept manually.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">requirements/environment.yaml</span></code>: Full tree of runtime and development dependencies with fully specified (‘pinned’) version numbers; created with <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">env</span> <span class="pre">export</span></code>.</p></li>
+</ul>
+<p>The pinned <code class="docutils literal notranslate"><span class="pre">environment.yaml</span></code> file should be used to create reproducible environments for development or deployment. This ensures reproducible results across machines and users. The unpinned <code class="docutils literal notranslate"><span class="pre">requirements.yaml</span></code> file has two main purposes: (i) keeping track of the top-level dependencies, and (ii) periodically updating the pinned <code class="docutils literal notranslate"><span class="pre">environment.yaml</span></code> file to the latest package versions.</p>
+<p>After introducing new first-level dependencies to your requirements, you have to update the environment files in order to be able to create reproducible environments for deployment and production.
+Updating the environment files involves the following steps:</p>
+<ol class="arabic simple">
+<li><p>Creating an environment from your top-level dependencies in <code class="docutils literal notranslate"><span class="pre">requirements/requirements.yaml</span></code></p></li>
+<li><p>Exporting this environment to <code class="docutils literal notranslate"><span class="pre">requirements/environment.yaml</span></code></p></li>
+</ol>
+<p>Alternatively, use the provided script</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">./tools/setup_env.sh<span class="w"> </span>-ue
+</span></pre></div>
+</div>
+<p>to create a environment from unpinned (<code class="docutils literal notranslate"><span class="pre">-u</span></code>) runtime and development dependencies and export (<code class="docutils literal notranslate"><span class="pre">-e</span></code>) it (consider throwing in <code class="docutils literal notranslate"><span class="pre">-m</span></code> for good measure to speed things up with <code class="docutils literal notranslate"><span class="pre">mamba</span></code>).</p>
+<p><em>Note that the separation of unpinned runtime and development dependencies into separate files (``requirements.yaml`` and ``dev-requirements.yaml``, respectively) has been given up because when creating an environment from multiple YAML files (with ``conda env create`` and ``conda env update``), only the version restrictions in the last file are guaranteed to be respected, so when installing devevelopment dependencies from ``dev-requirements.yaml`` into an environment created from ``requirements.yaml``, the solver does not take version restrictions in the latter file into account anymore, potentially resulting in inconsistent production and development environments. Given the negligible overhead (in terms of memory etc.) of installing development dependencies in production environments, they are only separated from the runtime dependencies in ``requirements.yaml`` by a comment.</em></p>
+</section>
+<section id="how-to-provide-executable-scripts">
+<h2>How to provide executable scripts<a class="headerlink" href="#how-to-provide-executable-scripts" title="Link to this heading">¶</a></h2>
+<p>By default, a single executable script called meteodata-lab is provided. It is created when the package is installed. When you call it, the main function (<code class="docutils literal notranslate"><span class="pre">cli</span></code>) in <code class="docutils literal notranslate"><span class="pre">src/meteodatalab/cli.py</span></code> is called.</p>
+<p>When the package is installed, a executable script named <code class="docutils literal notranslate"><span class="pre">meteodata-lab</span></code> is created in the bin folder of the active conda environment. Upon calling this script in the shell, the <code class="docutils literal notranslate"><span class="pre">main</span></code> function in <code class="docutils literal notranslate"><span class="pre">src/meteodatalab/cli.py</span></code> is executed.</p>
+<p>The scripts, their names and entry points are specified in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> in the <code class="docutils literal notranslate"><span class="pre">[project.scripts]</span></code> section. Just add additional entries to provide more scripts to the users of your package.</p>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="generated/meteodatalab.operators.vertical_reduction.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">meteodatalab.operators.vertical_reduction</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="authors.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Credits</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2024, MeteoSwiss</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials"></div>
+    </div>
+  </div>
+</footer>
+      <script src="_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/shibuya.js?v=e2230717"></script></body>
+</html>

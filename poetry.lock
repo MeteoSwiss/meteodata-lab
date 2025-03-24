@@ -749,13 +749,13 @@ numpy = "*"
 
 [[package]]
 name = "eccodes-cosmo-resources-python"
-version = "2.36.0.3"
+version = "2.36.0.3.post0"
 description = ""
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "eccodes_cosmo_resources_python-2.36.0.3-py3-none-any.whl", hash = "sha256:7c2b799ed6a84c9c891c1c84210c0cca4e328df80846d8492a86a2166442e53d"},
-    {file = "eccodes_cosmo_resources_python-2.36.0.3.tar.gz", hash = "sha256:5cad10f4c46c437f958319de7b508b42ca3be536949420b982dd8ff454757f34"},
+    {file = "eccodes_cosmo_resources_python-2.36.0.3.post0-py3-none-any.whl", hash = "sha256:570516b36ef35a6398133abf1fa86ee86b7cc78e61a36d2b257e898786934214"},
+    {file = "eccodes_cosmo_resources_python-2.36.0.3.post0.tar.gz", hash = "sha256:906298242fc718675a42c900eeeef0676a65f6c78a1ee11fba4a89682a43020f"},
 ]
 
 [[package]]
@@ -2167,13 +2167,13 @@ windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
 name = "pyparsing"
-version = "3.2.1"
+version = "3.2.2"
 description = "pyparsing module - Classes and methods to define and execute parsing grammars"
 optional = true
 python-versions = ">=3.9"
 files = [
-    {file = "pyparsing-3.2.1-py3-none-any.whl", hash = "sha256:506ff4f4386c4cec0590ec19e6302d3aedb992fdc02c761e90416f158dacf8e1"},
-    {file = "pyparsing-3.2.1.tar.gz", hash = "sha256:61980854fd66de3a90028d679a954d5f2623e83144b5afe5ee86f43d762e5f0a"},
+    {file = "pyparsing-3.2.2-py3-none-any.whl", hash = "sha256:6ab05e1cb111cc72acc8ed811a3ca4c2be2af8d7b6df324347f04fd057d8d793"},
+    {file = "pyparsing-3.2.2.tar.gz", hash = "sha256:2a857aee851f113c2de9d4bfd9061baea478cb0f1c7ca6cbf594942d6d111575"},
 ]
 
 [package.extras]
@@ -3140,13 +3140,13 @@ files = [
 
 [[package]]
 name = "tzdata"
-version = "2025.1"
+version = "2025.2"
 description = "Provider of IANA time zone data"
 optional = false
 python-versions = ">=2"
 files = [
-    {file = "tzdata-2025.1-py2.py3-none-any.whl", hash = "sha256:7e127113816800496f027041c570f50bcd464a020098a3b6b199517772303639"},
-    {file = "tzdata-2025.1.tar.gz", hash = "sha256:24894909e88cdb28bd1636c6887801df64cb485bd593f2fd83ef29075a81d694"},
+    {file = "tzdata-2025.2-py2.py3-none-any.whl", hash = "sha256:1a403fada01ff9221ca8044d701868fa132215d84beb92242d9acd2147f667a8"},
+    {file = "tzdata-2025.2.tar.gz", hash = "sha256:b60a638fcc0daffadf82fe0f57e53d06bdec2f36c4df66280ae79bce6bd6f2b9"},
 ]
 
 [[package]]

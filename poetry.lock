@@ -663,13 +663,13 @@ files = [
 
 [[package]]
 name = "earthkit-data"
-version = "0.13.4"
+version = "0.13.5"
 description = "A format-agnostic Python interface for geospatial data"
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "earthkit_data-0.13.4-py3-none-any.whl", hash = "sha256:0bf8db177ec1b11d9dd4b9521f538eae357cbcf6c8af82da63dad009927dc676"},
-    {file = "earthkit_data-0.13.4.tar.gz", hash = "sha256:adac40f82bcfc899c3b55bd64f8bbd2dd2e510487a9d24b9932531999f7c2fe5"},
+    {file = "earthkit_data-0.13.5-py3-none-any.whl", hash = "sha256:32487dad76df86290f5f44476548388e82fb326d84292ccc0d3661e358f41661"},
+    {file = "earthkit_data-0.13.5.tar.gz", hash = "sha256:436b0cb34361e8056c03ffe3c4e3e6458ab4b01945ce6a7d766e454b6f4ef82b"},
 ]
 
 [package.dependencies]
@@ -2112,7 +2112,7 @@ toml = ["tomli (>=1.2.3)"]
 name = "pyeccodes"
 version = "0.1.1"
 description = "Experimental pure Python version of eccodes"
-optional = true
+optional = false
 python-versions = "*"
 files = [
     {file = "pyeccodes-0.1.1.tar.gz", hash = "sha256:b5b5e62b8ea3fcd069caa0dec48d7f67889a6eadf198e015ec029839935fe596"},
@@ -2125,7 +2125,7 @@ numpy = "*"
 name = "pyfdb"
 version = "0.0.3"
 description = "Python interface to FDB"
-optional = true
+optional = false
 python-versions = "*"
 files = [
     {file = "0.0.3.zip", hash = "sha256:9ae49204ddf6672d58776206d97eeb547e6898ed359e427f838ce9cece6d43cb"},
@@ -2766,13 +2766,13 @@ test = ["array-api-strict", "asv", "gmpy2", "hypothesis (>=6.30)", "mpmath", "po
 
 [[package]]
 name = "setuptools"
-version = "77.0.3"
+version = "78.0.1"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "setuptools-77.0.3-py3-none-any.whl", hash = "sha256:67122e78221da5cf550ddd04cf8742c8fe12094483749a792d56cd669d6cf58c"},
-    {file = "setuptools-77.0.3.tar.gz", hash = "sha256:583b361c8da8de57403743e756609670de6fb2345920e36dc5c2d914c319c945"},
+    {file = "setuptools-78.0.1-py3-none-any.whl", hash = "sha256:1cc9b32ee94f93224d6c80193cbb768004667aa2f2732a473d6949b0236c1d4e"},
+    {file = "setuptools-78.0.1.tar.gz", hash = "sha256:4321d2dc2157b976dee03e1037c9f2bc5fea503c0c47d3c9458e0e8e49e659ce"},
 ]
 
 [package.extras]
@@ -3241,11 +3241,10 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 type = ["pytest-mypy"]
 
 [extras]
-fdb = ["pyfdb"]
 polytope = ["polytope-client"]
 regrid = ["pyproj", "rasterio", "scipy"]
 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.13"
-content-hash = "51d762701fc72d63aa9f9f8fa3e6a886d269b6bceed429a2eb747b900edae0d1"
+content-hash = "2f64da0df60a6bf2e450cfe2913e7ffd550ea1f590321f8203b0a094bedd81d6"

@@ -21,10 +21,10 @@ pipeline {
                 sh '''#!/usr/bin/env bash
                 set -e
                 spack_c2sm_url=https://github.com/C2SM/spack-c2sm.git
-                spack_c2sm_tag=v0.20.1.9
+                spack_c2sm_tag=v0.22.2.2
                 spack_c2sm_dir=${WORKSPACE}/s
                 git clone --depth 1 --recurse-submodules -b ${spack_c2sm_tag} ${spack_c2sm_url} ${spack_c2sm_dir}
-                . ${spack_c2sm_dir}/setup-env.sh
+                . ${spack_c2sm_dir}/setup-env.sh /mch-environment/v8
                 spack env activate -p ${WORKSPACE}/spack-env
                 spack mirror add iwf2-mirror /store_new/mch/msopr/icon_workflow_2/spack-mirror
                 spack install --no-check-signature --no-checksum

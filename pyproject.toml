@@ -36,7 +36,6 @@ eccodes-cosmo-resources-python = "==2.36.*"
 numpy = "^1.26.4"
 polytope-client = { version = "^0.7.4", optional = true}
 pydantic = "*"
-pyfdb = { url = "https://github.com/ecmwf/pyfdb/archive/refs/tags/0.0.3.zip", optional = true }
 pyproj = { version = "^3.6.1", optional = true }
 pyyaml = "^6.0.1"
 rasterio = { version = "^1.3.10", optional = true }
@@ -45,7 +44,7 @@ setuptools = "*"
 xarray = ">=2024"
 
 [tool.poetry.extras]
-fdb = ["pyfdb"]
+# fdb = ["pyfdb"]
 polytope = ["polytope-client"]
 regrid = ["pyproj", "rasterio", "scipy"]
 
@@ -60,6 +59,7 @@ mypy = "*"
 pandas-stubs = "*"
 pre-commit = "*"
 pydocstyle = "*"
+pyfdb = { url = "https://github.com/ecmwf/pyfdb/archive/refs/tags/0.0.3.zip" }
 pytest = "*"
 rstcheck = { version = "*", extras = ["sphinx"] }
 types-requests = "*"

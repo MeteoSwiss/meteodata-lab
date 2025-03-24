@@ -190,7 +190,7 @@ def test_icon2utm(data_dir, fieldextra, model_name, geo_coords):
     ds = grib_decoder.load(source, "T", geo_coords=geo_coords)
 
     # Use a small rectangular area around Bern
-    regrid_target = "utm32,376000,5197000,386000,5206000,1000,500"
+    regrid_target = "utm32n,376000,5197000,386000,5206000,1000,500"
     dst = regrid.RegularGrid.parse_regrid_operator(regrid_target)
     observed = regrid.iconremap(ds["T"], dst)
 

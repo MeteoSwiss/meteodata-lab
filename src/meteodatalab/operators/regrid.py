@@ -34,7 +34,7 @@ CRS_ALIASES = {
     "swiss95": "epsg:2056",  # Swiss CH1903+ / LV95
     "boaga-west": "epsg:3003",  # Monte Mario / Italy zone 1
     "boaga-east": "epsg:3004",  # Monte Mario / Italy zone 2
-    "utm32": "epsg:32632",  # UTM 32N
+    "utm32n": "epsg:32632",  # Universal Transverse Mercator zone 32N
 }
 
 
@@ -130,9 +130,8 @@ class RegularGrid:
         nx = (xmax - xmin) / dx + 1
         ny = (ymax - ymin) / dy + 1
         if abs(nx - round(nx)) > 1e-10 or abs(ny - round(ny)) > 1e-10:
-            print(f"diff x: {abs(nx - round(nx))}, diff y: {abs(ny - round(ny))}")
             raise ValueError("Inconsistent regrid parameters")
-        return cls(crs, round(nx), round(ny), xmin, xmax, ymin, ymax)
+        return cls(crs, int(round(nx)), int(round(ny)), xmin, xmax, ymin, ymax)
 
     def to_crs(self, crs: str, **kwargs):
         """Return a new grid in the given coordinate reference system.
@@ -207,7 +206,7 @@ def _lon_from_utm_zone(zone: int) -> int:
     return offset - 183
 
 
-def _grib_utm_m(value: float) -> int:
+def _grib_utm_m(value: float | int) -> int:
     # For UTM units, GRIB2 uses 10-2m whereas CRS uses m.
     return int(round(100 * value))
 

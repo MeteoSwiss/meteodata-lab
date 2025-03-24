@@ -34,6 +34,7 @@ CRS_ALIASES = {
     "swiss95": "epsg:2056",  # Swiss CH1903+ / LV95
     "boaga-west": "epsg:3003",  # Monte Mario / Italy zone 1
     "boaga-east": "epsg:3004",  # Monte Mario / Italy zone 2
+    "utm32": "epsg:32632",  # UTM 32N
 }
 
 
@@ -128,9 +129,10 @@ class RegularGrid:
             raise ValueError("Inconsistent regrid parameters")
         nx = (xmax - xmin) / dx + 1
         ny = (ymax - ymin) / dy + 1
-        if nx != int(nx) or ny != int(ny):
+        if abs(nx - round(nx)) > 1e-10 or abs(ny - round(ny)) > 1e-10:
+            print(f"diff x: {abs(nx - round(nx))}, diff y: {abs(ny - round(ny))}")
             raise ValueError("Inconsistent regrid parameters")
-        return cls(crs, int(nx), int(ny), xmin, xmax, ymin, ymax)
+        return cls(crs, round(nx), round(ny), xmin, xmax, ymin, ymax)
 
     def to_crs(self, crs: str, **kwargs):
         """Return a new grid in the given coordinate reference system.
@@ -192,8 +194,22 @@ class RegularGrid:
         )
 
 
-def _udeg(value):
+def _udeg(value: float) -> int:
     return int(round(value * 1e6))
+
+
+def _lon_from_utm_zone(zone: int) -> int:
+    if zone is None or zone < 1 or zone > 60:
+        raise ValueError(f"Invalid value for UTM zone: {zone}.")
+
+    # UTM zone are 6 degrees wide numbered from 1 starting at -180 to -174 degrees.
+    offset = zone * 6
+    return offset - 183
+
+
+def _grib_utm_m(value: float) -> int:
+    # For UTM units, GRIB2 uses 10-2m whereas CRS uses m.
+    return int(round(100 * value))
 
 
 def _get_metadata(grid: RegularGrid):
@@ -221,6 +237,34 @@ def _get_metadata(grid: RegularGrid):
             "longitudeOfLastGridPoint": _udeg(grid.xmax),
             "iDirectionIncrement": _udeg(grid.dx),
             "jDirectionIncrement": _udeg(grid.dy),
+            "scanningMode": scanning_mode,
+        }
+    elif grid.crs.get("proj") == "utm" and not grid.crs.get("south"):
+        # Transverse Mercator in northern hemisphere.
+        # https://codes.ecmwf.int/grib/format/grib2/ctables/3/4/
+        scanning_mode = set_code_flag([2])  # positive y
+        # i, j direction increments given relative to defined grid.
+        resolution_components_flags = set_code_flag([3, 4, 5])
+        return {
+            "numberOfDataPoints": grid.nx * grid.ny,
+            "sourceOfGridDefinition": 0,  # defined by template number
+            "numberOfOctectsForNumberOfPoints": 0,
+            "interpretationOfNumberOfPoints": 0,
+            "gridDefinitionTemplateNumber": 12,  # UTM
+            "shapeOfTheEarth": 5,  # WGS 84
+            "Ni": grid.nx,
+            "Nj": grid.ny,
+            "falseEasting": _grib_utm_m(500000),
+            "falseNorthing": 0,  # Northern hemisphere
+            "scaleFactorAtReferencePoint": 0.9996,
+            "longitudeOfReferencePoint": _lon_from_utm_zone(grid.crs.get("zone")),
+            "Di": _grib_utm_m(grid.dx),
+            "Dj": _grib_utm_m(grid.dy),
+            "X1": _grib_utm_m(grid.xmin),
+            "X2": _grib_utm_m(grid.xmax),
+            "Y1": _grib_utm_m(grid.ymin),
+            "Y2": _grib_utm_m(grid.ymax),
+            "resolutionAndComponentFlags": resolution_components_flags,
             "scanningMode": scanning_mode,
         }
     elif grid.crs.get("proj") == "ob_tran":

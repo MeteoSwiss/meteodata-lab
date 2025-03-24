@@ -23,6 +23,9 @@ authors = [
     "Christian Kanesan <christian.kanesan@meteoswiss.ch>",
     "Tobias Wicky <tobias.wicky@meteoswiss.ch>",
 ]
+packages = [
+    { include = "meteodatalab", from = "src" },
+]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.13"

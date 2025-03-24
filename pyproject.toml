@@ -3,7 +3,7 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "meteodatalab"
+name = "meteodata-lab"
 version = "0.2.0"
 description = "A data post-processing framework on the basis of xarray."
 readme = "README.md"

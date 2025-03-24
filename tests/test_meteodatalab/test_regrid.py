@@ -162,10 +162,10 @@ def test_icon2swiss_small(data_dir, fieldextra, model_name, geo_coords):
     assert_array_less(extreme_low, observed.values)
     assert_array_less(observed.values, extreme_high)
 
-    assert observed.y.shape == (19,)
-    assert observed.x.shape == (11,)
     # Verify that geolatlon coordinates match expected values on the corners and center.
     # Values are from https://epsg.io/transform#s_srs=21781&t_srs=4326
+    assert observed.y.shape == (19,)
+    assert observed.x.shape == (11,)
     assert observed.sel(y=9, x=5).lon == pytest.approx(7.438632, 1e-5)
     assert observed.sel(y=9, x=5).lat == pytest.approx(46.951082, 1e-5)
     assert observed.sel(y=0, x=0).lon == pytest.approx(7.373052, 1e-5)
@@ -176,6 +176,54 @@ def test_icon2swiss_small(data_dir, fieldextra, model_name, geo_coords):
     assert observed.sel(y=0, x=10).lat == pytest.approx(46.870107, 1e-5)
     assert observed.sel(y=18, x=10).lon == pytest.approx(7.504410, 1e-5)
     assert observed.sel(y=18, x=10).lat == pytest.approx(47.032020, 1e-5)
+
+    # Verify that the metadata grid fields that we can override are correct.
+    assert observed.metadata["sourceOfGridDefinition"] == 255
+    assert observed.metadata["numberOfDataPoints"] == 19 * 11
+
+
+@pytest.mark.data("iconremap")
+@pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
+def test_icon2utm(data_dir, fieldextra, model_name, geo_coords):
+    datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
+    source = data_source.FileDataSource(datafiles=datafiles)
+    ds = grib_decoder.load(source, "T", geo_coords=geo_coords)
+
+    # Use a small rectangular area around Bern
+    regrid_target = "utm32n,376000,5197000,386000,5206000,1000,500"
+    dst = regrid.RegularGrid.parse_regrid_operator(regrid_target)
+    observed = regrid.iconremap(ds["T"], dst)
+
+    # Sanity check the temperature values.
+    extreme_low = np.full(observed.shape, 150)
+    extreme_high = np.full(observed.shape, 350)
+    assert_array_less(extreme_low, observed.values)
+    assert_array_less(observed.values, extreme_high)
+
+    # Verify that geolatlon coordinates match expected values on the corners and center.
+    # Values are from https://epsg.io/transform#s_srs=32632&t_srs=4326
+    assert observed.y.shape == (19,)
+    assert observed.x.shape == (11,)
+    assert observed.sel(y=9, x=5).lon == pytest.approx(7.435998, 1e-5)
+    assert observed.sel(y=9, x=5).lat == pytest.approx(46.956345, 1e-5)
+    assert observed.sel(y=0, x=0).lon == pytest.approx(7.3715379, 1e-5)
+    assert observed.sel(y=0, x=0).lat == pytest.approx(46.9149497, 1e-5)
+    assert observed.sel(y=18, x=0).lon == pytest.approx(7.36908, 1e-5)
+    assert observed.sel(y=18, x=0).lat == pytest.approx(46.995906, 1e-5)
+    assert observed.sel(y=0, x=10).lon == pytest.approx(7.502818, 1e-5)
+    assert observed.sel(y=0, x=10).lat == pytest.approx(46.916742, 1e-5)
+    assert observed.sel(y=18, x=10).lon == pytest.approx(7.500557, 1e-5)
+    assert observed.sel(y=18, x=10).lat == pytest.approx(46.997704, 1e-5)
+
+    # Verify the geography is set correctly.
+    assert observed.metadata["sourceOfGridDefinition"] == 0
+    assert observed.metadata["numberOfDataPoints"] == 19 * 11
+    assert observed.metadata["gridDefinitionTemplateNumber"] == 12
+    assert observed.metadata["longitudeOfReferencePoint"] == 9.0
+    assert observed.metadata["iDirectionIncrementGridLength"] == 100000
+    assert observed.metadata["jDirectionIncrementGridLength"] == 50000
+    assert observed.metadata["X1"] == 37600000
+    assert observed.metadata["Y2"] == 520600000
 
 
 @pytest.mark.skip(reason="the byc method in fx is not optimised (>30min on icon-ch1)")

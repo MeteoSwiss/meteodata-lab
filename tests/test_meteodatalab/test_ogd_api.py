@@ -105,8 +105,11 @@ def test_get_from_ogd(mock_session: mock.MagicMock, data_dir: Path):
     assert observed.parameter["shortName"] == "T"
 
 
+@pytest.mark.parametrize("with_headers", [True, False])
 @mock.patch.object(ogd_api, "session", autospec=True)
-def test_download_from_ogd(mock_session: mock.MagicMock, tmp_path: Path):
+def test_download_from_ogd(
+    mock_session: mock.MagicMock, tmp_path: Path, with_headers: bool
+):
     content = b"some content"
     href = "https://test.com/path/to/some-file.grib"
     body = {
@@ -114,7 +117,10 @@ def test_download_from_ogd(mock_session: mock.MagicMock, tmp_path: Path):
         "links": [],
     }
     mock_post_response = mock.Mock(**{"json.return_value": body})
-    headers = {"X-Amz-Meta-Sha256": hashlib.sha256(content).hexdigest()}
+    if with_headers:
+        headers = {"X-Amz-Meta-Sha256": hashlib.sha256(content).hexdigest()}
+    else:
+        headers = {}
     mock_get_response = mock.Mock(
         headers=headers, **{"iter_content.return_value": [content]}
     )

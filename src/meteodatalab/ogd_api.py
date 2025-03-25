@@ -204,7 +204,7 @@ def get_from_ogd(request: Request) -> xr.DataArray:
     """
     if ekd.settings.get("cache-policy") == "off":
         doc = "https://earthkit-data.readthedocs.io/en/latest/examples/cache.html"
-        logger.warn("Earthkit-data caching is recommended. See: %s", doc)
+        logger.warning("Earthkit-data caching is recommended. See: %s", doc)
 
     asset_url = get_asset_url(request)
 
@@ -227,8 +227,9 @@ def download_from_ogd(request: Request, target: Path) -> None:
     request : Request
         Asset search filters, must select a single asset.
     target : Path
-        Target path where to save the asset. If the path points to an existing directory,
-        the asset will be saved under its own name.
+        Target path where to save the asset.
+        If the path points to an existing directory, the asset will be
+        saved under its own name.
 
     Raises
     ------

@@ -2,7 +2,7 @@
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poetry]
+[project]
 name = "meteodatalab"
 version = "0.2.0"
 description = "A data post-processing framework on the basis of xarray."
@@ -16,19 +16,26 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
 ]
 authors = [
-    "Carlos Osuna <carlos.osuna@meteoswiss.ch>",
-    "Petra Baumann <petra.baumanna@meteoswiss.ch>",
-    "Nina Burgdorfer <nina.burgdorfer@meteoswiss.ch>",
-    "Victoria Cherkas <victoria.cherkas@meteoswiss.ch>",
-    "Christian Kanesan <christian.kanesan@meteoswiss.ch>",
-    "Tobias Wicky <tobias.wicky@meteoswiss.ch>",
+    { name = "Carlos Osuna", email = "carlos.osuna@meteoswiss.ch" },
+    { name = "Petra Baumann", email = "petra.baumanna@meteoswiss.ch" },
+    { name = "Nina Burgdorfer", email = "nina.burgdorfer@meteoswiss.ch" },
+    { name = "Victoria Cherkas", email = "victoria.cherkas@meteoswiss.ch" },
+    { name = "Christian Kanesan", email = "christian.kanesan@meteoswiss.ch" },
+    { name = "Tobias Wicky", email = "tobias.wicky@meteoswiss.ch" },
 ]
+requires-python = ">=3.9,<3.13"
+dynamic = ["dependencies"]
+
+[project.urls]
+source = "https://github.com/MeteoSwiss/meteodata-lab"
+documentation = "https://meteoswiss.github.io/meteodata-lab/"
+
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.13"
 click = "^8.1.7"
-earthkit-data = ">=0.5.6,<1"
-eccodes = "^1.5.0"
+earthkit-data = ">=0.13.0,<1"
+eccodes = ">=2.39.0,<3"
 eccodes-cosmo-resources-python = "==2.36.*"
 numpy = "^1.26.4"
 polytope-client = { version = "^0.7.4", optional = true}
@@ -41,7 +48,7 @@ scipy = { version = "^1.13", optional = true }
 setuptools = "*"
 xarray = ">=2024"
 
-[tool.poetry.extras]
+[project.optional-dependencies]
 fdb = ["pyfdb"]
 polytope = ["polytope-client"]
 regrid = ["pyproj", "rasterio", "scipy"]
@@ -62,11 +69,7 @@ rstcheck = { version = "*", extras = ["sphinx"] }
 types-requests = "*"
 types-PyYAML = "*"
 
-[tool.poetry.urls]
-source = "https://github.com/MeteoSwiss/meteodata-lab"
-documentation = "https://meteoswiss.github.io/meteodata-lab/"
-
-[tool.poetry.scripts]
+[project.scripts]
 # Format: <command> = "<package>.<module>:<function>"
 meteodata-lab = "meteodatalab.cli:main"
 

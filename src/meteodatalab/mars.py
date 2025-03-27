@@ -63,11 +63,17 @@ class Point(typing.NamedTuple):
 
 
 @dc.dataclass(frozen=True)
+class Range:
+    start: int = 0
+    end: int = 0
+    step: int = 1
+
+@dc.dataclass(frozen=True)
 class TimeseriesFeature:
     type: FeatureType = FeatureType.TIMESERIES
     points: list[Point] = dc.field(default_factory=list)
-    start: int = 0
-    end: int = 0
+    range: Range | None = None
+    axes: str = "step"
 
     @pydantic.validator("type")
     @classmethod
@@ -163,4 +169,5 @@ class Request:
             param: str | list[str] = [str(p) for p in result["param"]]
         else:
             param = str(result["param"])
-        return result | {"param": param}
+        lower_model = result["model"].lower()
+        return result | {"param": param} | {"model": lower_model}

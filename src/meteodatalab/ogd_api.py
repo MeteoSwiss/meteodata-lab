@@ -4,10 +4,13 @@
 import dataclasses as dc
 import datetime as dt
 import enum
+import hashlib
 import logging
 import os
 import typing
 from importlib.resources import files
+from pathlib import Path
+from urllib.parse import urlparse
 from uuid import UUID
 
 # Third-party
@@ -201,7 +204,7 @@ def get_from_ogd(request: Request) -> xr.DataArray:
     """
     if ekd.settings.get("cache-policy") == "off":
         doc = "https://earthkit-data.readthedocs.io/en/latest/examples/cache.html"
-        logger.warn("Earthkit-data caching is recommended. See: %s", doc)
+        logger.warning("Earthkit-data caching is recommended. See: %s", doc)
 
     asset_url = get_asset_url(request)
 
@@ -211,3 +214,46 @@ def get_from_ogd(request: Request) -> xr.DataArray:
         {"param": request.variable},
         geo_coords=_geo_coords,
     )[request.variable]
+
+
+def download_from_ogd(request: Request, target: Path) -> None:
+    """Download item from OGD.
+
+    The request attributes define filters for the STAC search API according
+    to the forecast extension.
+
+    Parameters
+    ----------
+    request : Request
+        Asset search filters, must select a single asset.
+    target : Path
+        Target path where to save the asset.
+        If the path points to an existing directory, the asset will be
+        saved under its own name.
+
+    Raises
+    ------
+    ValueError
+        when the request does not select exactly one asset.
+    RuntimeError
+        if the checksum verification fails.
+
+    """
+    asset_url = get_asset_url(request)
+    response = session.get(asset_url, stream=True)
+    response.raise_for_status()
+
+    if target.is_dir():
+        path = target / Path(urlparse(asset_url).path).name
+    else:
+        path = target
+
+    hasher = hashlib.sha256()
+    with path.open("wb") as f:
+        for chunk in response.iter_content(16 * 1024):
+            f.write(chunk)
+            hasher.update(chunk)
+
+    hash = response.headers.get("X-Amz-Meta-Sha256")
+    if hash is not None and hash != hasher.hexdigest():
+        raise RuntimeError("Checksum verification failed.")

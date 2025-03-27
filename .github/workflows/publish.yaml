@@ -35,14 +35,14 @@ jobs:
 
   publish-to-pypi:
     name: >-
-      Publish Python 🐍 distribution 📦 to PyPI
+      Publish to PyPI
     if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
     needs:
     - build
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/eccodes-cosmo-resources-python
+      url: https://pypi.org/p/meteodata-lab
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
 
@@ -57,7 +57,7 @@ jobs:
 
   github-release:
     name: >-
-      Sign the Python 🐍 distribution 📦 with Sigstore
+      Sign with Sigstore
       and upload them to GitHub Release
     needs:
     - publish-to-pypi
@@ -99,14 +99,14 @@ jobs:
         --repo "$GITHUB_REPOSITORY"
 
   publish-to-testpypi:
-    name: Publish Python 🐍 distribution 📦 to TestPyPI
+    name: Publish to TestPyPI
     needs:
     - build
     runs-on: ubuntu-latest
 
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/eccodes-cosmo-resources-python
+      url: https://test.pypi.org/p/meteodata-lab
 
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing

@@ -57,6 +57,11 @@ def get_from_fdb(request: mars.Request) -> dict[str, xr.DataArray]:
     return grib_decoder.load(source, request)
 
 
+def _polytope_auth_in_env() -> bool:
+    polytope_username_auth = "POLYTOPE_USERNAME", "POLYTOPE_PASSWORD"
+    return all(env_var not in os.environ for env_var in polytope_username_auth) or "POLYTOPE_USER_KEY" in os.environ
+
+
 def get_from_polytope(request: mars.Request) -> dict[str, xr.DataArray]:
     """Get model data from Polytope.
 
@@ -76,11 +81,11 @@ def get_from_polytope(request: mars.Request) -> dict[str, xr.DataArray]:
         Dataset containing the requested data.
 
     """
-    keys = "POLYTOPE_ADDRESS", "POLYTOPE_USERNAME", "POLYTOPE_PASSWORD"
-    if any(key not in os.environ for key in keys):
+    keys = "POLYTOPE_ADDRESS"
+    if "POLYTOPE_ADDRESS" not in os.environ or not _polytope_auth_in_env():
         msg = (
             "Required environment variables for polytope are not set."
-            "Define 'POLYTOPE_ADDRESS', 'POLYTOPE_USERNAME' and 'POLYTOPE_PASSWORD'."
+            "Define 'POLYTOPE_ADDRESS' and set authentication parameters of either 'POLYTOPE_USERNAME' and 'POLYTOPE_PASSWORD' or 'POLYTOPE_USER_KEY'."
         )
         logger.exception(msg)
         raise RuntimeError(msg)

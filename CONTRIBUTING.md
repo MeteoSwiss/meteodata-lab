@@ -53,19 +53,13 @@ Ready to contribute? Here's how to set up `meteodata-lab` for local development.
 
     ```bash
     cd meteodata-lab/
-    ./tools/setup_env.sh
+    tools/setup_poetry.sh
     ```
 
-    This will create a conda environment named `meteodata-lab` (change with `-n`) and install the pinned runtime and development dependencies in `requirements/environment.yaml`.
+    This will install poetry and create a virtual environment under the `.venv` path and install all dependencies including the development group and extras.
+    The dependency versions are defined in the `poetry.lock` file. The `meteodata-lab` package is installed into the virtual environment in editable mode.
 
-    Install the package itself in editable mode.
-
-    ```bash
-    conda activate meteodata-lab
-    pip install --editable .
-    ```
-
-    Use `-u` to get the newest package versions (unpinned dependencies in `requirements/requirements.yaml`), and additionally `-e` to update the environment files.
+    To update the dependency versions, run `poetry update`. This command will regenerate the lock file which can be committed along with the code changes.
 
 4. Create a branch for local development:
 
@@ -84,8 +78,11 @@ Ready to contribute? Here's how to set up `meteodata-lab` for local development.
     Next, ensure that the code does what it is supposed to do by running the tests with pytest:
 
     ```bash
-    pytest
+    pytest -m "not ifs"
+    pytest -m ifs
     ```
+
+    Note that, currently, test data can only be found on balfrin.
 
 6. Commit your changes and push your branch to GitHub:
 
@@ -103,16 +100,6 @@ Before you submit a pull request, check that it meets these guidelines:
 
 1. The pull request should include tests.
 2. If the pull request adds functionality, the docs should be updated. Put your new functionality into a function with a docstring, and add the feature to the list in `README.md`.
-3. The pull request should work for Python 3.6 and 3.7, and for PyPy. Make sure that the tests pass for all supported Python versions.
-
-## Tips
-
-For a subset of tests or a specific test, run:
-
-```bash
-pytest tests.test_meteodatalab
-pytest tests.test_meteodatalab/test_feature::test_edge_case
-```
 
 ## Versioning
 
@@ -120,59 +107,6 @@ In order to release a new version of your project, follow these steps:
 
 - Make sure everything is committed, cleaned up and validating (duh!). Don't forget to keep track of the changes in `HISTORY.md`.
 - Increase the version number that is hardcoded in `pyproject.toml` (and only there) and commit.
-- Either create a (preferentially annotated) tag with `git tag`, or directly create a release on GitHub.
-
-## Project Structure
-
-Following is a description of the most important files and folders in the project in alphabetic order.
-
-- `.github/workflows/`: [GitHub Actions](https://docs.github.com/en/actions) workflows, e.g., checks that are run when certain branches are pushed.
-- `docs/`: Documentation.
-- `jenkins/`: Jenkins setup.
-- `requirements/`: Project dependencies and environment
-    - `environment.yaml`: Full tree of runtime and development dependencies with fully specified ('pinned') version numbers; created with `conda env export`.
-    - `requirements.yaml`: Top-level runtime and development dependencies with minimal version restrictions (typically a minimum version or a version range); kept manually.
-- `src/meteodatalab/`: Source code of the project package.
-- `tests/test_meteodatalab/`: Unit tests of the project package; run with `pytest`.
-- `tools/`: Scripts primarily for development
-    - `run-mypy.sh`: Run script for the static type checker `mypy`.
-    - `setup_env.sh`: Script to create new conda environments; see `tools/setup_env.sh -h` for all available options.
-    - `setup_miniconda.sh`: Script to install miniconda.
-- `.gitignore`: Files and folders ignored by `git`.
-- `.pre-commit-config.yaml`: Configuration of pre-commit hooks, which are formatters and checkers run before a successful commit.
-- `AUTHORS.md`: Project authors.
-- `CONTRIBUTING.md`: Instructions on how to contribute to the project.
-- `HISTORY.md`: List of changes for each version of the project.
-- `LICENSE`: License of the project.
-- `MANIFEST.in`: Files installed alongside the source code.
-- `pyproject.toml`: Main package specification file, including build dependencies, metadata and the configurations of development tools like `black`, `pytest`, `mypy` etc.
-- `README.md`: Description of the project.
-- `USAGE.md`: Information on how to use the package.
-
-## Managing dependencies
-
-meteodata-lab uses [Conda](https://docs.conda.io/en/latest/) to manage dependencies. (Also check out [Mamba](https://mamba.readthedocs.io/en/latest/) if you like your package installations fast.) Dependencies are specified in YAML files, of which there are two:
-
-- `requirements/requirements.yaml`: Top-level runtime and development dependencies with minimal version restrictions (typically a minimum version or a version range); kept manually.
-- `requirements/environment.yaml`: Full tree of runtime and development dependencies with fully specified ('pinned') version numbers; created with `conda env export`.
-
-The pinned `environment.yaml` file should be used to create reproducible environments for development or deployment. This ensures reproducible results across machines and users. The unpinned `requirements.yaml` file has two main purposes: (i) keeping track of the top-level dependencies, and (ii) periodically updating the pinned `environment.yaml` file to the latest package versions.
-
-After introducing new first-level dependencies to your requirements, you have to update the environment files in order to be able to create reproducible environments for deployment and production.
-Updating the environment files involves the following steps:
-
-1. Creating an environment from your top-level dependencies in `requirements/requirements.yaml`
-2. Exporting this environment to `requirements/environment.yaml`
-
-Alternatively, use the provided script
-
-```bash
-./tools/setup_env.sh -ue
-```
-
-to create a environment from unpinned (`-u`) runtime and development dependencies and export (`-e`) it (consider throwing in `-m` for good measure to speed things up with `mamba`).
-
-_Note that the separation of unpinned runtime and development dependencies into separate files (`requirements.yaml` and `dev-requirements.yaml`, respectively) has been given up because when creating an environment from multiple YAML files (with `conda env create` and `conda env update`), only the version restrictions in the last file are guaranteed to be respected, so when installing devevelopment dependencies from `dev-requirements.yaml` into an environment created from `requirements.yaml`, the solver does not take version restrictions in the latter file into account anymore, potentially resulting in inconsistent production and development environments. Given the negligible overhead (in terms of memory etc.) of installing development dependencies in production environments, they are only separated from the runtime dependencies in `requirements.yaml` by a comment._
 
 ## How to provide executable scripts
 
@@ -180,4 +114,15 @@ By default, a single executable script called meteodata-lab is provided. It is c
 
 When the package is installed, a executable script named `meteodata-lab` is created in the bin folder of the active conda environment. Upon calling this script in the shell, the `main` function in `src/meteodatalab/cli.py` is executed.
 
-The scripts, their names and entry points are specified in `pyproject.toml` in the `[project.scripts]` section. Just add additional entries to provide more scripts to the users of your package.
+The scripts, their names and entry points are specified in `pyproject.toml` in the `[tool.poetry.scripts]` section. Just add additional entries to provide more scripts to the users of your package.
+
+## Release Process
+
+Perform the following steps to publish a new version of the python package:
+- Create a branch named `rel-v<version>`.
+- Ensure that the `HISTORY.md` contains all relevant changes and add a new section for the version to be released.
+- Update the version string.
+    - Remove pre-release flags.
+    - Ensure that the changes are compliant with SemVer.
+- Request a code review on the branch and merge it to `main`.
+- Create and push a tag `v<version>`.

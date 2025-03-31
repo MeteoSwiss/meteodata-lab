@@ -54,7 +54,11 @@ class Type(str, Enum):
 
 
 class FeatureType(str, Enum):
+    BOUNDINGBOX = "boundingbox"
+    POLYGON = "polygon"
     TIMESERIES = "timeseries"
+    TRAJECTORY = "trajectory"
+    VERTICALPROFILE = "verticalprofile"
 
 
 class Point(typing.NamedTuple):
@@ -64,23 +68,82 @@ class Point(typing.NamedTuple):
 
 @dc.dataclass(frozen=True)
 class Range:
-    start: int = 0
-    end: int = 0
-    step: int = 1
+    start: int
+    end: int
+    step: int | None = None
+
+
+T = typing.TypeVar("T")
+
+
+def _default(value: T | None, default: T) -> T:
+    if value is not None:
+        return value
+    return default
+
+
+@dc.dataclass(frozen=True)
+class BoundingBoxFeature:
+    points: list[tuple[float, ...]]
+    axes: tuple[str, ...] | None = None  # default: lat, long
+    type: typing.Literal[FeatureType.BOUNDINGBOX] = FeatureType.BOUNDINGBOX
+
+    @pydantic.model_validator(mode="after")
+    def validate(self):
+        if len(self.points) != 2:
+            raise ValueError("points must contain two points")
+        axes = _default(self.axes, ("lat", "long"))
+        if any(len(point) != axes for point in self.points):
+            raise ValueError("points must have same number of components as axes")
+        return self
+
+
+@dc.dataclass(frozen=True)
+class PolygonFeature:
+    shape: list[Point] | list[list[Point]]
+    type: typing.Literal[FeatureType.POLYGON] = FeatureType.POLYGON
+
 
 @dc.dataclass(frozen=True)
 class TimeseriesFeature:
-    type: FeatureType = FeatureType.TIMESERIES
-    points: list[Point] = dc.field(default_factory=list)
+    points: list[Point]
     range: Range | None = None
     axes: str = "step"
+    type: typing.Literal[FeatureType.TIMESERIES] = FeatureType.TIMESERIES
 
-    @pydantic.validator("type")
-    @classmethod
-    def validate_type(cls, v: str) -> str:
-        if v != FeatureType.TIMESERIES:
-            raise ValueError("Wrong type")
-        return v
+
+@dc.dataclass(frozen=True)
+class TrajectoryFeature:
+    points: tuple[int | float, ...]
+    axes: tuple[str, ...] | None = None  # default: lat, long, level, step
+    padding: float | None = None  # default: 1
+    type: typing.Literal[FeatureType.TRAJECTORY] = FeatureType.TRAJECTORY
+
+    @pydantic.model_validator(mode="after")
+    def validate(self):
+        if len(self.points) < 2:
+            raise ValueError("point must have at least two values")
+        axes = _default(self.axes, ("lat", "long", "level", "step"))
+        if any(len(point) != axes for point in self.points):
+            raise ValueError("points must have same number of components as axes")
+        return self
+
+
+@dc.dataclass(frozen=True)
+class VerticalProfileFeature:
+    points: list[Point]
+    range: Range | None = None
+    axes: str = "levelist"
+    type: typing.Literal[FeatureType.VERTICALPROFILE] = FeatureType.VERTICALPROFILE
+
+
+Feature = (
+    BoundingBoxFeature
+    | PolygonFeature
+    | TimeseriesFeature
+    | TrajectoryFeature
+    | VerticalProfileFeature
+)
 
 
 @cache
@@ -118,7 +181,27 @@ class Request:
     stream: Stream = Stream.ENS_FORECAST
     type: Type = Type.ENS_MEMBER
 
-    feature: TimeseriesFeature | None = None
+    feature: Feature | None = dc.field(
+        default=None,
+        metadata=dict(discriminator="type"),
+    )
+
+    @pydantic.model_validator(mode="after")
+    def validate(self):
+        axes = getattr(self.feature, "axes", None)
+        range = getattr(self.feature, "range", None)
+        if (
+            isinstance(self.feature, (TimeseriesFeature, TrajectoryFeature))
+            and "step" in axes
+        ):
+            if range is not None and self.step is not None:
+                raise ValueError("only one of step or feature range should be defined")
+        elif axes == "levelist":
+            if range is not None and self.levelist is not None:
+                raise ValueError(
+                    "only one of levelist or feature range should be defined"
+                )
+        return self
 
     def dump(self):
         if pydantic.__version__.startswith("1"):
@@ -169,5 +252,4 @@ class Request:
             param: str | list[str] = [str(p) for p in result["param"]]
         else:
             param = str(result["param"])
-        lower_model = result["model"].lower()
-        return result | {"param": param} | {"model": lower_model}
+        return result | {"param": param, "model": result["model"].lower()}

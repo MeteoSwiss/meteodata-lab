@@ -103,9 +103,9 @@ def test_any_staggering(sample):
 def test_feature_timeseries(sample):
     feature = mars.TimeseriesFeature(
         points=[mars.Point(0.1, 0.2)],
-        start=0,
-        end=300,
+        range=mars.Range(start=0, end=300),
     )
+
     observed = mars.Request(
         "U",
         date="20200101",
@@ -113,13 +113,17 @@ def test_feature_timeseries(sample):
         number=1,
         feature=feature,
     ).to_fdb()
+
     expected = {k: v for k, v in sample.items() if k != "step"} | {
         "number": 1,
         "feature": {
             "type": "timeseries",
             "points": [[0.1, 0.2]],
-            "start": 0,
-            "end": 300,
+            "axes": "step",
+            "range": {
+                "start": 0,
+                "end": 300,
+            },
         },
     }
 

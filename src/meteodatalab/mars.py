@@ -80,11 +80,12 @@ class BoundingBoxFeature:
 
     @pydantic.model_validator(mode="after")
     def validate(self):
-        possible_axes = {("latitude", "longitude"), ("latitude", "longitude", "level")}
+        min_axes = {"latitude", "longitude"}
+        max_axes = {"latitude", "longitude", "level"}
         if len(self.points) != 2:
             raise ValueError("points must contain two points")
-        if self.axes not in possible_axes:
-            msg = "axes must be a sequence of latitude, longitude and optionally level"
+        if not (min_axes <= set(self.axes) <= max_axes):
+            msg = "axes must contain latitude, longitude and optionally level"
             raise ValueError(msg)
         if any(len(point) != len(self.axes) for point in self.points):
             raise ValueError("points must have same number of components as axes")

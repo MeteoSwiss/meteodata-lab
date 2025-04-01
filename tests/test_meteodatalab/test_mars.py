@@ -109,6 +109,7 @@ def test_feature_bounding_box(sample):
         "U",
         date="20200101",
         time="0000",
+        step=0,
         number=1,
         feature=feature,
     ).to_fdb()

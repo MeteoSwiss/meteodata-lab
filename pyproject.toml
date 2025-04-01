@@ -30,11 +30,11 @@ packages = [
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
 click = "^8.1.7"
-earthkit-data = {extras = ["covjsonkit"], version = "^0.13.5"}
+earthkit-data = { version = ">=0.11,<1", extras = ["covjsonkit"] }
 eccodes = "^1.5.0"
 eccodes-cosmo-resources-python = "==2.36.*"
 numpy = "^1.26.4"
-polytope-client = { version = "^0.7.4", optional = true}
+polytope-client = { version = "^0.7.4", optional = true }
 pydantic = "*"
 pyproj = { version = "^3.6.1", optional = true }
 pyyaml = "^6.0.1"

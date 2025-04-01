@@ -1,5 +1,7 @@
 """Mars request helper class."""
 
+from __future__ import annotations
+
 # Standard library
 import dataclasses as dc
 import json
@@ -55,10 +57,7 @@ class Type(str, Enum):
 
 class FeatureType(str, Enum):
     BOUNDINGBOX = "boundingbox"
-    POLYGON = "polygon"
     TIMESERIES = "timeseries"
-    TRAJECTORY = "trajectory"
-    VERTICALPROFILE = "verticalprofile"
 
 
 class Point(typing.NamedTuple):
@@ -73,77 +72,46 @@ class Range:
     step: int | None = None
 
 
-T = typing.TypeVar("T")
-
-
-def _default(value: T | None, default: T) -> T:
-    if value is not None:
-        return value
-    return default
-
-
 @dc.dataclass(frozen=True)
 class BoundingBoxFeature:
     points: list[tuple[float, ...]]
-    axes: tuple[str, ...] | None = None  # default: lat, long
+    axes: tuple[str, ...] = ("latitude", "longitude")
     type: typing.Literal[FeatureType.BOUNDINGBOX] = FeatureType.BOUNDINGBOX
 
     @pydantic.model_validator(mode="after")
     def validate(self):
+        possible_axes = {("latitude", "longitude"), ("latitude", "longitude", "level")}
         if len(self.points) != 2:
             raise ValueError("points must contain two points")
-        axes = _default(self.axes, ("lat", "long"))
-        if any(len(point) != axes for point in self.points):
+        if self.axes not in possible_axes:
+            msg = "axes must be a sequence of latitude, longitude and optionally level"
+            raise ValueError(msg)
+        if any(len(point) != len(self.axes) for point in self.points):
             raise ValueError("points must have same number of components as axes")
         return self
-
-
-@dc.dataclass(frozen=True)
-class PolygonFeature:
-    shape: list[Point] | list[list[Point]]
-    type: typing.Literal[FeatureType.POLYGON] = FeatureType.POLYGON
 
 
 @dc.dataclass(frozen=True)
 class TimeseriesFeature:
     points: list[Point]
+    time_axis: typing.Literal["step", "date"]
     range: Range | None = None
-    axes: str = "step"
+    axes: tuple[str, str] = ("latitude", "longitude")
     type: typing.Literal[FeatureType.TIMESERIES] = FeatureType.TIMESERIES
 
-
-@dc.dataclass(frozen=True)
-class TrajectoryFeature:
-    points: tuple[int | float, ...]
-    axes: tuple[str, ...] | None = None  # default: lat, long, level, step
-    padding: float | None = None  # default: 1
-    type: typing.Literal[FeatureType.TRAJECTORY] = FeatureType.TRAJECTORY
-
-    @pydantic.model_validator(mode="after")
-    def validate(self):
-        if len(self.points) < 2:
-            raise ValueError("point must have at least two values")
-        axes = _default(self.axes, ("lat", "long", "level", "step"))
-        if any(len(point) != axes for point in self.points):
-            raise ValueError("points must have same number of components as axes")
-        return self
+    def validate_request(self, request: Request) -> None:
+        time_attr = getattr(request, self.time_axis)
+        if self.range is not None and time_attr is not None:
+            raise ValueError(
+                f"only one of {self.time_axis} or feature range must be defined"
+            )
+        elif self.range is None and time_attr is None:
+            raise ValueError(
+                f"one of {self.time_axis} or feature range must be defined"
+            )
 
 
-@dc.dataclass(frozen=True)
-class VerticalProfileFeature:
-    points: list[Point]
-    range: Range | None = None
-    axes: str = "levelist"
-    type: typing.Literal[FeatureType.VERTICALPROFILE] = FeatureType.VERTICALPROFILE
-
-
-Feature = (
-    BoundingBoxFeature
-    | PolygonFeature
-    | TimeseriesFeature
-    | TrajectoryFeature
-    | VerticalProfileFeature
-)
+Feature = BoundingBoxFeature | TimeseriesFeature
 
 
 @cache
@@ -188,19 +156,8 @@ class Request:
 
     @pydantic.model_validator(mode="after")
     def validate(self):
-        axes = getattr(self.feature, "axes", None)
-        range = getattr(self.feature, "range", None)
-        if (
-            isinstance(self.feature, (TimeseriesFeature, TrajectoryFeature))
-            and "step" in axes
-        ):
-            if range is not None and self.step is not None:
-                raise ValueError("only one of step or feature range should be defined")
-        elif axes == "levelist":
-            if range is not None and self.levelist is not None:
-                raise ValueError(
-                    "only one of levelist or feature range should be defined"
-                )
+        if isinstance(self.feature, TimeseriesFeature):
+            self.feature.validate_request(self)
         return self
 
     def dump(self):

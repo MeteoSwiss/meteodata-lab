@@ -100,10 +100,36 @@ def test_any_staggering(sample):
     assert observed == expected
 
 
+def test_feature_bounding_box(sample):
+    feature = mars.BoundingBoxFeature(
+        points=[mars.Point(0.1, 0.2), mars.Point(0.3, 0.4)],
+    )
+
+    observed = mars.Request(
+        "U",
+        date="20200101",
+        time="0000",
+        number=1,
+        feature=feature,
+    ).to_fdb()
+
+    expected = sample | {
+        "number": 1,
+        "feature": {
+            "type": "boundingbox",
+            "points": [[0.1, 0.2], [0.3, 0.4]],
+            "axes": ["latitude", "longitude"],
+        },
+    }
+
+    assert observed == expected
+
+
 def test_feature_timeseries(sample):
     feature = mars.TimeseriesFeature(
         points=[mars.Point(0.1, 0.2)],
         range=mars.Range(start=0, end=300),
+        time_axis="step",
     )
 
     observed = mars.Request(
@@ -119,7 +145,8 @@ def test_feature_timeseries(sample):
         "feature": {
             "type": "timeseries",
             "points": [[0.1, 0.2]],
-            "axes": "step",
+            "axes": ["latitude", "longitude"],
+            "time_axis": "step",
             "range": {
                 "start": 0,
                 "end": 300,

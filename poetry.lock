@@ -3452,4 +3452,4 @@ regrid = ["pyproj", "rasterio", "scipy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "866f10a88d602da9592b3b88571c5e28ba2f38455ce8b16264a0ae243773ba75"
+content-hash = "7c374b9f865e17e4f145f3081b0fbbd59c95cd77ffc94a38ce7b769cdaaefba3"

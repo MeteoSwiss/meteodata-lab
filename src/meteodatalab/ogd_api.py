@@ -23,7 +23,7 @@ import yaml
 # Local
 from . import data_source, grib_decoder, icon_grid, util
 
-SEARCH_URL = "https://data.geo.admin.ch/api/stac"
+SEARCH_URL = "https://data.geo.admin.ch/api/stac/v1/search"
 
 logger = logging.getLogger(__name__)
 session = util.init_session(logger)
@@ -148,8 +148,8 @@ def get_asset_url(request: Request):
     [asset_url] = result  # expect only one asset
 
     # https://meteoswiss.atlassian.net/browse/OG-62
-    if asset_url.startswith("https://data.geo.admin.ch/api/stac"):
-        asset_url = asset_url[35:]
+    if asset_url.startswith("https://data.geo.admin.ch"):
+        asset_url = asset_url[26:]
 
     return asset_url
 

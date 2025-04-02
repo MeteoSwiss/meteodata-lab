@@ -8,7 +8,6 @@ import hashlib
 import logging
 import os
 import typing
-from importlib.resources import files
 from pathlib import Path
 from urllib.parse import urlparse
 from uuid import UUID
@@ -18,7 +17,6 @@ import earthkit.data as ekd  # type: ignore
 import pydantic
 import pydantic.dataclasses as pdc
 import xarray as xr
-import yaml
 
 # Local
 from . import data_source, grib_decoder, icon_grid, util
@@ -153,7 +151,8 @@ def get_asset_url(request: Request):
 
     return asset_url
 
-def get_collection_asset_url(collection_id: str, asset_id:str) -> str:
+
+def get_collection_asset_url(collection_id: str, asset_id: str) -> str:
     """Get collection asset URL from OGD.
 
     Query the STAC collection assets and return the URL for the given asset ID.
@@ -161,9 +160,9 @@ def get_collection_asset_url(collection_id: str, asset_id:str) -> str:
     Parameters
     ----------
     collection_id : str
-        Full STAC collection ID, e.g., 'ch.meteoschweiz.ogd-forecasting-icon-ch1'.
+        Full STAC collection ID
     asset_id : str
-        The ID of the static asset to retrieve, e.g., 'horizontal_constants_icon-ch1-eps.grib2'.
+        The ID of the static asset to retrieve.
 
     Returns
     -------
@@ -174,6 +173,7 @@ def get_collection_asset_url(collection_id: str, asset_id:str) -> str:
     ------
     ValueError
         If the asset is not found in the collection.
+
     """
     url = f"{SEARCH_URL}/{collection_id}/assets"
 
@@ -184,7 +184,9 @@ def get_collection_asset_url(collection_id: str, asset_id:str) -> str:
     asset_info = assets.get(asset_id)
 
     if not asset_info or "href" not in asset_info:
-        raise ValueError(f"Asset '{asset_id}' not found in collection '{collection_id}'.")
+        raise ValueError(
+            f"Asset '{asset_id}' not found in collection '{collection_id}'."
+        )
 
     return asset_info["href"]
 

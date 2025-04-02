@@ -300,6 +300,10 @@ def _download_with_checksum(url: str, target: Path) -> None:
     filename = Path(urlparse(url).path).name
     path = target / filename if target.is_dir() else target
 
+    if path.exists():
+        logger.info(f"File already exists, skipping download: {path}")
+        return
+
     hasher = hashlib.sha256()
     with path.open("wb") as f:
         for chunk in response.iter_content(16 * 1024):

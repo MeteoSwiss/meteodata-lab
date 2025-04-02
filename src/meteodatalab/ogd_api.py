@@ -153,19 +153,55 @@ def get_asset_url(request: Request):
 
     return asset_url
 
+def get_collection_asset_url(collection_id: str, asset_id:str) -> str:
+    """Get collection asset URL from OGD.
+
+    Query the STAC collection assets and return the URL for the given asset ID.
+
+    Parameters
+    ----------
+    collection_id : str
+        Full STAC collection ID, e.g., 'ch.meteoschweiz.ogd-forecasting-icon-ch1'.
+    asset_id : str
+        The ID of the static asset to retrieve, e.g., 'horizontal_constants_icon-ch1-eps.grib2'.
+
+    Returns
+    -------
+    str
+        The pre-signed URL of the requested static asset.
+
+    Raises
+    ------
+    ValueError
+        If the asset is not found in the collection.
+    """
+    url = f"{SEARCH_URL}/{collection_id}/assets"
+
+    response = session.get(url)
+    response.raise_for_status()
+
+    assets = response.json().get("assets", {})
+    asset_info = assets.get(asset_id)
+
+    if not asset_info or "href" not in asset_info:
+        raise ValueError(f"Asset '{asset_id}' not found in collection '{collection_id}'.")
+
+    return asset_info["href"]
+
 
 def _get_geo_coord_url(uuid: UUID) -> str:
     if (var := os.environ.get("MDL_GEO_COORD_URL")) is not None:
         return var
 
-    model = icon_grid.GRID_UUID_TO_MODEL.get(uuid)
-
-    if model is None:
+    model_name = icon_grid.GRID_UUID_TO_MODEL.get(uuid)
+    if model_name is None:
         raise KeyError("Grid UUID not found")
 
-    config_path = files("meteodatalab.data").joinpath("geo_coords_urls.yaml")
-    urls = yaml.safe_load(config_path.open())
-    return urls[model]["horizontal"]
+    base_model = model_name.removesuffix("-eps")
+    collection_id = f"ch.meteoschweiz.ogd-forecasting-{base_model}"
+    asset_id = f"horizontal_constants_{model_name}.grib2"
+
+    return get_collection_asset_url(collection_id, asset_id)
 
 
 def _no_coords(uuid: UUID) -> dict[str, xr.DataArray]:
@@ -217,10 +253,14 @@ def get_from_ogd(request: Request) -> xr.DataArray:
 
 
 def download_from_ogd(request: Request, target: Path) -> None:
-    """Download item from OGD.
+    """Download forecast asset and its static coordinate files from OGD.
 
     The request attributes define filters for the STAC search API according
     to the forecast extension.
+
+    In addition to the main asset, this function downloads static files
+    with horizontal and vertical coordinates, as the forecast item
+    contain no height, longitude, or latitude information.
 
     Parameters
     ----------
@@ -239,14 +279,26 @@ def download_from_ogd(request: Request, target: Path) -> None:
         if the checksum verification fails.
 
     """
+    # Download main forecast asset
     asset_url = get_asset_url(request)
-    response = session.get(asset_url, stream=True)
+    _download_with_checksum(asset_url, target)
+
+    model_suffix = request.collection.value.removeprefix("ogd-forecasting-")
+    collection_id = f"ch.meteoschweiz.{request.collection.value}"
+
+    # Download coordinate files
+    for prefix in ["horizontal", "vertical"]:
+        asset_id = f"{prefix}_constants_icon-{model_suffix}-eps.grib2"
+        url = get_collection_asset_url(collection_id, asset_id)
+        _download_with_checksum(url, target)
+
+
+def _download_with_checksum(url: str, target: Path) -> None:
+    response = session.get(url, stream=True)
     response.raise_for_status()
 
-    if target.is_dir():
-        path = target / Path(urlparse(asset_url).path).name
-    else:
-        path = target
+    filename = Path(urlparse(url).path).name
+    path = target / filename if target.is_dir() else target
 
     hasher = hashlib.sha256()
     with path.open("wb") as f:
@@ -256,4 +308,4 @@ def download_from_ogd(request: Request, target: Path) -> None:
 
     hash = response.headers.get("X-Amz-Meta-Sha256")
     if hash is not None and hash != hasher.hexdigest():
-        raise RuntimeError("Checksum verification failed.")
+        raise RuntimeError(f"Checksum verification failed for {filename}")

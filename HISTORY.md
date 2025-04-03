@@ -1,5 +1,15 @@
 # History
 
+## [0.2.1a1] (2025-04-03)
+
+### Additions
+- `ogd_api`:
+  - Added `get_collection_asset_url` function to fetch pre-signed URLs for static assets from a STAC collection.
+
+### Breaking Changes
+- The `geo_coords_urls.yaml` file containing pre-signed URLs for coordinate files has been removed. Coordinate URLs are now resolved dynamically using the new get_collection_asset_url function.
+
+
 ## [0.2.0] (2025-03-20)
 
 ### Additions

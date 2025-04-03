@@ -171,7 +171,7 @@ def get_collection_asset_url(collection_id: str, asset_id: str) -> str:
 
     Raises
     ------
-    ValueError
+    KeyError
         If the asset is not found in the collection.
 
     """
@@ -184,9 +184,7 @@ def get_collection_asset_url(collection_id: str, asset_id: str) -> str:
     asset_info = assets.get(asset_id)
 
     if not asset_info or "href" not in asset_info:
-        raise ValueError(
-            f"Asset '{asset_id}' not found in collection '{collection_id}'."
-        )
+        raise KeyError(f"Asset '{asset_id}' not found in collection '{collection_id}'.")
 
     return asset_info["href"]
 
@@ -262,7 +260,7 @@ def download_from_ogd(request: Request, target: Path) -> None:
 
     In addition to the main asset, this function downloads static files
     with horizontal and vertical coordinates, as the forecast item
-    contain no height, longitude, or latitude information.
+    does not include the horizontal or vertical coordinates.
 
     Parameters
     ----------
@@ -285,12 +283,12 @@ def download_from_ogd(request: Request, target: Path) -> None:
     asset_url = get_asset_url(request)
     _download_with_checksum(asset_url, target)
 
-    model_suffix = request.collection.value.removeprefix("ogd-forecasting-")
-    collection_id = f"ch.meteoschweiz.{request.collection.value}"
+    model_suffix = request.collection.removeprefix("ogd-forecasting-")
+    collection_id = f"ch.meteoschweiz.{request.collection}"
 
     # Download coordinate files
     for prefix in ["horizontal", "vertical"]:
-        asset_id = f"{prefix}_constants_icon-{model_suffix}-eps.grib2"
+        asset_id = f"{prefix}_constants_{model_suffix}-eps.grib2"
         url = get_collection_asset_url(collection_id, asset_id)
         _download_with_checksum(url, target)
 

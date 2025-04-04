@@ -24,7 +24,7 @@ def extrapolate_temperature_sfc2p(
     Parameters
     ----------
     t_sfc : xr.DataArray
-        Surface temperature.
+        Surface temperature [K].
     z_sfc : xr.DataArray
         Surface geopotential.
     p_sfc : xr.DataArray

@@ -119,9 +119,9 @@ def test_download_from_ogd(
     horizontal_href = "https://test.com/path/to/horizontal.grib"
     vertical_href = "https://test.com/path/to/vertical.grib"
 
-    search_url = "https://sys-data.int.bgdi.ch/api/stac/v1/search"
+    collections_url = "https://sys-data.int.bgdi.ch/api/stac/v1/collections"
     collection_id = "ch.meteoschweiz.ogd-forecasting-icon-ch2"
-    assets_url = f"{search_url}/{collection_id}/assets"
+    assets_url = f"{collections_url}/{collection_id}/assets"
 
     mock_post_response = mock.Mock()
     mock_post_response.json.return_value = {
@@ -145,20 +145,19 @@ def test_download_from_ogd(
     def mock_get_response(url, *args, **kwargs):
         # Respond with asset list for coordinate URLs
         if url == assets_url:
+            assets = [
+                {
+                    "id": "horizontal_constants_icon-ch2-eps.grib2",
+                    "href": horizontal_href,
+                },
+                {
+                    "id": "vertical_constants_icon-ch2-eps.grib2",
+                    "href": vertical_href,
+                },
+            ]
             return mock.Mock(
                 spec=requests.Response,
-                json=mock.Mock(
-                    return_value={
-                        "assets": {
-                            "horizontal_constants_icon-ch2-eps.grib2": {
-                                "href": horizontal_href
-                            },
-                            "vertical_constants_icon-ch2-eps.grib2": {
-                                "href": vertical_href
-                            },
-                        }
-                    }
-                ),
+                json=mock.Mock(return_value={"assets": assets}),
             )
 
         if url == main_href:

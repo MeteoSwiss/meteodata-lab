@@ -8,6 +8,7 @@ from unittest import mock
 # Third-party
 import pydantic
 import pytest
+import requests
 import xarray as xr
 
 # First-party
@@ -110,24 +111,81 @@ def test_get_from_ogd(mock_session: mock.MagicMock, data_dir: Path):
 def test_download_from_ogd(
     mock_session: mock.MagicMock, tmp_path: Path, with_headers: bool
 ):
-    content = b"some content"
-    href = "https://test.com/path/to/some-file.grib"
-    body = {
-        "features": [{"assets": {"some-asset.ext": {"href": href}}}],
+    content_main = b"main content"
+    content_horizontal = b"horizontal content"
+    content_vertical = b"vertical content"
+
+    main_href = "https://test.com/path/to/some-file.grib"
+    horizontal_href = "https://test.com/path/to/horizontal.grib"
+    vertical_href = "https://test.com/path/to/vertical.grib"
+
+    search_url = "https://sys-data.int.bgdi.ch/api/stac/v1/search"
+    collection_id = "ch.meteoschweiz.ogd-forecasting-icon-ch2"
+    assets_url = f"{search_url}/{collection_id}/assets"
+
+    mock_post_response = mock.Mock()
+    mock_post_response.json.return_value = {
+        "features": [{"assets": {"some-asset.ext": {"href": main_href}}}],
         "links": [],
     }
-    mock_post_response = mock.Mock(**{"json.return_value": body})
+
     if with_headers:
-        headers = {"X-Amz-Meta-Sha256": hashlib.sha256(content).hexdigest()}
+        headers_main = {"X-Amz-Meta-Sha256": hashlib.sha256(content_main).hexdigest()}
+        headers_horizontal = {
+            "X-Amz-Meta-Sha256": hashlib.sha256(content_horizontal).hexdigest()
+        }
+        headers_vertical = {
+            "X-Amz-Meta-Sha256": hashlib.sha256(content_vertical).hexdigest()
+        }
     else:
-        headers = {}
-    mock_get_response = mock.Mock(
-        headers=headers, **{"iter_content.return_value": [content]}
-    )
+        headers_main = {}
+        headers_horizontal = {}
+        headers_vertical = {}
+
+    def mock_get_response(url, *args, **kwargs):
+        # Respond with asset list for coordinate URLs
+        if url == assets_url:
+            return mock.Mock(
+                spec=requests.Response,
+                json=mock.Mock(
+                    return_value={
+                        "assets": {
+                            "horizontal_constants_icon-ch2-eps.grib2": {
+                                "href": horizontal_href
+                            },
+                            "vertical_constants_icon-ch2-eps.grib2": {
+                                "href": vertical_href
+                            },
+                        }
+                    }
+                ),
+            )
+
+        if url == main_href:
+            return mock.Mock(
+                spec=requests.Response,
+                iter_content=mock.Mock(return_value=[content_main]),
+                headers=headers_main,
+            )
+        elif url == horizontal_href:
+            return mock.Mock(
+                spec=requests.Response,
+                iter_content=mock.Mock(return_value=[content_horizontal]),
+                headers=headers_horizontal,
+            )
+        elif url == vertical_href:
+            return mock.Mock(
+                spec=requests.Response,
+                iter_content=mock.Mock(return_value=[content_vertical]),
+                headers=headers_vertical,
+            )
+
+        raise ValueError(f"Unexpected URL: {url}")
+
     mock_session.configure_mock(
         **{
             "post.return_value": mock_post_response,
-            "get.return_value": mock_get_response,
+            "get.side_effect": mock_get_response,
         }
     )
 
@@ -142,7 +200,6 @@ def test_download_from_ogd(
     target.mkdir()
     ogd_api.download_from_ogd(req, target)
 
-    observed = (target / "some-file.grib").read_bytes()
-    expected = content
-
-    assert observed == expected
+    assert (target / "some-file.grib").read_bytes() == content_main
+    assert (target / "horizontal.grib").read_bytes() == content_horizontal
+    assert (target / "vertical.grib").read_bytes() == content_vertical

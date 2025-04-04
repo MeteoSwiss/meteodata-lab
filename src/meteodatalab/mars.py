@@ -124,6 +124,9 @@ def _load_mapping():
 N_LVL = {
     Model.COSMO_1E: 80,
     Model.COSMO_2E: 60,
+    Model.ICON_CH1_EPS: 80,
+    Model.ICON_CH2_EPS: 80,
+    Model.KENDA_CH1: 80,
 }
 
 

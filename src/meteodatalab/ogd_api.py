@@ -21,7 +21,7 @@ import xarray as xr
 # Local
 from . import data_source, grib_decoder, icon_grid, util
 
-SEARCH_URL = "https://sys-data.int.bgdi.ch/api/stac/v1/search"
+API_URL = "https://sys-data.int.bgdi.ch/api/stac/v1"
 
 logger = logging.getLogger(__name__)
 session = util.init_session(logger)
@@ -142,12 +142,8 @@ def get_asset_url(request: Request):
         URL of the selected asset.
 
     """
-    result = _search(SEARCH_URL, request)
+    result = _search(f"{API_URL}/search", request)
     [asset_url] = result  # expect only one asset
-
-    # https://meteoswiss.atlassian.net/browse/OG-62
-    if asset_url.startswith("https://sys-data.int.bgdi.ch"):
-        asset_url = asset_url[29:]
 
     return asset_url
 
@@ -175,12 +171,12 @@ def get_collection_asset_url(collection_id: str, asset_id: str) -> str:
         If the asset is not found in the collection.
 
     """
-    url = f"{SEARCH_URL}/{collection_id}/assets"
+    url = f"{API_URL}/collections/{collection_id}/assets"
 
     response = session.get(url)
     response.raise_for_status()
 
-    assets = response.json().get("assets", {})
+    assets = {asset["id"]: asset for asset in response.json().get("assets", [])}
     asset_info = assets.get(asset_id)
 
     if not asset_info or "href" not in asset_info:

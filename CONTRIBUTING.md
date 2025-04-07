@@ -53,7 +53,7 @@ Ready to contribute? Here's how to set up `meteodata-lab` for local development.
 
     ```bash
     cd meteodata-lab/
-    tools/setup_poetry.sh
+    scripts/setup_poetry.sh
     ```
 
     This will install poetry and create a virtual environment under the `.venv` path and install all dependencies including the development group and extras.

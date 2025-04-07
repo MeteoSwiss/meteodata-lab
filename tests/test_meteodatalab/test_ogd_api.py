@@ -1,6 +1,7 @@
 # Standard library
 import datetime as dt
 import hashlib
+import typing
 from contextlib import nullcontext
 from pathlib import Path
 from unittest import mock
@@ -106,10 +107,17 @@ def test_get_from_ogd(mock_session: mock.MagicMock, data_dir: Path):
     assert observed.parameter["shortName"] == "T"
 
 
-@pytest.mark.parametrize("with_headers", [True, False])
+@pytest.mark.parametrize(
+    "with_headers,valid_content,exc",
+    [(True, True, None), (True, False, RuntimeError), (False, True, None)],
+)
 @mock.patch.object(ogd_api, "session", autospec=True)
 def test_download_from_ogd(
-    mock_session: mock.MagicMock, tmp_path: Path, with_headers: bool
+    mock_session: mock.MagicMock,
+    tmp_path: Path,
+    with_headers: bool,
+    valid_content: bool,
+    exc: typing.Type[Exception] | None,
 ):
     content_main = b"main content"
     content_horizontal = b"horizontal content"
@@ -159,20 +167,20 @@ def test_download_from_ogd(
                 spec=requests.Response,
                 json=mock.Mock(return_value={"assets": assets}),
             )
-
         if url == main_href:
+            content = content_main if valid_content else b"random content"
             return mock.Mock(
                 spec=requests.Response,
-                iter_content=mock.Mock(return_value=[content_main]),
+                iter_content=mock.Mock(return_value=[content]),
                 headers=headers_main,
             )
-        elif url == horizontal_href:
+        if url == horizontal_href:
             return mock.Mock(
                 spec=requests.Response,
                 iter_content=mock.Mock(return_value=[content_horizontal]),
                 headers=headers_horizontal,
             )
-        elif url == vertical_href:
+        if url == vertical_href:
             return mock.Mock(
                 spec=requests.Response,
                 iter_content=mock.Mock(return_value=[content_vertical]),
@@ -197,7 +205,13 @@ def test_download_from_ogd(
     )
     target = tmp_path / "out"
     target.mkdir()
-    ogd_api.download_from_ogd(req, target)
+    cm = pytest.raises(exc) if exc is not None else nullcontext()
+
+    with cm:
+        ogd_api.download_from_ogd(req, target)
+
+    if exc is not None:
+        return
 
     assert (target / "some-file.grib").read_bytes() == content_main
     assert (target / "horizontal.grib").read_bytes() == content_horizontal

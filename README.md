@@ -1,4 +1,9 @@
-# meteodata-lab
+<p align="center">
+  <picture>
+    <img src="./docs/images/meteodata_lab_logo_transparent_cropped.png" height="130">
+  </picture>
+</p>
+
 <!-- To update when it's released -->
 [![PyPI version](https://img.shields.io/pypi/v/your-package-name.svg)](https://pypi.org/project/your-package-name/)
 

@@ -24,7 +24,7 @@
 > [!WARNING]
 > This project is in BETA and under active development. Interfaces and functionality are subject to change.
 
-MeteoData Lab is a NumPy/Xarray-based Python library for processing and analyzing gridded meteorological data. It supports GRIB (read/write) and is tailored to common workflows that require data interpolation, regridding to custom grids (e.g., Swiss grid or rotated lat/lon), and the computation of advanced meteorological fields.
+Meteodata-lab is a NumPy/Xarray-based Python library for processing and analyzing gridded meteorological data. It supports GRIB (read/write) and is tailored to common workflows that require data interpolation, regridding to custom grids (e.g., Swiss grid or rotated lat/lon), and the computation of advanced meteorological fields.
 
 ## Installation
 

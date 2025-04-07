@@ -25,7 +25,7 @@ def extrapolate_temperature_sfc2p(
     temperature from the surface to a target pressure level using a
     polynomial expression of a dimensionless variable y, which is a function of
     the surface temperature, surface pressure, and height. It assumes
-    a constant lapse rate of 0.0065 K m^-1.
+    a constant lapse rate of 0.0065 K m^-1 and dry air gas constant.
 
     Parameters
     ----------
@@ -64,7 +64,7 @@ def extrapolate_geopotential_sfc2p(
     geopotential from the surface to a target pressure level using a
     polynomial expression of a dimensionless variable y, which is a function of
     the surface temperature, surface pressure, and height. It assumes
-    a constant lapse rate of 0.0065 K m^-1.
+    a constant lapse rate of 0.0065 K m^-1 and dry air gas constant.
 
     Parameters
     ----------

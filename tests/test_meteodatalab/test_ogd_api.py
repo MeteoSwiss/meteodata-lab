@@ -115,6 +115,10 @@ def test_download_from_ogd(
     content_horizontal = b"horizontal content"
     content_vertical = b"vertical content"
 
+    hash_main = hashlib.sha256(content_main).hexdigest()
+    hash_horizontal = hashlib.sha256(content_horizontal).hexdigest()
+    hash_vertical = hashlib.sha256(content_vertical).hexdigest()
+
     main_href = "https://test.com/path/to/some-file.grib"
     horizontal_href = "https://test.com/path/to/horizontal.grib"
     vertical_href = "https://test.com/path/to/vertical.grib"
@@ -130,13 +134,9 @@ def test_download_from_ogd(
     }
 
     if with_headers:
-        headers_main = {"X-Amz-Meta-Sha256": hashlib.sha256(content_main).hexdigest()}
-        headers_horizontal = {
-            "X-Amz-Meta-Sha256": hashlib.sha256(content_horizontal).hexdigest()
-        }
-        headers_vertical = {
-            "X-Amz-Meta-Sha256": hashlib.sha256(content_vertical).hexdigest()
-        }
+        headers_main = {"X-Amz-Meta-Sha256": hash_main}
+        headers_horizontal = {"X-Amz-Meta-Sha256": hash_horizontal}
+        headers_vertical = {"X-Amz-Meta-Sha256": hash_vertical}
     else:
         headers_main = {}
         headers_horizontal = {}
@@ -202,3 +202,12 @@ def test_download_from_ogd(
     assert (target / "some-file.grib").read_bytes() == content_main
     assert (target / "horizontal.grib").read_bytes() == content_horizontal
     assert (target / "vertical.grib").read_bytes() == content_vertical
+
+    if with_headers:
+        assert (target / "some-file.sha256").read_text() == hash_main
+        assert (target / "horizontal.sha256").read_text() == hash_horizontal
+        assert (target / "vertical.sha256").read_text() == hash_vertical
+    else:
+        assert not (target / "some-file.sha256").exists()
+        assert not (target / "horizontal.sha256").exists()
+        assert not (target / "vertical.sha256").exists()

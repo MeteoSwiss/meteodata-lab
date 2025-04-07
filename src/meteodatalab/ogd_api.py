@@ -289,16 +289,30 @@ def download_from_ogd(request: Request, target: Path) -> None:
         _download_with_checksum(url, target)
 
 
+def _file_hash(path: Path):
+    hash = hashlib.sha256()
+    with path.open("rb") as f:
+        while chunk := f.read(16 * 1024):
+            hash.update(chunk)
+    return hash.hexdigest()
+
+
 def _download_with_checksum(url: str, target: Path) -> None:
+    filename = Path(urlparse(url).path).name
+    path = target / filename if target.is_dir() else target
+    hash_path = path.with_suffix(".sha256")
+
+    if path.exists():
+        if hash_path.exists() and hash_path.read_text() == _file_hash(path):
+            logger.info(f"File already exists, skipping download: {path}")
+            return
+
     response = session.get(url, stream=True)
     response.raise_for_status()
 
-    filename = Path(urlparse(url).path).name
-    path = target / filename if target.is_dir() else target
-
-    if path.exists():
-        logger.info(f"File already exists, skipping download: {path}")
-        return
+    hash = response.headers.get("X-Amz-Meta-Sha256")
+    if hash is not None:
+        hash_path.write_text(hash)
 
     hasher = hashlib.sha256()
     with path.open("wb") as f:
@@ -306,6 +320,5 @@ def _download_with_checksum(url: str, target: Path) -> None:
             f.write(chunk)
             hasher.update(chunk)
 
-    hash = response.headers.get("X-Amz-Meta-Sha256")
     if hash is not None and hash != hasher.hexdigest():
         raise RuntimeError(f"Checksum verification failed for {filename}")

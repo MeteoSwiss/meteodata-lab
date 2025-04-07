@@ -4,8 +4,22 @@
   </picture>
 </p>
 
-<!-- To update when it's released -->
-[![PyPI version](https://img.shields.io/pypi/v/your-package-name.svg)](https://pypi.org/project/your-package-name/)
+
+<p align="center">
+<a href="https://pypi.org/project/meteodata-lab/">
+  <img src="https://img.shields.io/pypi/v/meteodata-lab.svg?color=ff69b4" alt="PyPI version">
+</a>
+  <a href="https://opensource.org/licenses/mit">
+    <img src="https://img.shields.io/badge/licence-MIT-blue.svg" alt="Licence">
+  </a>
+  <a href="https://github.com/meteoswiss/meteodata-lab/releases">
+    <img src="https://img.shields.io/github/v/release/meteoswiss/meteodata-lab?color=purple&label=Release" alt="Latest Release">
+  </a>
+</p>
+<p align="center">
+  <a href="#installation">Installation</a> •
+  <a href="https://meteoswiss.github.io/meteodata-lab/">Documentation</a>
+</p>
 
 A model data processing framework based on xarray.
 

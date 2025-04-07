@@ -4,11 +4,13 @@
 import numpy as np
 import xarray as xr
 
-G = 9.80665  # m/s^2
-R_d = 287.053  # Pa K^-1 m^3 kg^-1
+# Local
+from .. import physical_constants as pc
+
 LAPSE_RATE = 0.0065  # K m^-1
-T1 = 2000.0
-T2 = 2500.0
+H1 = 2000.0
+H2 = 2500.0
+T1 = 298.0
 
 
 def extrapolate_temperature_sfc2p(
@@ -80,23 +82,25 @@ def extrapolate_geopotential_sfc2p(
     y = _vertical_extrapolation_y_term(
         t_sfc, p_sfc, z_sfc, p_target, lapse_rate=LAPSE_RATE
     )
-    return z_sfc - R_d * t_sfc * np.log(p_target / p_sfc) * (1 + y / 2 + (y**2) / 6)
+    return z_sfc - pc.r_d * t_sfc * np.log(p_target / p_sfc) * (1 + y / 2 + (y**2) / 6)
 
 
 def _vertical_extrapolation_t_zero_prime(t_sfc, z_sfc):
-    t = t_sfc + LAPSE_RATE * z_sfc / G
-    t_min = np.minimum(t, 298.0)
-    return xr.where(z_sfc / G > T2, t_min, t_min * 0.5 + t * 0.5)
+    t = t_sfc + LAPSE_RATE * z_sfc / pc.g
+    t_min = np.minimum(t, T1)
+    return xr.where(z_sfc / pc.g > H2, t_min, t_min * 0.5 + t * 0.5)
 
 
 def _vertical_extrapolation_lapse_rate(z_sfc, t_sfc):
     t_zero_prime = _vertical_extrapolation_t_zero_prime(t_sfc, z_sfc)
     return xr.where(
-        z_sfc / G < T1, LAPSE_RATE, G / z_sfc * np.maximum(t_zero_prime - t_sfc, 0.0)
+        z_sfc / pc.g < H1,
+        LAPSE_RATE,
+        pc.g / z_sfc * np.maximum(t_zero_prime - t_sfc, 0.0),
     )
 
 
 def _vertical_extrapolation_y_term(t_sfc, p_sfc, z_sfc, p_target, lapse_rate=None):
     if lapse_rate is None:
         lapse_rate = _vertical_extrapolation_lapse_rate(z_sfc, t_sfc)
-    return lapse_rate * R_d / G * np.log(p_target / p_sfc)
+    return lapse_rate * pc.r_d / pc.g * np.log(p_target / p_sfc)

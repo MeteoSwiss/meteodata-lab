@@ -21,7 +21,11 @@ def extrapolate_temperature_sfc2p(
 ) -> xr.DataArray:
     """Extrapolate temperature to a target pressure level.
 
-    Implements the algorithm described in [1]_.
+    Implements the algorithm described in [1]_. The algorithm extrapolates
+    temperature from the surface to a target pressure level using a
+    polynomial expression of a dimensionless variable y, which is a function of
+    the surface temperature, surface pressure, and geopotential. It assumes
+    a constant lapse rate of 0.0065 K m^-1.
 
     Parameters
     ----------
@@ -56,7 +60,11 @@ def extrapolate_geopotential_sfc2p(
 ) -> xr.DataArray:
     """Extrapolate geopotential to a target pressure level.
 
-    Implements the algorithm described in [1]_.
+    Implements the algorithm described in [1]_. The algorithm extrapolates
+    geopotential from the surface to a target pressure level using a
+    polynomial expression of a dimensionless variable y, which is a function of
+    the surface temperature, surface pressure, and geopotential. It assumes
+    a constant lapse rate of 0.0065 K m^-1.
 
     Parameters
     ----------

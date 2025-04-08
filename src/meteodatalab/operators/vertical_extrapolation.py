@@ -27,6 +27,12 @@ def extrapolate_temperature_sfc2p(
     the surface temperature, surface pressure, and height. It assumes
     a constant lapse rate of 0.0065 K m^-1 and dry air gas constant.
 
+    This extrapolation should be used with caution. Its intended use is to
+    extrapolate temperature to pressure levels below the surface, where
+    values are undefined. This is useful for applications where no missing values
+    are allowed, such as when training data-driven models. Results of the
+    extrapolation are not physically meaningful.
+
     Parameters
     ----------
     t_sfc : xr.DataArray
@@ -65,6 +71,12 @@ def extrapolate_geopotential_sfc2p(
     polynomial expression of a dimensionless variable y, which is a function of
     the surface temperature, surface pressure, and height. It assumes
     a constant lapse rate of 0.0065 K m^-1 and dry air gas constant.
+
+    This extrapolation should be used with caution. Its intended use is to
+    extrapolate geopotential to pressure levels below the surface, where
+    values are undefined. This is useful for applications where no missing values
+    are allowed, such as when training data-driven models. Results of the
+    extrapolation are not physically meaningful.
 
     Parameters
     ----------

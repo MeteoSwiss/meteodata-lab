@@ -31,8 +31,8 @@ packages = [
 python = ">=3.10,<3.13"
 click = "^8.1.7"
 earthkit-data = { version = ">=0.11,<1", extras = ["covjsonkit"] }
-eccodes = "^1.5.0"
-eccodes-cosmo-resources-python = "==2.36.*"
+eccodes = "~2.38"
+eccodes-cosmo-resources-python = "~2.38"
 numpy = "^1.26.4"
 polytope-client = { version = "^0.7.4", optional = true }
 pydantic = "*"

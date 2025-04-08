@@ -8,6 +8,7 @@ import hashlib
 import logging
 import os
 import typing
+from functools import lru_cache
 from pathlib import Path
 from urllib.parse import urlparse
 from uuid import UUID
@@ -148,6 +149,16 @@ def get_asset_url(request: Request):
     return asset_url
 
 
+@lru_cache
+def _get_collection_assets(collection_id: str):
+    url = f"{API_URL}/collections/{collection_id}/assets"
+
+    response = session.get(url)
+    response.raise_for_status()
+
+    return {asset["id"]: asset for asset in response.json().get("assets", [])}
+
+
 def get_collection_asset_url(collection_id: str, asset_id: str) -> str:
     """Get collection asset URL from OGD.
 
@@ -171,12 +182,7 @@ def get_collection_asset_url(collection_id: str, asset_id: str) -> str:
         If the asset is not found in the collection.
 
     """
-    url = f"{API_URL}/collections/{collection_id}/assets"
-
-    response = session.get(url)
-    response.raise_for_status()
-
-    assets = {asset["id"]: asset for asset in response.json().get("assets", [])}
+    assets = _get_collection_assets(collection_id)
     asset_info = assets.get(asset_id)
 
     if not asset_info or "href" not in asset_info:
@@ -263,9 +269,7 @@ def download_from_ogd(request: Request, target: Path) -> None:
     request : Request
         Asset search filters, must select a single asset.
     target : Path
-        Target path where to save the asset.
-        If the path points to an existing directory, the asset will be
-        saved under its own name.
+        Target path where to save the asset, must be a directory.
 
     Raises
     ------
@@ -275,6 +279,12 @@ def download_from_ogd(request: Request, target: Path) -> None:
         if the checksum verification fails.
 
     """
+    if target.exists() and not target.is_dir():
+        raise ValueError(f"target: {target} must be a directory")
+
+    if not target.exists():
+        target.mkdir(parents=True)
+
     # Download main forecast asset
     asset_url = get_asset_url(request)
     _download_with_checksum(asset_url, target)
@@ -289,16 +299,30 @@ def download_from_ogd(request: Request, target: Path) -> None:
         _download_with_checksum(url, target)
 
 
+def _file_hash(path: Path):
+    hash = hashlib.sha256()
+    with path.open("rb") as f:
+        while chunk := f.read(16 * 1024):
+            hash.update(chunk)
+    return hash.hexdigest()
+
+
 def _download_with_checksum(url: str, target: Path) -> None:
+    filename = Path(urlparse(url).path).name
+    path = target / filename if target.is_dir() else target
+    hash_path = path.with_suffix(".sha256")
+
+    if path.exists():
+        if hash_path.exists() and hash_path.read_text() == _file_hash(path):
+            logger.info(f"File already exists, skipping download: {path}")
+            return
+
     response = session.get(url, stream=True)
     response.raise_for_status()
 
-    filename = Path(urlparse(url).path).name
-    path = target / filename if target.is_dir() else target
-
-    if path.exists():
-        logger.info(f"File already exists, skipping download: {path}")
-        return
+    hash = response.headers.get("X-Amz-Meta-Sha256")
+    if hash is not None:
+        hash_path.write_text(hash)
 
     hasher = hashlib.sha256()
     with path.open("wb") as f:
@@ -306,6 +330,5 @@ def _download_with_checksum(url: str, target: Path) -> None:
             f.write(chunk)
             hasher.update(chunk)
 
-    hash = response.headers.get("X-Amz-Meta-Sha256")
     if hash is not None and hash != hasher.hexdigest():
         raise RuntimeError(f"Checksum verification failed for {filename}")

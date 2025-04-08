@@ -26,34 +26,33 @@ def test_extrapolate_sfc2p(data_dir):
 
     # load input data set
     fds = data_source.FileDataSource(datafiles=files)
-    ds_sfc = grib_decoder.load(fds, {"param": ["HSURF", "T_2M", "PS"]})
-    ds_ml = grib_decoder.load(fds, {"param": ["HHL", "T", "P"]})
-    set_origin_xy(ds_ml, ref_param="HHL")
-    hfl = destagger(ds_ml["HHL"], "z")
+    ds = grib_decoder.load(fds, {"param": ["HSURF", "T_2M", "PS", "HHL", "T", "P"]})
+    set_origin_xy(ds, ref_param="HHL")
+    hfl = destagger(ds["HHL"], "z")
     fi = (hfl * pc.g).assign_attrs(override(hfl.attrs["metadata"], shortName="FI"))
 
     # call extrapolation operator for geopotential
-    expected = interpolate_k2p(
-        fi, "linear_in_lnp", ds_ml["P"], [target_p], "hPa"
-    ).squeeze("z")
+    expected = interpolate_k2p(fi, "linear_in_lnp", ds["P"], [target_p], "hPa").squeeze(
+        "z"
+    )
     res = (
         extrapolate_geopotential_sfc2p(
-            ds_sfc["HSURF"], ds_sfc["T_2M"], ds_sfc["PS"], target_p * 100.0
+            ds["HSURF"], ds["T_2M"], ds["PS"], target_p * 100.0
         )
         .squeeze("z")
         .where(~expected.isnull())
     )
-    assert_allclose(res, expected, rtol=0.1)
+    assert_allclose(res, expected, rtol=0.04)
 
     # call extrapolation operator for temperature
     expected = interpolate_k2p(
-        ds_ml["T"], "linear_in_lnp", ds_ml["P"], [target_p], "hPa"
+        ds["T"], "linear_in_lnp", ds["P"], [target_p], "hPa"
     ).squeeze("z")
     res = (
         extrapolate_temperature_sfc2p(
-            ds_sfc["T_2M"], ds_sfc["HSURF"], ds_sfc["PS"], target_p * 100.0
+            ds["T_2M"], ds["HSURF"], ds["PS"], target_p * 100.0
         )
         .squeeze("z")
         .where(~expected.isnull())
     )
-    assert_allclose(res, expected, rtol=0.1)
+    assert_allclose(res, expected, rtol=0.04)

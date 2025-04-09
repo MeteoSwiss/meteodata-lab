@@ -1,6 +1,6 @@
 <p align="center">
   <picture>
-    <img src="./docs/images/meteodata_lab_logo_transparent_cropped.png" height="130">
+    <img src="meteodata_lab_logo_with_name-optimized.gif" height="160">
   </picture>
 </p>
 

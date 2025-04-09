@@ -1,6 +1,7 @@
 # Standard library
 import datetime as dt
 import hashlib
+import typing
 from contextlib import nullcontext
 from pathlib import Path
 from unittest import mock
@@ -8,6 +9,7 @@ from unittest import mock
 # Third-party
 import pydantic
 import pytest
+import requests
 import xarray as xr
 
 # First-party
@@ -105,29 +107,92 @@ def test_get_from_ogd(mock_session: mock.MagicMock, data_dir: Path):
     assert observed.parameter["shortName"] == "T"
 
 
-@pytest.mark.parametrize("with_headers", [True, False])
+@pytest.mark.parametrize(
+    "with_headers,valid_content,exc",
+    [(True, True, None), (True, False, RuntimeError), (False, True, None)],
+)
 @mock.patch.object(ogd_api, "session", autospec=True)
 def test_download_from_ogd(
-    mock_session: mock.MagicMock, tmp_path: Path, with_headers: bool
+    mock_session: mock.MagicMock,
+    tmp_path: Path,
+    with_headers: bool,
+    valid_content: bool,
+    exc: typing.Type[Exception] | None,
 ):
-    content = b"some content"
-    href = "https://test.com/path/to/some-file.grib"
-    body = {
-        "features": [{"assets": {"some-asset.ext": {"href": href}}}],
+    content_main = b"main content"
+    content_horizontal = b"horizontal content"
+    content_vertical = b"vertical content"
+
+    hash_main = hashlib.sha256(content_main).hexdigest()
+    hash_horizontal = hashlib.sha256(content_horizontal).hexdigest()
+    hash_vertical = hashlib.sha256(content_vertical).hexdigest()
+
+    main_href = "https://test.com/path/to/some-file.grib"
+    horizontal_href = "https://test.com/path/to/horizontal.grib"
+    vertical_href = "https://test.com/path/to/vertical.grib"
+
+    collections_url = "https://sys-data.int.bgdi.ch/api/stac/v1/collections"
+    collection_id = "ch.meteoschweiz.ogd-forecasting-icon-ch2"
+    assets_url = f"{collections_url}/{collection_id}/assets"
+
+    mock_post_response = mock.Mock()
+    mock_post_response.json.return_value = {
+        "features": [{"assets": {"some-asset.ext": {"href": main_href}}}],
         "links": [],
     }
-    mock_post_response = mock.Mock(**{"json.return_value": body})
+
     if with_headers:
-        headers = {"X-Amz-Meta-Sha256": hashlib.sha256(content).hexdigest()}
+        headers_main = {"X-Amz-Meta-Sha256": hash_main}
+        headers_horizontal = {"X-Amz-Meta-Sha256": hash_horizontal}
+        headers_vertical = {"X-Amz-Meta-Sha256": hash_vertical}
     else:
-        headers = {}
-    mock_get_response = mock.Mock(
-        headers=headers, **{"iter_content.return_value": [content]}
-    )
+        headers_main = {}
+        headers_horizontal = {}
+        headers_vertical = {}
+
+    def mock_get_response(url, *args, **kwargs):
+        # Respond with asset list for coordinate URLs
+        if url == assets_url:
+            assets = [
+                {
+                    "id": "horizontal_constants_icon-ch2-eps.grib2",
+                    "href": horizontal_href,
+                },
+                {
+                    "id": "vertical_constants_icon-ch2-eps.grib2",
+                    "href": vertical_href,
+                },
+            ]
+            return mock.Mock(
+                spec=requests.Response,
+                json=mock.Mock(return_value={"assets": assets}),
+            )
+        if url == main_href:
+            content = content_main if valid_content else b"random content"
+            return mock.Mock(
+                spec=requests.Response,
+                iter_content=mock.Mock(return_value=[content]),
+                headers=headers_main,
+            )
+        if url == horizontal_href:
+            return mock.Mock(
+                spec=requests.Response,
+                iter_content=mock.Mock(return_value=[content_horizontal]),
+                headers=headers_horizontal,
+            )
+        if url == vertical_href:
+            return mock.Mock(
+                spec=requests.Response,
+                iter_content=mock.Mock(return_value=[content_vertical]),
+                headers=headers_vertical,
+            )
+
+        raise ValueError(f"Unexpected URL: {url}")
+
     mock_session.configure_mock(
         **{
             "post.return_value": mock_post_response,
-            "get.return_value": mock_get_response,
+            "get.side_effect": mock_get_response,
         }
     )
 
@@ -140,9 +205,23 @@ def test_download_from_ogd(
     )
     target = tmp_path / "out"
     target.mkdir()
-    ogd_api.download_from_ogd(req, target)
+    cm = pytest.raises(exc) if exc is not None else nullcontext()
 
-    observed = (target / "some-file.grib").read_bytes()
-    expected = content
+    with cm:
+        ogd_api.download_from_ogd(req, target)
 
-    assert observed == expected
+    if exc is not None:
+        return
+
+    assert (target / "some-file.grib").read_bytes() == content_main
+    assert (target / "horizontal.grib").read_bytes() == content_horizontal
+    assert (target / "vertical.grib").read_bytes() == content_vertical
+
+    if with_headers:
+        assert (target / "some-file.sha256").read_text() == hash_main
+        assert (target / "horizontal.sha256").read_text() == hash_horizontal
+        assert (target / "vertical.sha256").read_text() == hash_vertical
+    else:
+        assert not (target / "some-file.sha256").exists()
+        assert not (target / "horizontal.sha256").exists()
+        assert not (target / "vertical.sha256").exists()

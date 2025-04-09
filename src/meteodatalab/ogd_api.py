@@ -8,7 +8,7 @@ import hashlib
 import logging
 import os
 import typing
-from importlib.resources import files
+from functools import lru_cache
 from pathlib import Path
 from urllib.parse import urlparse
 from uuid import UUID
@@ -18,12 +18,11 @@ import earthkit.data as ekd  # type: ignore
 import pydantic
 import pydantic.dataclasses as pdc
 import xarray as xr
-import yaml
 
 # Local
 from . import data_source, grib_decoder, icon_grid, util
 
-SEARCH_URL = "https://data.geo.admin.ch/api/stac/v1/search"
+API_URL = "https://data.geo.admin.ch/api/stac/v1"
 
 logger = logging.getLogger(__name__)
 session = util.init_session(logger)
@@ -144,28 +143,67 @@ def get_asset_url(request: Request):
         URL of the selected asset.
 
     """
-    result = _search(SEARCH_URL, request)
+    result = _search(f"{API_URL}/search", request)
     [asset_url] = result  # expect only one asset
 
-    # https://meteoswiss.atlassian.net/browse/OG-62
-    if asset_url.startswith("https://data.geo.admin.ch"):
-        asset_url = asset_url[26:]
-
     return asset_url
+
+
+@lru_cache
+def _get_collection_assets(collection_id: str):
+    url = f"{API_URL}/collections/{collection_id}/assets"
+
+    response = session.get(url)
+    response.raise_for_status()
+
+    return {asset["id"]: asset for asset in response.json().get("assets", [])}
+
+
+def get_collection_asset_url(collection_id: str, asset_id: str) -> str:
+    """Get collection asset URL from OGD.
+
+    Query the STAC collection assets and return the URL for the given asset ID.
+
+    Parameters
+    ----------
+    collection_id : str
+        Full STAC collection ID
+    asset_id : str
+        The ID of the static asset to retrieve.
+
+    Returns
+    -------
+    str
+        The pre-signed URL of the requested static asset.
+
+    Raises
+    ------
+    KeyError
+        If the asset is not found in the collection.
+
+    """
+    assets = _get_collection_assets(collection_id)
+    asset_info = assets.get(asset_id)
+
+    if not asset_info or "href" not in asset_info:
+        raise KeyError(f"Asset '{asset_id}' not found in collection '{collection_id}'.")
+
+    return asset_info["href"]
 
 
 def _get_geo_coord_url(uuid: UUID) -> str:
     if (var := os.environ.get("MDL_GEO_COORD_URL")) is not None:
         return var
 
-    model = icon_grid.GRID_UUID_TO_MODEL.get(uuid)
-
-    if model is None:
+    model_name = icon_grid.GRID_UUID_TO_MODEL.get(uuid)
+    if model_name is None:
         raise KeyError("Grid UUID not found")
 
-    config_path = files("meteodatalab.data").joinpath("geo_coords_urls.yaml")
-    urls = yaml.safe_load(config_path.open())
-    return urls[model]["horizontal"]
+    base_model = model_name.removesuffix("-eps")
+    collection_id = f"ch.meteoschweiz.ogd-forecasting-{base_model}"
+    asset_id = f"horizontal_constants_{model_name}.grib2"
+
+    return get_collection_asset_url(collection_id, asset_id)
 
 
 def _no_coords(uuid: UUID) -> dict[str, xr.DataArray]:
@@ -217,19 +255,21 @@ def get_from_ogd(request: Request) -> xr.DataArray:
 
 
 def download_from_ogd(request: Request, target: Path) -> None:
-    """Download item from OGD.
+    """Download forecast asset and its static coordinate files from OGD.
 
     The request attributes define filters for the STAC search API according
     to the forecast extension.
+
+    In addition to the main asset, this function downloads static files
+    with horizontal and vertical coordinates, as the forecast item
+    does not include the horizontal or vertical coordinates.
 
     Parameters
     ----------
     request : Request
         Asset search filters, must select a single asset.
     target : Path
-        Target path where to save the asset.
-        If the path points to an existing directory, the asset will be
-        saved under its own name.
+        Target path where to save the asset, must be a directory.
 
     Raises
     ------
@@ -239,14 +279,50 @@ def download_from_ogd(request: Request, target: Path) -> None:
         if the checksum verification fails.
 
     """
+    if target.exists() and not target.is_dir():
+        raise ValueError(f"target: {target} must be a directory")
+
+    if not target.exists():
+        target.mkdir(parents=True)
+
+    # Download main forecast asset
     asset_url = get_asset_url(request)
-    response = session.get(asset_url, stream=True)
+    _download_with_checksum(asset_url, target)
+
+    model_suffix = request.collection.removeprefix("ogd-forecasting-")
+    collection_id = f"ch.meteoschweiz.{request.collection}"
+
+    # Download coordinate files
+    for prefix in ["horizontal", "vertical"]:
+        asset_id = f"{prefix}_constants_{model_suffix}-eps.grib2"
+        url = get_collection_asset_url(collection_id, asset_id)
+        _download_with_checksum(url, target)
+
+
+def _file_hash(path: Path):
+    hash = hashlib.sha256()
+    with path.open("rb") as f:
+        while chunk := f.read(16 * 1024):
+            hash.update(chunk)
+    return hash.hexdigest()
+
+
+def _download_with_checksum(url: str, target: Path) -> None:
+    filename = Path(urlparse(url).path).name
+    path = target / filename if target.is_dir() else target
+    hash_path = path.with_suffix(".sha256")
+
+    if path.exists():
+        if hash_path.exists() and hash_path.read_text() == _file_hash(path):
+            logger.info(f"File already exists, skipping download: {path}")
+            return
+
+    response = session.get(url, stream=True)
     response.raise_for_status()
 
-    if target.is_dir():
-        path = target / Path(urlparse(asset_url).path).name
-    else:
-        path = target
+    hash = response.headers.get("X-Amz-Meta-Sha256")
+    if hash is not None:
+        hash_path.write_text(hash)
 
     hasher = hashlib.sha256()
     with path.open("wb") as f:
@@ -254,6 +330,5 @@ def download_from_ogd(request: Request, target: Path) -> None:
             f.write(chunk)
             hasher.update(chunk)
 
-    hash = response.headers.get("X-Amz-Meta-Sha256")
     if hash is not None and hash != hasher.hexdigest():
-        raise RuntimeError("Checksum verification failed.")
+        raise RuntimeError(f"Checksum verification failed for {filename}")

@@ -1,5 +1,15 @@
 # History
 
+## [unreleased] (2025-04-03)
+
+### Additions
+- `ogd_api`:
+  - Added `get_collection_asset_url` function to fetch pre-signed URLs for static assets from a STAC collection.
+
+### Breaking Changes
+- The `geo_coords_urls.yaml` file containing pre-signed URLs for coordinate files has been removed. Coordinate URLs are now resolved dynamically using the new get_collection_asset_url function.
+
+
 ## [0.2.0] (2025-03-20)
 
 ### Additions
@@ -99,6 +109,7 @@
 - Added ninjo_k2th product
 - Added GRIB data loader based on earthkit-data
 
+[unreleased]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.2.0..main
 [0.2.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.2.0-rc3..v0.2.0
 [0.2.0-rc3]: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.2.0-rc2..v0.2.0-rc3
 [0.2.0-rc2]: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.2.0-rc1..v0.2.0-rc2

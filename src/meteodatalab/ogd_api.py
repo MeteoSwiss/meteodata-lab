@@ -22,7 +22,7 @@ import xarray as xr
 # Local
 from . import data_source, grib_decoder, icon_grid, util
 
-API_URL = "https://sys-data.int.bgdi.ch/api/stac/v1"
+API_URL = "https://data.geo.admin.ch/api/stac/v1"
 
 logger = logging.getLogger(__name__)
 session = util.init_session(logger)

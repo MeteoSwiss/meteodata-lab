@@ -131,7 +131,7 @@ def test_download_from_ogd(
     horizontal_href = "https://test.com/path/to/horizontal.grib"
     vertical_href = "https://test.com/path/to/vertical.grib"
 
-    collections_url = "https://sys-data.int.bgdi.ch/api/stac/v1/collections"
+    collections_url = "https://data.geo.admin.ch/api/stac/v1/collections"
     collection_id = "ch.meteoschweiz.ogd-forecasting-icon-ch2"
     assets_url = f"{collections_url}/{collection_id}/assets"
 

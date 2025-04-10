@@ -1,6 +1,4 @@
 # meteodata-lab
-<!-- To update when it's released -->
-[![PyPI version](https://img.shields.io/pypi/v/your-package-name.svg)](https://pypi.org/project/your-package-name/)
 
 A model data processing framework based on xarray.
 
@@ -19,6 +17,13 @@ To install the latest release from PyPI:
 ```bash
 pip install meteodata-lab
 ```
+#### Optional Extras
+To install optional extras:
+```bash
+pip install "meteodata-lab[polytope,regrid]"
+```
+**Note**: The `fdb` extra is currently disabled because its dependency `pyfdb` is not available on PyPI. As an alternative the development setup can be used.
+
 ### For Development
 To set up the project for local development, clone the repository and use the provided Poetry setup script:
 ```bash

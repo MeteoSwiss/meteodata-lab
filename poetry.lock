@@ -828,13 +828,13 @@ numpy = "*"
 
 [[package]]
 name = "eccodes-cosmo-resources-python"
-version = "2.38.3.1b0"
+version = "2.38.3.1"
 description = ""
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "eccodes_cosmo_resources_python-2.38.3.1b0-py3-none-any.whl", hash = "sha256:e2283f5357783de698deed6be46b857744dee5507f7b22e174aaa5360eb69b82"},
-    {file = "eccodes_cosmo_resources_python-2.38.3.1b0.tar.gz", hash = "sha256:d5e824f6b6e47581111f6841f9f91906eefb215f7d741cc056da64d7f4674f93"},
+    {file = "eccodes_cosmo_resources_python-2.38.3.1-py3-none-any.whl", hash = "sha256:1ebd4e848b62af0902a801fd06873e9e63b67e6f5acd643aa40b9d584b2e369a"},
+    {file = "eccodes_cosmo_resources_python-2.38.3.1.tar.gz", hash = "sha256:cfdba003bf7405e050bb31d2261cda7b631ccdd0eedbf60c3146c7d95a38e34e"},
 ]
 
 [[package]]
@@ -894,13 +894,13 @@ typing = ["typing-extensions (>=4.12.2)"]
 
 [[package]]
 name = "findlibs"
-version = "0.1.0"
+version = "0.1.1"
 description = "A packages to search for shared libraries on various platforms"
 optional = false
 python-versions = "*"
 files = [
-    {file = "findlibs-0.1.0-py3-none-any.whl", hash = "sha256:1e5aeeaa33e972da79f54d120d0e4b0eb5d7384016b618a9b7da2ada2deb2248"},
-    {file = "findlibs-0.1.0.tar.gz", hash = "sha256:2d458b844c7044a75f68d909a0f6ca5a598fdec895a0e009a7f6cde0905de659"},
+    {file = "findlibs-0.1.1-py3-none-any.whl", hash = "sha256:1b611a040d41e491049568e530c7e032f5c2be8f582386961b8d14a6936406a9"},
+    {file = "findlibs-0.1.1.tar.gz", hash = "sha256:dc7a0d4fe2bb6635f1e4bdcde60aecec42b6755c4783c2f629069c2f9321d732"},
 ]
 
 [package.extras]

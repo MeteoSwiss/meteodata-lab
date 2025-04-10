@@ -29,6 +29,6 @@ To set up the project for local development, clone the repository and use the pr
 ```bash
 git clone git@github.com:MeteoSwiss/meteodata-lab.git
 cd meteodata-lab
-./scripts/setup-poetry.sh
+./scripts/setup_poetry.sh
 ```
 This will install Poetry (if not already available), set up the virtual environment, and install all dependencies with extras.

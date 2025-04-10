@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "meteodata-lab"
-version = "0.3.0a"
+version = "0.3.0b"
 description = "A data post-processing framework on the basis of xarray."
 readme = "README.md"
 keywords = ["Icon", "Data Processing"]

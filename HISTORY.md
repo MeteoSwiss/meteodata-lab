@@ -1,13 +1,27 @@
 # History
 
-## [unreleased] (2025-04-03)
+## [0.3.0] (2025-04-11)
+
+
 
 ### Additions
+- Updated eccodes to version 2.38.3 which includes a binary distribution in PyPI.
+- The python package is now pushed to PyPI.
 - `ogd_api`:
   - Added `get_collection_asset_url` function to fetch pre-signed URLs for static assets from a STAC collection.
+  - `download_from_ogd` function performs checksum verification.
+- `mars`:
+  - Added default number of levels for icon and kenda models.
+  - Added support for bounding box feature extraction requests.
+
+### Fixes
+- `regrid`:
+  - `regrid` and `iconremap` functions now correctly set the metadata section 3 for destinations grids in the CRS UTM 32N (Switzerland).
 
 ### Breaking Changes
 - The `geo_coords_urls.yaml` file containing pre-signed URLs for coordinate files has been removed. Coordinate URLs are now resolved dynamically using the new get_collection_asset_url function.
+- The URL domain in `ogd_api` has been changed from the integration to the production environment.
+- The eccodes definitions are installed using the `eccodes-cosmo-resources-python` package from PyPI.
 
 
 ## [0.2.0] (2025-03-20)
@@ -109,7 +123,7 @@
 - Added ninjo_k2th product
 - Added GRIB data loader based on earthkit-data
 
-[unreleased]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.2.0..main
+[0.3.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.2.0..v0.3.0
 [0.2.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.2.0-rc3..v0.2.0
 [0.2.0-rc3]: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.2.0-rc2..v0.2.0-rc3
 [0.2.0-rc2]: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.2.0-rc1..v0.2.0-rc2

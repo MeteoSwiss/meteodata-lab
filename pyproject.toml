@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "meteodata-lab"
-version = "0.2.1a1"
+version = "0.3.0a"
 description = "A data post-processing framework on the basis of xarray."
 readme = "README.md"
 keywords = ["Icon", "Data Processing"]
@@ -31,8 +31,8 @@ packages = [
 python = ">=3.10,<3.13"
 click = "^8.1.7"
 earthkit-data = { version = ">=0.11,<1", extras = ["covjsonkit"] }
-eccodes = "^1.5.0"
-eccodes-cosmo-resources-python = "==2.36.*"
+eccodes = "~2.38"
+eccodes-cosmo-resources-python = "~2.38"
 numpy = "^1.26.4"
 polytope-client = { version = "^0.7.4", optional = true }
 pydantic = "*"

@@ -36,11 +36,18 @@ To install the latest release from PyPI:
 ```bash
 pip install meteodata-lab
 ```
+#### Optional Extras
+To install optional extras:
+```bash
+pip install "meteodata-lab[polytope,regrid]"
+```
+**Note**: The `fdb` extra is currently disabled because its dependency `pyfdb` is not available on PyPI. As an alternative the development setup can be used.
+
 ### For Development
 To set up the project for local development, clone the repository and use the provided Poetry setup script:
 ```bash
 git clone git@github.com:MeteoSwiss/meteodata-lab.git
 cd meteodata-lab
-./scripts/setup-poetry.sh
+./scripts/setup_poetry.sh
 ```
 This will install Poetry (if not already available), set up the virtual environment, and install all dependencies with extras.

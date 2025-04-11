@@ -15,7 +15,6 @@ from meteodatalab import icon_grid
 
 root = Path(__file__).parents[2]
 view_path = str(root / "spack-env/.spack-env/view")
-os.environ["ECCODES_DIR"] = view_path
 
 
 @pytest.fixture(scope="session")

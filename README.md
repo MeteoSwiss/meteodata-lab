@@ -1,11 +1,30 @@
-# meteodata-lab
+<p align="center">
+  <picture>
+    <img src="meteodata_lab_logo_with_name-optimized.gif" height="160" alt="meteodata-lab animated logo showing a cloud partially hiding the sun in a shape of a gear">
+  </picture>
+</p>
 
-A model data processing framework based on xarray.
+<p align="center">
+    <a href="https://pypi.org/project/meteodata-lab/">
+    <img src="https://img.shields.io/pypi/v/meteodata-lab.svg?color=ff69b4" alt="PyPI version">
+    </a>
+    <a href="https://github.com/meteoswiss/meteodata-lab/releases">
+    <img src="https://img.shields.io/github/v/release/meteoswiss/meteodata-lab?color=purple&label=Release" alt="Latest Release">
+    </a>
+    <a href="https://opensource.org/licenses/mit">
+    <img src="https://img.shields.io/badge/licence-MIT-blue.svg" alt="Licence">
+    </a>
+</p>
 
-**DISCLAIMER**
+<p align="center">
+    <a href="#installation">Installation</a> •
+    <a href="https://meteoswiss.github.io/meteodata-lab/">Documentation</a>
+</p>
 
 > [!WARNING]
-> This project is BETA and will be experimental for the forseable future. Interfaces and functionality are likely to change, and the project itself may be scrapped. Do not use this software in any project/software that is operational.
+> This project is in BETA and under active development. Interfaces and functionality are subject to change.
+
+**Meteodata-lab** is a NumPy/Xarray-based Python library for processing and analyzing gridded meteorological data. It supports GRIB (read/write) and is tailored to common workflows that require data interpolation, regridding to custom grids (e.g., Swiss grid or rotated lat/lon), and the computation of advanced meteorological fields. One of the key features of meteodata-lab is its use of operators that ensure the integrity of GRIB metadata is maintained throughout processing, allowing for consistent writing back to GRIB format.
 
 ## Installation
 

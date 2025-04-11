@@ -35,7 +35,7 @@ pipeline {
             steps {
                 sh '''#!/usr/bin/env bash
                 set -x
-                bash tools/setup_poetry.sh
+                bash scripts/setup_poetry.sh
                 '''
             }
         }

@@ -5,8 +5,8 @@ import numpy as np
 import xarray as xr
 
 # First-party
-from meteodatalab import metadata
-from meteodatalab import physical_constants as pc
+from .. import metadata
+from .. import physical_constants as pc
 
 LAPSE_RATE = 0.0065  # K m^-1
 H1 = 2000.0

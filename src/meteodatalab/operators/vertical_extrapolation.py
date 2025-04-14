@@ -4,8 +4,9 @@
 import numpy as np
 import xarray as xr
 
-# Local
-from .. import physical_constants as pc
+# First-party
+from meteodatalab import metadata
+from meteodatalab import physical_constants as pc
 
 LAPSE_RATE = 0.0065  # K m^-1
 H1 = 2000.0
@@ -55,7 +56,12 @@ def extrapolate_temperature_sfc2p(
 
     """
     y = _vertical_extrapolation_y_term(t_sfc, p_sfc, h_sfc, p_target)
-    return t_sfc * (1 + y + (y**2) / 2 + (y**3) / 6)
+    res = t_sfc * (1 + y + (y**2) / 2 + (y**3) / 6)
+    res.attrs = metadata.override(
+        t_sfc.metadata, shortName="T", typeOfLevel="isobaricInPa"
+    )
+    res = _assign_vcoord(res, p_target)
+    return res
 
 
 def extrapolate_geopotential_sfc2p(
@@ -102,9 +108,14 @@ def extrapolate_geopotential_sfc2p(
     y = _vertical_extrapolation_y_term(
         t_sfc, p_sfc, h_sfc, p_target, lapse_rate=LAPSE_RATE
     )
-    return h_sfc * pc.g - pc.r_d * t_sfc * np.log(p_target / p_sfc) * (
+    res = h_sfc * pc.g - pc.r_d * t_sfc * np.log(p_target / p_sfc) * (
         1 + y / 2 + (y**2) / 6
     )
+    res.attrs = metadata.override(
+        t_sfc.metadata, shortName="FI", typeOfLevel="isobaricInPa"
+    )
+    res = _assign_vcoord(res, p_target)
+    return res
 
 
 def _vertical_extrapolation_t_zero_prime(t_sfc, h_sfc):
@@ -122,7 +133,21 @@ def _vertical_extrapolation_lapse_rate(h_sfc, t_sfc):
     )
 
 
-def _vertical_extrapolation_y_term(t_sfc, p_sfc, h_sfc, p_target, lapse_rate=None):
+def _vertical_extrapolation_y_term(
+    t_sfc, p_sfc, h_sfc, p_target, lapse_rate=None
+) -> xr.DataArray:
     if lapse_rate is None:
         lapse_rate = _vertical_extrapolation_lapse_rate(h_sfc, t_sfc)
     return lapse_rate * pc.r_d / pc.g * np.log(p_target / p_sfc)
+
+
+def _assign_vcoord(x: xr.DataArray, p_target: float) -> xr.DataArray:
+    attrs = {
+        "units": "Pa",
+        "positive": "down",
+        "standard_name": "air_pressure",
+        "long_name": "pressure",
+    }
+    x = x.assign_coords(z=[p_target])
+    x["z"].attrs = attrs
+    return x

@@ -120,6 +120,47 @@ def extrapolate_geopotential_sfc2p(
     return res
 
 
+def extrapolate_k2p(
+    field: xr.DataArray,
+    p_target: float,
+) -> xr.DataArray:
+    """Extrapolate a field using constant extrapolation.
+
+    Implements the algorithm described in [1]_. For all variables except
+    temperature and geopotential (see ``extrapolate_temperature_sfc2p`` and
+    ``extrapolate_geopotential_sfc2p``), the extrapolation is done by simply
+    extending the values of the lowermost model level to the target pressure level.
+
+    .. caution :
+        This extrapolation should be used with caution. Its intended use is to
+        extrapolate temperature to pressure levels below the surface, where
+        values are undefined. This is useful for applications where no missing values
+        are allowed, such as when training data-driven models. Results of the
+        extrapolation are not physically meaningful.
+
+    Parameters
+    ----------
+    field : xr.DataArray
+        Field to extrapolate.
+    p_target : float
+        Target pressure level [Pa].
+
+    Returns
+    -------
+    xr.DataArray
+        Extrapolated field at the target pressure level.
+
+    References
+    ----------
+    .. [1] https://www.umr-cnrm.fr/gmapdoc/IMG/pdf/ykfpos46t1r1.pdf
+
+    """
+    res = field[{"z": [-1]}]
+    res.attrs = metadata.override(field.metadata, typeOfLevel="isobaricInPa")
+    res = _assign_vcoord(res, p_target)
+    return res
+
+
 def _vertical_extrapolation_t_zero_prime(t_sfc, h_sfc):
     t = t_sfc + LAPSE_RATE * h_sfc
     t_min = np.minimum(t, T1)

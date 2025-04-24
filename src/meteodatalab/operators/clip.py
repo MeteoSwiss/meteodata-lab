@@ -1,7 +1,7 @@
 """Horizontal clipping operator."""
 
 # Standard library
-from uuid import UUID, uuid4
+from uuid import UUID, uuid5
 
 # Third-party
 import numpy as np
@@ -33,14 +33,23 @@ def clip_lateral_boundary_strip(
     strip_idx: int
         The maximum lateral boundary strip index to keep.
     idx: xr.DataArray, optional
-        The lateral boundary strip index to use.
+        The lateral boundary strip index to use. This is the `refin_c_ctrl` variable
+        from the ICON grid descriptor file. If not provided, it will be loaded from
+        the grid descriptor file using the `uuidOfHGrid` attribute of the field.
+        Providing the `idx` is useful if you want to use this operator multiple times
+        and want to avoid reading the grid descriptor file multiple times.
     new_gridfile: str, optional
-        The new grid descriptor file to use. This is not implemented yet.
+        If provided, the new grid descriptor file will be saved to this path. In order
+        to read back the clipped data, the new grid descriptor file must be provided to
+        the `geo_coords` callback of the `grib_decoder.load` function. It is only needed
+        once.
 
     Raises
     ------
     ValueError
         If the field is not on an unstructured grid.
+    ValueError
+        If the provided grid descriptor file does not match the field's UUID.
     NotImplementedError
         If the new grid descriptor file functionality is not implemented yet.
 
@@ -58,22 +67,31 @@ def clip_lateral_boundary_strip(
     if not field.metadata.get("gridType") == "unstructured_grid":
         raise ValueError("Field must be on an unstructured grid.")
 
+    original_grid_uuid = UUID(field.metadata.get("uuidOfHGrid"))
+
     if idx is None:
-        grid_uuid = UUID(field.metadata.get("uuidOfHGrid"))
-        idx = load_boundary_idx_from_file(grid_uuid)
+        idx = load_boundary_idx_from_file(original_grid_uuid)
+        if idx.attrs["uuidOfHGrid"] != str(original_grid_uuid).replace("-", ""):
+            raise ValueError(
+                "The provided grid descriptor file does not match the field's UUID."
+            )
 
     mask = np.isin(idx.values, np.arange(1, strip_idx + 1))
 
-    # TODO: implement new grid descriptor file functionality
-    if new_gridfile is not None:
-        raise NotImplementedError(
-            "New grid descriptor file functionality is not implemented yet."
-        )
+    # Create a deterministic UUID from the original UUID and the strip_idx
+    new_uuid = uuid5(original_grid_uuid, str(strip_idx))
 
+    if new_gridfile is not None:
+        idx = idx.reset_coords()[["clon", "clat"]].sel(cell=~mask)
+        idx.attrs = {"uuidOfHGrid": str(new_uuid)}
+        idx.to_netcdf(new_gridfile)
+
+    field = field.sel(cell=~mask)
     return xr.DataArray(
-        field.sel(cell=~mask),
+        field,
         attrs=metadata.override(
             field.metadata,
-            uuidOfHGrid=str(uuid4()).replace("-", ""),
+            uuidOfHGrid=str(new_uuid).replace("-", ""),
+            numberOfDataPoints=field.size,
         ),
     )

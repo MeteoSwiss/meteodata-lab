@@ -446,7 +446,7 @@ def save(
     idx = {
         dim: field.coords[key]
         for key in field.dims
-        if (dim := str(key)) not in {"x", "y"}
+        if (dim := str(key)) not in {"x", "y", "cell"}
     }
 
     step_unit = UnitOfTime.MINUTE

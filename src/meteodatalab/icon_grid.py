@@ -52,6 +52,31 @@ def load_grid_from_file(
     return {"lon": result.clon, "lat": result.clat}
 
 
+def load_boundary_idx_from_file(uuid: UUID) -> xr.DataArray:
+    """Load the lateral boundary strip index from .nc format file.
+
+    Parameters
+    ----------
+    uuid: UUID
+        The UUID of the horizontal grid as specified in the GRIB metadata.
+
+    Returns
+    -------
+    xr.DataArray
+        Lateral boundary strip index for the given grid.
+
+    """
+    grid_dir = Path("/scratch/mch/jenkins/icon/pool/data/ICON/mch/grids/")
+    grid_paths = {
+        UUID("17643da2-5749-59b6-44d2-54a3cd6e2bc0"): grid_dir
+        / "icon-1/icon_grid_0001_R19B08_mch.nc",
+        UUID("bbbd5a09-8554-9924-3c7a-4aa4c8762920"): grid_dir
+        / "icon-2/icon_grid_0002_R19B07_mch.nc",
+    }
+    grid_path = grid_paths.get(uuid)
+    return xr.open_dataset(grid_path)["refin_c_ctrl"]
+
+
 def load_grid_from_balfrin() -> Callable[[UUID], dict[str, xr.DataArray]]:
     """Return a grid source to load grid files when running on balfrin."""
     grid_dir = Path("/scratch/mch/jenkins/icon/pool/data/ICON/mch/grids/")

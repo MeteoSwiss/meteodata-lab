@@ -50,8 +50,6 @@ def clip_lateral_boundary_strip(
         If the field is not on an unstructured grid.
     ValueError
         If the provided grid descriptor file does not match the field's UUID.
-    NotImplementedError
-        If the new grid descriptor file functionality is not implemented yet.
 
     Returns
     -------
@@ -71,7 +69,7 @@ def clip_lateral_boundary_strip(
 
     if idx is None:
         idx = load_boundary_idx_from_file(original_grid_uuid)
-        if idx.attrs["uuidOfHGrid"] != str(original_grid_uuid).replace("-", ""):
+        if idx.attrs["uuidOfHGrid"] != original_grid_uuid.hex:
             raise ValueError(
                 "The provided grid descriptor file does not match the field's UUID."
             )

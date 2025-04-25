@@ -55,6 +55,8 @@ def test_clip_lateral_boundary_strip_gridfile(data_dir, tmp_path):
     # read the clipped data back, using the new grid descriptor file
     def _geo_coords_cbk(uuid=None):
         ds = xr.open_dataset(tmp_path / "_test_gridfile.nc")
+        if str(uuid) != str(ds.attrs["uuidOfHGrid"]):
+            raise ValueError(f"UUID mismatch: {uuid} != {ds.attrs['uuidOfHGrid']}")
         return {"lat": ds.clat, "lon": ds.clon}
 
     reader = data_source.FileDataSource(datafiles=[str(outfile)])

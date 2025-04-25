@@ -9,9 +9,9 @@ from meteodatalab.operators import clip
 
 @pytest.mark.data("iconremap")
 def test_clip_lateral_boundary_strip(data_dir):
-    cdatafile = str(data_dir / "ICON-CH1-EPS_lfff00000000_000")
+    datafile = str(data_dir / "ICON-CH1-EPS_lfff00000000_000")
 
-    reader = data_source.FileDataSource(datafiles=[cdatafile])
+    reader = data_source.FileDataSource(datafiles=[datafile])
     ds = grib_decoder.load(reader, {"param": ["T_2M"]})
     ori = ds["T_2M"]
     ori_uuid = ori.metadata.get("uuidOfHGrid")
@@ -36,9 +36,9 @@ def test_clip_lateral_boundary_strip(data_dir):
 
 @pytest.mark.data("iconremap")
 def test_clip_lateral_boundary_strip_gridfile(data_dir, tmp_path):
-    cdatafile = str(data_dir / "ICON-CH1-EPS_lfff00000000_000")
+    datafile = str(data_dir / "ICON-CH1-EPS_lfff00000000_000")
 
-    reader = data_source.FileDataSource(datafiles=[cdatafile])
+    reader = data_source.FileDataSource(datafiles=[datafile])
     ds = grib_decoder.load(reader, {"param": ["T_2M"]})
     ori = ds["T_2M"]
 

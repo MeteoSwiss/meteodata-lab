@@ -160,10 +160,9 @@ def extrapolate_k2p(
     .. [1] https://www.umr-cnrm.fr/gmapdoc/IMG/pdf/ykfpos46t1r1.pdf
 
     """
-    res = field[{"z": [-1]}]
-    res.attrs = metadata.override(field.metadata, typeOfLevel="isobaricInPa")
-    res = _assign_vcoord(res, p_target)
-    return res
+    return _assign_vcoord(field[{"z": [-1]}], p_target).assign_attrs(
+        metadata.override(field.metadata, typeOfLevel="isobaricInPa")
+    )
 
 
 def _vertical_extrapolation_t_zero_prime(t_sfc, h_sfc):

@@ -1,5 +1,8 @@
 """Vertical extrapolation operators."""
 
+# Standard library
+from typing import Literal
+
 # Third-party
 import numpy as np
 import xarray as xr
@@ -123,13 +126,13 @@ def extrapolate_geopotential_sfc2p(
 def extrapolate_k2p(
     field: xr.DataArray,
     p_target: float,
+    mode: Literal["constant"] = "constant",
 ) -> xr.DataArray:
-    """Extrapolate a field using constant extrapolation.
+    """Extrapolate a field to a target pressure level.
 
-    Implements the algorithm described in [1]_. For all variables except
-    temperature and geopotential (see ``extrapolate_temperature_sfc2p`` and
-    ``extrapolate_geopotential_sfc2p``), the extrapolation is done by simply
-    extending the values of the lowermost model level to the target pressure level.
+    Currently, only the 'constant' extrapolation mode is implemented, where
+    the extrapolation is done by simply extending the values of the
+    lowermost model level to the target pressure level.
 
     .. caution :
         This extrapolation should be used with caution. Its intended use is to
@@ -144,6 +147,8 @@ def extrapolate_k2p(
         Field to extrapolate.
     p_target : float
         Target pressure level [Pa].
+    mode : str, optional
+        Extrapolation mode. Currently only 'constant' is implemented.
 
     Returns
     -------

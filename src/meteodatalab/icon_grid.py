@@ -74,6 +74,10 @@ def load_boundary_idx_from_file(uuid: UUID) -> xr.DataArray:
         / "icon-2/icon_grid_0002_R19B07_mch.nc",
     }
     grid_path = grid_paths.get(uuid)
+    if grid_path is None:
+        raise KeyError(
+            "No grid file for UUID %s. Known UUIDs are %s.", uuid, grid_paths.keys()
+        )
     ds = xr.open_dataset(grid_path)
     return ds["refin_c_ctrl"].assign_attrs(
         uuidOfHGrid=ds.attrs["uuidOfHGrid"],

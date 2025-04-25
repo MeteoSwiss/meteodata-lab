@@ -80,7 +80,7 @@ def clip_lateral_boundary_strip(
     new_uuid = uuid5(original_grid_uuid, str(strip_idx))
 
     if new_gridfile is not None:
-        idx = idx.reset_coords()[["clon", "clat"]].sel(cell=~mask)
+        idx = idx.reset_coords()[["clon", "clat"]].sel(cell=~mask)  # type: ignore
         idx.attrs = {"uuidOfHGrid": str(new_uuid)}
         idx.to_netcdf(new_gridfile)
 

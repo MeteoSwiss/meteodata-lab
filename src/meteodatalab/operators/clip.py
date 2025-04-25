@@ -91,7 +91,7 @@ def clip_lateral_boundary_strip(
         field,
         attrs=metadata.override(
             field.metadata,
-            uuidOfHGrid=str(new_uuid).replace("-", ""),
+            uuidOfHGrid=new_uuid.hex,
             numberOfDataPoints=field.size,
         ),
     )

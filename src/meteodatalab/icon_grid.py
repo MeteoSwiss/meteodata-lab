@@ -74,7 +74,10 @@ def load_boundary_idx_from_file(uuid: UUID) -> xr.DataArray:
         / "icon-2/icon_grid_0002_R19B07_mch.nc",
     }
     grid_path = grid_paths.get(uuid)
-    return xr.open_dataset(grid_path)["refin_c_ctrl"]
+    ds = xr.open_dataset(grid_path)
+    return ds["refin_c_ctrl"].assign_attrs(
+        uuidOfHGrid=ds.attrs["uuidOfHGrid"],
+    )
 
 
 def load_grid_from_balfrin() -> Callable[[UUID], dict[str, xr.DataArray]]:

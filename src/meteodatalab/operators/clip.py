@@ -69,7 +69,7 @@ def clip_lateral_boundary_strip(
 
     if idx is None:
         idx = load_boundary_idx_from_file(original_grid_uuid)
-        if idx.attrs["uuidOfHGrid"] != original_grid_uuid.hex:
+        if idx.attrs["uuidOfHGrid"].replace("-", "") != original_grid_uuid.hex:
             raise ValueError(
                 "The provided grid descriptor file does not match the field's UUID."
             )

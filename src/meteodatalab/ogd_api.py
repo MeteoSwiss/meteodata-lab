@@ -59,9 +59,15 @@ def _parse_datetime(value: str) -> dt.datetime:
 class Request:
     collection: Collection = dc.field(metadata=dict(exclude=True))
     variable: str
-    reference_datetime: str
+    reference_datetime: str = dc.field(
+        metadata=dict(
+            validation_alias=pydantic.AliasChoices("reference_datetime", "ref_time")
+        )
+    )
     perturbed: bool
-    horizon: dt.timedelta
+    horizon: dt.timedelta = dc.field(
+        metadata=dict(validation_alias=pydantic.AliasChoices("horizon", "lead_time"))
+    )
 
     if typing.TYPE_CHECKING:
         # https://github.com/pydantic/pydantic/issues/10266

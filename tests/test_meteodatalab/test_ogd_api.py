@@ -84,6 +84,26 @@ def test_reference_datetime(value, valid):
         assert observed.reference_datetime == expected
 
 
+def test_request_alias():
+    req = ogd_api.Request(
+        collection="ogd-forecasting-icon-ch1",
+        variable="T",
+        ref_time="2025-04-08T08:00:00Z",
+        perturbed=False,
+        lead_time="P0DT1H",
+    )
+    observed = req.dump()
+    expected = {
+        "collections": ["ch.meteoschweiz.ogd-forecasting-icon-ch1"],
+        "forecast:variable": "T",
+        "forecast:reference_datetime": "2025-04-08T08:00:00Z",
+        "forecast:perturbed": False,
+        "forecast:horizon": "PT1H",
+    }
+
+    assert observed == expected
+
+
 @mock.patch.object(ogd_api, "session", autospec=True)
 def test_get_from_ogd(mock_session: mock.MagicMock, data_dir: Path):
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"

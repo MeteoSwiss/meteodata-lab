@@ -1,5 +1,8 @@
 """Vertical extrapolation operators."""
 
+# Standard library
+from typing import Literal
+
 # Third-party
 import numpy as np
 import xarray as xr
@@ -118,6 +121,48 @@ def extrapolate_geopotential_sfc2p(
     )
     res = _assign_vcoord(res, p_target)
     return res
+
+
+def extrapolate_k2p(
+    field: xr.DataArray,
+    p_target: float,
+    mode: Literal["constant"] = "constant",
+) -> xr.DataArray:
+    """Extrapolate a field to a target pressure level.
+
+    Currently, only the 'constant' extrapolation mode is implemented, where
+    the extrapolation is done by simply extending the values of the
+    lowermost model level to the target pressure level.
+
+    .. caution :
+        This extrapolation should be used with caution. Its intended use is to
+        extrapolate temperature to pressure levels below the surface, where
+        values are undefined. This is useful for applications where no missing values
+        are allowed, such as when training data-driven models. Results of the
+        extrapolation are not physically meaningful.
+
+    Parameters
+    ----------
+    field : xr.DataArray
+        Field to extrapolate.
+    p_target : float
+        Target pressure level [Pa].
+    mode : str, optional
+        Extrapolation mode. Currently only 'constant' is implemented.
+
+    Returns
+    -------
+    xr.DataArray
+        Extrapolated field at the target pressure level.
+
+    References
+    ----------
+    .. [1] https://www.umr-cnrm.fr/gmapdoc/IMG/pdf/ykfpos46t1r1.pdf
+
+    """
+    return _assign_vcoord(field[{"z": [-1]}], p_target).assign_attrs(
+        metadata.override(field.metadata, typeOfLevel="isobaricInPa")
+    )
 
 
 def _vertical_extrapolation_t_zero_prime(t_sfc, h_sfc):

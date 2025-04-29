@@ -8,6 +8,7 @@ from meteodatalab.metadata import override, set_origin_xy
 from meteodatalab.operators.destagger import destagger
 from meteodatalab.operators.vertical_extrapolation import (
     extrapolate_geopotential_sfc2p,
+    extrapolate_k2p,
     extrapolate_temperature_sfc2p,
 )
 from meteodatalab.operators.vertical_interpolation import interpolate_k2p
@@ -56,3 +57,25 @@ def test_extrapolate_sfc2p(data_dir):
         .where(~expected.isnull())
     )
     assert_allclose(res, expected, rtol=0.04)
+
+
+def test_extrapolate_k2p(data_dir):
+
+    # define target coordinates
+    target_p = 850.0
+
+    # input data
+    files = [
+        str(data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"),
+    ]
+
+    # load input data set
+    fds = data_source.FileDataSource(datafiles=files)
+    ds = grib_decoder.load(fds, {"param": ["QV"]})
+
+    # call extrapolation operator
+    expected = ds["QV"][{"z": -1}]
+    res = extrapolate_k2p(ds["QV"], target_p * 100.0).squeeze("z")
+
+    assert_allclose(res, expected)
+    assert res.metadata.get("typeOfLevel") == "isobaricInPa"

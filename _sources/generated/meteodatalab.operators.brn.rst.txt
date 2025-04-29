@@ -1,0 +1,30 @@
+﻿meteodatalab.operators.brn
+==========================
+
+.. automodule:: meteodatalab.operators.brn
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      fbrn
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

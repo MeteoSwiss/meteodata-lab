@@ -4,72 +4,53 @@
 Installation
 ============
 
-There are two installation types, a production installation, which is static, and a development installation, which is editable.
+For Users
+=========
 
+To install the latest release from PyPI:
 
-Preparation
------------
+.. code-block:: bash
 
-To install meteodata-lab you need a miniconda installation. You can either set up your miniconda installation manually or use the script `tools/setup_miniconda.sh`, which will download and install the latest version of miniconda.
+   pip install meteodata-lab
 
+Optional Extras
+---------------
 
-Installation of dependencies
-----------------------------
+To install optional extras:
 
-Dependencies are handled by the conda package manager. The goal of this step is to set up a conda environment according to the requirements of meteodata-lab. Note that by design, there are some dependencies already when you start developing the package, as the environment includes linters and other development tools.
+.. code-block:: bash
 
-The dependencies are handled in requirement files. Free installations are based on the `requirements/requirements.yaml` file, where the top-level dependencies of the package are listed. Pinned installations are based on exported environments and stored in the file `requirements/environment.yaml`.
+   pip install "meteodata-lab[polytope,regrid]"
 
-Environments (based on either unpinned or pinned requirements) are handled by the script `tools/setup_env.sh`. The optional flag `-u` stands for unpinned installation:
+**Note**: The ``fdb`` extra is currently disabled because its dependency ``pyfdb`` is not available on PyPI. As an alternative, the development setup can be used.
 
-.. code-block:: console
+For Contributors
+================
 
-    $ bash tools/setup_env.sh -u
+To set up the project for local development (e.g. for contributing code or testing changes), follow these steps:
 
-This will create an up-to-date environment that can be exported to `requirements/environment.yaml` with the optional flag `-e` (see below).
+1. If you don't have write access, first fork the repository on GitHub, then clone your fork:
 
-You can control the environment name with the flag `-n` and the Python version with `-v`. Run :code:`./tools/setup_env -h` for available options and defaults (incl. mamba support).
+   .. code-block:: bash
 
+      git clone git@github.com:your-username/meteodata-lab.git
 
-Installation of meteodata-lab
------------------------------
+   If you do have write access, you can clone the main repository directly:
 
-After creating and activating your environment by running
+   .. code-block:: bash
 
-.. code-block:: console
+      git clone git@github.com:MeteoSwiss/meteodata-lab.git
 
-    $ ./tools/setup_env.sh
-    $ conda activate meteodata-lab
+2. Navigate to the project directory and run the setup script:
 
-in the root folder of meteodata-lab, type
+   .. code-block:: bash
 
-.. code-block:: console
+      cd meteodata-lab
+      ./scripts/setup_poetry.sh
 
-    $ python -m pip install --no-deps .
+   This will install Poetry (if not already available), set up the virtual environment, and install all dependencies with extras.
 
-for a (static) production installation and
-
-.. code-block:: console
-
-    $ pip install --no-deps --editable .
-
-for a (editable) development installation.
-
-
-Maintenance of the environment (for developers)
------------------------------------------------
-
-If you need to add new first-level dependencies to your package, make sure to include them in `requirements/requirements.yaml`. (Note that pip requirements can be added to these files in the `- pip:` section of the document.) After a (unpinned!) installation, this will change the full dependency tree and you need to export the environment. You can either do this by hand by activating the environment and then running
-
-.. code-block:: console
-
-    $ conda env export meteodata-lab requirements/environment.yaml
-
-or you can reinstall with the setup script from `requirements/requirements.yaml` and directly export the environment with the `-e` flag.
-
-.. code-block:: console
-
-    $ ./tools/setup_env -ue
+You can find more information about contributing to meteodata-lab at our `Contributing page <https://meteoswiss.github.io/meteodata-lab/contributing.html>`_.
 
 
 Interaction with Jenkins and Github actions

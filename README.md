@@ -1,5 +1,5 @@
 # meteodata-lab
- 
+
 <p align="center">
   <picture>
     <img src="meteodata_lab_logo_with_name-optimized.gif" height="160" alt="meteodata-lab animated logo showing a cloud partially hiding the sun in a shape of a gear">
@@ -45,11 +45,32 @@ pip install "meteodata-lab[polytope,regrid]"
 ```
 **Note**: The `fdb` extra is currently disabled because its dependency `pyfdb` is not available on PyPI. As an alternative the development setup can be used.
 
-### For Development
-To set up the project for local development, clone the repository and use the provided Poetry setup script:
-```bash
-git clone git@github.com:MeteoSwiss/meteodata-lab.git
-cd meteodata-lab
-./scripts/setup_poetry.sh
-```
-This will install Poetry (if not already available), set up the virtual environment, and install all dependencies with extras.
+### For Contributors
+To set up the project for local development (e.g. for contributing code or testing changes), follow these steps:
+1. If you don't have write access, first fork the repository on GitHub, then clone your fork:
+    ```bash
+    git clone git@github.com:your-username/meteodata-lab.git
+    ```
+    If you do have write access, you can clone the main repository directly:
+    ```bash
+    git clone git@github.com:MeteoSwiss/meteodata-lab.git
+    ```
+2. Navigate to the project directory and run the setup script:
+    ```bash
+    cd meteodata-lab
+    ./scripts/setup_poetry.sh
+    ```
+    This will install Poetry (if not already available), set up the virtual environment, and install all dependencies with extras.
+
+
+You can find more information about contributing to meteodata-lab at our [Contributing page](https://meteoswiss.github.io/meteodata-lab/contributing.html).
+
+## Documentation
+
+Learn more about meteodata-lab in its official documentation at [meteoswiss.github.io/meteodata-lab/](https://meteoswiss.github.io/meteodata-lab/).
+
+<!-- Try out [interactive Juypter notebooks](https://github.com/MeteoSwiss/opendata-nwp-demos) -->
+
+
+
+

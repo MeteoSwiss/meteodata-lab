@@ -1,11 +1,12 @@
 # meteodata-lab
 
 <p align="center">
-  <picture>
-    <img src="meteodata_lab_logo_with_name-optimized.gif" height="160" alt="meteodata-lab animated logo showing a cloud partially hiding the sun in a shape of a gear">
-  </picture>
+    <picture>
+        <img src="https://raw.githubusercontent.com/MeteoSwiss/meteodata-lab/main/meteodata-lab_logo.gif"
+            style="max-height: 160px; height: auto; width: auto;"
+            alt="Animated logo">
+    </picture>
 </p>
-
 <p align="center">
     <a href="https://pypi.org/project/meteodata-lab/">
     <img src="https://img.shields.io/pypi/v/meteodata-lab.svg?color=ff69b4" alt="PyPI version">
@@ -23,7 +24,7 @@
     <a href="https://meteoswiss.github.io/meteodata-lab/">Documentation</a>
 </p>
 
-> [!WARNING]
+> **WARNING:**  
 > This project is in BETA and under active development. Interfaces and functionality are subject to change.
 
 **Meteodata-lab** is a NumPy/Xarray-based Python library for processing and analyzing gridded meteorological data. It supports GRIB (read/write) and is tailored to common workflows that require data interpolation, regridding to custom grids (e.g., Swiss grid or rotated lat/lon), and the computation of advanced meteorological fields. One of the key features of meteodata-lab is its use of operators that ensure the integrity of GRIB metadata is maintained throughout processing, allowing for consistent writing back to GRIB format.

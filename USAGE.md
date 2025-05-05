@@ -2,7 +2,7 @@
 
 ## Using `ogd_api` to access ICON-CH1/2-EPS forecasts
 
-The `ogd_api` module in the `meteodatalab` library allows you to query and retrieve deterministic weather forecast data published through the Swiss Open Government Data (OGD) STAC API.
+The `ogd_api` module allows you to query and retrieve deterministic weather forecast data published through the Swiss Open Government Data (OGD) [STAC API](https://data.geo.admin.ch/api/stac/static/spec/v0.9/api.html).
 
 You can find interactive Jupyter notebooks demonstrating examples of `ogd_api` usage here: [MeteoSwiss Open Data NWP Demos](https://github.com/MeteoSwiss/opendata-nwp-demos).
 
@@ -36,16 +36,18 @@ Each argument in the request serves the following purpose:
 | `perturbed`          | If `True`, retrieves ensemble forecast members; if `False`, returns the deterministic forecast. |
 | `horizon`            | Forecast lead time, provided as either:<br>– [datetime.timedelta](https://docs.python.org/3/library/datetime.html#timedelta-objects) object (e.g., `datetime.timedelta(hours=2)`) <br>– [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601#Durations) duration string (e.g., `"P0DT2H"`)|
 ### Step 2:
-There are two options:
-- Load forecast data to Xarray with `get_from_ogd`
-- Download forecast data with `download_from_ogd`
+To access the forecast data, you have two choices:
+1. Load forecast data to Xarray with `get_from_ogd`
+2. Download forecast data with `download_from_ogd`
 
-#### Load forecast data to Xarray
-We now send our request to the API and retrieve the resulting dataset using the `get_from_ogd` function. The response is returned as an `xarray.DataArray`, which is efficient for handling multi-dimensional data.  
+
+**1. Load forecast data to Xarray**
+
+We now send our request to the API and retrieve the resulting dataset using the `get_from_ogd` function. The response is returned as an `xarray.DataArray`, which is efficient for handling multi-dimensional data.
 >  **Tip**: You can use configure caching behaviour in [earthkit-data](https://earthkit-data.readthedocs.io/en/latest/) to avoid re-downloading files:
 > - `"off"` (default): no caching — files are always freshly downloaded
 > - `"temporary"`: auto-cleared after the session
-> - `"user"`: saves to a specific directory across sessions  
+> - `"user"`: saves to a specific directory across sessions
 >See the [earthkit-data caching docs](https://earthkit-data.readthedocs.io/en/latest/examples/cache.html) for details.
 
 ```python
@@ -56,7 +58,7 @@ config.set("cache-policy", "temporary")
 da = ogd_api.get_from_ogd(req)
 ```
 
-#### Download forecast data
+**2. Download forecast data**
 ```python
 from pathlib import Path
 

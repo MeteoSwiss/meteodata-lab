@@ -70,7 +70,3 @@ You can find more information about contributing to meteodata-lab at our [Contri
 Learn more about meteodata-lab in its official documentation at [meteoswiss.github.io/meteodata-lab/](https://meteoswiss.github.io/meteodata-lab/).
 
 <!-- Try out [interactive Juypter notebooks](https://github.com/MeteoSwiss/opendata-nwp-demos) -->
-
-
-
-

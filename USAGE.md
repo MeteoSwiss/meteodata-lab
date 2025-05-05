@@ -2,7 +2,8 @@
 
 ## Using `ogd_api` to access ICON-CH1/2-EPS forecasts
 
-The `ogd_api` module allows you to query and retrieve weather forecast data published through data.geo.admin.ch's extended [STAC API](https://data.geo.admin.ch/api/stac/static/spec/v0.9/api.html).
+The `ogd_api` module provides a Python interface to the [STAC search API](https://data.geo.admin.ch/api/stac/static/spec/v1/api.html) on data.geo.admin.ch.
+It enables querying and retrieving numerical weather prediction (NWP) data from **MeteoSwiss**, published through Switzerland’s **Open Government Data** (OGD) initiative and extended for forecast-specific access.
 
 You can find interactive Jupyter notebooks demonstrating the usage of `ogd_api` here: [MeteoSwiss Open Data NWP Demos](https://github.com/MeteoSwiss/opendata-nwp-demos).
 
@@ -15,7 +16,7 @@ Use `ogd_api.Request` to define a query, for example, to retrieve ICON-CH2-EPS t
 from datetime import datetime, timezone
 from meteodatalab import ogd_api
 
-today = datetime.now(timezone.utc).replace(hour=0, minute=0)
+today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
 
 req = ogd_api.Request(
     collection="ogd-forecasting-icon-ch2",
@@ -32,10 +33,10 @@ Each argument in the request serves the following purpose:
 |----------------------|-------------|
 | `collection`         | Forecast collection to use (e.g., `ogd-forecasting-icon-ch1` for ICON-CH1-EPS and `ogd-forecasting-icon-ch2` for ICON-CH2-EPS). |
 | `variable`           | Meteorological variable of interest (`TOT_PREC` = total precipitation). |
-| `reference_datetime` | Initialization time of the forecast in **UTC**, provided as either:<br>- [datetime.datetime](https://docs.python.org/3/library/datetime.html#datetime-objects) object (e.g.,<br> &nbsp; `datetime.datetime(2025, 5, 22, 9, 0, 0, tzinfo=datetime.timezone.utc)`) <br>- [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations) date string (e.g., `"2025-05-22T09:00:00Z"`)|
+| `reference_datetime` | Initialization time of the forecast in **UTC**, provided as either [datetime.datetime](https://docs.python.org/3/library/datetime.html#datetime-objects) object (e.g., `datetime.datetime(2025, 5, 5, 0, 0, 0, tzinfo=datetime.timezone.utc)`) or [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations) date string (e.g., `"2025-05-05T00:00:00Z"`)|
 | `perturbed`          | If `True`, retrieves ensemble forecast members; if `False`, returns the deterministic forecast. |
-| `horizon`            | Forecast lead time, provided as either:<br>– [datetime.timedelta](https://docs.python.org/3/library/datetime.html#timedelta-objects) object (e.g., `datetime.timedelta(hours=2)`) <br>– [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601#Durations) duration string (e.g., `"P0DT2H"`)|
-### Step 2: Retrieve forecast data
+| `horizon`            | Forecast lead time, provided as either [datetime.timedelta](https://docs.python.org/3/library/datetime.html#timedelta-objects) object (e.g., `datetime.timedelta(hours=2)`) or [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601#Durations) duration string (e.g., `"P0DT2H"`)|
+### Step 2: Retrieve forecasts
 To access the forecast data, you have two choices:
 1. Load forecast data to Xarray with `get_from_ogd`
 2. Download forecast data with `download_from_ogd`
@@ -48,15 +49,19 @@ We now send our request to the API and retrieve the resulting dataset using the 
 > - `"off"` (default): no caching — files are always freshly downloaded
 > - `"temporary"`: auto-cleared after the session
 > - `"user"`: saves to a specific directory across sessions
+>
 >See the [earthkit-data caching docs](https://earthkit-data.readthedocs.io/en/latest/examples/cache.html) for details.
 
 ```python
+from earthkit.data import config
+
 # Enable temporary cache
 config.set("cache-policy", "temporary")
 
 # Load data as xarray.DataArray
 da = ogd_api.get_from_ogd(req)
 ```
+![Image: returned DataArray overview](DataArray_overview.png)
 
 **2. Download forecast data**
 ```python

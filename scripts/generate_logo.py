@@ -10,7 +10,7 @@ from PIL import Image, ImageDraw, ImageSequence
 # ---- Generate background grid as GIF
 
 # Canvas setup
-width, height = 800, 800
+width, height = 200, 200
 background_color = (255, 255, 255, 255)
 blue_color = (15, 76, 129)
 
@@ -25,7 +25,9 @@ blue_box = (
     int(width * (1 - blue_box_margin)),
     int(height * (1 - blue_box_margin)),
 )
-draw_bg.rounded_rectangle(blue_box, radius=50, fill=blue_color)
+
+corner_radius = int(width * 0.0625)  # Scale radius with canvas size
+draw_bg.rounded_rectangle(blue_box, radius=corner_radius, fill=blue_color)
 
 
 # Diagonal mask
@@ -45,7 +47,7 @@ def get_diagonal_mask(size, progress, direction):
 
 
 # Grid drawing
-def draw_rectangular_grid_centered(draw, step, color="white"):
+def draw_rectangular_grid_centered(draw, step, color=(255, 255, 255, 80)):
     box_x0, box_y0, box_x1, box_y1 = blue_box
     grid_width = box_x1 - box_x0
     grid_height = box_y1 - box_y0
@@ -64,7 +66,7 @@ def draw_rectangular_grid_centered(draw, step, color="white"):
         draw.line((box_x0, y, box_x1, y), fill=color, width=1)
 
 
-def draw_fully_symmetric_triangular_grid(draw, step, color="white"):
+def draw_fully_symmetric_triangular_grid(draw, step, color=(255, 255, 255, 80)):
     h = step * math.sqrt(3) / 2
     cols = int(width / step) + 2
     rows = int(height / h) + 2
@@ -90,8 +92,8 @@ def draw_fully_symmetric_triangular_grid(draw, step, color="white"):
 
 
 # Animation parameters
-triangular_step = 80
-rectangular_base_step = 46
+triangular_step = 20
+rectangular_base_step = 11
 total_frames = 25
 frames = []
 
@@ -176,7 +178,7 @@ for frame in ImageSequence.Iterator(background_gif):
     composite_frames.append(frame_copy)
 
 # Save the final animation
-final_updated_output_path = "./metedata-lab_logo.gif"
+final_updated_output_path = "./meteodata-lab_logo.gif"
 composite_frames[0].save(
     final_updated_output_path,
     save_all=True,

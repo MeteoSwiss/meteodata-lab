@@ -42,11 +42,11 @@ If you are proposing a feature,
 
 Ready to contribute? Here's how to set up `meteodata-lab` for local development.
 
-1. Fork the [`meteodata-lab` repo](https://github.com/) on GitHub.
+1. Fork the [meteodata-lab repo](https://github.com/MeteoSwiss/meteodata-lab) on GitHub.
 2. Clone your fork locally:
 
     ```bash
-    git clone git@github.com:your_name_here/meteodata-lab.git
+    git clone git@github.com:your-username/meteodata-lab.git
     ```
 
 3. Create a virtual environment and install the dependencies:

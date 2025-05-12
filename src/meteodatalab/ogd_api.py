@@ -148,7 +148,8 @@ def get_asset_url(request: Request):
     Raises
     ------
     ValueError
-        when the request does not select exactly one asset.
+        when the request does not select exactly one asset, or no datetime
+        can be found in the asset URL for 'latest' requests.
 
     Returns
     -------
@@ -159,9 +160,16 @@ def get_asset_url(request: Request):
     result = _search(f"{API_URL}/search", request)
 
     if request.reference_datetime == "latest":
-        asset_url = max(
-            result, key=lambda url: re.search(r"\d{10}", url).group(0)
-        )  # most recent asset
+        datetime_regex = re.compile(r"-(\d{12})-")
+
+        def extract_datetime_key(url: str) -> str:
+            path = urlparse(url).path
+            match = datetime_regex.search(path)
+            if not match:
+                raise ValueError(f"No valid datetime found in URL path: {url}")
+            return match.group(1)
+
+        asset_url = max(result, key=extract_datetime_key)
     else:
         [asset_url] = result  # expect only one asset
 

@@ -7,6 +7,7 @@ import enum
 import hashlib
 import logging
 import os
+import re
 import typing
 from functools import lru_cache
 from pathlib import Path
@@ -90,6 +91,8 @@ class Request:
             return input_value.astimezone(dt.timezone.utc).strftime(fmt)
 
         value = handler(input_value)
+        if value == "latest":
+            return value
         parts = value.split("/")
         match parts:
             case [v, ".."] | ["..", v] | [v]:
@@ -106,8 +109,12 @@ class Request:
         return value
 
     def dump(self):
+        exclude_fields = {}
+        if self.reference_datetime == "latest":
+            exclude_fields["reference_datetime"] = True
+
         root = pydantic.RootModel(self)
-        return root.model_dump(mode="json", by_alias=True)
+        return root.model_dump(mode="json", by_alias=True, exclude=exclude_fields)
 
 
 def _search(url: str, request: Request):
@@ -150,7 +157,13 @@ def get_asset_url(request: Request):
 
     """
     result = _search(f"{API_URL}/search", request)
-    [asset_url] = result  # expect only one asset
+
+    if request.reference_datetime == "latest":
+        asset_url = max(
+            result, key=lambda url: re.search(r"\d{10}", url).group(0)
+        )  # most recent asset
+    else:
+        [asset_url] = result  # expect only one asset
 
     return asset_url
 

@@ -245,3 +245,25 @@ def test_download_from_ogd(
         assert not (target / "some-file.sha256").exists()
         assert not (target / "horizontal.sha256").exists()
         assert not (target / "vertical.sha256").exists()
+
+
+@mock.patch.object(ogd_api, "_search")
+def test_get_asset_url_latest(mock_search: mock.MagicMock):
+    mock_search.return_value = [
+        "https://test.com/icon-ch1-eps-202505100000-0-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505120600-0-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505120000-0-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505110000-0-v_10m-perturb.grib2",
+    ]
+
+    req = ogd_api.Request(
+        collection="ogd-forecasting-icon-ch1",
+        variable="v_10m",
+        reference_datetime="latest",
+        perturbed=True,
+        horizon="P0DT1H",
+    )
+
+    result = ogd_api.get_asset_url(req)
+
+    assert result == "https://test.com/icon-ch1-eps-202505120600-0-v_10m-perturb.grib2"

@@ -7,6 +7,7 @@ import enum
 import hashlib
 import logging
 import os
+import re
 import typing
 from functools import lru_cache
 from pathlib import Path
@@ -90,6 +91,8 @@ class Request:
             return input_value.astimezone(dt.timezone.utc).strftime(fmt)
 
         value = handler(input_value)
+        if value == "latest":
+            return value
         parts = value.split("/")
         match parts:
             case [v, ".."] | ["..", v] | [v]:
@@ -106,8 +109,12 @@ class Request:
         return value
 
     def dump(self):
+        exclude_fields = {}
+        if self.reference_datetime == "latest":
+            exclude_fields["reference_datetime"] = True
+
         root = pydantic.RootModel(self)
-        return root.model_dump(mode="json", by_alias=True)
+        return root.model_dump(mode="json", by_alias=True, exclude=exclude_fields)
 
 
 def _search(url: str, request: Request):
@@ -141,7 +148,8 @@ def get_asset_url(request: Request):
     Raises
     ------
     ValueError
-        when the request does not select exactly one asset.
+        when the request does not select exactly one asset, or no datetime
+        can be found in the asset URL for 'latest' requests.
 
     Returns
     -------
@@ -150,7 +158,20 @@ def get_asset_url(request: Request):
 
     """
     result = _search(f"{API_URL}/search", request)
-    [asset_url] = result  # expect only one asset
+
+    if request.reference_datetime == "latest":
+        datetime_regex = re.compile(r"-(\d{12})-")
+
+        def extract_datetime_key(url: str) -> str:
+            path = urlparse(url).path
+            match = datetime_regex.search(path)
+            if not match:
+                raise ValueError(f"No valid datetime found in URL path: {url}")
+            return match.group(1)
+
+        asset_url = max(result, key=extract_datetime_key)
+    else:
+        [asset_url] = result  # expect only one asset
 
     return asset_url
 

@@ -1,4 +1,4 @@
-{{ objname | escape | underline}}
+{{ fullname | replace("meteodatalab.", "") | escape | underline }}
 
 .. automodule:: {{ fullname }}
    :members:

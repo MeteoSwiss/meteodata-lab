@@ -15,6 +15,7 @@ Top level modules
    data_source
    grib_decoder
    mars
+   ogd_api
 
 Horizontal operators
 --------------------

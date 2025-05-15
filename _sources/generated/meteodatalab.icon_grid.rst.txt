@@ -1,0 +1,33 @@
+﻿icon\_grid
+==========
+
+.. automodule:: meteodatalab.icon_grid
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      get_remap_coeffs
+      load_boundary_idx_from_file
+      load_grid_from_balfrin
+      load_grid_from_file
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

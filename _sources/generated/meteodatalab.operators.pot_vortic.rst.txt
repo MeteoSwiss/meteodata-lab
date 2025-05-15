@@ -1,0 +1,30 @@
+﻿operators.pot\_vortic
+=====================
+
+.. automodule:: meteodatalab.operators.pot_vortic
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      compute_pot_vortic
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

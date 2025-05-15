@@ -1,0 +1,31 @@
+﻿operators.wind
+==============
+
+.. automodule:: meteodatalab.operators.wind
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      direction
+      speed
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

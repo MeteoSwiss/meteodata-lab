@@ -76,7 +76,7 @@ History
 
 
 
-`0.2.0-rc3 <https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.2.0-rc2..v0.2.0-rc3>`_ (2023-12-18)
+`0.2.0-rc3`_ (2023-12-18)
 ----------------------------------------------------------------------------------------------------------------------------
 
 - Added vertical interpolation operator ``interpolate_k2any``

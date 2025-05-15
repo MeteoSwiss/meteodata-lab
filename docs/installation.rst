@@ -22,7 +22,9 @@ To install optional extras:
 
    pip install "meteodata-lab[polytope,regrid]"
 
-**Note**: The ``fdb`` extra is currently disabled because its dependency ``pyfdb`` is not available on PyPI. As an alternative, the development setup can be used.
+.. note::
+
+   The ``fdb`` extra is currently disabled because its dependency ``pyfdb`` is not available on PyPI. As an alternative, the development setup can be used.
 
 For Contributors
 ================
@@ -49,8 +51,6 @@ To set up the project for local development (e.g. for contributing code or testi
       ./scripts/setup_poetry.sh
 
    This will install Poetry (if not already available), set up the virtual environment, and install all dependencies with extras.
-
-You can find more information about contributing to meteodata-lab at our `Contributing page <https://meteoswiss.github.io/meteodata-lab/contributing.html>`_.
 
 
 Interaction with Jenkins and Github actions

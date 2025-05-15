@@ -2,8 +2,8 @@
 
 <p align="center">
     <picture>
-        <img src="https://raw.githubusercontent.com/MeteoSwiss/meteodata-lab/main/meteodata-lab_logo.gif"
-            style="max-height: 160px; height: auto; width: auto;"
+        <img src="https://raw.githubusercontent.com/MeteoSwiss/meteodata-lab/main/docs/assets/meteodata-lab_logo.gif"
+            style="max-height: 200px; height: auto; width: auto;"
             alt="Animated logo">
     </picture>
 </p>
@@ -71,4 +71,4 @@ You can find more information about contributing to meteodata-lab at our [Contri
 
 Learn more about meteodata-lab in its official documentation at [meteoswiss.github.io/meteodata-lab/](https://meteoswiss.github.io/meteodata-lab/).
 
-<!-- Try out [interactive Juypter notebooks](https://github.com/MeteoSwiss/opendata-nwp-demos) -->
+Try out [interactive Juypter notebooks](https://github.com/MeteoSwiss/opendata-nwp-demos)

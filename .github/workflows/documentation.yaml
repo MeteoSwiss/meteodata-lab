@@ -14,7 +14,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: ammaraskar/sphinx-action@7.4.7
       with:
-        pre-build-command: "pip install ."
+        pre-build-command: "pip install .[polytope,regrid]"
         docs-folder: "docs/"
     # Great extra actions to compose with:
     # Create an artifact of the html output.

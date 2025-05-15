@@ -14,8 +14,12 @@ Top level modules
    data_cache
    data_source
    grib_decoder
+   icon_grid
    mars
+   mch_model_data
+   metadata
    ogd_api
+   physical_constants
 
 Horizontal operators
 --------------------
@@ -59,5 +63,6 @@ Vertical operators
 .. autosummary::
    :toctree: generated
 
+   operators.vertical_extrapolation
    operators.vertical_interpolation
    operators.vertical_reduction

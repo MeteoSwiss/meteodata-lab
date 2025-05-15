@@ -5,7 +5,7 @@ Using ``ogd_api`` to access ICON-CH1/2-EPS forecasts
 ----------------------------------------------------
 
 The ``ogd_api`` module provides a Python interface to the `STAC search API <https://data.geo.admin.ch/api/stac/static/spec/v1/api.html>`_ on data.geo.admin.ch.
-It enables querying and retrieving numerical weather prediction (NWP) data from **MeteoSwiss**, published through Switzerland’s `Open Government Data (OGD) initiative <https://www.meteoswiss.admin.ch/services-and-publications/service/open-data.html)>`_ and extended for forecast-specific access.
+It enables querying and retrieving numerical weather prediction (NWP) data from **MeteoSwiss**, published through Switzerland’s `Open Government Data (OGD) initiative <https://www.meteoswiss.admin.ch/services-and-publications/service/open-data.html>`_ and extended for forecast-specific access.
 
 You can find interactive Jupyter notebooks demonstrating the usage of ``ogd_api`` here: `MeteoSwiss Open Data NWP Demos <https://github.com/MeteoSwiss/opendata-nwp-demos>`_.
 

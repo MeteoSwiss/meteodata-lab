@@ -250,10 +250,10 @@ def test_download_from_ogd(
 @mock.patch.object(ogd_api, "_search")
 def test_get_asset_url_latest(mock_search: mock.MagicMock):
     mock_search.return_value = [
-        "https://test.com/icon-ch1-eps-202505100000-0-v_10m-perturb.grib2",
-        "https://test.com/icon-ch1-eps-202505120600-0-v_10m-perturb.grib2",
-        "https://test.com/icon-ch1-eps-202505120000-0-v_10m-perturb.grib2",
-        "https://test.com/icon-ch1-eps-202505110000-0-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505100000-1-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505120600-1-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505120000-1-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505110000-1-v_10m-perturb.grib2",
     ]
 
     req = ogd_api.Request(
@@ -264,6 +264,8 @@ def test_get_asset_url_latest(mock_search: mock.MagicMock):
         horizon="P0DT1H",
     )
 
-    result = ogd_api.get_asset_url(req)
+    result = ogd_api.get_asset_urls(req)
 
-    assert result == "https://test.com/icon-ch1-eps-202505120600-0-v_10m-perturb.grib2"
+    assert result == [
+        "https://test.com/icon-ch1-eps-202505120600-1-v_10m-perturb.grib2"
+    ]

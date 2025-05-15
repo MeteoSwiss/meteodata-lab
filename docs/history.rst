@@ -1,7 +1,7 @@
 History
 =======
 
-`0.3.0 <https://github.com/MeteoSwiss/meteodata-lab/compare/v0.2.0..v0.3.0>`_ (2025-04-11)
+`0.3.0`_ (2025-04-11)
 --------------------------------------------------------------------------------------------
 
 **Additions**
@@ -31,7 +31,7 @@ History
 - The eccodes definitions are installed using the ``eccodes-cosmo-resources-python`` package from PyPI.
 
 
-`0.2.0 <https://github.com/MeteoSwiss/meteodata-lab/compare/v0.2.0-rc3..v0.2.0>`_ (2025-03-20)
+`0.2.0`_ (2025-03-20)
 ------------------------------------------------------------------------------------------------
 
 **Additions**
@@ -84,7 +84,7 @@ History
 - Removed the ``system_definitions`` module
 
 
-`0.2.0-rc2 <https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.2.0-rc1..v0.2.0-rc2>`_ (2023-12-11)
+`0.2.0-rc2`_ (2023-12-11)
 ----------------------------------------------------------------------------------------------------------------------------
 
 - Added ``product.run_products`` function
@@ -93,7 +93,7 @@ History
 - ``mars.Request`` now supports multiple params
 
 
-`0.2.0-rc1 <https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.1.0..v0.2.0-rc1>`_ (2023-12-01)
+`0.2.0-rc1`_ (2023-12-01)
 ------------------------------------------------------------------------------------------------------------------------
 
 - Added support for the FDB data source
@@ -118,7 +118,7 @@ History
 - **Breaking:** the ``load`` method of ``GribReader`` now takes a mapping of labels to requests and returns a mapping of labels to ``xarray.DataArray``
 
 
-`0.1.0 <https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/tree/v0.1.0>`_ (2023-07-11)
+`0.1.0`_ (2023-07-11)
 -----------------------------------------------------------------------------------------------------
 
 - Added operators:
@@ -140,3 +140,10 @@ History
     * ``integrate_k``
 - Added ``ninjo_k2th`` product
 - Added GRIB data loader based on ``earthkit-data``
+
+.. _0.3.0: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.2.0..v0.3.0
+.. _0.2.0: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.2.0-rc3..v0.2.0
+.. _0.2.0-rc3: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.2.0-rc2..v0.2.0-rc3
+.. _0.2.0-rc2: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.2.0-rc1..v0.2.0-rc2
+.. _0.2.0-rc1: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.1.0..v0.2.0-rc1
+.. _0.1.0: https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/tree/v0.1.0

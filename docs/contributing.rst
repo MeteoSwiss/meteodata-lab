@@ -11,7 +11,7 @@ You can contribute in many ways.
 Report Bugs
 ~~~~~~~~~~~
 
-Report bugs as `GitHub issues <https://github.com/MeteoSwiss/meteodata-lab/issues>`_.
+Report bugs as `GitHub issues`_.
 
 If you are reporting a bug, please include
 
@@ -22,12 +22,12 @@ If you are reporting a bug, please include
 Fix Bugs
 ~~~~~~~~
 
-Look through the `GitHub issues <https://github.com/MeteoSwiss/meteodata-lab/issues>`_ for bugs. Anything tagged with "bug" and "help wanted" is open to whoever wants to implement it.
+Look through the `GitHub issues`_ for bugs. Anything tagged with "bug" and "help wanted" is open to whoever wants to implement it.
 
 Implement Features
 ~~~~~~~~~~~~~~~~~~
 
-Look through the `GitHub issues <https://github.com/MeteoSwiss/meteodata-lab/issues>`_ for features. Anything tagged with "enhancement" and "help wanted" is open to whoever wants to implement it.
+Look through the `GitHub issues`_ for features. Anything tagged with "enhancement" and "help wanted" is open to whoever wants to implement it.
 
 Write Documentation
 ~~~~~~~~~~~~~~~~~~~
@@ -37,7 +37,7 @@ meteodata-lab could always use more documentation, whether as part of the offici
 Submit Feedback
 ~~~~~~~~~~~~~~~
 
-The best way to send feedback is to file a `GitHub issues <https://github.com/MeteoSwiss/meteodata-lab/issues>`_.
+The best way to send feedback is to file a `GitHub issues`_.
 
 If you are proposing a feature,
 
@@ -141,3 +141,5 @@ Perform the following steps to publish a new version of the python package:
   * Ensure that the changes are compliant with SemVer.
 * Request a code review on the branch and merge it to ``main``.
 * Create and push a tag ``v<version>``.
+
+.. _GitHub issues: https://github.com/MeteoSwiss/meteodata-lab/issues

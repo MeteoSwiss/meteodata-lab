@@ -32,40 +32,40 @@ Use ``ogd_api.Request`` to define a query, for example, to retrieve ICON-CH2-EPS
 
 Each argument in the request serves the following purpose:
 
-+-------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Argument                | Description                                                                                                                                                                                                                                          |
-+=========================+======================================================================================================================================================================================================================================================+
-| ``collection``          | Forecast collection to use.                                                                                                                                                                                                                          |
-|                         |                                                                                                                                                                                                                                                      |
-|                         | Examples:                                                                                                                                                                                                                                            |
-|                         | - ``ogd-forecasting-icon-ch1`` (ICON-CH1-EPS)                                                                                                                                                                                                        |
-|                         | - ``ogd-forecasting-icon-ch2`` (ICON-CH2-EPS)                                                                                                                                                                                                        |
-+-------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``variable``            | Meteorological variable of interest.                                                                                                                                                                                                                 |
-|                         |                                                                                                                                                                                                                                                      |
-|                         | Example: ``TOT_PREC`` for total precipitation.                                                                                                                                                                                                       |
-+-------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``reference_datetime``  | Initialization time of the forecast in **UTC**, provided as one of the following:                                                                                                                                                                    |
-|                         |                                                                                                                                                                                                                                                      |
-|                         | - `datetime.datetime <https://docs.python.org/3/library/datetime.html#datetime-objects>`_ object                                                                                                                                                     |
-|                         |   (e.g., ``datetime.datetime(2025, 5, 5, tzinfo=datetime.timezone.utc)``)                                                                                                                                                                            |
-|                         | - `ISO 8601 datetime objects <https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations>`_ date string                                                                                                                           |
-|                         |   (e.g., ``"2025-05-05T00:00:00Z"``)                                                                                                                                                                                                                 |
-|                         | - ``"latest"`` to automatically select the most recent forecast based on the ``reference_datetime`` embedded in each individual asset URL (i.e., for a single combination of collection, variable, reference time, and horizon)                      |
-|                         |                                                                                                                                                                                                                                                      |
-|                         |   **Note:** When using ``"latest"``, the selected reference time may vary across separate requests or files, depending on when they are executed while new data is being                                                                             |
-|                         |   progressively pushed to the STAC API (i.e., assets are not published all at once).                                                                                                                                                                 |
-+-------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``perturbed``           | If ``True``, retrieves ensemble forecast members.                                                                                                                                                                                                    |
-|                         | If ``False``, returns the deterministic (control) forecast.                                                                                                                                                                                          |
-+-------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``horizon``             | Forecast lead time, provided as one of the following:                                                                                                                                                                                                |
-|                         |                                                                                                                                                                                                                                                      |
-|                         | - `datetime.timedelta <https://docs.python.org/3/library/datetime.html#timedelta-objects>`_ object                                                                                                                                                   |
-|                         |   (e.g., ``datetime.timedelta(hours=2)``)                                                                                                                                                                                                            |
-|                         | - `ISO 8601 duration objects <https://en.wikipedia.org/wiki/ISO_8601#Durations>`_ duration string                                                                                                                                                    |
-|                         |   (e.g., ``"P0DT2H"``)                                                                                                                                                                                                                               |
-+-------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
++-------------------------+------------------------------------------------------------------------------------------------------------------------+
+| Argument                | Description                                                                                                            |
++=========================+========================================================================================================================+
+| ``collection``          | Forecast collection to use.                                                                                            |
+|                         |                                                                                                                        |
+|                         | Examples:                                                                                                              |
+|                         | - ``ogd-forecasting-icon-ch1`` (ICON-CH1-EPS)                                                                          |
+|                         | - ``ogd-forecasting-icon-ch2`` (ICON-CH2-EPS)                                                                          |
++-------------------------+------------------------------------------------------------------------------------------------------------------------+
+| ``variable``            | Meteorological variable of interest.                                                                                   |
+|                         |                                                                                                                        |
+|                         | Example: ``TOT_PREC`` for total precipitation.                                                                         |
++-------------------------+------------------------------------------------------------------------------------------------------------------------+
+| ``reference_datetime``  | Initialization time of the forecast in **UTC**, provided as one of the following:                                      |
+|                         |                                                                                                                        |
+|                         | - `datetime.datetime`_ object                                                                                          |
+|                         |   (e.g., ``datetime.datetime(2025, 5, 5, tzinfo=datetime.timezone.utc)``)                                              |
+|                         | - `ISO 8601 datetime string`_ (e.g., ``"2025-05-05T00:00:00Z"``)                                                       |
+|                         | - ``"latest"`` to automatically select the most recent forecast based on the                                           |
+|                         |   ``reference_datetime`` embedded in each individual asset URL (i.e., for a single                                     |
+|                         |   combination of collection, variable, reference time, and horizon).                                                   |
+|                         |                                                                                                                        |
+|                         |   **Note:** When using ``"latest"``, the selected reference time may vary across separate                              |
+|                         |   requests or files, depending on when they are executed while new data is being                                       |
+|                         |   progressively pushed to the STAC API (i.e., assets are not published all at once).                                   |
++-------------------------+------------------------------------------------------------------------------------------------------------------------+
+| ``perturbed``           | If ``True``, retrieves ensemble forecast members.                                                                      |
+|                         | If ``False``, returns the deterministic (control) forecast.                                                            |
++-------------------------+------------------------------------------------------------------------------------------------------------------------+
+| ``horizon``             | Forecast lead time, provided as one of the following:                                                                  |
+|                         |                                                                                                                        |
+|                         | - `datetime.timedelta`_ object (e.g., ``datetime.timedelta(hours=2)``)                                                 |
+|                         | - `ISO 8601 duration string`_ (e.g., ``"P0DT2H"``)                                                                     |
++-------------------------+------------------------------------------------------------------------------------------------------------------------+
 
 
 Step 2: Retrieve forecasts
@@ -146,3 +146,8 @@ After downloading, you should find the following files inside the ``forecast_fil
     These checksums are saved as ``.sha256`` files and used to skip re-downloading valid existing files.
 
     Learn more about the data structure `here <https://opendatadocs.meteoswiss.ch/e-forecast-data/e2-e3-numerical-weather-forecasting-model>`_.
+
+.. _datetime.datetime: https://docs.python.org/3/library/datetime.html#datetime-objects
+.. _datetime.timedelta: https://docs.python.org/3/library/datetime.html#timedelta-objects
+.. _ISO 8601 datetime string: https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations
+.. _ISO 8601 duration string: https://en.wikipedia.org/wiki/ISO_8601#Durations

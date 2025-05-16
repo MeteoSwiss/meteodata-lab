@@ -157,11 +157,29 @@ def _search(url: str, request: Request):
     return result
 
 
+def _restrict_ref_times(request: Request, ref_times: list[dt.datetime]):
+    match request.reference_datetime.split("/"):
+        case [v]:
+            d = _parse_datetime(v)
+            return [ref_time for ref_time in ref_times if ref_time == d]
+        case [v, ".."]:
+            d = _parse_datetime(v)
+            return [ref_time for ref_time in ref_times if ref_time >= d]
+        case ["..", v]:
+            d = _parse_datetime(v)
+            return [ref_time for ref_time in ref_times if ref_time <= d]
+        case [v1, v2]:
+            d1 = _parse_datetime(v1)
+            d2 = _parse_datetime(v2)
+            return [ref_time for ref_time in ref_times if d1 <= ref_time <= d2]
+
+
 def get_asset_urls(request: Request) -> list[str]:
     """Get asset URLs from OGD.
 
     The request attributes define filters for the STAC search API according
-    to the forecast extension.
+    to the forecast extension. Forecasts reference datetimes for which not all
+    requested lead times are present are excluded from the result.
 
     Parameters
     ----------
@@ -171,8 +189,7 @@ def get_asset_urls(request: Request) -> list[str]:
     Raises
     ------
     ValueError
-        when the request does not select exactly one asset, or no datetime
-        can be found in the asset URL for 'latest' requests.
+        when no datetime can be found in the asset URL for 'latest' requests.
 
     Returns
     -------
@@ -196,23 +213,32 @@ def get_asset_urls(request: Request) -> list[str]:
         match = pattern.search(path)
         if not match:
             raise ValueError(f"No valid datetime found in URL path: {url}")
-        ref_time = dt.datetime.strptime(match.group("ref_time"), "%Y%m%d%H%M")
+        val = match.group("ref_time")
+        fmt = "%Y%m%d%H%M"
+        utc = dt.timezone.utc
+        ref_time = dt.datetime.strptime(val, fmt).replace(tzinfo=utc)
         lead_time = dt.timedelta(hours=float(match.group("lead_time")))
         return ref_time, lead_time
 
     asset_map = {extract_key(url): url for url in result}
 
-    if request.reference_datetime == "latest":
-        tmp = {}
-        for ref_time, lead_time in asset_map:
-            tmp.setdefault(ref_time, []).append(lead_time)
-        required = set(lead_times)
-        complete = [ref_time for ref_time in tmp if set(tmp[ref_time]) >= required]
-        ref_time = max(complete)
-    else:
-        ref_time = request.reference_datetime
+    # gather reference times for which all requested lead times are present
+    tmp = {}
+    for ref_time, lead_time in asset_map:
+        tmp.setdefault(ref_time, []).append(lead_time)
+    required = set(lead_times)
+    complete = [ref_time for ref_time in tmp if set(tmp[ref_time]) >= required]
 
-    return [asset_map[(ref_time, lead_time)] for lead_time in lead_times]
+    if request.reference_datetime == "latest":
+        ref_time = max(complete)
+        return [asset_map[(ref_time, lead_time)] for lead_time in lead_times]
+
+    ref_times = _restrict_ref_times(request, set(complete))
+    return [
+        asset_map[(ref_time, lead_time)]
+        for lead_time in lead_times
+        for ref_time in sorted(ref_times)
+    ]
 
 
 @lru_cache

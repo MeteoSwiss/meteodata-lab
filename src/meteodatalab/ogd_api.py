@@ -9,6 +9,7 @@ import logging
 import os
 import re
 import typing
+from collections.abc import Iterable
 from functools import lru_cache
 from pathlib import Path
 from urllib.parse import urlparse
@@ -157,7 +158,9 @@ def _search(url: str, request: Request):
     return result
 
 
-def _restrict_ref_times(request: Request, ref_times: list[dt.datetime]):
+def _restrict_ref_times(
+    request: Request, ref_times: Iterable[dt.datetime]
+) -> list[dt.datetime]:
     match request.reference_datetime.split("/"):
         case [v]:
             d = _parse_datetime(v)
@@ -172,6 +175,9 @@ def _restrict_ref_times(request: Request, ref_times: list[dt.datetime]):
             d1 = _parse_datetime(v1)
             d2 = _parse_datetime(v2)
             return [ref_time for ref_time in ref_times if d1 <= ref_time <= d2]
+    raise ValueError(
+        f"Could not parse request.reference_datetime: {request.reference_datetime}"
+    )
 
 
 def get_asset_urls(request: Request) -> list[str]:
@@ -208,7 +214,7 @@ def get_asset_urls(request: Request) -> list[str]:
 
     pattern = re.compile(r"-(?P<ref_time>\d{12})-(?P<lead_time>\d+)-")
 
-    def extract_key(url: str) -> str:
+    def extract_key(url: str) -> tuple[dt.datetime, dt.timedelta]:
         path = urlparse(url).path
         match = pattern.search(path)
         if not match:
@@ -223,7 +229,7 @@ def get_asset_urls(request: Request) -> list[str]:
     asset_map = {extract_key(url): url for url in result}
 
     # gather reference times for which all requested lead times are present
-    tmp = {}
+    tmp: dict[dt.datetime, list[dt.timedelta]] = {}
     for ref_time, lead_time in asset_map:
         tmp.setdefault(ref_time, []).append(lead_time)
     required = set(lead_times)

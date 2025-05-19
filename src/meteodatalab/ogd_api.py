@@ -9,7 +9,6 @@ import logging
 import os
 import re
 import typing
-from collections.abc import Iterable
 from functools import lru_cache
 from pathlib import Path
 from urllib.parse import urlparse

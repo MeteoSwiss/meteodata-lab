@@ -30,7 +30,9 @@ session = util.init_session(logger)
 
 
 class Collection(str, enum.Enum):
+    #: Collection of icon-ch1-eps model outputs
     ICON_CH1 = "ogd-forecasting-icon-ch1"
+    #: Collection of icon-ch2-eps model outputs
     ICON_CH2 = "ogd-forecasting-icon-ch2"
 
 

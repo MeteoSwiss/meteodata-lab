@@ -277,6 +277,7 @@ def test_get_asset_urls_multiple_lead_times(mock_search: mock.MagicMock):
         "https://test.com/icon-ch1-eps-202505100000-1-v_10m-perturb.grib2",
         "https://test.com/icon-ch1-eps-202505100000-2-v_10m-perturb.grib2",
         "https://test.com/icon-ch1-eps-202505100000-3-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505100000-4-v_10m-perturb.grib2",
         "https://test.com/icon-ch1-eps-202505110000-1-v_10m-perturb.grib2",
     ]
 

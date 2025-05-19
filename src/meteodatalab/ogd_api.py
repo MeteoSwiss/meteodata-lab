@@ -30,7 +30,9 @@ session = util.init_session(logger)
 
 
 class Collection(str, enum.Enum):
+    #: Collection of icon-ch1-eps model outputs
     ICON_CH1 = "ogd-forecasting-icon-ch1"
+    #: Collection of icon-ch2-eps model outputs
     ICON_CH2 = "ogd-forecasting-icon-ch2"
 
 
@@ -58,6 +60,27 @@ def _parse_datetime(value: str) -> dt.datetime:
     ),
 )
 class Request:
+    """Define filters for the STAC Search API.
+
+    Parameters
+    ----------
+    collection : Collection
+        Name of the STAC collection.
+    variable : str
+        Name of the variable following the DWD convention.
+    reference_datetime : str
+        Forecast reference datetime in ISO 8601 format.
+        Alias: ref_time
+    perturbed : bool
+        If true, retrieve ensemble forecast members.
+        Otherwise, retrieve deterministic (control) forecast.
+    horizon : datetime.timedelta or list[datetime.timedelta]
+        Lead time of the requested data.
+        Can be supplied as string in ISO 8601 format.
+        Alias: lead_time
+
+    """
+
     collection: Collection = dc.field(metadata=dict(exclude=True))
     variable: str
     reference_datetime: str = dc.field(
@@ -66,7 +89,7 @@ class Request:
         )
     )
     perturbed: bool
-    horizon: dt.timedelta = dc.field(
+    horizon: dt.timedelta | list[dt.timedelta] = dc.field(
         metadata=dict(validation_alias=pydantic.AliasChoices("horizon", "lead_time"))
     )
 
@@ -112,6 +135,8 @@ class Request:
         exclude_fields = {}
         if self.reference_datetime == "latest":
             exclude_fields["reference_datetime"] = True
+        if isinstance(self.horizon, list):
+            exclude_fields["horizon"] = True
 
         root = pydantic.RootModel(self)
         return root.model_dump(mode="json", by_alias=True, exclude=exclude_fields)
@@ -134,46 +159,70 @@ def _search(url: str, request: Request):
     return result
 
 
-def get_asset_url(request: Request):
-    """Get asset URL from OGD.
+def get_asset_urls(request: Request) -> list[str]:
+    """Get asset URLs from OGD.
 
     The request attributes define filters for the STAC search API according
-    to the forecast extension.
+    to the forecast extension. Forecasts reference datetimes for which not all
+    requested lead times are present are excluded from the result.
 
     Parameters
     ----------
     request : Request
-        Asset search filters, must select a single asset.
+        Asset search filters
 
     Raises
     ------
     ValueError
-        when the request does not select exactly one asset, or no datetime
-        can be found in the asset URL for 'latest' requests.
+        when no datetime can be found in the asset URL for 'latest' requests.
 
     Returns
     -------
-    str
-        URL of the selected asset.
+    list[str]
+        URLs of the selected assets.
 
     """
     result = _search(f"{API_URL}/search", request)
 
+    if len(result) == 1:
+        return result
+
+    lead_times = (
+        request.horizon if isinstance(request.horizon, list) else [request.horizon]
+    )
+
+    pattern = re.compile(r"-(?P<ref_time>\d{12})-(?P<lead_time>\d+)-")
+
+    def extract_key(url: str) -> tuple[dt.datetime, dt.timedelta]:
+        path = urlparse(url).path
+        match = pattern.search(path)
+        if not match:
+            raise ValueError(f"No valid datetime found in URL path: {url}")
+        val = match.group("ref_time")
+        fmt = "%Y%m%d%H%M"
+        utc = dt.timezone.utc
+        ref_time = dt.datetime.strptime(val, fmt).replace(tzinfo=utc)
+        lead_time = dt.timedelta(hours=float(match.group("lead_time")))
+        return ref_time, lead_time
+
+    asset_map = {extract_key(url): url for url in result}
+
+    # gather reference times for which all requested lead times are present
+    tmp: dict[dt.datetime, list[dt.timedelta]] = {}
+    for ref_time, lead_time in asset_map:
+        tmp.setdefault(ref_time, []).append(lead_time)
+    required = set(lead_times)
+    complete = [ref_time for ref_time in tmp if set(tmp[ref_time]) >= required]
+
     if request.reference_datetime == "latest":
-        datetime_regex = re.compile(r"-(\d{12})-")
+        ref_time = max(complete)
+        return [asset_map[(ref_time, lead_time)] for lead_time in lead_times]
 
-        def extract_datetime_key(url: str) -> str:
-            path = urlparse(url).path
-            match = datetime_regex.search(path)
-            if not match:
-                raise ValueError(f"No valid datetime found in URL path: {url}")
-            return match.group(1)
-
-        asset_url = max(result, key=extract_datetime_key)
-    else:
-        [asset_url] = result  # expect only one asset
-
-    return asset_url
+    return [
+        asset_map[(ref_time, lead_time)]
+        for lead_time in lead_times
+        for ref_time in complete
+    ]
 
 
 @lru_cache
@@ -271,9 +320,9 @@ def get_from_ogd(request: Request) -> xr.DataArray:
         doc = "https://earthkit-data.readthedocs.io/en/latest/examples/cache.html"
         logger.warning("Earthkit-data caching is recommended. See: %s", doc)
 
-    asset_url = get_asset_url(request)
+    asset_urls = get_asset_urls(request)
 
-    source = data_source.URLDataSource(urls=[asset_url])
+    source = data_source.URLDataSource(urls=asset_urls)
     return grib_decoder.load(
         source,
         {"param": request.variable},
@@ -313,8 +362,9 @@ def download_from_ogd(request: Request, target: Path) -> None:
         target.mkdir(parents=True)
 
     # Download main forecast asset
-    asset_url = get_asset_url(request)
-    _download_with_checksum(asset_url, target)
+    asset_urls = get_asset_urls(request)
+    for asset_url in asset_urls:
+        _download_with_checksum(asset_url, target)
 
     model_suffix = request.collection.removeprefix("ogd-forecasting-")
     collection_id = f"ch.meteoschweiz.{request.collection}"

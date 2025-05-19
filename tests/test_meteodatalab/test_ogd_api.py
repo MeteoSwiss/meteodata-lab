@@ -248,12 +248,12 @@ def test_download_from_ogd(
 
 
 @mock.patch.object(ogd_api, "_search")
-def test_get_asset_url_latest(mock_search: mock.MagicMock):
+def test_get_asset_urls_latest(mock_search: mock.MagicMock):
     mock_search.return_value = [
-        "https://test.com/icon-ch1-eps-202505100000-0-v_10m-perturb.grib2",
-        "https://test.com/icon-ch1-eps-202505120600-0-v_10m-perturb.grib2",
-        "https://test.com/icon-ch1-eps-202505120000-0-v_10m-perturb.grib2",
-        "https://test.com/icon-ch1-eps-202505110000-0-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505100000-1-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505120600-1-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505120000-1-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505110000-1-v_10m-perturb.grib2",
     ]
 
     req = ogd_api.Request(
@@ -264,6 +264,35 @@ def test_get_asset_url_latest(mock_search: mock.MagicMock):
         horizon="P0DT1H",
     )
 
-    result = ogd_api.get_asset_url(req)
+    result = ogd_api.get_asset_urls(req)
 
-    assert result == "https://test.com/icon-ch1-eps-202505120600-0-v_10m-perturb.grib2"
+    assert result == [
+        "https://test.com/icon-ch1-eps-202505120600-1-v_10m-perturb.grib2"
+    ]
+
+
+@mock.patch.object(ogd_api, "_search")
+def test_get_asset_urls_multiple_lead_times(mock_search: mock.MagicMock):
+    mock_search.return_value = [
+        "https://test.com/icon-ch1-eps-202505100000-1-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505100000-2-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505100000-3-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505100000-4-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505110000-1-v_10m-perturb.grib2",
+    ]
+
+    req = ogd_api.Request(
+        collection="ogd-forecasting-icon-ch1",
+        variable="v_10m",
+        reference_datetime="2025-05-10T00:00:00Z/..",
+        perturbed=True,
+        horizon=["P0DT1H", "P0DT2H", "P0DT3H"],
+    )
+
+    result = ogd_api.get_asset_urls(req)
+
+    assert result == [
+        "https://test.com/icon-ch1-eps-202505100000-1-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505100000-2-v_10m-perturb.grib2",
+        "https://test.com/icon-ch1-eps-202505100000-3-v_10m-perturb.grib2",
+    ]

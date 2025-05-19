@@ -158,28 +158,6 @@ def _search(url: str, request: Request):
     return result
 
 
-def _restrict_ref_times(
-    request: Request, ref_times: Iterable[dt.datetime]
-) -> list[dt.datetime]:
-    match request.reference_datetime.split("/"):
-        case [v]:
-            d = _parse_datetime(v)
-            return [ref_time for ref_time in ref_times if ref_time == d]
-        case [v, ".."]:
-            d = _parse_datetime(v)
-            return [ref_time for ref_time in ref_times if ref_time >= d]
-        case ["..", v]:
-            d = _parse_datetime(v)
-            return [ref_time for ref_time in ref_times if ref_time <= d]
-        case [v1, v2]:
-            d1 = _parse_datetime(v1)
-            d2 = _parse_datetime(v2)
-            return [ref_time for ref_time in ref_times if d1 <= ref_time <= d2]
-    raise ValueError(
-        f"Could not parse request.reference_datetime: {request.reference_datetime}"
-    )
-
-
 def get_asset_urls(request: Request) -> list[str]:
     """Get asset URLs from OGD.
 
@@ -239,11 +217,10 @@ def get_asset_urls(request: Request) -> list[str]:
         ref_time = max(complete)
         return [asset_map[(ref_time, lead_time)] for lead_time in lead_times]
 
-    ref_times = _restrict_ref_times(request, set(complete))
     return [
         asset_map[(ref_time, lead_time)]
         for lead_time in lead_times
-        for ref_time in sorted(ref_times)
+        for ref_time in complete
     ]
 
 

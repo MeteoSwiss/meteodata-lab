@@ -40,6 +40,7 @@ Each argument in the request serves the following purpose:
 | ``collection``          | Forecast collection to use.                                                                                            |
 |                         |                                                                                                                        |
 |                         | Examples:                                                                                                              |
+|                         |                                                                                                                        |                                                                                  |
 |                         | - ``"ogd-forecasting-icon-ch1"`` (ICON-CH1-EPS)                                                                        |
 |                         | - ``"ogd-forecasting-icon-ch2"`` (ICON-CH2-EPS)                                                                        |
 +-------------------------+------------------------------------------------------------------------------------------------------------------------+

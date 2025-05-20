@@ -148,8 +148,7 @@ class Request:
         return root.model_dump(mode="json", by_alias=True, exclude=exclude_fields)
 
 
-def _search(url: str, request: Request | None = None):
-    body = request.dump() if request is not None else None
+def _search(url: str, body: dict | None = None):
     response = session.post(url, json=body)
     response.raise_for_status()
 
@@ -161,7 +160,7 @@ def _search(url: str, request: Request | None = None):
 
     for link in obj["links"]:
         if link["rel"] == "next":
-            result.extend(_search(link["href"]))
+            result.extend(_search(link["href"], link["body"]))
 
     return result
 
@@ -189,7 +188,7 @@ def get_asset_urls(request: Request) -> list[str]:
         URLs of the selected assets.
 
     """
-    result = _search(f"{API_URL}/search", request)
+    result = _search(f"{API_URL}/search", request.dump())
 
     if len(result) == 1:
         return result

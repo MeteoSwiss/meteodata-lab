@@ -131,10 +131,16 @@ class Request:
                 raise ValueError(f"Unable to parse reference_datetime: {value}")
         return value
 
+    @pydantic.field_serializer("reference_datetime")
+    def serialize_reference_datetime(self, value: str):
+        if value == "latest":
+            cutoff = dt.datetime.now(tz=dt.timezone.utc) - dt.timedelta(hours=48)
+            fmt = "%Y-%m-%dT%H:%M:%SZ"  # Zulu isoformat
+            return f"{cutoff.strftime(fmt)}/.."
+        return value
+
     def dump(self):
         exclude_fields = {}
-        if self.reference_datetime == "latest":
-            exclude_fields["reference_datetime"] = True
         if isinstance(self.horizon, list):
             exclude_fields["horizon"] = True
 
@@ -142,8 +148,8 @@ class Request:
         return root.model_dump(mode="json", by_alias=True, exclude=exclude_fields)
 
 
-def _search(url: str, request: Request):
-    response = session.post(url, json=request.dump())
+def _search(url: str, body: dict | None = None):
+    response = session.post(url, json=body)
     response.raise_for_status()
 
     obj = response.json()
@@ -154,7 +160,7 @@ def _search(url: str, request: Request):
 
     for link in obj["links"]:
         if link["rel"] == "next":
-            result.extend(_search(link["href"], request))
+            result.extend(_search(link["href"], link["body"]))
 
     return result
 
@@ -182,7 +188,7 @@ def get_asset_urls(request: Request) -> list[str]:
         URLs of the selected assets.
 
     """
-    result = _search(f"{API_URL}/search", request)
+    result = _search(f"{API_URL}/search", request.dump())
 
     if len(result) == 1:
         return result

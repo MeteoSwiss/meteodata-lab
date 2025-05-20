@@ -1,20 +1,22 @@
 Usage
 =====
 
-Using ``ogd_api`` to access ICON-CH1/2-EPS forecasts
-----------------------------------------------------
+.. default-role:: py:obj
 
-The ``ogd_api`` module provides a Python interface to the `STAC search API <https://data.geo.admin.ch/api/stac/static/spec/v1/api.html>`_ on data.geo.admin.ch.
+Using `~meteodatalab.ogd_api` to access ICON-CH1/2-EPS forecasts
+----------------------------------------------------------------
+
+The `~meteodatalab.ogd_api` module provides a Python interface to the `STAC search API <https://data.geo.admin.ch/api/stac/static/spec/v1/api.html>`_ on data.geo.admin.ch.
 It enables querying and retrieving numerical weather prediction (NWP) data from **MeteoSwiss**, published through Switzerland’s `Open Government Data (OGD) initiative <https://www.meteoswiss.admin.ch/services-and-publications/service/open-data.html>`_ and extended for forecast-specific access.
 
-You can find interactive Jupyter notebooks demonstrating the usage of ``ogd_api`` here: `MeteoSwiss Open Data NWP Demos <https://github.com/MeteoSwiss/opendata-nwp-demos>`_.
+You can find interactive Jupyter notebooks demonstrating the usage of `~meteodatalab.ogd_api` here: `MeteoSwiss Open Data NWP Demos <https://github.com/MeteoSwiss/opendata-nwp-demos>`_.
 
 This example walks you through creating requests and retrieving forecast data.
 
 Step 1: Build requests
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Use ``ogd_api.Request`` to define a query, for example, to retrieve ICON-CH2-EPS total precipitation.
+Use `ogd_api.Request <meteodatalab.ogd_api.Request>` to define a query, for example, to retrieve ICON-CH2-EPS total precipitation.
 
 .. code-block:: python
 
@@ -38,12 +40,13 @@ Each argument in the request serves the following purpose:
 | ``collection``          | Forecast collection to use.                                                                                            |
 |                         |                                                                                                                        |
 |                         | Examples:                                                                                                              |
-|                         | - ``ogd-forecasting-icon-ch1`` (ICON-CH1-EPS)                                                                          |
-|                         | - ``ogd-forecasting-icon-ch2`` (ICON-CH2-EPS)                                                                          |
+|                         |                                                                                                                        |
+|                         | - ``"ogd-forecasting-icon-ch1"`` (ICON-CH1-EPS)                                                                        |
+|                         | - ``"ogd-forecasting-icon-ch2"`` (ICON-CH2-EPS)                                                                        |
 +-------------------------+------------------------------------------------------------------------------------------------------------------------+
 | ``variable``            | Meteorological variable of interest.                                                                                   |
 |                         |                                                                                                                        |
-|                         | Example: ``TOT_PREC`` for total precipitation.                                                                         |
+|                         | Example: ``"TOT_PREC"`` for total precipitation.                                                                       |
 +-------------------------+------------------------------------------------------------------------------------------------------------------------+
 | ``reference_datetime``  | Initialization time of the forecast in **UTC**, provided as one of the following:                                      |
 |                         |                                                                                                                        |
@@ -73,13 +76,13 @@ Step 2: Retrieve forecasts
 
 To access the forecast data, you have two choices:
 
-1. Load forecast data to Xarray with ``get_from_ogd``
-2. Download forecast data with ``download_from_ogd``
+1. Load forecast data to Xarray with `~meteodatalab.ogd_api.get_from_ogd`
+2. Download forecast data with `~meteodatalab.ogd_api.download_from_ogd`
 
 
 **1. Load forecast data to Xarray**
 
-We now send our request to the API and retrieve the resulting dataset using the ``get_from_ogd`` function. The response is returned as an ``xarray.DataArray``, which is efficient for handling multi-dimensional data.
+We now send our request to the API and retrieve the resulting dataset using the `~meteodatalab.ogd_api.get_from_ogd` function. The response is returned as an `xarray.DataArray`, which is efficient for handling multi-dimensional data.
 
 .. hint::
 
@@ -136,7 +139,8 @@ After downloading, you should find the following files inside the ``forecast_fil
 
     Forecast GRIB files like ``icon-ch2-eps-*.grib2`` do **not** include horizontal or vertical coordinates (longitude, latitude, or height).
     Therefore, the horizontal and vertical constants are provided as separate files to fully describe the forecast grid. This applies when using
-    ``download_from_ogd``. If you use ``get_from_ogd``, the horizontal coordinates are automatically loaded and included as part of the ``xarray.DataArray``.
+    `~meteodatalab.ogd_api.download_from_ogd`. If you use `~meteodatalab.ogd_api.get_from_ogd`, the horizontal coordinates are automatically loaded
+    and included as part of the `xarray.DataArray`.
 
 .. hint::
 

@@ -1,6 +1,3 @@
-Welcome to meteodata-lab's documentation!
-=========================================
-
 .. mdinclude:: ../README.md
 
 .. toctree::

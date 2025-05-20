@@ -1,8 +1,8 @@
 Credits
 =======
+
 Development Lead
 ----------------
-
 
 Carlos Osuna <carlos.osuna@meteoswiss.ch>
 

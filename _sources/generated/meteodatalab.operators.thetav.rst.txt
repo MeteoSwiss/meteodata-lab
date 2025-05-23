@@ -1,0 +1,30 @@
+﻿operators.thetav
+================
+
+.. automodule:: meteodatalab.operators.thetav
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      fthetav
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

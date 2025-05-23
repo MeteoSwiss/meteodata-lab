@@ -1,0 +1,39 @@
+﻿operators.gis
+=============
+
+.. automodule:: meteodatalab.operators.gis
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      geolatlon2swiss
+      get_grid
+      rot2geolatlon
+      vref_rot2geolatlon
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      RotLatLonGrid
+   
+   
+
+   
+   
+   
+
+
+

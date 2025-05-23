@@ -1,0 +1,30 @@
+﻿operators.relhum
+================
+
+.. automodule:: meteodatalab.operators.relhum
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      relhum
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

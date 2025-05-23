@@ -160,7 +160,9 @@ def _search(url: str, body: dict | None = None):
 
     for link in obj["links"]:
         if link["rel"] == "next":
-            result.extend(_search(link["href"], link["body"]))
+            if link["method"] != "POST" or not link["merge"]:
+                raise RuntimeError(f"Bad link: {link}")
+            result.extend(_search(link["href"], body | link["body"]))
 
     return result
 

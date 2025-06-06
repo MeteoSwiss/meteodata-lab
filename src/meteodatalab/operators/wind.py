@@ -41,7 +41,7 @@ def speed(u: xr.DataArray, v: xr.DataArray) -> xr.DataArray:
 
     name = {"U": "SP", "U_10M": "SP_10M"}[u.parameter["shortName"]]
     return xr.DataArray(
-        wind.speed(u,v),
+        wind.speed(u, v),
         attrs=override(u.metadata, shortName=name),
     )
 

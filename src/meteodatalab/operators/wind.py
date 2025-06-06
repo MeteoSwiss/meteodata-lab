@@ -3,7 +3,7 @@
 # Third-party
 import numpy as np
 import xarray as xr
-from earthkit.meteo import wind
+from earthkit.meteo import wind  # type: ignore
 
 # Local
 from ..metadata import is_staggered_horizontal, override

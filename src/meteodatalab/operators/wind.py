@@ -3,6 +3,7 @@
 # Third-party
 import numpy as np
 import xarray as xr
+from earthkit.meteo import wind  # type: ignore
 
 # Local
 from ..metadata import is_staggered_horizontal, override
@@ -40,7 +41,7 @@ def speed(u: xr.DataArray, v: xr.DataArray) -> xr.DataArray:
 
     name = {"U": "SP", "U_10M": "SP_10M"}[u.parameter["shortName"]]
     return xr.DataArray(
-        np.sqrt(u**2 + v**2),
+        wind.speed(u.values, v.values),
         attrs=override(u.metadata, shortName=name),
     )
 

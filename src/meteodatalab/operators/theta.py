@@ -29,7 +29,6 @@ def compute_theta(p: xr.DataArray, t: xr.DataArray) -> xr.DataArray:
         potential temperature in K
 
     """
-
     return xr.DataArray(
         thermo.potential_temperature(t.values, p.values),
         attrs=metadata.override(p.metadata, shortName="PT"),

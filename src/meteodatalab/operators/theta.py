@@ -2,7 +2,7 @@
 
 # Third-party
 import xarray as xr
-from earthkit.meteo import thermo # type: ignore
+from earthkit.meteo import thermo  # type: ignore
 
 # Local
 from .. import metadata

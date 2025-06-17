@@ -2,10 +2,10 @@
 
 # Third-party
 import xarray as xr
+from earthkit.meteo import thermo # type: ignore
 
 # Local
 from .. import metadata
-from earthkit.meteo import thermo # type: ignore
 
 
 def compute_theta(p: xr.DataArray, t: xr.DataArray) -> xr.DataArray:

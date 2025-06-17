@@ -6,6 +6,7 @@ import xarray as xr
 # Local
 from .. import metadata
 from .. import physical_constants as pc
+from earthkit.meteo import thermo # type: ignore
 
 
 def compute_theta(p: xr.DataArray, t: xr.DataArray) -> xr.DataArray:
@@ -24,10 +25,8 @@ def compute_theta(p: xr.DataArray, t: xr.DataArray) -> xr.DataArray:
         potential temperature in K
 
     """
-    # Reference surface pressure for computation of potential temperature
-    p0 = 1.0e5
 
     return xr.DataArray(
-        data=(p0 / p) ** pc.rdocp * t,
+        thermo.potential_temperature(t.values, p.values),
         attrs=metadata.override(p.metadata, shortName="PT"),
     )

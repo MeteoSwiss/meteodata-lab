@@ -18,6 +18,11 @@ def compute_theta(p: xr.DataArray, t: xr.DataArray) -> xr.DataArray:
     t : xarray.DataArray
         air temperature in K
 
+    Constants
+    ---------
+    Reference surface pressure for computation of potential temperature
+    p0 = 1.0e5
+
     Returns
     -------
     xarray.DataArray

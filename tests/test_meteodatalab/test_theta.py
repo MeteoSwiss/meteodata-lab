@@ -36,7 +36,7 @@ def test_theta(data_dir, fieldextra):
 
     fs_ds = fieldextra("THETA")
 
-    # due to the difference in constants from earthkit-meteo and fieldextra theres a increased margin of error
+    # due to the difference in constants from earthkit-meteo and fieldextra there is an increased margin of error
     err = calculate_error(ds["P"], ds["T"])
 
     assert_allclose(fs_ds["THETA"] - err, theta, rtol=1e-6)

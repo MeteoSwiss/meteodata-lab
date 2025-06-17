@@ -5,7 +5,6 @@ import xarray as xr
 
 # Local
 from .. import metadata
-from .. import physical_constants as pc
 from earthkit.meteo import thermo # type: ignore
 
 

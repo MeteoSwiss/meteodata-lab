@@ -31,5 +31,6 @@ def compute_theta(p: xr.DataArray, t: xr.DataArray) -> xr.DataArray:
     """
     return xr.DataArray(
         thermo.potential_temperature(t.values, p.values),
+        dims=p.dims,
         attrs=metadata.override(p.metadata, shortName="PT"),
     )

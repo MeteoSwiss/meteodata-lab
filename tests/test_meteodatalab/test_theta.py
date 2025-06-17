@@ -15,7 +15,7 @@ def calculate_error(p, t):
 
     p_np = p.values
     t_np = t.values
-    return (p0 / p_np) ** rdocp * t_np - (p0 / p_np) ** kappa * t_np
+    return ((p0 / p_np) ** rdocp - (p0 / p_np) ** kappa) * t_np
 
 
 def test_theta(data_dir, fieldextra):

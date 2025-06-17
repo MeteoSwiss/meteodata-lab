@@ -5,8 +5,9 @@ from numpy.testing import assert_allclose
 from meteodatalab.grib_decoder import GribReader
 from meteodatalab.operators.theta import compute_theta
 
+
 def calculate_error(p, t):
-    p0 = 1.0e5 # Reference surface pressure 
+    p0 = 1.0e5  # Reference surface pressure
     r_d = 287.05  # Specific gas constant for dry air [J kg-1 K-1]
     cp_d = 1005.0  # Specific heat capacity at constant pressure for dry air [J kg-1 K]
     rdocp = r_d / cp_d
@@ -14,7 +15,8 @@ def calculate_error(p, t):
 
     p_np = p.values
     t_np = t.values
-    return (p0/p_np) ** rdocp * t_np - (p0/p_np) ** kappa * t_np
+    return (p0 / p_np) ** rdocp * t_np - (p0 / p_np) ** kappa * t_np
+
 
 def test_theta(data_dir, fieldextra):
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"

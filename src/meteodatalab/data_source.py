@@ -134,7 +134,9 @@ class FileDataSource(DataSource):
 
     def _retrieve(self, request: dict):
         req_kwargs = self.request_template | request
-        _ = mars.Request(**req_kwargs)
+        if req_kwargs:
+            # validate only if there is a request
+            _ = mars.Request(**req_kwargs)
         fs = ekd.from_source("file", self.datafiles)
         yield from fs.sel(req_kwargs)
 

@@ -8,6 +8,8 @@ import sys
 import xarray as xr
 
 # First-party
+from meteodatalab import metadata
+from meteodatalab import physical_constants as pc
 from meteodatalab.operators.destagger import destagger
 from meteodatalab.operators.pot_vortic import compute_pot_vortic
 from meteodatalab.operators.rho import compute_rho_tot
@@ -16,8 +18,6 @@ from meteodatalab.operators.vertical_interpolation import (
     interpolate_k2theta,
 )
 from meteodatalab.operators.vertical_reduction import integrate_k
-from meteodatalab import physical_constants as pc
-from meteodatalab import metadata
 
 
 def compute_theta(p, t):

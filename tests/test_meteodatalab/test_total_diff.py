@@ -4,11 +4,11 @@ import xarray as xr
 from numpy.testing import assert_allclose
 
 # First-party
+from meteodatalab import metadata
+from meteodatalab import physical_constants as pc
 from meteodatalab.grib_decoder import GribReader
 from meteodatalab.operators import diff
 from meteodatalab.operators.total_diff import TotalDiff
-from meteodatalab import physical_constants as pc
-from meteodatalab import metadata
 
 
 def compute_theta(p, t):

@@ -1,12 +1,22 @@
 # Third-party
 import pytest
+import xarray as xr
 from numpy.testing import assert_allclose
 
 # First-party
 from meteodatalab.grib_decoder import GribReader
 from meteodatalab.operators.destagger import destagger
-from meteodatalab.operators.theta import compute_theta
 from meteodatalab.operators.vertical_interpolation import interpolate_k2theta
+from meteodatalab import physical_constants as pc
+from meteodatalab import metadata
+
+
+def compute_theta(p, t):
+    p0 = 1.0e5
+    return xr.DataArray(
+        data=(p0 / p) ** pc.rdocp * t,
+        attrs=metadata.override(p.metadata, shortName="PT"),
+    )
 
 
 # @pytest.mark.parametrize("mode", ["high_fold", "low_fold", "undef_fold"])

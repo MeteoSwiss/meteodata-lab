@@ -29,7 +29,6 @@ def compute_theta(p: xr.DataArray, t: xr.DataArray) -> xr.DataArray:
         potential temperature in K
 
     """
-
     pt = xr.Dataset({"p": p, "t": t})
     (pt2,) = xr.broadcast(pt)
 

@@ -1,4 +1,4 @@
-"""Theta computation with fieldextra constants"""
+"""Theta computation with fieldextra constants."""
 
 # Third-party
 import xarray as xr

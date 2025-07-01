@@ -1,25 +1,15 @@
 # Third-party
 import pytest
-import xarray as xr
 from numpy.testing import assert_allclose
 
 # First-party
 import meteodatalab.operators.pot_vortic as pv
-from meteodatalab import metadata
-from meteodatalab import physical_constants as pc
 from meteodatalab.data_cache import DataCache
 from meteodatalab.data_source import FDBDataSource
 from meteodatalab.grib_decoder import load
 from meteodatalab.metadata import set_origin_xy
+from meteodatalab.operators.internal.theta import compute_theta
 from meteodatalab.operators.rho import compute_rho_tot
-
-
-def compute_theta(p, t):
-    p0 = 1.0e5
-    return xr.DataArray(
-        data=(p0 / p) ** pc.rdocp * t,
-        attrs=metadata.override(p.metadata, shortName="PT"),
-    )
 
 
 @pytest.fixture

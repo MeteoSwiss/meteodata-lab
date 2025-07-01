@@ -1,22 +1,12 @@
 # Third-party
 import numpy as np
-import xarray as xr
 from numpy.testing import assert_allclose
 
 # First-party
-from meteodatalab import metadata
-from meteodatalab import physical_constants as pc
 from meteodatalab.grib_decoder import GribReader
 from meteodatalab.operators import diff
+from meteodatalab.operators.internal.theta import compute_theta
 from meteodatalab.operators.total_diff import TotalDiff
-
-
-def compute_theta(p, t):
-    p0 = 1.0e5
-    return xr.DataArray(
-        data=(p0 / p) ** pc.rdocp * t,
-        attrs=metadata.override(p.metadata, shortName="PT"),
-    )
 
 
 def test_total_diff(data_dir):

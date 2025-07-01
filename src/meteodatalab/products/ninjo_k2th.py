@@ -8,9 +8,8 @@ import sys
 import xarray as xr
 
 # First-party
-from meteodatalab import metadata
-from meteodatalab import physical_constants as pc
 from meteodatalab.operators.destagger import destagger
+from meteodatalab.operators.internal.theta import compute_theta
 from meteodatalab.operators.pot_vortic import compute_pot_vortic
 from meteodatalab.operators.rho import compute_rho_tot
 from meteodatalab.operators.vertical_interpolation import (
@@ -18,15 +17,6 @@ from meteodatalab.operators.vertical_interpolation import (
     interpolate_k2theta,
 )
 from meteodatalab.operators.vertical_reduction import integrate_k
-
-
-def compute_theta(p, t):
-    p0 = 1.0e5
-    return xr.DataArray(
-        data=(p0 / p) ** pc.rdocp * t,
-        attrs=metadata.override(p.metadata, shortName="PT"),
-    )
-
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)

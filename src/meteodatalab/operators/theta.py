@@ -29,11 +29,10 @@ def compute_theta(p: xr.DataArray, t: xr.DataArray) -> xr.DataArray:
         potential temperature in K
 
     """
-    pt = xr.Dataset({"p": p, "t": t})
-    (pt2,) = xr.broadcast(pt)
+    pb, tb = xr.broadcast(p, t)
 
     return xr.DataArray(
-        thermo.potential_temperature(t.values, p.values),
-        dims=pt2.dims,
+        thermo.potential_temperature(tb.values, pb.values),
+        dims=pb.dims,
         attrs=metadata.override(p.metadata, shortName="PT"),
     )

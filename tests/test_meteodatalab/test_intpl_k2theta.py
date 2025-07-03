@@ -5,7 +5,7 @@ from numpy.testing import assert_allclose
 # First-party
 from meteodatalab.grib_decoder import GribReader
 from meteodatalab.operators.destagger import destagger
-from meteodatalab.operators.theta import compute_theta
+from meteodatalab.operators.internal.theta import compute_theta
 from meteodatalab.operators.vertical_interpolation import interpolate_k2theta
 
 

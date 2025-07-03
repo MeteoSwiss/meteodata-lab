@@ -8,8 +8,8 @@ from meteodatalab.data_cache import DataCache
 from meteodatalab.data_source import FDBDataSource
 from meteodatalab.grib_decoder import load
 from meteodatalab.metadata import set_origin_xy
+from meteodatalab.operators.internal.theta import compute_theta
 from meteodatalab.operators.rho import compute_rho_tot
-from meteodatalab.operators.theta import compute_theta
 
 
 @pytest.fixture

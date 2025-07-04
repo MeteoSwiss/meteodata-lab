@@ -2,10 +2,10 @@
 
 # Third-party
 import xarray as xr
+from earthkit.meteo import thermo  # type: ignore
 
 # Local
 from .. import metadata
-from .. import physical_constants as pc
 
 
 def fthetav(p: xr.DataArray, t: xr.DataArray, qv: xr.DataArray) -> xr.DataArray:
@@ -26,10 +26,10 @@ def fthetav(p: xr.DataArray, t: xr.DataArray, qv: xr.DataArray) -> xr.DataArray:
         virtual potential temperature in K
 
     """
-    # Reference surface pressure for computation of potential temperature
-    p0 = 1.0e5
+    pb, tb, qvb = xr.broadcast(p, t, qv)
 
     return xr.DataArray(
-        data=(p0 / p) ** pc.rdocp * t * (1.0 + (pc.rvd_o * qv / (1.0 - qv))),
+        data=thermo.virtual_potential_temperature(tb.values, qvb.values, pb.values),
+        dims=pb.dims,
         attrs=metadata.override(t.metadata, shortName="THETA_V"),
     )

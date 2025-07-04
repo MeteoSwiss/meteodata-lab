@@ -29,7 +29,7 @@ def fthetav(p: xr.DataArray, t: xr.DataArray, qv: xr.DataArray) -> xr.DataArray:
     pb, tb, qvb = xr.broadcast(p, t, qv)
 
     return xr.DataArray(
-        data=thermo.virtual_potential_temperature(tb.values, pb.values, qvb.values),
+        data=thermo.virtual_potential_temperature(tb.values, qvb.values, pb.values),
         dims=pb.dims,
         attrs=metadata.override(t.metadata, shortName="THETA_V"),
     )

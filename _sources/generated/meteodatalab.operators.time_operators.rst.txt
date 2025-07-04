@@ -1,0 +1,34 @@
+﻿operators.time\_operators
+=========================
+
+.. automodule:: meteodatalab.operators.time_operators
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      delta
+      get_nsteps
+      resample
+      resample_average
+      time_rate
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

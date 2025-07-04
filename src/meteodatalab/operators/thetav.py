@@ -6,7 +6,6 @@ from earthkit.meteo import thermo  # type: ignore
 
 # Local
 from .. import metadata
-from .. import physical_constants as pc
 
 
 def fthetav(p: xr.DataArray, t: xr.DataArray, qv: xr.DataArray) -> xr.DataArray:

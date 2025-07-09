@@ -51,11 +51,11 @@ def relhum(
     if phase not in phase_conditions:
         raise ValueError("Invalid phase. Phase must be 'water', 'ice', or 'water+ice'.")
 
-    q = r / (1 - r)
-    pb, tb, qvb = xr.broadcast(p, t, q)
+    q = r / (1 + r)
+    pb, tb, qb = xr.broadcast(p, t, q)
 
     return xr.DataArray(
-        data=(thermo.relative_humidity_from_specific_humidity(tb.values, qvb.values, pb.values)).clip(0, max),
+        data=thermo.relative_humidity_from_specific_humidity(tb.values, qb.values, pb.values),
         attrs=metadata.override(
             t.metadata, shortName=phase_conditions[phase]["shortName"]
         ),

@@ -5,20 +5,20 @@ from typing import Literal
 
 # Third-party
 import xarray as xr
+from earthkit.meteo import thermo  # type: ignore
 
 # Local
 from .. import metadata
-from .atmo import pv_si, pv_sm, pv_sw, qv_pvp
 
 
 def relhum(
-    qv, t, p, clipping=True, phase: Literal["water", "ice", "water+ice"] = "water"
+    r, t, p, clipping=True, phase: Literal["water", "ice", "water+ice"] = "water"
 ):
     """Calculate relative humidity.
 
     Parameters
     ----------
-    qv : xarray.DataArray
+    r : xarray.DataArray
         water vapor mixing ratio
     t : xarray.DataArray
         temperature in Kelvin
@@ -43,18 +43,19 @@ def relhum(
     max = 100 if clipping else None
 
     phase_conditions = {
-        "water": {"func": pv_sw(t), "shortName": "RELHUM"},
-        "ice": {"func": pv_si(t), "shortName": "RH_ICE"},
-        "water+ice": {"func": pv_sm(t), "shortName": "RH_MIX_EC"},
+        "water": {"shortName": "RELHUM"},
+        "ice": {"shortName": "RH_ICE"},
+        "water+ice": {"shortName": "RH_MIX_EC"},
     }
 
     if phase not in phase_conditions:
         raise ValueError("Invalid phase. Phase must be 'water', 'ice', or 'water+ice'.")
 
-    result = (100.0 * qv / qv_pvp(phase_conditions[phase]["func"], p)).clip(0, max)
+    q = r / (1 - r)
+    pb, tb, qvb = xr.broadcast(p, t, q)
 
     return xr.DataArray(
-        data=result,
+        data=(thermo.relative_humidity_from_specific_humidity(tb.values, qvb.values, pb.values)).clip(0, max),
         attrs=metadata.override(
             t.metadata, shortName=phase_conditions[phase]["shortName"]
         ),

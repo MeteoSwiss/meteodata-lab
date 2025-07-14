@@ -1,7 +1,9 @@
 """Util module."""
 
 # Standard library
+import functools
 import logging
+from queue import Queue
 
 # Third-party
 import requests
@@ -33,3 +35,29 @@ def init_session(logger: logging.Logger | None = None) -> requests.Session:
         session.hooks["response"].append(_log_errors)
 
     return session
+
+
+def memoize(func, maxsize=10):
+    cache = {}
+    queue = Queue(maxsize=maxsize)
+
+    @functools.wraps(func)
+    def wrapped(field, dst):
+        key = None
+        if (md5 := field.metadata.get("md5Section3", None)) is not None:
+            key = md5, repr(dst)
+            if key in cache:
+                return cache[key]
+
+        result = func(field, dst)
+        if key is not None:
+            cache[key] = result
+            try:
+                queue.put_nowait(key)
+            except queue.Full:
+                old_key = queue.get_nowait()
+                del cache[old_key]
+                queue.put_nowait(key)
+        return result
+
+    return wrapped

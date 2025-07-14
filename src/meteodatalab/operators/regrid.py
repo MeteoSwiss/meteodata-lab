@@ -21,7 +21,7 @@ except ImportError:
     raise ImportError("The regrid operator requires extra dependencies.")
 
 # Local
-from .. import icon_grid, metadata
+from .. import icon_grid, metadata, util
 from ..grib_decoder import set_code_flag
 
 Resampling: typing.TypeAlias = warp.Resampling
@@ -515,6 +515,25 @@ def _linear_weights_cropped_domain(
     return idx[indices], weights
 
 
+@util.memoize
+def _compute_barycentric_weights(
+    field: xr.DataArray, dst: RegularGrid
+) -> tuple[NDArray, NDArray]:
+    utm_crs = "epsg:32632"  # UTM zone 32N
+
+    transformer_src = Transformer.from_crs("epsg:4326", utm_crs, always_xy=True)
+    points_src = transformer_src.transform(field.lon, field.lat)
+
+    gx, gy = np.meshgrid(dst.x, dst.y)
+    transformer_dst = Transformer.from_crs(dst.crs.wkt, utm_crs, always_xy=True)
+    points_dst = transformer_dst.transform(gx.flat, gy.flat)
+
+    xy = np.array(points_src).T
+    uv = np.array(points_dst).T
+
+    return _linear_weights_cropped_domain(xy, uv)
+
+
 def iconremap(
     field: xr.DataArray, dst: RegularGrid, method: Literal["byc"] = "byc"
 ) -> xr.DataArray:
@@ -543,20 +562,9 @@ def iconremap(
     if method not in {"byc"}:
         raise NotImplementedError(f"method: {method} is not implemented")
 
-    utm_crs = "epsg:32632"  # UTM zone 32N
-
-    transformer_src = Transformer.from_crs("epsg:4326", utm_crs, always_xy=True)
-    points_src = transformer_src.transform(field.lon, field.lat)
+    indices, weights = _compute_barycentric_weights(field, dst)
 
     gx, gy = np.meshgrid(dst.x, dst.y)
-    transformer_dst = Transformer.from_crs(dst.crs.wkt, utm_crs, always_xy=True)
-    points_dst = transformer_dst.transform(gx.flat, gy.flat)
-
-    xy = np.array(points_src).T
-    uv = np.array(points_dst).T
-
-    indices, weights = _linear_weights_cropped_domain(xy, uv)
-
     transformer_geo = Transformer.from_crs(dst.crs.wkt, "epsg:4326", always_xy=True)
     lon, lat = transformer_geo.transform(gx, gy)
 

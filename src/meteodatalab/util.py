@@ -9,11 +9,11 @@ import itertools
 import logging
 import typing
 from collections.abc import Callable
-from typing_extensions import ParamSpec
 
 # Third-party
 import requests
 from requests.adapters import HTTPAdapter
+from typing_extensions import ParamSpec
 from urllib3.util import Retry
 
 

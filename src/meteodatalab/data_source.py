@@ -178,7 +178,7 @@ class URLDataSource(DataSource):
 
 @dc.dataclass
 class StreamDataSource(DataSource):
-    stream: list[str] | None = None
+    stream: typing.BinaryIO | None = None
 
     def _retrieve(self, request: dict):
         req_kwargs = self.request_template | request
@@ -190,7 +190,7 @@ class StreamDataSource(DataSource):
             yield from fs
 
     @staticmethod
-    def _match_request(field, request: dict) -> bool:
+    def _match_request(field: ekd.Field, request: dict) -> bool:
         """Check if the field matches the request."""
         md = field.metadata()
         for key, value in request.items():

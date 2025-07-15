@@ -174,3 +174,32 @@ class URLDataSource(DataSource):
         req_kwargs = self.request_template | request
         fs = ekd.from_source("url", self.urls)
         yield from fs.sel(**req_kwargs)
+
+
+@dc.dataclass
+class StreamDataSource(DataSource):
+    stream: list[str] | None = None
+
+    def _retrieve(self, request: dict):
+        req_kwargs = self.request_template | request
+        fs = ekd.from_source("stream", self.stream)
+        if req_kwargs:
+            _ = mars.Request(**req_kwargs)
+            yield from (field for field in fs if self._match_request(field, req_kwargs))
+        else:
+            yield from fs
+
+    @staticmethod
+    def _match_request(field, request: dict) -> bool:
+        """Check if the field matches the request."""
+        md = field.metadata()
+        for key, value in request.items():
+            field_value = md.get(key, None)
+            if md is None:
+                raise ValueError(f"Metadata key '{key}' not found in field metadata.")
+            if isinstance(value, list):
+                if field_value not in value:
+                    return False
+            elif field_value != value:
+                return False
+        return True

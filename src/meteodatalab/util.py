@@ -67,7 +67,7 @@ class Queue(typing.Generic[K]):
     # Adapted from priority queue example in heapq documentation
 
     class Full(Exception):
-        pass
+        """Exception indicating that the queue is full."""
 
     def __init__(self, maxsize: int) -> None:
         self.queue: list[Entry[K]] = []
@@ -103,6 +103,9 @@ class Queue(typing.Generic[K]):
 
 
 def memoize(key_maker: Callable[P, K], maxsize: int = 10) -> Callable[[F], F]:
+    if maxsize < 1:
+        raise ValueError("maxsize must be 1 or more")
+
     def decorator(func: Callable[P, T]) -> Callable[P, T]:
         cache: dict[K, T] = {}
         queue: Queue[K] = Queue(maxsize=maxsize)

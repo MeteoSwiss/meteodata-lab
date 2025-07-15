@@ -515,7 +515,14 @@ def _linear_weights_cropped_domain(
     return idx[indices], weights
 
 
-@util.memoize
+def _key_maker(field: xr.DataArray, dst: RegularGrid) -> tuple[str, str] | None:
+    md5 = field.metadata.get("md5Section3", None)
+    if md5 is None:
+        return None
+    return md5, repr(dst)
+
+
+@util.memoize(_key_maker)
 def _compute_barycentric_weights(
     field: xr.DataArray, dst: RegularGrid
 ) -> tuple[NDArray, NDArray]:

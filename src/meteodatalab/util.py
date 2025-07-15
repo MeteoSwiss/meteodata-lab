@@ -1,9 +1,15 @@
 """Util module."""
 
 # Standard library
+import dataclasses as dc
+import enum
 import functools
+import heapq
+import itertools
 import logging
-from queue import Queue
+import typing
+from collections.abc import Callable
+from typing_extensions import ParamSpec
 
 # Third-party
 import requests
@@ -37,27 +43,88 @@ def init_session(logger: logging.Logger | None = None) -> requests.Session:
     return session
 
 
-def memoize(func, maxsize=10):
-    cache = {}
-    queue = Queue(maxsize=maxsize)
+P = ParamSpec("P")
+K = typing.TypeVar("K", bound=typing.Hashable)
+T = typing.TypeVar("T")
+F = Callable[P, T]
 
-    @functools.wraps(func)
-    def wrapped(field, dst):
-        key = None
-        if (md5 := field.metadata.get("md5Section3", None)) is not None:
-            key = md5, repr(dst)
-            if key in cache:
+
+# Work around for sentinel object pending PEP 661
+class Removed(enum.Enum):
+    token = 0
+
+
+REMOVED = Removed.token
+
+
+@dc.dataclass(unsafe_hash=True, order=True)
+class Entry(typing.Generic[K]):
+    count: int
+    item: K | Removed
+
+
+class Queue(typing.Generic[K]):
+    # Adapted from priority queue example in heapq documentation
+
+    class Full(Exception):
+        pass
+
+    def __init__(self, maxsize: int) -> None:
+        self.queue: list[Entry[K]] = []
+        self.finder: dict[K, Entry[K]] = {}
+        self.counter = itertools.count()
+        self.maxsize = maxsize
+        self.size = 0
+
+    def add_item(self, item: K) -> None:
+        if item in self.finder:
+            self.remove_item(item)
+        elif self.size >= self.maxsize:
+            raise self.Full
+        count = next(self.counter)
+        entry = Entry(count, item)
+        self.finder[item] = entry
+        heapq.heappush(self.queue, entry)
+        self.size += 1
+
+    def remove_item(self, item: K) -> None:
+        entry = self.finder.pop(item)
+        entry.item = REMOVED
+        self.size -= 1
+
+    def pop_item(self) -> K:
+        while self.queue:
+            item = heapq.heappop(self.queue).item
+            if item is not REMOVED:
+                del self.finder[item]
+                self.size -= 1
+                return item
+        raise KeyError("pop from empty queue")
+
+
+def memoize(key_maker: Callable[P, K], maxsize: int = 10) -> Callable[[F], F]:
+    def decorator(func: Callable[P, T]) -> Callable[P, T]:
+        cache: dict[K, T] = {}
+        queue: Queue[K] = Queue(maxsize=maxsize)
+
+        @functools.wraps(func)
+        def wrapped(*args: P.args, **kwargs: P.kwargs) -> T:
+            key = key_maker(*args, **kwargs)
+            if key is not None and key in cache:
+                queue.add_item(key)
                 return cache[key]
 
-        result = func(field, dst)
-        if key is not None:
-            cache[key] = result
-            try:
-                queue.put_nowait(key)
-            except queue.Full:
-                old_key = queue.get_nowait()
-                del cache[old_key]
-                queue.put_nowait(key)
-        return result
+            result = func(*args, **kwargs)
+            if key is not None:
+                cache[key] = result
+                try:
+                    queue.add_item(key)
+                except queue.Full:
+                    old_key = queue.pop_item()
+                    del cache[old_key]
+                    queue.add_item(key)
+            return result
 
-    return wrapped
+        return wrapped
+
+    return decorator

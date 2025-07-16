@@ -58,8 +58,11 @@ def relhum(
     phase_for_svp = "mixed" if phase == "water+ice" else phase
 
     return xr.DataArray(
-        data=(100 * thermo.vapour_pressure_from_specific_humidity(qb, pb) /
-              thermo.saturation_vapour_pressure(tb.values, phase=phase_for_svp)).clip(0,max),
+        data=(
+            100
+            * thermo.vapour_pressure_from_specific_humidity(qb, pb)
+            / thermo.saturation_vapour_pressure(tb.values, phase=phase_for_svp)
+        ).clip(0, max),
         attrs=metadata.override(
             t.metadata, shortName=phase_conditions[phase]["shortName"]
         ),

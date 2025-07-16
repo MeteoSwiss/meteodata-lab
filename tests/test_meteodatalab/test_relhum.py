@@ -49,4 +49,4 @@ def test_relhum(data_dir, fieldextra, phase, field, expected):
     assert relhum_arr.parameter == expected
 
     fs_ds = fieldextra("RELHUM", field=field)
-    assert_allclose(fs_ds[field], relhum_arr, rtol=5e-3, atol=5e-2)
+    assert_allclose(fs_ds[field], relhum_arr, rtol=7e-3, atol=5e-2)

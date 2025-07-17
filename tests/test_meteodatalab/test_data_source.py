@@ -126,3 +126,14 @@ def test_retrieve_url(server):
     source = data_source.URLDataSource(urls=urls)
     for field in source.retrieve({"param": "T"}):
         assert field.metadata("shortName") == "T"
+
+
+def test_retrieve_stream(data_dir):
+    datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
+    request = {"param": "T", "levelist": 10}
+
+    with open(datafile, "rb") as f:
+        source = data_source.StreamDataSource(stream=f)
+        for field in source.retrieve(request):
+            assert field.metadata("shortName") == "T"
+            assert field.metadata("levelist") == 10

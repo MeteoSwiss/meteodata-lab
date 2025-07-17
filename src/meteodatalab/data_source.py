@@ -196,7 +196,7 @@ class StreamDataSource(DataSource):
         for key, value in request.items():
             field_value = md.get(key, None)
             if md is None:
-                raise ValueError(f"Metadata key '{key}' not found in field metadata.")
+                raise KeyError(f"Metadata key '{key}' not found in field metadata.")
             if isinstance(value, list):
                 if field_value not in value:
                     return False

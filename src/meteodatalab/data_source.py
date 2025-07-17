@@ -5,7 +5,7 @@ import dataclasses as dc
 import os
 import typing
 from abc import ABC, abstractmethod
-from collections.abc import Iterator
+from collections.abc import Container, Iterator
 from contextlib import contextmanager, nullcontext
 from contextvars import ContextVar
 from functools import singledispatchmethod

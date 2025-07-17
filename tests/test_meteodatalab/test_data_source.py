@@ -128,23 +128,6 @@ def test_retrieve_url(server):
         assert field.metadata("shortName") == "T"
 
 
-# TODO: which one to use?
-def test_retrieve_stream_mock(mock_from_source, mock_grib_def_ctx):
-    streamfile = "foo"
-    param = "bar"
-
-    with open(streamfile, "w") as f:
-        source = data_source.StreamDataSource(stream=f)
-        for _ in source.retrieve(param):
-            pass
-
-    assert mock_grib_def_ctx.mock_calls == [call("cosmo")]
-    assert mock_from_source.mock_calls == [
-        call("stream", f),
-        call().__iter__(),
-    ]
-
-
 def test_retrieve_stream(data_dir):
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
     request = {"param": "T", "levelist": 10}

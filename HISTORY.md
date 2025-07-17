@@ -13,6 +13,7 @@
 - Changed implementation to use earthkit-meteo
   - relhum
   - theta
+  - thetav
   - wind speed
 - Numpy version requirement is updated to `>=1.26.4,<2.4.0`
 

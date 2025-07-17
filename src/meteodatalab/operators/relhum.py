@@ -12,14 +12,14 @@ from .. import metadata
 
 
 def relhum(
-    r, t, p, clipping=True, phase: Literal["water", "ice", "water+ice"] = "water"
+    w, t, p, clipping=True, phase: Literal["water", "ice", "water+ice"] = "water"
 ):
     """Calculate relative humidity.
 
     Parameters
     ----------
-    r : xarray.DataArray
-        water vapor mixing ratio
+    w : xarray.DataArray
+        water vapor mixing ratio in kg/kg
     t : xarray.DataArray
         temperature in Kelvin
     p : xarray.DataArray
@@ -28,7 +28,7 @@ def relhum(
         clips the relative humidity to [0,100] interval.
         Only upper bound is controlled by this parameter,
         since lower bound clipping is always performed.
-    phase : Literal["water", "ice", "water+ic"]
+    phase : Literal["water", "ice", "water+ice"]
         Customizes how relative humidity is computed.
         'water'        over water
         'ice'          over ice
@@ -42,27 +42,43 @@ def relhum(
     """
     max = 100 if clipping else None
 
+    # Phase-specific metadata and saturation vapor pressure configuration
     phase_conditions = {
-        "water": {"shortName": "RELHUM"},
-        "ice": {"shortName": "RH_ICE"},
-        "water+ice": {"shortName": "RH_MIX_EC"},
+        "water": {
+            "shortName": "RELHUM",
+            "svp_phase": "water",
+        },
+        "ice": {
+            "shortName": "RH_ICE",
+            "svp_phase": "ice",
+        },
+        "water+ice": {
+            "shortName": "RH_MIX_EC",
+            "svp_phase": "mixed",  # earthkit-meteo op. requires "mixed"
+        },
     }
 
     if phase not in phase_conditions:
         raise ValueError("Invalid phase. Phase must be 'water', 'ice', or 'water+ice'.")
 
-    q = r / (1 + r)
+    # Convert mixing ratio (w) to specific humidity (q)
+    q = w / (1 + w)
 
     pb, tb, qb = xr.broadcast(p, t, q)
 
-    phase_for_svp = "mixed" if phase == "water+ice" else phase
+    # Use the mapped saturation vapor pressure phase
+    svp_phase = phase_conditions[phase]["svp_phase"]
 
+    # Compute relative humidity using earthkit-meteo operators
+    rh = (
+        100
+        * thermo.vapour_pressure_from_specific_humidity(qb, pb)
+        / thermo.saturation_vapour_pressure(tb.values, phase=svp_phase)
+    ).clip(0, max)
+
+    # Return RH with appropriate metadata
     return xr.DataArray(
-        data=(
-            100
-            * thermo.vapour_pressure_from_specific_humidity(qb, pb)
-            / thermo.saturation_vapour_pressure(tb.values, phase=phase_for_svp)
-        ).clip(0, max),
+        data=rh,
         attrs=metadata.override(
             t.metadata, shortName=phase_conditions[phase]["shortName"]
         ),

@@ -1,0 +1,43 @@
+﻿metadata
+========
+
+.. automodule:: meteodatalab.metadata
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      compute_origin
+      extract
+      extract_hcoords
+      extract_pv
+      is_staggered_horizontal
+      load_grid_reference
+      override
+      set_origin_xy
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Grid
+   
+   
+
+   
+   
+   
+
+
+

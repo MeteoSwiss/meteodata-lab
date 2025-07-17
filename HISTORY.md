@@ -1,5 +1,23 @@
 # History
 
+## [0.5.0-rc1] (2025-07-17)
+
+### Additions
+- Added `StreamDataSource`
+- Added in-memory cache to the `iconremap` function
+
+### Fixes
+- Allow empty requests on the `FileDataSource`
+
+### Changes
+- Changed implementation to use earthkit-meteo
+  - relhum
+  - theta
+  - thetav
+  - wind speed
+- Numpy version requirement is updated to `>=1.26.4,<2.4.0`
+
+
 ## [0.4.0] (2025-05-27)
 
 ### Fixes
@@ -145,6 +163,7 @@
 - Added ninjo_k2th product
 - Added GRIB data loader based on earthkit-data
 
+[0.5.0-rc1]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.4.0..v0.5.0-rc1
 [0.4.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.4.0-rc1..v0.4.0
 [0.4.0-rc1]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.3.0..v0.4.0-rc1
 [0.3.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.2.0..v0.3.0

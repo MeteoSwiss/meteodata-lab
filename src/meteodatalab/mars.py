@@ -105,7 +105,7 @@ class Request:
     stream: Stream = Stream.ENS_FORECAST
     type: Type = Type.ENS_MEMBER
 
-    feature: dict
+    feature: dict = {}
 
     @pydantic.model_validator(mode="after")
     def validate(self):

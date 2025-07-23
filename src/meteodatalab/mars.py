@@ -66,6 +66,7 @@ class Range:
     end: int
     step: int | None = None
 
+
 @cache
 def _load_mapping():
     mapping_path = files("meteodatalab.data").joinpath("field_mappings.yml")

@@ -3,7 +3,8 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from meteodatalab.grib_decoder import GribReader
+from meteodatalab.data_source import FileDataSource
+from meteodatalab.grib_decoder import load
 from meteodatalab.operators.relhum import relhum
 
 expected_water = {
@@ -42,8 +43,8 @@ def test_relhum(data_dir, fieldextra, phase, field, expected):
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
     cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
-    reader = GribReader.from_files([cdatafile, datafile])
-    ds = reader.load_fieldnames(["P", "T", "QV"])
+    source = FileDataSource(datafiles=[str(datafile), str(cdatafile)])
+    ds = load(source, {"param": ["P", "T", "QV"]})
 
     relhum_arr = relhum(ds["QV"], ds["T"], ds["P"], clipping=True, phase=phase)
     assert relhum_arr.parameter == expected

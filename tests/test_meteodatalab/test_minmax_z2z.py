@@ -5,7 +5,6 @@ from numpy.testing import assert_allclose
 # First-party
 from meteodatalab.data_source import FileDataSource
 from meteodatalab.grib_decoder import load
-
 from meteodatalab.operators.destagger import destagger
 from meteodatalab.operators.vertical_reduction import minmax_k
 

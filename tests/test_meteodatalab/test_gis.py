@@ -6,8 +6,7 @@ from numpy.testing import assert_allclose
 
 # First-party
 from meteodatalab.data_source import FileDataSource
-from meteodatalab.grib_decoder import load, get_code_flag
-
+from meteodatalab.grib_decoder import get_code_flag, load
 from meteodatalab.metadata import set_origin_xy
 from meteodatalab.operators import gis
 

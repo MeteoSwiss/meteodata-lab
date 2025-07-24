@@ -8,12 +8,14 @@ from pathlib import Path
 import click
 import yaml
 
+# First-party
+from meteodatalab.data_source import FileDataSource
+from meteodatalab.grib_decoder import load
+
 # Local
 from . import __version__, grib_decoder
 from .metadata import is_staggered_horizontal
 from .operators import destagger, gis, regrid
-from meteodatalab.data_source import FileDataSource
-from meteodatalab.grib_decoder import load
 
 
 def print_version(ctx, _, value: bool) -> None:

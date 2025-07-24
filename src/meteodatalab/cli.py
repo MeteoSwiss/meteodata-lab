@@ -134,7 +134,7 @@ def regrid_cmd(
     if outfile.exists():
         click.confirm(f"OUTFILE {outfile} exists. Overwrite?")
 
-    fds = data_source.FileDataSource(datafiles=infile)
+    fds = data_source.FileDataSource(datafiles=list(str(x) for x in infile))
     ds = grib_decoder.load(fds, {"param": params.split(",")})
 
     handle_vector_fields(ds)

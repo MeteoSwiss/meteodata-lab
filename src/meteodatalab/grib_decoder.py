@@ -7,12 +7,10 @@ import io
 import logging
 import typing
 from collections import UserDict
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Sequence
 from enum import Enum
 from itertools import product
-from pathlib import Path
 from uuid import UUID
-from warnings import warn
 
 # Third-party
 import earthkit.data as ekd  # type: ignore
@@ -22,7 +20,7 @@ import xarray as xr
 from numpy.typing import DTypeLike
 
 # Local
-from . import data_source, icon_grid, mars, metadata, tasking
+from . import data_source, icon_grid, mars, metadata
 
 logger = logging.getLogger(__name__)
 

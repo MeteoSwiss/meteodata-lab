@@ -24,12 +24,6 @@ def machine():
     path = Path("/etc/xthostname")
     if path.exists():
         return path.read_text().strip()
-    hostname = subprocess.check_output(["hostname", "-s"]).decode()
-    match hostname.split("-"):
-        case "tsa", *_:
-            return "tsa"
-        case "arolla", *_:
-            return "arolla"
     return "unknown"
 
 
@@ -52,9 +46,7 @@ def unpack(work_dir: Path):
 @pytest.fixture
 def data_dir(request, machine, unpack):
     """Base data dir."""
-    if machine == "tsa":
-        base_dir = Path("/project/s83c/rz+/icon_data_processing_incubator/")
-    elif machine == "balfrin":
+    if machine == "balfrin":
         base_dir = Path("/store_new/mch/msopr/icon_workflow_2/")
     else:
         return None

@@ -9,7 +9,7 @@ import click
 import yaml
 
 # Local
-from . import __version__, grib_decoder, data_source
+from . import __version__, data_source, grib_decoder
 from .metadata import is_staggered_horizontal
 from .operators import destagger, gis, regrid
 

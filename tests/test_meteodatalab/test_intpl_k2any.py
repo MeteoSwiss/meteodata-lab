@@ -3,7 +3,8 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from meteodatalab.grib_decoder import GribReader
+from meteodatalab.data_source import FileDataSource
+from meteodatalab.grib_decoder import load
 from meteodatalab.operators.destagger import destagger
 from meteodatalab.operators.vertical_interpolation import (
     TargetCoordinates,
@@ -31,8 +32,8 @@ def test_intpl_k2any(data_dir, fieldextra):
     cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
     # load input data set
-    reader = GribReader.from_files([cdatafile, datafile])
-    ds = reader.load_fieldnames(["DBZ", "HHL"])
+    source = FileDataSource(datafiles=[str(datafile), str(cdatafile)])
+    ds = load(source, {"param": ["DBZ", "HHL"]})
 
     hfl = destagger(ds["HHL"].squeeze(drop=True), "z")
 

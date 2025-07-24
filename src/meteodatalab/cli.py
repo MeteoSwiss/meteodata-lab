@@ -8,12 +8,8 @@ from pathlib import Path
 import click
 import yaml
 
-# First-party
-from meteodatalab.data_source import FileDataSource
-from meteodatalab.grib_decoder import load
-
 # Local
-from . import __version__, grib_decoder
+from . import __version__, grib_decoder, data_source
 from .metadata import is_staggered_horizontal
 from .operators import destagger, gis, regrid
 
@@ -138,7 +134,7 @@ def regrid_cmd(
     if outfile.exists():
         click.confirm(f"OUTFILE {outfile} exists. Overwrite?")
 
-    fds = FileDataSource(datafiles=infile)
+    fds = data_source.FileDataSource(datafiles=infile)
     ds = grib_decoder.load(fds, {"param": params.split(",")})
 
     handle_vector_fields(ds)

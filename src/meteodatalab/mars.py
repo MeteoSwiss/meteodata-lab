@@ -15,6 +15,7 @@ from importlib.resources import files
 import pydantic
 import yaml
 from pydantic import dataclasses as pdc
+from typing import Any
 
 ValidationError = pydantic.ValidationError
 
@@ -105,10 +106,7 @@ class Request:
     stream: Stream = Stream.ENS_FORECAST
     type: Type = Type.ENS_MEMBER
 
-    feature: dict | None = dc.field(
-        default=None,
-        metadata=dict(discriminator="type"),
-    )
+    feature: Any = dc.field(default=None)
 
     @pydantic.model_validator(mode="after")
     def validate(self):

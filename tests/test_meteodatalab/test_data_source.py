@@ -8,7 +8,7 @@ from unittest.mock import call, patch
 import pytest
 
 # First-party
-from meteodatalab import config, data_source, mars
+from meteodatalab import data_source, mars
 
 
 @pytest.fixture

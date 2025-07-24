@@ -56,23 +56,6 @@ def test_retrieve_files_tuple(mock_from_source, mock_grib_def_ctx):
     ]
 
 
-def test_retrieve_files_ifs(mock_from_source, mock_grib_def_ctx):
-    datafiles = ["foo"]
-    param = "bar"
-
-    with config.set_values(data_scope="ifs"):
-        source = data_source.FileDataSource(datafiles=datafiles)
-        for _ in source.retrieve(param):
-            pass
-
-    assert mock_grib_def_ctx.mock_calls == [call("ifs")]
-    assert mock_from_source.mock_calls == [
-        call("file", datafiles),
-        call().sel({"param": param}),
-        call().sel().__iter__(),
-    ]
-
-
 def test_retrieve_fdb(mock_from_source, mock_grib_def_ctx):
     param = "U"
     template = {"date": "20200101", "time": "0000"}

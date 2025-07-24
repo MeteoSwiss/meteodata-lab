@@ -12,6 +12,8 @@ import yaml
 from . import __version__, grib_decoder
 from .metadata import is_staggered_horizontal
 from .operators import destagger, gis, regrid
+from meteodatalab.data_source import FileDataSource
+from meteodatalab.grib_decoder import load
 
 
 def print_version(ctx, _, value: bool) -> None:
@@ -134,8 +136,8 @@ def regrid_cmd(
     if outfile.exists():
         click.confirm(f"OUTFILE {outfile} exists. Overwrite?")
 
-    reader = grib_decoder.GribReader.from_files(list(infile), ref_param=ref_param)
-    ds = reader.load_fieldnames(params.split(","))
+    fds = FileDataSource(datafiles=infile)
+    ds = grib_decoder.load(fds, {"param": params.split(",")})
 
     handle_vector_fields(ds)
 

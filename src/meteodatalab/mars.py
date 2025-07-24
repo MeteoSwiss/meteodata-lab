@@ -10,12 +10,12 @@ from collections.abc import Iterable
 from enum import Enum
 from functools import cache
 from importlib.resources import files
+from typing import Any
 
 # Third-party
 import pydantic
 import yaml
 from pydantic import dataclasses as pdc
-from typing import Any
 
 ValidationError = pydantic.ValidationError
 

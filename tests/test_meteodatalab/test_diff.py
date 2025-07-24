@@ -3,16 +3,17 @@ import numpy as np
 from numpy.testing import assert_allclose
 
 # First-party
-from meteodatalab.grib_decoder import GribReader
+from meteodatalab.data_source import FileDataSource
+from meteodatalab.grib_decoder import load
 from meteodatalab.operators import diff
 from meteodatalab.operators.theta import compute_theta
 
 
 def test_masspoint_field(data_dir):
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
-    reader = GribReader.from_files([datafile])
 
-    ds = reader.load_fieldnames(["P", "T"])
+    source = FileDataSource(datafiles=[str(datafile)])
+    ds = load(source, {"param": ["P", "T"]})
 
     theta = compute_theta(ds["P"], ds["T"])
 
@@ -33,9 +34,9 @@ def test_masspoint_field(data_dir):
 
 def test_staggered_field(data_dir):
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
-    reader = GribReader.from_files([datafile])
 
-    ds = reader.load_fieldnames(["W"])
+    source = FileDataSource(datafiles=[str(datafile)])
+    ds = load(source, {"param": ["W"]})
 
     w = ds["W"]
     wn = w.to_numpy()

@@ -21,8 +21,8 @@ def test_extrapolate_sfc2p(data_dir):
 
     # input data
     files = [
-        data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000",
-        data_dir / "COSMO-1E/1h/const/000/lfff00000000c",
+        str(data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"),
+        str(data_dir / "COSMO-1E/1h/const/000/lfff00000000c"),
     ]
 
     # load input data set

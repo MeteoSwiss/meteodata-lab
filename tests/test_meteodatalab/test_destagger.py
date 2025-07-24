@@ -3,7 +3,8 @@ import numpy as np
 from numpy.testing import assert_allclose, assert_equal
 
 # First-party
-from meteodatalab.grib_decoder import GribReader
+from meteodatalab.data_source import FileDataSource
+from meteodatalab.grib_decoder import load
 from meteodatalab.metadata import set_origin_xy
 from meteodatalab.operators.destagger import destagger
 
@@ -12,10 +13,9 @@ def test_destagger(data_dir, fieldextra):
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
     cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
-    reader = GribReader.from_files([cdatafile, datafile])
-    ds = reader.load_fieldnames(
-        ["U", "V", "HHL"],
-    )
+    source = FileDataSource(datafiles=[str(datafile), str(cdatafile)])
+    ds = load(source, {"param": ["U", "V", "HHL"]})
+
     set_origin_xy(ds, ref_param="HHL")
 
     u = destagger(ds["U"], "x")

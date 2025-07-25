@@ -1,0 +1,33 @@
+﻿operators.lateral\_operators
+============================
+
+.. automodule:: meteodatalab.operators.lateral_operators
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      compute_cond_mask
+      compute_weights
+      disk_avg
+      fill_undef
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

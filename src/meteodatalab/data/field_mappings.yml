@@ -148,10 +148,10 @@ ASHFL_S:
     paramId: 500087
 ASWDIR_S:
   cosmo:
-    paramId: 500481
+    paramId: 500480
 ASWDIFD_S:
   cosmo:
-    paramId: 500503
+    paramId: 500481
 EWSS:
   ifs:
     name: ewss

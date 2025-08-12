@@ -294,17 +294,6 @@ def load(
 
     """
 
-    #    pp = ekd.from_source("file", source.datafiles)
-
-    #    print("OO", source.datafiles, pp)
-    #    a = pp.sel(param="T")
-    #    import yaml
-
-    #    with open("/scratch/mch/cosuna/meteodata-lab/profile.yaml", "r") as file:
-    #        profile = yaml.safe_load(file)
-
-    #    return a.to_xarray()  # profile=profile)
-
     buffer_map = _load_buffer_map(source, request, geo_coords=geo_coords)
     result = {}
     for name, buffer in buffer_map.items():

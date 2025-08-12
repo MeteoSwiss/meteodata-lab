@@ -1,0 +1,20 @@
+ensure_dims: [z,number,step, forecast_reference_time]
+rename_dims: {
+   level: z,
+   number: eps,
+   step: lead_time,
+   forecast_reference_time: ref_time
+}
+variable_attrs:
+- cfName
+- name
+- units
+- typeOfLevel
+- levtype
+- paramId
+
+global_attrs:
+- Conventions: CF-1.8
+- institution: MeteoSwiss
+
+add_valid_time_coord: true

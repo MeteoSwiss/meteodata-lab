@@ -3,7 +3,8 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from meteodatalab.grib_decoder import GribReader
+from meteodatalab.data_source import FileDataSource
+from meteodatalab.grib_decoder import load
 from meteodatalab.operators.hzerocl import fhzerocl
 
 
@@ -12,10 +13,8 @@ def test_hzerocl(data_dir, fieldextra, extrapolate):
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
     cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
-    reader = GribReader.from_files([cdatafile, datafile])
-    ds = reader.load_fieldnames(
-        ["T", "HHL"],
-    )
+    source = FileDataSource(datafiles=[str(datafile), str(cdatafile)])
+    ds = load(source, {"param": ["T", "HHL"]})
 
     hzerocl = fhzerocl(ds["T"], ds["HHL"], extrapolate)
 

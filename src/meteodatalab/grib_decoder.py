@@ -7,12 +7,10 @@ import io
 import logging
 import typing
 from collections import UserDict
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Sequence
 from enum import Enum
 from itertools import product
-from pathlib import Path
 from uuid import UUID
-from warnings import warn
 
 # Third-party
 import earthkit.data as ekd  # type: ignore
@@ -22,7 +20,7 @@ import xarray as xr
 from numpy.typing import DTypeLike
 
 # Local
-from . import data_source, icon_grid, mars, metadata, tasking
+from . import data_source, icon_grid, mars, metadata
 
 logger = logging.getLogger(__name__)
 
@@ -303,116 +301,6 @@ def load(
         except MissingData as e:
             raise RuntimeError(f"Missing data for param: {name}") from e
     return result
-
-
-class GribReader:
-    def __init__(
-        self,
-        source: data_source.DataSource,
-        geo_coords: GeoCoordsCbk | None = None,
-        ref_param: Request | None = None,
-    ):
-        """Initialize a grib reader from a data source.
-
-        Parameters
-        ----------
-        source : data_source.DataSource
-            Data source from which to retrieve the grib fields
-        geo_coords: Callable[[UUID], dict[str, xr.DataArray]] | None
-            Callable that returns the horizontal coordinates
-            of the grid defined by the given UUID. The dimension must be "cell".
-        ref_param : str
-            name of parameter used to construct a reference grid
-
-        Raises
-        ------
-        ValueError
-            if the grid can not be constructed from the ref_param
-
-        """
-        self.data_source = source
-        self.geo_coords = geo_coords
-        if ref_param is not None:
-            warn("GribReader: ref_param is deprecated.")
-
-    @classmethod
-    def from_files(
-        cls,
-        datafiles: list[Path],
-        geo_coords: GeoCoordsCbk | None = None,
-        ref_param: Request | None = None,
-    ):
-        """Initialize a grib reader from a list of grib files.
-
-        Parameters
-        ----------
-        datafiles : list[Path]
-            List of grib input filenames
-        geo_coords: Callable[[UUID], dict[str, xr.DataArray]] | None
-            Callable that returns the horizontal coordinates
-            of the grid defined by the given UUID. The dimension must be "cell".
-        ref_param : str
-            name of parameter used to construct a reference grid
-
-        Raises
-        ------
-        ValueError
-            if the grid can not be constructed from the ref_param
-
-        """
-        return cls(
-            data_source.FileDataSource(datafiles=[str(p) for p in datafiles]),
-            geo_coords,
-            ref_param,
-        )
-
-    def load(
-        self,
-        requests: Mapping[str, Request],
-        extract_pv: str | None = None,
-    ) -> dict[str, xr.DataArray]:
-        """Load a dataset with the requested parameters.
-
-        Parameters
-        ----------
-        requests : Mapping[str, Request]
-            Mapping of label to request for a given field from the data source.
-        extract_pv: str | None
-            Optionally extract hybrid level coefficients from the field referenced by
-            the given label.
-
-        Raises
-        ------
-        RuntimeError
-            if not all fields are found in the data source.
-
-        Returns
-        -------
-        dict[str, xr.DataArray]
-            Mapping of fields by label
-
-        """
-        result = {
-            name: tasking.delayed(load_single_param)(
-                self.data_source, req, self.geo_coords
-            )
-            for name, req in requests.items()
-        }
-
-        if extract_pv is not None:
-            if extract_pv not in requests:
-                msg = f"{extract_pv=} was not a key of the given requests."
-                raise RuntimeError(msg)
-            return result | metadata.extract_pv(result[extract_pv].metadata)
-        return result
-
-    def load_fieldnames(
-        self,
-        params: list[str],
-        extract_pv: str | None = None,
-    ) -> dict[str, xr.DataArray]:
-        reqs = {param: param for param in params}
-        return self.load(reqs, extract_pv)
 
 
 def save(

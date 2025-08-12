@@ -9,7 +9,7 @@ import click
 import yaml
 
 # Local
-from . import __version__, grib_decoder
+from . import __version__, data_source, grib_decoder
 from .metadata import is_staggered_horizontal
 from .operators import destagger, gis, regrid
 
@@ -134,8 +134,8 @@ def regrid_cmd(
     if outfile.exists():
         click.confirm(f"OUTFILE {outfile} exists. Overwrite?")
 
-    reader = grib_decoder.GribReader.from_files(list(infile), ref_param=ref_param)
-    ds = reader.load_fieldnames(params.split(","))
+    fds = data_source.FileDataSource(datafiles=list(str(x) for x in infile))
+    ds = grib_decoder.load(fds, {"param": params.split(",")})
 
     handle_vector_fields(ds)
 

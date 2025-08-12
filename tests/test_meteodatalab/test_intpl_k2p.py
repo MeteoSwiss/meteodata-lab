@@ -3,7 +3,8 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from meteodatalab.grib_decoder import GribReader
+from meteodatalab.data_source import FileDataSource
+from meteodatalab.grib_decoder import load
 from meteodatalab.operators.vertical_interpolation import interpolate_k2p
 
 
@@ -23,10 +24,10 @@ def test_intpl_k2p(mode, fx_mode, atol, rtol, data_dir, fieldextra):
 
     # input data
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
+    cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
-    # load input data set
-    reader = GribReader.from_files([datafile])
-    ds = reader.load_fieldnames(["P", "T"])
+    source = FileDataSource(datafiles=[datafile, cdatafile])
+    ds = load(source, {"param": ["P", "T"]})
 
     # call interpolation operator
     t = interpolate_k2p(ds["T"], mode, ds["P"], tc_values, tc_units)

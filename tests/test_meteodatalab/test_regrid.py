@@ -7,7 +7,8 @@ import pytest
 from numpy.testing import assert_allclose, assert_array_less
 
 # First-party
-from meteodatalab import data_source, grib_decoder
+from meteodatalab.data_source import FileDataSource
+from meteodatalab.grib_decoder import load
 from meteodatalab.operators.hzerocl import fhzerocl
 
 try:
@@ -22,10 +23,8 @@ def test_regrid(data_dir, fieldextra, geo_coords):
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
     cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
-    reader = grib_decoder.GribReader.from_files(
-        [cdatafile, datafile], geo_coords=geo_coords
-    )
-    ds = reader.load_fieldnames(["T", "HHL"])
+    source = FileDataSource(datafiles=[str(datafile), str(cdatafile)])
+    ds = load(source, {"param": ["T", "HHL"]}, geo_coords=geo_coords)
 
     hzerocl = fhzerocl(ds["T"], ds["HHL"], extrapolate=True)
     out_regrid_target = "swiss,549500,149500,650500,250500,1000,1000"
@@ -74,8 +73,8 @@ def test_to_crs():
 @pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
 def test_icon2geolatlon(data_dir, fieldextra, model_name, geo_coords):
     datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
-    source = data_source.FileDataSource(datafiles=datafiles)
-    ds = grib_decoder.load(source, "T", geo_coords=geo_coords)
+    source = FileDataSource(datafiles=datafiles)
+    ds = load(source, "T", geo_coords=geo_coords)
     original = ds["T"].attrs.copy()
 
     observed = regrid.icon2geolatlon(ds["T"])
@@ -112,8 +111,8 @@ def test_icon2geolatlon(data_dir, fieldextra, model_name, geo_coords):
 @pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
 def test_icon2rotlatlon(data_dir, fieldextra, model_name, geo_coords):
     datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
-    source = data_source.FileDataSource(datafiles=datafiles)
-    ds = grib_decoder.load(source, "T", geo_coords=geo_coords)
+    source = FileDataSource(datafiles=datafiles)
+    ds = load(source, "T", geo_coords=geo_coords)
 
     observed = regrid.icon2rotlatlon(ds["T"])
 
@@ -148,8 +147,8 @@ def test_icon2rotlatlon(data_dir, fieldextra, model_name, geo_coords):
 @pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
 def test_icon2swiss_small(data_dir, fieldextra, model_name, geo_coords):
     datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
-    source = data_source.FileDataSource(datafiles=datafiles)
-    ds = grib_decoder.load(source, "T", geo_coords=geo_coords)
+    source = FileDataSource(datafiles=datafiles)
+    ds = load(source, "T", geo_coords=geo_coords)
 
     # Use a small rectangular area centered around Bern
     regrid_target = "swiss,595000,191000,605000,209000,1000,1000"
@@ -186,8 +185,8 @@ def test_icon2swiss_small(data_dir, fieldextra, model_name, geo_coords):
 @pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
 def test_icon2utm(data_dir, fieldextra, model_name, geo_coords):
     datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
-    source = data_source.FileDataSource(datafiles=datafiles)
-    ds = grib_decoder.load(source, "T", geo_coords=geo_coords)
+    source = FileDataSource(datafiles=datafiles)
+    ds = load(source, "T", geo_coords=geo_coords)
 
     # Use a small rectangular area around Bern
     regrid_target = "utm32n,376000,5197000,386000,5206000,1000,500"
@@ -231,8 +230,8 @@ def test_icon2utm(data_dir, fieldextra, model_name, geo_coords):
 @pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
 def test_icon2swiss(data_dir, fieldextra, model_name, geo_coords):
     datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
-    source = data_source.FileDataSource(datafiles=datafiles)
-    ds = grib_decoder.load(source, "T", geo_coords=geo_coords)
+    source = FileDataSource(datafiles=datafiles)
+    ds = load(source, "T", geo_coords=geo_coords)
 
     out_regrid_target = {
         "icon-ch1-eps": "swiss,255500,-159500,964500,479500,1000,1000",

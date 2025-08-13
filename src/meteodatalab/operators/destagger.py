@@ -99,10 +99,8 @@ def _update_grid(field: xr.DataArray, dim: Literal["x", "y"]) -> dict[str, Any]:
 def _update_vertical(field) -> dict[str, Any]:
     if field.levtype != "ml":
         raise ValueError("typeOfLevel must equal generalVertical")
-    return metadata.override(
-        field.metadata,
-        typeOfLevel="generalVerticalLayer",
-    )
+    field.attrs["typeOfLevel"] = "generalVerticalLayer"
+    return field.attrs
 
 
 def destagger(
@@ -154,8 +152,6 @@ def destagger(
             .assign_coords(metadata.extract_hcoords(attrs["metadata"]))
         )
     elif dim == "z":
-        #        if field.origin_z != -0.5:
-        #            raise ValueError
         return (
             xr.apply_ufunc(
                 interpolate_midpoint,

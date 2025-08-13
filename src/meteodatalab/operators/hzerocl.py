@@ -73,7 +73,13 @@ def fhzerocl(
 
     hzerocl = height1 + (height2 - height1) * (t0 - t1) / (t2 - t1)
 
+    hzero_attrs = t.attrs.copy()
+    hzero_attrs["paramId"] = 500127
+    hzero_attrs["units"] = "m"
+    hzero_attrs["long_name"] = "Height of 0 degree Celsius isotherm above msl"
+    hzero_attrs["standard_name"] = "hzerocl"
+
     return xr.DataArray(
         data=hzerocl.where(hzerocl > 0),
-        attrs=metadata.override(t.metadata, shortName="HZEROCL"),
+        attrs=hzero_attrs,
     )

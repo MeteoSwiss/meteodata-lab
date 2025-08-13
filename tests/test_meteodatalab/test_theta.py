@@ -1,10 +1,13 @@
 # Third-party
 from numpy.testing import assert_allclose
+import earthkit.data as ekd
+import yaml
 
 # First-party
 from meteodatalab.data_source import FileDataSource
 from meteodatalab.grib_decoder import load
 from meteodatalab.operators.theta import compute_theta
+from importlib.resources import files
 
 
 def calculate_error(p, t):
@@ -24,17 +27,21 @@ def test_theta(data_dir, fieldextra):
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
     cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
-    source = FileDataSource(datafiles=[datafile, cdatafile])
-    ds = load(source, {"param": ["P", "T"]})
+    with open(files("meteodatalab.data").joinpath("profile.yaml"), "r") as file:
+        profile = yaml.safe_load(file)
+
+    ds = (
+        ekd.from_source("file", [str(datafile)])
+        .sel(param=["T", "P"])
+        .to_xarray(profile="grib", **profile)
+    )
+
     theta = compute_theta(ds["P"], ds["T"])
 
-    assert theta.parameter == {
-        "centre": "lssw",
-        "paramId": 502693,
-        "shortName": "PT",
-        "units": "K",
-        "name": "Potential temperature",
-    }
+    assert theta.paramId == 502693
+    assert theta.units == "K"
+    assert theta.long_name == "Potential temperature"
+    assert theta.standard_name == "PT"
 
     fs_ds = fieldextra("THETA")
 

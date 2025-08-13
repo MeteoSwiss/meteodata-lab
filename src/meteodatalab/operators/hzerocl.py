@@ -77,7 +77,7 @@ def fhzerocl(
     hzero_attrs["paramId"] = 500127
     hzero_attrs["units"] = "m"
     hzero_attrs["long_name"] = "Height of 0 degree Celsius isotherm above msl"
-    hzero_attrs["standard_name"] = "hzerocl"
+    hzero_attrs["standard_name"] = "HZEROCL"
 
     return xr.DataArray(
         data=hzerocl.where(hzerocl > 0),

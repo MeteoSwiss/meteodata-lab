@@ -31,8 +31,13 @@ def compute_theta(p: xr.DataArray, t: xr.DataArray) -> xr.DataArray:
     """
     pb, tb = xr.broadcast(p, t)
 
+    attrs = t.attrs.copy()
+    attrs["paramId"] = 502693
+    attrs["units"] = "K"
+    attrs["long_name"] = "Potential temperature"
+    attrs["standard_name"] = "PT"
     return xr.DataArray(
         thermo.potential_temperature(tb.values, pb.values),
         dims=pb.dims,
-        attrs=metadata.override(p.metadata, shortName="PT"),
+        attrs=attrs,
     )

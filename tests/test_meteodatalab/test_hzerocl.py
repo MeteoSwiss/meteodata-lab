@@ -1,10 +1,10 @@
 # Third-party
 import pytest
 from numpy.testing import assert_allclose
+import earthkit.data as ekd
+import yaml
 
 # First-party
-from meteodatalab.data_source import FileDataSource
-from meteodatalab.grib_decoder import load
 from meteodatalab.operators.hzerocl import fhzerocl
 from importlib.resources import files
 
@@ -14,16 +14,7 @@ def test_hzerocl(data_dir, fieldextra, extrapolate):
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
     cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
-    source = FileDataSource(datafiles=[str(datafile), str(cdatafile)])
-    ds = load(source, {"param": ["T", "HHL"]})
-
-    import earthkit.data as ekd
-
-    import yaml
-
-    profile = files("meteodatalab.data").joinpath("profile.yaml")
-
-    with open(profile, "r") as file:
+    with open(files("meteodatalab.data").joinpath("profile.yaml"), "r") as file:
         profile = yaml.safe_load(file)
 
     ds_t = (
@@ -42,7 +33,7 @@ def test_hzerocl(data_dir, fieldextra, extrapolate):
 
     assert hzerocl.paramId == 500127
     assert hzerocl.units == "m"
-    assert hzerocl.standard_name == "hzerocl"
+    assert hzerocl.standard_name == "HZEROCL"
 
     fs_ds = fieldextra(
         "hzerocl",

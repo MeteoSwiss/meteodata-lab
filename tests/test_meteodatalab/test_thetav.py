@@ -1,6 +1,9 @@
 # Third-party
 from earthkit.meteo import thermo  # type: ignore
 from numpy.testing import assert_allclose
+import earthkit.data as ekd
+import yaml
+from importlib.resources import files
 
 # First-party
 import meteodatalab.operators.thetav as mthetav
@@ -30,17 +33,21 @@ def calculate_error(p, t, qv):
 
 def test_thetav(data_dir, fieldextra):
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
-    source = FileDataSource(datafiles=[str(datafile)])
-    ds = load(source, {"param": ["P", "T", "QV"]})
+    with open(files("meteodatalab.data").joinpath("profile.yaml"), "r") as file:
+        profile = yaml.safe_load(file)
+
+    ds = (
+        ekd.from_source("file", [str(datafile)])
+        .sel(param=["P", "T", "QV"])
+        .to_xarray(profile="grib", **profile)
+    )
+
     thetav = mthetav.fthetav(ds["P"], ds["T"], ds["QV"])
 
-    assert thetav.parameter == {
-        "centre": "lssw",
-        "paramId": 500597,
-        "shortName": "THETA_V",
-        "units": "K",
-        "name": "virtual potential temperature",
-    }
+    assert thetav.paramId == 500597
+    assert thetav.units == "K"
+    assert thetav.long_name == "Potential temperature"
+    assert thetav.standard_name == "THETA_V"
 
     fs_ds = fieldextra("THETAV")
 

@@ -2,12 +2,10 @@
 from numpy.testing import assert_allclose
 import earthkit.data as ekd
 import yaml
+from importlib.resources import files
 
 # First-party
-from meteodatalab.data_source import FileDataSource
-from meteodatalab.grib_decoder import load
 from meteodatalab.operators.theta import compute_theta
-from importlib.resources import files
 
 
 def calculate_error(p, t):
@@ -25,7 +23,6 @@ def calculate_error(p, t):
 def test_theta(data_dir, fieldextra):
 
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
-    cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
     with open(files("meteodatalab.data").joinpath("profile.yaml"), "r") as file:
         profile = yaml.safe_load(file)

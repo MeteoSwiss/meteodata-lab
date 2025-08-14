@@ -1,5 +1,21 @@
 # History
 
+## [0.5.0] (2025-08-15)
+
+### Additions
+- Added `param_id` mappings for short wave radiation
+
+### Changes
+- eccodes version requirement is updated to `>=2.38,<2.40`
+- Removed feature extraction request validation
+
+### Deprecations
+To be removed in version 0.6
+- `product` module
+- `tasking` module
+- `grib_decoder.GribReader` class
+
+
 ## [0.5.0-rc1] (2025-07-17)
 
 ### Additions

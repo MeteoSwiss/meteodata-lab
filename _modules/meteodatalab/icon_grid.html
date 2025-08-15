@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="violet" data-content_root="../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.icon_grid - meteodata-lab 0.5.0 documentation</title><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=397bb51e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/shibuya.css?v=76b6f612" />
+    <link media="print" rel="stylesheet" type="text/css" href="../../_static/print.css?v=20ff2c19" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="meteodatalab.icon_grid"/>
+<meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../../index.html">
+      
+      
+      <strong>meteodata-lab</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials"></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2 -translate-x-2"></span>
+          <span class="hamburger_3 -translate-x-1"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">meteodata-lab</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.config.html">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.data_cache.html">data_cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.data_source.html">data_source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.grib_decoder.html">grib_decoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.icon_grid.html">icon_grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.mars.html">mars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.mch_model_data.html">mch_model_data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.metadata.html">metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.ogd_api.html">ogd_api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.physical_constants.html">physical_constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.crop.html">operators.crop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.gis.html">operators.gis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.lateral_operators.html">operators.lateral_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.regrid.html">operators.regrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.atmo.html">operators.atmo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.brn.html">operators.brn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.hzerocl.html">operators.hzerocl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.pot_vortic.html">operators.pot_vortic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.radiation.html">operators.radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.relhum.html">operators.relhum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.rho.html">operators.rho</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.theta.html">operators.theta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.thetav.html">operators.thetav</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.wind.html">operators.wind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.time_operators.html">operators.time_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.vertical_extrapolation.html">operators.vertical_extrapolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.vertical_interpolation.html">operators.vertical_interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.vertical_reduction.html">operators.vertical_reduction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../index.html"><span itemprop="name">meteodata-lab</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">Module code</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">meteodatalab.icon_grid</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <h1>Source code for meteodatalab.icon_grid</h1><div class="highlight"><pre>
+<span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;ICON native grid helper functions.&quot;&quot;&quot;</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="c1"># Standard library</span>
+</span><span data-line="4"><span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Callable</span>
+</span><span data-line="5"><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+</span><span data-line="6"><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+</span><span data-line="7"><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Literal</span>
+</span><span data-line="8"><span class="kn">from</span> <span class="nn">uuid</span> <span class="kn">import</span> <span class="n">UUID</span>
+</span><span data-line="9">
+</span><span data-line="10"><span class="c1"># Third-party</span>
+</span><span data-line="11"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span data-line="12"><span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+</span><span data-line="13">
+</span><span data-line="14"><span class="n">GRID_UUID_TO_MODEL</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="15">    <span class="n">UUID</span><span class="p">(</span><span class="s2">&quot;17643da2-5749-59b6-44d2-54a3cd6e2bc0&quot;</span><span class="p">):</span> <span class="s2">&quot;icon-ch1-eps&quot;</span><span class="p">,</span>
+</span><span data-line="16">    <span class="n">UUID</span><span class="p">(</span><span class="s2">&quot;bbbd5a09-8554-9924-3c7a-4aa4c8762920&quot;</span><span class="p">):</span> <span class="s2">&quot;icon-ch2-eps&quot;</span><span class="p">,</span>
+</span><span data-line="17"><span class="p">}</span>
+</span><span data-line="18">
+</span><span data-line="19">
+<div class="viewcode-block" id="load_grid_from_file">
+<a class="viewcode-back" href="../../generated/meteodatalab.icon_grid.html#meteodatalab.icon_grid.load_grid_from_file">[docs]</a>
+</span><span data-line="20"><span class="k">def</span> <span class="nf">load_grid_from_file</span><span class="p">(</span>
+</span><span data-line="21">    <span class="n">uuid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">grid_paths</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">UUID</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span>
+</span><span data-line="22"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]:</span>
+</span><span data-line="23"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the clat and clon grid coordinates from .nc format file.</span>
+</span><span data-line="24">
+</span><span data-line="25"><span class="sd">    Parameters</span>
+</span><span data-line="26"><span class="sd">    ----------</span>
+</span><span data-line="27"><span class="sd">    uuid: UUID</span>
+</span><span data-line="28"><span class="sd">        The UUID of the horizontal grid as specified in the GRIB metadata.</span>
+</span><span data-line="29"><span class="sd">    grid_paths: dict[UUID, Path]</span>
+</span><span data-line="30"><span class="sd">        Dictionary mapping from horizontal grid UUID to the path where the data file is.</span>
+</span><span data-line="31">
+</span><span data-line="32"><span class="sd">    Raises</span>
+</span><span data-line="33"><span class="sd">    ------</span>
+</span><span data-line="34"><span class="sd">    KeyError</span>
+</span><span data-line="35"><span class="sd">        If the UUID does not match a known model.</span>
+</span><span data-line="36">
+</span><span data-line="37"><span class="sd">    Returns</span>
+</span><span data-line="38"><span class="sd">    -------</span>
+</span><span data-line="39"><span class="sd">    dict[str, xr.DataArray]</span>
+</span><span data-line="40"><span class="sd">        Dataset containing clon and clat coordinates of the ICON grid cell centers for</span>
+</span><span data-line="41"><span class="sd">        the model.</span>
+</span><span data-line="42">
+</span><span data-line="43"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="44">    <span class="n">grid_path</span> <span class="o">=</span> <span class="n">grid_paths</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
+</span><span data-line="45">    <span class="k">if</span> <span class="n">grid_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="46">        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+</span><span data-line="47">            <span class="s2">&quot;No grid file for UUID </span><span class="si">%s</span><span class="s2">. Known UUIDs are </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">grid_paths</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</span><span data-line="48">        <span class="p">)</span>
+</span><span data-line="49">    <span class="n">rad2deg</span> <span class="o">=</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+</span><span data-line="50">    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">grid_path</span><span class="p">)</span>
+</span><span data-line="51">    <span class="n">result</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[[</span><span class="s2">&quot;clon&quot;</span><span class="p">,</span> <span class="s2">&quot;clat&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">reset_coords</span><span class="p">()</span> <span class="o">*</span> <span class="n">rad2deg</span>
+</span><span data-line="52">    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;lon&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">clon</span><span class="p">,</span> <span class="s2">&quot;lat&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">clat</span><span class="p">}</span></div>
+
+</span><span data-line="53">
+</span><span data-line="54">
+<div class="viewcode-block" id="load_boundary_idx_from_file">
+<a class="viewcode-back" href="../../generated/meteodatalab.icon_grid.html#meteodatalab.icon_grid.load_boundary_idx_from_file">[docs]</a>
+</span><span data-line="55"><span class="k">def</span> <span class="nf">load_boundary_idx_from_file</span><span class="p">(</span><span class="n">uuid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
+</span><span data-line="56"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the lateral boundary strip index from .nc format file.</span>
+</span><span data-line="57">
+</span><span data-line="58"><span class="sd">    Parameters</span>
+</span><span data-line="59"><span class="sd">    ----------</span>
+</span><span data-line="60"><span class="sd">    uuid: UUID</span>
+</span><span data-line="61"><span class="sd">        The UUID of the horizontal grid as specified in the GRIB metadata.</span>
+</span><span data-line="62">
+</span><span data-line="63"><span class="sd">    Returns</span>
+</span><span data-line="64"><span class="sd">    -------</span>
+</span><span data-line="65"><span class="sd">    xr.DataArray</span>
+</span><span data-line="66"><span class="sd">        Lateral boundary strip index for the given grid.</span>
+</span><span data-line="67">
+</span><span data-line="68"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="69">    <span class="n">grid_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/scratch/mch/jenkins/icon/pool/data/ICON/mch/grids/&quot;</span><span class="p">)</span>
+</span><span data-line="70">    <span class="n">grid_paths</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="71">        <span class="n">UUID</span><span class="p">(</span><span class="s2">&quot;17643da2-5749-59b6-44d2-54a3cd6e2bc0&quot;</span><span class="p">):</span> <span class="n">grid_dir</span>
+</span><span data-line="72">        <span class="o">/</span> <span class="s2">&quot;icon-1/icon_grid_0001_R19B08_mch.nc&quot;</span><span class="p">,</span>
+</span><span data-line="73">        <span class="n">UUID</span><span class="p">(</span><span class="s2">&quot;bbbd5a09-8554-9924-3c7a-4aa4c8762920&quot;</span><span class="p">):</span> <span class="n">grid_dir</span>
+</span><span data-line="74">        <span class="o">/</span> <span class="s2">&quot;icon-2/icon_grid_0002_R19B07_mch.nc&quot;</span><span class="p">,</span>
+</span><span data-line="75">    <span class="p">}</span>
+</span><span data-line="76">    <span class="n">grid_path</span> <span class="o">=</span> <span class="n">grid_paths</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
+</span><span data-line="77">    <span class="k">if</span> <span class="n">grid_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="78">        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+</span><span data-line="79">            <span class="s2">&quot;No grid file for UUID </span><span class="si">%s</span><span class="s2">. Known UUIDs are </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">grid_paths</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</span><span data-line="80">        <span class="p">)</span>
+</span><span data-line="81">    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">grid_path</span><span class="p">)</span>
+</span><span data-line="82">    <span class="k">return</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;refin_c_ctrl&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">assign_attrs</span><span class="p">(</span>
+</span><span data-line="83">        <span class="n">uuidOfHGrid</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;uuidOfHGrid&quot;</span><span class="p">],</span>
+</span><span data-line="84">    <span class="p">)</span></div>
+
+</span><span data-line="85">
+</span><span data-line="86">
+<div class="viewcode-block" id="load_grid_from_balfrin">
+<a class="viewcode-back" href="../../generated/meteodatalab.icon_grid.html#meteodatalab.icon_grid.load_grid_from_balfrin">[docs]</a>
+</span><span data-line="87"><span class="k">def</span> <span class="nf">load_grid_from_balfrin</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">UUID</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]]:</span>
+</span><span data-line="88"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a grid source to load grid files when running on balfrin.&quot;&quot;&quot;</span>
+</span><span data-line="89">    <span class="n">grid_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/scratch/mch/jenkins/icon/pool/data/ICON/mch/grids/&quot;</span><span class="p">)</span>
+</span><span data-line="90">    <span class="n">grid_paths</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="91">        <span class="n">UUID</span><span class="p">(</span><span class="s2">&quot;17643da2-5749-59b6-44d2-54a3cd6e2bc0&quot;</span><span class="p">):</span> <span class="n">grid_dir</span>
+</span><span data-line="92">        <span class="o">/</span> <span class="s2">&quot;icon-1/icon_grid_0001_R19B08_mch.nc&quot;</span><span class="p">,</span>
+</span><span data-line="93">        <span class="n">UUID</span><span class="p">(</span><span class="s2">&quot;bbbd5a09-8554-9924-3c7a-4aa4c8762920&quot;</span><span class="p">):</span> <span class="n">grid_dir</span>
+</span><span data-line="94">        <span class="o">/</span> <span class="s2">&quot;icon-2/icon_grid_0002_R19B07_mch.nc&quot;</span><span class="p">,</span>
+</span><span data-line="95">    <span class="p">}</span>
+</span><span data-line="96">    <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">load_grid_from_file</span><span class="p">,</span> <span class="n">grid_paths</span><span class="o">=</span><span class="n">grid_paths</span><span class="p">)</span></div>
+
+</span><span data-line="97">
+</span><span data-line="98">
+<div class="viewcode-block" id="get_remap_coeffs">
+<a class="viewcode-back" href="../../generated/meteodatalab.icon_grid.html#meteodatalab.icon_grid.get_remap_coeffs">[docs]</a>
+</span><span data-line="99"><span class="k">def</span> <span class="nf">get_remap_coeffs</span><span class="p">(</span>
+</span><span data-line="100">    <span class="n">grid_uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">grid_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;rotlatlon&quot;</span><span class="p">,</span> <span class="s2">&quot;geolatlon&quot;</span><span class="p">]</span>
+</span><span data-line="101"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
+</span><span data-line="102"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get ICON native grid remap indices and weights.</span>
+</span><span data-line="103">
+</span><span data-line="104"><span class="sd">    Parameters</span>
+</span><span data-line="105"><span class="sd">    ----------</span>
+</span><span data-line="106"><span class="sd">    grid_uuid : str</span>
+</span><span data-line="107"><span class="sd">        The UUID of the horizontal grid in hex format.</span>
+</span><span data-line="108"><span class="sd">    grid_type : str</span>
+</span><span data-line="109"><span class="sd">        Type of grid to remap to.</span>
+</span><span data-line="110">
+</span><span data-line="111"><span class="sd">    Raises</span>
+</span><span data-line="112"><span class="sd">    ------</span>
+</span><span data-line="113"><span class="sd">    KeyError</span>
+</span><span data-line="114"><span class="sd">        If the UUID is not found in the GRID_ID constant.</span>
+</span><span data-line="115">
+</span><span data-line="116"><span class="sd">    Returns</span>
+</span><span data-line="117"><span class="sd">    -------</span>
+</span><span data-line="118"><span class="sd">    xarray.Dataset</span>
+</span><span data-line="119"><span class="sd">        Dataset of the remap indices and weights.</span>
+</span><span data-line="120">
+</span><span data-line="121"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="122">    <span class="n">model</span> <span class="o">=</span> <span class="n">GRID_UUID_TO_MODEL</span><span class="p">[</span><span class="n">UUID</span><span class="p">(</span><span class="n">grid_uuid</span><span class="p">)]</span>
+</span><span data-line="123">    <span class="n">coeffs_path</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="124">        <span class="sa">f</span><span class="s2">&quot;/store_new/mch/msopr/icon_workflow_2/iconremap-weights/</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">grid_type</span><span class="si">}</span><span class="s2">.nc&quot;</span>
+</span><span data-line="125">    <span class="p">)</span>
+</span><span data-line="126">    <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">coeffs_path</span><span class="p">)</span></div>
+
+</span></pre></div>
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2024, MeteoSwiss</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials"></div>
+    </div>
+  </div>
+</footer>
+      <script src="../../_static/documentation_options.js?v=1dd76d02"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/shibuya.js?v=c477d091"></script></body>
+</html>

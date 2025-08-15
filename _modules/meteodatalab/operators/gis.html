@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="violet" data-content_root="../../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.gis - meteodata-lab 0.5.0 documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=397bb51e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=76b6f612" />
+    <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="meteodatalab.operators.gis"/>
+<meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../../../index.html">
+      
+      
+      <strong>meteodata-lab</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials"></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2 -translate-x-2"></span>
+          <span class="hamburger_3 -translate-x-1"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">meteodata-lab</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.config.html">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.data_cache.html">data_cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.data_source.html">data_source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.grib_decoder.html">grib_decoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.icon_grid.html">icon_grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.mars.html">mars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.mch_model_data.html">mch_model_data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.metadata.html">metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.ogd_api.html">ogd_api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.physical_constants.html">physical_constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.crop.html">operators.crop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.gis.html">operators.gis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.lateral_operators.html">operators.lateral_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.regrid.html">operators.regrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.atmo.html">operators.atmo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.brn.html">operators.brn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.hzerocl.html">operators.hzerocl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.pot_vortic.html">operators.pot_vortic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.radiation.html">operators.radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.relhum.html">operators.relhum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.rho.html">operators.rho</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.theta.html">operators.theta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.thetav.html">operators.thetav</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.wind.html">operators.wind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.time_operators.html">operators.time_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.vertical_extrapolation.html">operators.vertical_extrapolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.vertical_interpolation.html">operators.vertical_interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.vertical_reduction.html">operators.vertical_reduction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../../index.html"><span itemprop="name">meteodata-lab</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../index.html"><span itemprop="name">Module code</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">meteodatalab.operators.gis</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <h1>Source code for meteodatalab.operators.gis</h1><div class="highlight"><pre>
+<span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;Geospatial logic.&quot;&quot;&quot;</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="c1"># Standard library</span>
+</span><span data-line="4"><span class="kn">import</span> <span class="nn">dataclasses</span> <span class="k">as</span> <span class="nn">dc</span>
+</span><span data-line="5"><span class="kn">import</span> <span class="nn">typing</span>
+</span><span data-line="6"><span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Mapping</span>
+</span><span data-line="7">
+</span><span data-line="8"><span class="c1"># Third-party</span>
+</span><span data-line="9"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span data-line="10"><span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+</span><span data-line="11">
+</span><span data-line="12"><span class="c1"># Local</span>
+</span><span data-line="13"><span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">metadata</span>
+</span><span data-line="14"><span class="kn">from</span> <span class="nn">..grib_decoder</span> <span class="kn">import</span> <span class="n">set_code_flag</span>
+</span><span data-line="15"><span class="kn">from</span> <span class="nn">.support_operators</span> <span class="kn">import</span> <span class="n">get_grid_coords</span>
+</span><span data-line="16">
+</span><span data-line="17">
+<div class="viewcode-block" id="RotLatLonGrid">
+<a class="viewcode-back" href="../../../generated/meteodatalab.operators.gis.html#meteodatalab.operators.gis.RotLatLonGrid">[docs]</a>
+</span><span data-line="18"><span class="nd">@dc</span><span class="o">.</span><span class="n">dataclass</span>
+</span><span data-line="19"><span class="k">class</span> <span class="nc">RotLatLonGrid</span><span class="p">:</span>
+</span><span data-line="20"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Class representing a rotated lat lon grid.</span>
+</span><span data-line="21">
+</span><span data-line="22"><span class="sd">    Attributes</span>
+</span><span data-line="23"><span class="sd">    ----------</span>
+</span><span data-line="24"><span class="sd">    rlon : xr.DataArray</span>
+</span><span data-line="25"><span class="sd">        longitude values in degrees of the grid points in the rotated lat lon CRS.</span>
+</span><span data-line="26"><span class="sd">    rlat : xr.DataArray</span>
+</span><span data-line="27"><span class="sd">        latitude values in degrees of the grid points in the rotated lat lon CRS.</span>
+</span><span data-line="28"><span class="sd">    north_pole_lon : float</span>
+</span><span data-line="29"><span class="sd">        longitude of the rotated north pole in degrees.</span>
+</span><span data-line="30"><span class="sd">    north_pole_lat : float</span>
+</span><span data-line="31"><span class="sd">        latitude of the rotated north pole in degrees.</span>
+</span><span data-line="32">
+</span><span data-line="33"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="34">
+</span><span data-line="35">    <span class="c1"># all units in degrees</span>
+</span><span data-line="36">    <span class="n">rlon</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span>
+</span><span data-line="37">    <span class="n">rlat</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span>
+</span><span data-line="38">    <span class="n">north_pole_lon</span><span class="p">:</span> <span class="nb">float</span>
+</span><span data-line="39">    <span class="n">north_pole_lat</span><span class="p">:</span> <span class="nb">float</span></div>
+
+</span><span data-line="40">
+</span><span data-line="41">
+</span><span data-line="42"><span class="k">def</span> <span class="nf">_check_requirements</span><span class="p">(</span><span class="n">geo</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="43">    <span class="n">requirements</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="44">        <span class="s2">&quot;angleOfRotationInDegrees&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+</span><span data-line="45">        <span class="s2">&quot;gridType&quot;</span><span class="p">:</span> <span class="s2">&quot;rotated_ll&quot;</span><span class="p">,</span>
+</span><span data-line="46">        <span class="s2">&quot;iScansNegatively&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span><span data-line="47">        <span class="s2">&quot;jScansPositively&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+</span><span data-line="48">    <span class="p">}</span>
+</span><span data-line="49">    <span class="n">errors</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">geo</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">requirements</span> <span class="k">if</span> <span class="n">requirements</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">!=</span> <span class="n">geo</span><span class="p">[</span><span class="n">key</span><span class="p">]}</span>
+</span><span data-line="50">    <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+</span><span data-line="51">        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Unsupported values for keys: </span><span class="si">{</span><span class="n">errors</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span data-line="52">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</span><span data-line="53">
+</span><span data-line="54">
+<div class="viewcode-block" id="get_grid">
+<a class="viewcode-back" href="../../../generated/meteodatalab.operators.gis.html#meteodatalab.operators.gis.get_grid">[docs]</a>
+</span><span data-line="55"><span class="k">def</span> <span class="nf">get_grid</span><span class="p">(</span><span class="n">geo</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RotLatLonGrid</span><span class="p">:</span>
+</span><span data-line="56"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get grid parameters for a given field.</span>
+</span><span data-line="57">
+</span><span data-line="58"><span class="sd">    Only fields defined on regular grids in rotlatlon coordinates,</span>
+</span><span data-line="59"><span class="sd">    without rotation nor flipped axes are supported.</span>
+</span><span data-line="60">
+</span><span data-line="61"><span class="sd">    Parameters</span>
+</span><span data-line="62"><span class="sd">    ----------</span>
+</span><span data-line="63"><span class="sd">    geo : Mapping[str, Any]</span>
+</span><span data-line="64"><span class="sd">        Grib keys related to the geography of the field.</span>
+</span><span data-line="65">
+</span><span data-line="66"><span class="sd">    Raises</span>
+</span><span data-line="67"><span class="sd">    ------</span>
+</span><span data-line="68"><span class="sd">    ValueError</span>
+</span><span data-line="69"><span class="sd">        if the field does not fulfill the conditions above.</span>
+</span><span data-line="70">
+</span><span data-line="71"><span class="sd">    Returns</span>
+</span><span data-line="72"><span class="sd">    -------</span>
+</span><span data-line="73"><span class="sd">    RotLatLonGrid</span>
+</span><span data-line="74"><span class="sd">        object representing the rotated lat lon grid.</span>
+</span><span data-line="75">
+</span><span data-line="76"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="77">    <span class="n">_check_requirements</span><span class="p">(</span><span class="n">geo</span><span class="p">)</span>
+</span><span data-line="78">
+</span><span data-line="79">    <span class="n">ni</span> <span class="o">=</span> <span class="n">geo</span><span class="p">[</span><span class="s2">&quot;Ni&quot;</span><span class="p">]</span>
+</span><span data-line="80">    <span class="n">x0</span> <span class="o">=</span> <span class="n">geo</span><span class="p">[</span><span class="s2">&quot;longitudeOfFirstGridPointInDegrees&quot;</span><span class="p">]</span>
+</span><span data-line="81">    <span class="n">dx</span> <span class="o">=</span> <span class="n">geo</span><span class="p">[</span><span class="s2">&quot;iDirectionIncrementInDegrees&quot;</span><span class="p">]</span>
+</span><span data-line="82">    <span class="n">rlon</span> <span class="o">=</span> <span class="n">get_grid_coords</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">)</span>
+</span><span data-line="83">
+</span><span data-line="84">    <span class="n">nj</span> <span class="o">=</span> <span class="n">geo</span><span class="p">[</span><span class="s2">&quot;Nj&quot;</span><span class="p">]</span>
+</span><span data-line="85">    <span class="n">y0</span> <span class="o">=</span> <span class="n">geo</span><span class="p">[</span><span class="s2">&quot;latitudeOfFirstGridPointInDegrees&quot;</span><span class="p">]</span>
+</span><span data-line="86">    <span class="n">dy</span> <span class="o">=</span> <span class="n">geo</span><span class="p">[</span><span class="s2">&quot;jDirectionIncrementInDegrees&quot;</span><span class="p">]</span>
+</span><span data-line="87">    <span class="n">rlat</span> <span class="o">=</span> <span class="n">get_grid_coords</span><span class="p">(</span><span class="n">nj</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">)</span>
+</span><span data-line="88">
+</span><span data-line="89">    <span class="n">lon_np</span> <span class="o">=</span> <span class="p">(</span><span class="n">geo</span><span class="p">[</span><span class="s2">&quot;longitudeOfSouthernPoleInDegrees&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">180</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span>
+</span><span data-line="90">    <span class="n">lat_np</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">geo</span><span class="p">[</span><span class="s2">&quot;latitudeOfSouthernPoleInDegrees&quot;</span><span class="p">]</span>
+</span><span data-line="91">
+</span><span data-line="92">    <span class="k">return</span> <span class="n">RotLatLonGrid</span><span class="p">(</span><span class="n">rlon</span><span class="p">,</span> <span class="n">rlat</span><span class="p">,</span> <span class="n">lon_np</span><span class="p">,</span> <span class="n">lat_np</span><span class="p">)</span></div>
+
+</span><span data-line="93">
+</span><span data-line="94">
+<div class="viewcode-block" id="rot2geolatlon">
+<a class="viewcode-back" href="../../../generated/meteodatalab.operators.gis.html#meteodatalab.operators.gis.rot2geolatlon">[docs]</a>
+</span><span data-line="95"><span class="k">def</span> <span class="nf">rot2geolatlon</span><span class="p">(</span><span class="n">grid</span><span class="p">:</span> <span class="n">RotLatLonGrid</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]:</span>
+</span><span data-line="96"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute geographical lat lon values for a rotated lat lon grid.</span>
+</span><span data-line="97">
+</span><span data-line="98"><span class="sd">    Parameters</span>
+</span><span data-line="99"><span class="sd">    ----------</span>
+</span><span data-line="100"><span class="sd">    grid : RotLatLonGrid</span>
+</span><span data-line="101"><span class="sd">        object representing the rotated lat lon grid.</span>
+</span><span data-line="102">
+</span><span data-line="103"><span class="sd">    Returns</span>
+</span><span data-line="104"><span class="sd">    -------</span>
+</span><span data-line="105"><span class="sd">    tuple[xarray.DataArray, xarray.DataArray]</span>
+</span><span data-line="106"><span class="sd">        tuple of longitudes and latitudes of the grid points in the</span>
+</span><span data-line="107"><span class="sd">        geographical lat lon CRS.</span>
+</span><span data-line="108">
+</span><span data-line="109"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="110">    <span class="n">deg2rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span>
+</span><span data-line="111">    <span class="n">rad2deg</span> <span class="o">=</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+</span><span data-line="112">    <span class="n">sin_np_lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">deg2rad</span> <span class="o">*</span> <span class="n">grid</span><span class="o">.</span><span class="n">north_pole_lat</span><span class="p">)</span>
+</span><span data-line="113">    <span class="n">cos_np_lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">deg2rad</span> <span class="o">*</span> <span class="n">grid</span><span class="o">.</span><span class="n">north_pole_lat</span><span class="p">)</span>
+</span><span data-line="114">
+</span><span data-line="115">    <span class="n">sin_np_lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">deg2rad</span> <span class="o">*</span> <span class="n">grid</span><span class="o">.</span><span class="n">north_pole_lon</span><span class="p">)</span>
+</span><span data-line="116">    <span class="n">cos_np_lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">deg2rad</span> <span class="o">*</span> <span class="n">grid</span><span class="o">.</span><span class="n">north_pole_lon</span><span class="p">)</span>
+</span><span data-line="117">
+</span><span data-line="118">    <span class="c1"># Compute new coordinates</span>
+</span><span data-line="119">    <span class="c1"># ... normalize input coordinates</span>
+</span><span data-line="120">    <span class="n">norm_lon</span> <span class="o">=</span> <span class="n">deg2rad</span> <span class="o">*</span> <span class="n">grid</span><span class="o">.</span><span class="n">rlon</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">rlon</span> <span class="o">&lt;</span> <span class="mi">180</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">rlon</span> <span class="o">-</span> <span class="mi">360</span><span class="p">)</span>
+</span><span data-line="121">
+</span><span data-line="122">    <span class="c1"># ... cache trigonometric operations</span>
+</span><span data-line="123">    <span class="n">sin_lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">deg2rad</span> <span class="o">*</span> <span class="n">grid</span><span class="o">.</span><span class="n">rlat</span><span class="p">)</span>
+</span><span data-line="124">    <span class="n">cos_lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">deg2rad</span> <span class="o">*</span> <span class="n">grid</span><span class="o">.</span><span class="n">rlat</span><span class="p">)</span>
+</span><span data-line="125">    <span class="n">sin_lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">norm_lon</span><span class="p">)</span>
+</span><span data-line="126">    <span class="n">cos_lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">norm_lon</span><span class="p">)</span>
+</span><span data-line="127">    <span class="c1"># ... compute latitude</span>
+</span><span data-line="128">    <span class="n">arg1</span> <span class="o">=</span> <span class="n">cos_np_lat</span> <span class="o">*</span> <span class="n">cos_lat</span> <span class="o">*</span> <span class="n">cos_lon</span> <span class="o">+</span> <span class="n">sin_np_lat</span> <span class="o">*</span> <span class="n">sin_lat</span>
+</span><span data-line="129">    <span class="n">lat</span> <span class="o">=</span> <span class="n">rad2deg</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">arg1</span><span class="p">)</span>
+</span><span data-line="130">    <span class="c1"># ... compute longitude</span>
+</span><span data-line="131">    <span class="n">arg2</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="132">        <span class="n">sin_np_lon</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">sin_np_lat</span> <span class="o">*</span> <span class="n">cos_lon</span> <span class="o">*</span> <span class="n">cos_lat</span> <span class="o">+</span> <span class="n">cos_np_lat</span> <span class="o">*</span> <span class="n">sin_lat</span><span class="p">)</span>
+</span><span data-line="133">        <span class="o">-</span> <span class="n">cos_np_lon</span> <span class="o">*</span> <span class="n">sin_lon</span> <span class="o">*</span> <span class="n">cos_lat</span>
+</span><span data-line="134">    <span class="p">)</span>
+</span><span data-line="135">    <span class="n">arg3</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="136">        <span class="n">cos_np_lon</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">sin_np_lat</span> <span class="o">*</span> <span class="n">cos_lon</span> <span class="o">*</span> <span class="n">cos_lat</span> <span class="o">+</span> <span class="n">cos_np_lat</span> <span class="o">*</span> <span class="n">sin_lat</span><span class="p">)</span>
+</span><span data-line="137">        <span class="o">+</span> <span class="n">sin_np_lon</span> <span class="o">*</span> <span class="n">sin_lon</span> <span class="o">*</span> <span class="n">cos_lat</span>
+</span><span data-line="138">    <span class="p">)</span>
+</span><span data-line="139">    <span class="c1"># BUG: changes sign when arg2 is negative and less than threshold</span>
+</span><span data-line="140">    <span class="n">arg4</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">arg3</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-20</span><span class="p">,</span> <span class="mf">1e-20</span><span class="p">,</span> <span class="n">arg3</span><span class="p">)</span>
+</span><span data-line="141">    <span class="n">lon</span> <span class="o">=</span> <span class="n">rad2deg</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">arg2</span><span class="p">,</span> <span class="n">arg4</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span>
+</span><span data-line="142">
+</span><span data-line="143">    <span class="k">return</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span></div>
+
+</span><span data-line="144">
+</span><span data-line="145">
+<div class="viewcode-block" id="geolatlon2swiss">
+<a class="viewcode-back" href="../../../generated/meteodatalab.operators.gis.html#meteodatalab.operators.gis.geolatlon2swiss">[docs]</a>
+</span><span data-line="146"><span class="k">def</span> <span class="nf">geolatlon2swiss</span><span class="p">(</span>
+</span><span data-line="147">    <span class="n">lon</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span>
+</span><span data-line="148"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]:</span>
+</span><span data-line="149"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert from geolatlon to swiss coordinates.</span>
+</span><span data-line="150">
+</span><span data-line="151"><span class="sd">    Parameters</span>
+</span><span data-line="152"><span class="sd">    ----------</span>
+</span><span data-line="153"><span class="sd">    lon : xarray.DataArray</span>
+</span><span data-line="154"><span class="sd">        longitude coordinates in the geolatlon CRS.</span>
+</span><span data-line="155"><span class="sd">    lat : xarray.DataArray</span>
+</span><span data-line="156"><span class="sd">        latitude coordinates in the geolatlon CRS.</span>
+</span><span data-line="157">
+</span><span data-line="158"><span class="sd">    Returns</span>
+</span><span data-line="159"><span class="sd">    -------</span>
+</span><span data-line="160"><span class="sd">    tuple[xarray.DataArray, xarray.DataArray]</span>
+</span><span data-line="161"><span class="sd">        x and y coordinates in the Swiss LV03 coordinate system.</span>
+</span><span data-line="162">
+</span><span data-line="163"><span class="sd">    Notes</span>
+</span><span data-line="164"><span class="sd">    -----</span>
+</span><span data-line="165"><span class="sd">    Approximate formula published by swisstopo, precision in the order of 1 meter</span>
+</span><span data-line="166">
+</span><span data-line="167"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="168">    <span class="n">norm_lat</span> <span class="o">=</span> <span class="p">((</span><span class="n">lat</span> <span class="o">*</span> <span class="mf">3.6</span><span class="p">)</span> <span class="o">-</span> <span class="mf">169.02866</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
+</span><span data-line="169">    <span class="n">lon</span> <span class="o">=</span> <span class="n">lon</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">lon</span> <span class="o">&lt;</span> <span class="mi">180</span><span class="p">,</span> <span class="n">lon</span> <span class="o">-</span> <span class="mi">360</span><span class="p">)</span>
+</span><span data-line="170">    <span class="n">norm_lon</span> <span class="o">=</span> <span class="p">((</span><span class="n">lon</span> <span class="o">*</span> <span class="mf">3.6</span><span class="p">)</span> <span class="o">-</span> <span class="mf">26.7825</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
+</span><span data-line="171">    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="172">        <span class="mf">200147.07</span>
+</span><span data-line="173">        <span class="o">+</span> <span class="mf">3745.25</span> <span class="o">*</span> <span class="n">norm_lon</span> <span class="o">*</span> <span class="n">norm_lon</span>
+</span><span data-line="174">        <span class="o">+</span> <span class="n">norm_lat</span>
+</span><span data-line="175">        <span class="o">*</span> <span class="p">(</span>
+</span><span data-line="176">            <span class="mf">308807.95</span>
+</span><span data-line="177">            <span class="o">+</span> <span class="mf">76.63</span> <span class="o">*</span> <span class="n">norm_lat</span>
+</span><span data-line="178">            <span class="o">-</span> <span class="mf">194.56</span> <span class="o">*</span> <span class="n">norm_lon</span> <span class="o">*</span> <span class="n">norm_lon</span>
+</span><span data-line="179">            <span class="o">+</span> <span class="mf">119.79</span> <span class="o">*</span> <span class="n">norm_lat</span> <span class="o">*</span> <span class="n">norm_lat</span>
+</span><span data-line="180">        <span class="p">)</span>
+</span><span data-line="181">    <span class="p">)</span>
+</span><span data-line="182">    <span class="n">x</span> <span class="o">=</span> <span class="mf">600072.37</span> <span class="o">+</span> <span class="n">norm_lon</span> <span class="o">*</span> <span class="p">(</span>
+</span><span data-line="183">        <span class="mf">211455.93</span>
+</span><span data-line="184">        <span class="o">-</span> <span class="mf">10938.51</span> <span class="o">*</span> <span class="n">norm_lat</span>
+</span><span data-line="185">        <span class="o">-</span> <span class="mf">0.36</span> <span class="o">*</span> <span class="n">norm_lat</span> <span class="o">*</span> <span class="n">norm_lat</span>
+</span><span data-line="186">        <span class="o">-</span> <span class="mf">44.54</span> <span class="o">*</span> <span class="n">norm_lon</span> <span class="o">*</span> <span class="n">norm_lon</span>
+</span><span data-line="187">    <span class="p">)</span>
+</span><span data-line="188">    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span></div>
+
+</span><span data-line="189">
+</span><span data-line="190">
+<div class="viewcode-block" id="vref_rot2geolatlon">
+<a class="viewcode-back" href="../../../generated/meteodatalab.operators.gis.html#meteodatalab.operators.gis.vref_rot2geolatlon">[docs]</a>
+</span><span data-line="191"><span class="k">def</span> <span class="nf">vref_rot2geolatlon</span><span class="p">(</span>
+</span><span data-line="192">    <span class="n">u</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span>
+</span><span data-line="193"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]:</span>
+</span><span data-line="194"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply coordinate rotation to vector field.</span>
+</span><span data-line="195">
+</span><span data-line="196"><span class="sd">    When converting from rotated lat lon to geo lat lon, the</span>
+</span><span data-line="197"><span class="sd">    orientation of the grid changes and vector fields for which</span>
+</span><span data-line="198"><span class="sd">    the components are expressed in the grid unit vectors need</span>
+</span><span data-line="199"><span class="sd">    to be realigned.</span>
+</span><span data-line="200">
+</span><span data-line="201"><span class="sd">    Note that this function does not perform any regridding.</span>
+</span><span data-line="202">
+</span><span data-line="203"><span class="sd">    Parameters</span>
+</span><span data-line="204"><span class="sd">    ----------</span>
+</span><span data-line="205"><span class="sd">    u : xarray.DataArray</span>
+</span><span data-line="206"><span class="sd">        x component of the vector field w.r.t. a rotated lat lon grid.</span>
+</span><span data-line="207"><span class="sd">    v : xarray.DataArray</span>
+</span><span data-line="208"><span class="sd">        y component of the vector field w.r.t. a rotated lat lon grid.</span>
+</span><span data-line="209">
+</span><span data-line="210"><span class="sd">    Raises</span>
+</span><span data-line="211"><span class="sd">    ------</span>
+</span><span data-line="212"><span class="sd">    ValueError</span>
+</span><span data-line="213"><span class="sd">        if either field is on a staggered grid or other than rotated lat lon.</span>
+</span><span data-line="214">
+</span><span data-line="215"><span class="sd">    Returns</span>
+</span><span data-line="216"><span class="sd">    -------</span>
+</span><span data-line="217"><span class="sd">    tuple[xarray.DataArray, xarray.DataArray]</span>
+</span><span data-line="218"><span class="sd">        x and y components of the vector field w.r.t. the geo lat lon coords.</span>
+</span><span data-line="219">
+</span><span data-line="220"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="221">    <span class="k">if</span> <span class="n">metadata</span><span class="o">.</span><span class="n">is_staggered_horizontal</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="ow">or</span> <span class="n">metadata</span><span class="o">.</span><span class="n">is_staggered_horizontal</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+</span><span data-line="222">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The vector fields must be destaggered.&quot;</span><span class="p">)</span>
+</span><span data-line="223">    <span class="k">if</span> <span class="p">(</span>
+</span><span data-line="224">        <span class="n">u</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gridDefinitionTemplateNumber&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span>
+</span><span data-line="225">        <span class="ow">or</span> <span class="n">v</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gridDefinitionTemplateNumber&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span>
+</span><span data-line="226">    <span class="p">):</span>
+</span><span data-line="227">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The vector fields must be defined on a rotated lat lon grid.&quot;</span><span class="p">)</span>
+</span><span data-line="228">
+</span><span data-line="229">    <span class="n">grid</span> <span class="o">=</span> <span class="n">get_grid</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">geography</span><span class="p">)</span>
+</span><span data-line="230">    <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="n">rot2geolatlon</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+</span><span data-line="231">    <span class="n">u_g</span><span class="p">,</span> <span class="n">v_g</span> <span class="o">=</span> <span class="n">_vref_rot2geolatlon</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">grid</span><span class="p">)</span>
+</span><span data-line="232">
+</span><span data-line="233">    <span class="c1"># bit 5 left unset since u/v relative to grid in x (i) and y (j) directions,</span>
+</span><span data-line="234">    <span class="c1"># not defined grid; bits 3 and 4 set as i, j direction increments given</span>
+</span><span data-line="235">    <span class="n">resolution_components_flags</span> <span class="o">=</span> <span class="n">set_code_flag</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+</span><span data-line="236">
+</span><span data-line="237">    <span class="k">return</span> <span class="p">(</span>
+</span><span data-line="238">        <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
+</span><span data-line="239">            <span class="n">u_g</span><span class="p">,</span>
+</span><span data-line="240">            <span class="n">attrs</span><span class="o">=</span><span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span>
+</span><span data-line="241">                <span class="n">u</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">resolutionAndComponentFlags</span><span class="o">=</span><span class="n">resolution_components_flags</span>
+</span><span data-line="242">            <span class="p">),</span>
+</span><span data-line="243">        <span class="p">),</span>
+</span><span data-line="244">        <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
+</span><span data-line="245">            <span class="n">v_g</span><span class="p">,</span>
+</span><span data-line="246">            <span class="n">attrs</span><span class="o">=</span><span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span>
+</span><span data-line="247">                <span class="n">v</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">resolutionAndComponentFlags</span><span class="o">=</span><span class="n">resolution_components_flags</span>
+</span><span data-line="248">            <span class="p">),</span>
+</span><span data-line="249">        <span class="p">),</span>
+</span><span data-line="250">    <span class="p">)</span></div>
+
+</span><span data-line="251">
+</span><span data-line="252">
+</span><span data-line="253"><span class="k">def</span> <span class="nf">_vref_rot2geolatlon</span><span class="p">(</span>
+</span><span data-line="254">    <span class="n">u</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
+</span><span data-line="255">    <span class="n">v</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
+</span><span data-line="256">    <span class="n">lon</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
+</span><span data-line="257">    <span class="n">lat</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
+</span><span data-line="258">    <span class="n">grid</span><span class="p">:</span> <span class="n">RotLatLonGrid</span><span class="p">,</span>
+</span><span data-line="259"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]:</span>
+</span><span data-line="260">    <span class="n">deg2rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span>
+</span><span data-line="261">    <span class="n">sin_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">deg2rad</span> <span class="o">*</span> <span class="n">grid</span><span class="o">.</span><span class="n">north_pole_lat</span><span class="p">)</span>
+</span><span data-line="262">    <span class="n">cos_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">deg2rad</span> <span class="o">*</span> <span class="n">grid</span><span class="o">.</span><span class="n">north_pole_lat</span><span class="p">)</span>
+</span><span data-line="263">
+</span><span data-line="264">    <span class="n">norm_lat</span> <span class="o">=</span> <span class="n">lat</span> <span class="o">*</span> <span class="n">deg2rad</span>
+</span><span data-line="265">    <span class="n">norm_dlon</span> <span class="o">=</span> <span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">north_pole_lon</span> <span class="o">-</span> <span class="n">lon</span><span class="p">)</span> <span class="o">*</span> <span class="n">deg2rad</span>
+</span><span data-line="266">    <span class="n">arg1</span> <span class="o">=</span> <span class="n">cos_np</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">norm_dlon</span><span class="p">)</span>
+</span><span data-line="267">    <span class="n">arg2</span> <span class="o">=</span> <span class="n">sin_np</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">norm_lat</span><span class="p">)</span> <span class="o">-</span> <span class="n">cos_np</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">norm_lat</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">norm_dlon</span><span class="p">)</span>
+</span><span data-line="268">    <span class="n">norm</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">arg1</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">arg2</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+</span><span data-line="269">
+</span><span data-line="270">    <span class="n">u_out</span> <span class="o">=</span> <span class="n">u</span> <span class="o">*</span> <span class="n">arg2</span> <span class="o">*</span> <span class="n">norm</span> <span class="o">+</span> <span class="n">v</span> <span class="o">*</span> <span class="n">arg1</span> <span class="o">*</span> <span class="n">norm</span>
+</span><span data-line="271">    <span class="n">v_out</span> <span class="o">=</span> <span class="o">-</span><span class="n">u</span> <span class="o">*</span> <span class="n">arg1</span> <span class="o">*</span> <span class="n">norm</span> <span class="o">+</span> <span class="n">v</span> <span class="o">*</span> <span class="n">arg2</span> <span class="o">*</span> <span class="n">norm</span>
+</span><span data-line="272">
+</span><span data-line="273">    <span class="k">return</span> <span class="n">u_out</span><span class="p">,</span> <span class="n">v_out</span>
+</span></pre></div>
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2024, MeteoSwiss</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials"></div>
+    </div>
+  </div>
+</footer>
+      <script src="../../../_static/documentation_options.js?v=1dd76d02"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/shibuya.js?v=c477d091"></script></body>
+</html>

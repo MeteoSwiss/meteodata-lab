@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="violet" data-content_root="../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.ogd_api - meteodata-lab 0.5.0 documentation</title><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=397bb51e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/shibuya.css?v=76b6f612" />
+    <link media="print" rel="stylesheet" type="text/css" href="../../_static/print.css?v=20ff2c19" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="meteodatalab.ogd_api"/>
+<meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../../index.html">
+      
+      
+      <strong>meteodata-lab</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials"></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2 -translate-x-2"></span>
+          <span class="hamburger_3 -translate-x-1"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">meteodata-lab</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.config.html">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.data_cache.html">data_cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.data_source.html">data_source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.grib_decoder.html">grib_decoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.icon_grid.html">icon_grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.mars.html">mars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.mch_model_data.html">mch_model_data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.metadata.html">metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.ogd_api.html">ogd_api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.physical_constants.html">physical_constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.crop.html">operators.crop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.gis.html">operators.gis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.lateral_operators.html">operators.lateral_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.regrid.html">operators.regrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.atmo.html">operators.atmo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.brn.html">operators.brn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.hzerocl.html">operators.hzerocl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.pot_vortic.html">operators.pot_vortic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.radiation.html">operators.radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.relhum.html">operators.relhum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.rho.html">operators.rho</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.theta.html">operators.theta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.thetav.html">operators.thetav</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.wind.html">operators.wind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.time_operators.html">operators.time_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.vertical_extrapolation.html">operators.vertical_extrapolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.vertical_interpolation.html">operators.vertical_interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/meteodatalab.operators.vertical_reduction.html">operators.vertical_reduction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../index.html"><span itemprop="name">meteodata-lab</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">Module code</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">meteodatalab.ogd_api</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <h1>Source code for meteodatalab.ogd_api</h1><div class="highlight"><pre>
+<span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;Open Government Data API helpers.&quot;&quot;&quot;</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="c1"># Standard library</span>
+</span><span data-line="4"><span class="kn">import</span> <span class="nn">dataclasses</span> <span class="k">as</span> <span class="nn">dc</span>
+</span><span data-line="5"><span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
+</span><span data-line="6"><span class="kn">import</span> <span class="nn">enum</span>
+</span><span data-line="7"><span class="kn">import</span> <span class="nn">hashlib</span>
+</span><span data-line="8"><span class="kn">import</span> <span class="nn">logging</span>
+</span><span data-line="9"><span class="kn">import</span> <span class="nn">os</span>
+</span><span data-line="10"><span class="kn">import</span> <span class="nn">re</span>
+</span><span data-line="11"><span class="kn">import</span> <span class="nn">typing</span>
+</span><span data-line="12"><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+</span><span data-line="13"><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+</span><span data-line="14"><span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">urlparse</span>
+</span><span data-line="15"><span class="kn">from</span> <span class="nn">uuid</span> <span class="kn">import</span> <span class="n">UUID</span>
+</span><span data-line="16">
+</span><span data-line="17"><span class="c1"># Third-party</span>
+</span><span data-line="18"><span class="kn">import</span> <span class="nn">earthkit.data</span> <span class="k">as</span> <span class="nn">ekd</span>  <span class="c1"># type: ignore</span>
+</span><span data-line="19"><span class="kn">import</span> <span class="nn">pydantic</span>
+</span><span data-line="20"><span class="kn">import</span> <span class="nn">pydantic.dataclasses</span> <span class="k">as</span> <span class="nn">pdc</span>
+</span><span data-line="21"><span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+</span><span data-line="22">
+</span><span data-line="23"><span class="c1"># Local</span>
+</span><span data-line="24"><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">data_source</span><span class="p">,</span> <span class="n">grib_decoder</span><span class="p">,</span> <span class="n">icon_grid</span><span class="p">,</span> <span class="n">util</span>
+</span><span data-line="25">
+</span><span data-line="26"><span class="n">API_URL</span> <span class="o">=</span> <span class="s2">&quot;https://data.geo.admin.ch/api/stac/v1&quot;</span>
+</span><span data-line="27">
+</span><span data-line="28"><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</span><span data-line="29"><span class="n">session</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">init_session</span><span class="p">(</span><span class="n">logger</span><span class="p">)</span>
+</span><span data-line="30">
+</span><span data-line="31">
+<div class="viewcode-block" id="Collection">
+<a class="viewcode-back" href="../../generated/meteodatalab.ogd_api.html#meteodatalab.ogd_api.Collection">[docs]</a>
+</span><span data-line="32"><span class="k">class</span> <span class="nc">Collection</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+</span><span data-line="33">    <span class="c1">#: Collection of icon-ch1-eps model outputs</span>
+</span><span data-line="34">    <span class="n">ICON_CH1</span> <span class="o">=</span> <span class="s2">&quot;ogd-forecasting-icon-ch1&quot;</span>
+</span><span data-line="35">    <span class="c1">#: Collection of icon-ch2-eps model outputs</span>
+</span><span data-line="36">    <span class="n">ICON_CH2</span> <span class="o">=</span> <span class="s2">&quot;ogd-forecasting-icon-ch2&quot;</span></div>
+
+</span><span data-line="37">
+</span><span data-line="38">
+</span><span data-line="39"><span class="k">def</span> <span class="nf">_forecast_prefix</span><span class="p">(</span><span class="n">field_name</span><span class="p">):</span>
+</span><span data-line="40">    <span class="k">if</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="p">{</span>
+</span><span data-line="41">        <span class="s2">&quot;variable&quot;</span><span class="p">,</span>
+</span><span data-line="42">        <span class="s2">&quot;reference_datetime&quot;</span><span class="p">,</span>
+</span><span data-line="43">        <span class="s2">&quot;perturbed&quot;</span><span class="p">,</span>
+</span><span data-line="44">        <span class="s2">&quot;horizon&quot;</span><span class="p">,</span>
+</span><span data-line="45">    <span class="p">}:</span>
+</span><span data-line="46">        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;forecast:</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span data-line="47">    <span class="k">return</span> <span class="n">field_name</span>
+</span><span data-line="48">
+</span><span data-line="49">
+</span><span data-line="50"><span class="k">def</span> <span class="nf">_parse_datetime</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
+</span><span data-line="51">    <span class="k">return</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S%z&quot;</span><span class="p">)</span>
+</span><span data-line="52">
+</span><span data-line="53">
+<div class="viewcode-block" id="Request">
+<a class="viewcode-back" href="../../generated/meteodatalab.ogd_api.html#meteodatalab.ogd_api.Request">[docs]</a>
+</span><span data-line="54"><span class="nd">@pdc</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span>
+</span><span data-line="55">    <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span data-line="56">    <span class="n">config</span><span class="o">=</span><span class="n">pydantic</span><span class="o">.</span><span class="n">ConfigDict</span><span class="p">(</span>
+</span><span data-line="57">        <span class="n">use_enum_values</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span data-line="58">        <span class="n">ser_json_timedelta</span><span class="o">=</span><span class="s2">&quot;iso8601&quot;</span><span class="p">,</span>
+</span><span data-line="59">        <span class="n">alias_generator</span><span class="o">=</span><span class="n">pydantic</span><span class="o">.</span><span class="n">AliasGenerator</span><span class="p">(</span><span class="n">serialization_alias</span><span class="o">=</span><span class="n">_forecast_prefix</span><span class="p">),</span>
+</span><span data-line="60">    <span class="p">),</span>
+</span><span data-line="61"><span class="p">)</span>
+</span><span data-line="62"><span class="k">class</span> <span class="nc">Request</span><span class="p">:</span>
+</span><span data-line="63"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Define filters for the STAC Search API.</span>
+</span><span data-line="64">
+</span><span data-line="65"><span class="sd">    Parameters</span>
+</span><span data-line="66"><span class="sd">    ----------</span>
+</span><span data-line="67"><span class="sd">    collection : Collection</span>
+</span><span data-line="68"><span class="sd">        Name of the STAC collection.</span>
+</span><span data-line="69"><span class="sd">    variable : str</span>
+</span><span data-line="70"><span class="sd">        Name of the variable following the DWD convention.</span>
+</span><span data-line="71"><span class="sd">    reference_datetime : str</span>
+</span><span data-line="72"><span class="sd">        Forecast reference datetime in ISO 8601 format.</span>
+</span><span data-line="73"><span class="sd">        Alias: ref_time</span>
+</span><span data-line="74"><span class="sd">    perturbed : bool</span>
+</span><span data-line="75"><span class="sd">        If true, retrieve ensemble forecast members.</span>
+</span><span data-line="76"><span class="sd">        Otherwise, retrieve deterministic (control) forecast.</span>
+</span><span data-line="77"><span class="sd">    horizon : datetime.timedelta or list[datetime.timedelta]</span>
+</span><span data-line="78"><span class="sd">        Lead time of the requested data.</span>
+</span><span data-line="79"><span class="sd">        Can be supplied as string in ISO 8601 format.</span>
+</span><span data-line="80"><span class="sd">        Alias: lead_time</span>
+</span><span data-line="81">
+</span><span data-line="82"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="83">
+</span><span data-line="84">    <span class="n">collection</span><span class="p">:</span> <span class="n">Collection</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+</span><span data-line="85">    <span class="n">variable</span><span class="p">:</span> <span class="nb">str</span>
+</span><span data-line="86">    <span class="n">reference_datetime</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">field</span><span class="p">(</span>
+</span><span data-line="87">        <span class="n">metadata</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+</span><span data-line="88">            <span class="n">validation_alias</span><span class="o">=</span><span class="n">pydantic</span><span class="o">.</span><span class="n">AliasChoices</span><span class="p">(</span><span class="s2">&quot;reference_datetime&quot;</span><span class="p">,</span> <span class="s2">&quot;ref_time&quot;</span><span class="p">)</span>
+</span><span data-line="89">        <span class="p">)</span>
+</span><span data-line="90">    <span class="p">)</span>
+</span><span data-line="91">    <span class="n">perturbed</span><span class="p">:</span> <span class="nb">bool</span>
+</span><span data-line="92">    <span class="n">horizon</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">timedelta</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">timedelta</span><span class="p">]</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">field</span><span class="p">(</span>
+</span><span data-line="93">        <span class="n">metadata</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">validation_alias</span><span class="o">=</span><span class="n">pydantic</span><span class="o">.</span><span class="n">AliasChoices</span><span class="p">(</span><span class="s2">&quot;horizon&quot;</span><span class="p">,</span> <span class="s2">&quot;lead_time&quot;</span><span class="p">))</span>
+</span><span data-line="94">    <span class="p">)</span>
+</span><span data-line="95">
+</span><span data-line="96">    <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+</span><span data-line="97">        <span class="c1"># https://github.com/pydantic/pydantic/issues/10266</span>
+</span><span data-line="98">        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">):</span> <span class="o">...</span>
+</span><span data-line="99">
+</span><span data-line="100">    <span class="nd">@pydantic</span><span class="o">.</span><span class="n">computed_field</span>  <span class="c1"># type: ignore[misc]</span>
+</span><span data-line="101">    <span class="nd">@property</span>
+</span><span data-line="102">    <span class="k">def</span> <span class="nf">collections</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span><span data-line="103">        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;ch.meteoschweiz.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="p">)]</span>
+</span><span data-line="104">
+</span><span data-line="105">    <span class="nd">@pydantic</span><span class="o">.</span><span class="n">field_validator</span><span class="p">(</span><span class="s2">&quot;reference_datetime&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;wrap&quot;</span><span class="p">)</span>
+</span><span data-line="106">    <span class="nd">@classmethod</span>
+</span><span data-line="107">    <span class="k">def</span> <span class="nf">valid_reference_datetime</span><span class="p">(</span>
+</span><span data-line="108">        <span class="bp">cls</span><span class="p">,</span> <span class="n">input_value</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">ValidatorFunctionWrapHandler</span>
+</span><span data-line="109">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span data-line="110">        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_value</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">):</span>
+</span><span data-line="111">            <span class="k">if</span> <span class="n">input_value</span><span class="o">.</span><span class="n">tzinfo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="112">                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Converting naive datetime from local time to UTC&quot;</span><span class="p">)</span>
+</span><span data-line="113">            <span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%SZ&quot;</span>  <span class="c1"># Zulu isoformat</span>
+</span><span data-line="114">            <span class="k">return</span> <span class="n">input_value</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+</span><span data-line="115">
+</span><span data-line="116">        <span class="n">value</span> <span class="o">=</span> <span class="n">handler</span><span class="p">(</span><span class="n">input_value</span><span class="p">)</span>
+</span><span data-line="117">        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;latest&quot;</span><span class="p">:</span>
+</span><span data-line="118">            <span class="k">return</span> <span class="n">value</span>
+</span><span data-line="119">        <span class="n">parts</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+</span><span data-line="120">        <span class="k">match</span> <span class="n">parts</span><span class="p">:</span>
+</span><span data-line="121">            <span class="k">case</span> <span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="n">v</span><span class="p">]:</span>
+</span><span data-line="122">                <span class="c1"># open ended or single value</span>
+</span><span data-line="123">                <span class="n">_parse_datetime</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</span><span data-line="124">            <span class="k">case</span> <span class="p">[</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">]:</span>
+</span><span data-line="125">                <span class="c1"># range</span>
+</span><span data-line="126">                <span class="n">d1</span> <span class="o">=</span> <span class="n">_parse_datetime</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span>
+</span><span data-line="127">                <span class="n">d2</span> <span class="o">=</span> <span class="n">_parse_datetime</span><span class="p">(</span><span class="n">v2</span><span class="p">)</span>
+</span><span data-line="128">                <span class="k">if</span> <span class="n">d2</span> <span class="o">&lt;</span> <span class="n">d1</span><span class="p">:</span>
+</span><span data-line="129">                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;reference_datetime bounds inverted&quot;</span><span class="p">)</span>
+</span><span data-line="130">            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+</span><span data-line="131">                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unable to parse reference_datetime: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span data-line="132">        <span class="k">return</span> <span class="n">value</span>
+</span><span data-line="133">
+</span><span data-line="134">    <span class="nd">@pydantic</span><span class="o">.</span><span class="n">field_serializer</span><span class="p">(</span><span class="s2">&quot;reference_datetime&quot;</span><span class="p">)</span>
+</span><span data-line="135">    <span class="k">def</span> <span class="nf">serialize_reference_datetime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span data-line="136">        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;latest&quot;</span><span class="p">:</span>
+</span><span data-line="137">            <span class="n">cutoff</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">dt</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span> <span class="o">-</span> <span class="n">dt</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">48</span><span class="p">)</span>
+</span><span data-line="138">            <span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%SZ&quot;</span>  <span class="c1"># Zulu isoformat</span>
+</span><span data-line="139">            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cutoff</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span><span class="si">}</span><span class="s2">/..&quot;</span>
+</span><span data-line="140">        <span class="k">return</span> <span class="n">value</span>
+</span><span data-line="141">
+</span><span data-line="142">    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="143">        <span class="n">exclude_fields</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span data-line="144">        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">horizon</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span data-line="145">            <span class="n">exclude_fields</span><span class="p">[</span><span class="s2">&quot;horizon&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="146">
+</span><span data-line="147">        <span class="n">root</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">RootModel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</span><span data-line="148">        <span class="k">return</span> <span class="n">root</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="n">by_alias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="n">exclude_fields</span><span class="p">)</span></div>
+
+</span><span data-line="149">
+</span><span data-line="150">
+</span><span data-line="151"><span class="k">def</span> <span class="nf">_search</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span data-line="152">    <span class="n">response</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">body</span><span class="p">)</span>
+</span><span data-line="153">    <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+</span><span data-line="154">
+</span><span data-line="155">    <span class="n">obj</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</span><span data-line="156">    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="157">    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">]:</span>
+</span><span data-line="158">        <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;assets&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+</span><span data-line="159">            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">asset</span><span class="p">[</span><span class="s2">&quot;href&quot;</span><span class="p">])</span>
+</span><span data-line="160">
+</span><span data-line="161">    <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;links&quot;</span><span class="p">]:</span>
+</span><span data-line="162">        <span class="k">if</span> <span class="n">link</span><span class="p">[</span><span class="s2">&quot;rel&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;next&quot;</span><span class="p">:</span>
+</span><span data-line="163">            <span class="k">if</span> <span class="n">link</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;POST&quot;</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">link</span><span class="p">[</span><span class="s2">&quot;merge&quot;</span><span class="p">]:</span>
+</span><span data-line="164">                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bad link: </span><span class="si">{</span><span class="n">link</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span data-line="165">            <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">_search</span><span class="p">(</span><span class="n">link</span><span class="p">[</span><span class="s2">&quot;href&quot;</span><span class="p">],</span> <span class="n">body</span> <span class="o">|</span> <span class="n">link</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">]))</span>
+</span><span data-line="166">
+</span><span data-line="167">    <span class="k">return</span> <span class="n">result</span>
+</span><span data-line="168">
+</span><span data-line="169">
+<div class="viewcode-block" id="get_asset_urls">
+<a class="viewcode-back" href="../../generated/meteodatalab.ogd_api.html#meteodatalab.ogd_api.get_asset_urls">[docs]</a>
+</span><span data-line="170"><span class="k">def</span> <span class="nf">get_asset_urls</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span><span data-line="171"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get asset URLs from OGD.</span>
+</span><span data-line="172">
+</span><span data-line="173"><span class="sd">    The request attributes define filters for the STAC search API according</span>
+</span><span data-line="174"><span class="sd">    to the forecast extension. Forecasts reference datetimes for which not all</span>
+</span><span data-line="175"><span class="sd">    requested lead times are present are excluded from the result.</span>
+</span><span data-line="176">
+</span><span data-line="177"><span class="sd">    Parameters</span>
+</span><span data-line="178"><span class="sd">    ----------</span>
+</span><span data-line="179"><span class="sd">    request : Request</span>
+</span><span data-line="180"><span class="sd">        Asset search filters</span>
+</span><span data-line="181">
+</span><span data-line="182"><span class="sd">    Raises</span>
+</span><span data-line="183"><span class="sd">    ------</span>
+</span><span data-line="184"><span class="sd">    ValueError</span>
+</span><span data-line="185"><span class="sd">        when no datetime can be found in the asset URL for &#39;latest&#39; requests.</span>
+</span><span data-line="186">
+</span><span data-line="187"><span class="sd">    Returns</span>
+</span><span data-line="188"><span class="sd">    -------</span>
+</span><span data-line="189"><span class="sd">    list[str]</span>
+</span><span data-line="190"><span class="sd">        URLs of the selected assets.</span>
+</span><span data-line="191">
+</span><span data-line="192"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="193">    <span class="n">result</span> <span class="o">=</span> <span class="n">_search</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">API_URL</span><span class="si">}</span><span class="s2">/search&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">dump</span><span class="p">())</span>
+</span><span data-line="194">
+</span><span data-line="195">    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="196">        <span class="k">return</span> <span class="n">result</span>
+</span><span data-line="197">
+</span><span data-line="198">    <span class="n">lead_times</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="199">        <span class="n">request</span><span class="o">.</span><span class="n">horizon</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">horizon</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">request</span><span class="o">.</span><span class="n">horizon</span><span class="p">]</span>
+</span><span data-line="200">    <span class="p">)</span>
+</span><span data-line="201">
+</span><span data-line="202">    <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;-(?P&lt;ref_time&gt;\d</span><span class="si">{12}</span><span class="s2">)-(?P&lt;lead_time&gt;\d+)-&quot;</span><span class="p">)</span>
+</span><span data-line="203">
+</span><span data-line="204">    <span class="k">def</span> <span class="nf">extract_key</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">timedelta</span><span class="p">]:</span>
+</span><span data-line="205">        <span class="n">path</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">path</span>
+</span><span data-line="206">        <span class="n">match</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span><span data-line="207">        <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+</span><span data-line="208">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No valid datetime found in URL path: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span data-line="209">        <span class="n">val</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;ref_time&quot;</span><span class="p">)</span>
+</span><span data-line="210">        <span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M&quot;</span>
+</span><span data-line="211">        <span class="n">utc</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span>
+</span><span data-line="212">        <span class="n">ref_time</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">fmt</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">utc</span><span class="p">)</span>
+</span><span data-line="213">        <span class="n">lead_time</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;lead_time&quot;</span><span class="p">)))</span>
+</span><span data-line="214">        <span class="k">return</span> <span class="n">ref_time</span><span class="p">,</span> <span class="n">lead_time</span>
+</span><span data-line="215">
+</span><span data-line="216">    <span class="n">asset_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">extract_key</span><span class="p">(</span><span class="n">url</span><span class="p">):</span> <span class="n">url</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">result</span><span class="p">}</span>
+</span><span data-line="217">
+</span><span data-line="218">    <span class="c1"># gather reference times for which all requested lead times are present</span>
+</span><span data-line="219">    <span class="n">tmp</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">timedelta</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span data-line="220">    <span class="k">for</span> <span class="n">ref_time</span><span class="p">,</span> <span class="n">lead_time</span> <span class="ow">in</span> <span class="n">asset_map</span><span class="p">:</span>
+</span><span data-line="221">        <span class="n">tmp</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">ref_time</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lead_time</span><span class="p">)</span>
+</span><span data-line="222">    <span class="n">required</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">lead_times</span><span class="p">)</span>
+</span><span data-line="223">    <span class="n">complete</span> <span class="o">=</span> <span class="p">[</span><span class="n">ref_time</span> <span class="k">for</span> <span class="n">ref_time</span> <span class="ow">in</span> <span class="n">tmp</span> <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="n">ref_time</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="n">required</span><span class="p">]</span>
+</span><span data-line="224">
+</span><span data-line="225">    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">reference_datetime</span> <span class="o">==</span> <span class="s2">&quot;latest&quot;</span><span class="p">:</span>
+</span><span data-line="226">        <span class="n">ref_time</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">complete</span><span class="p">)</span>
+</span><span data-line="227">        <span class="k">return</span> <span class="p">[</span><span class="n">asset_map</span><span class="p">[(</span><span class="n">ref_time</span><span class="p">,</span> <span class="n">lead_time</span><span class="p">)]</span> <span class="k">for</span> <span class="n">lead_time</span> <span class="ow">in</span> <span class="n">lead_times</span><span class="p">]</span>
+</span><span data-line="228">
+</span><span data-line="229">    <span class="k">return</span> <span class="p">[</span>
+</span><span data-line="230">        <span class="n">asset_map</span><span class="p">[(</span><span class="n">ref_time</span><span class="p">,</span> <span class="n">lead_time</span><span class="p">)]</span>
+</span><span data-line="231">        <span class="k">for</span> <span class="n">lead_time</span> <span class="ow">in</span> <span class="n">lead_times</span>
+</span><span data-line="232">        <span class="k">for</span> <span class="n">ref_time</span> <span class="ow">in</span> <span class="n">complete</span>
+</span><span data-line="233">    <span class="p">]</span></div>
+
+</span><span data-line="234">
+</span><span data-line="235">
+</span><span data-line="236"><span class="nd">@lru_cache</span>
+</span><span data-line="237"><span class="k">def</span> <span class="nf">_get_collection_assets</span><span class="p">(</span><span class="n">collection_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span data-line="238">    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">API_URL</span><span class="si">}</span><span class="s2">/collections/</span><span class="si">{</span><span class="n">collection_id</span><span class="si">}</span><span class="s2">/assets&quot;</span>
+</span><span data-line="239">
+</span><span data-line="240">    <span class="n">response</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</span><span data-line="241">    <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+</span><span data-line="242">
+</span><span data-line="243">    <span class="k">return</span> <span class="p">{</span><span class="n">asset</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]:</span> <span class="n">asset</span> <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;assets&quot;</span><span class="p">,</span> <span class="p">[])}</span>
+</span><span data-line="244">
+</span><span data-line="245">
+<div class="viewcode-block" id="get_collection_asset_url">
+<a class="viewcode-back" href="../../generated/meteodatalab.ogd_api.html#meteodatalab.ogd_api.get_collection_asset_url">[docs]</a>
+</span><span data-line="246"><span class="k">def</span> <span class="nf">get_collection_asset_url</span><span class="p">(</span><span class="n">collection_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">asset_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span data-line="247"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get collection asset URL from OGD.</span>
+</span><span data-line="248">
+</span><span data-line="249"><span class="sd">    Query the STAC collection assets and return the URL for the given asset ID.</span>
+</span><span data-line="250">
+</span><span data-line="251"><span class="sd">    Parameters</span>
+</span><span data-line="252"><span class="sd">    ----------</span>
+</span><span data-line="253"><span class="sd">    collection_id : str</span>
+</span><span data-line="254"><span class="sd">        Full STAC collection ID</span>
+</span><span data-line="255"><span class="sd">    asset_id : str</span>
+</span><span data-line="256"><span class="sd">        The ID of the static asset to retrieve.</span>
+</span><span data-line="257">
+</span><span data-line="258"><span class="sd">    Returns</span>
+</span><span data-line="259"><span class="sd">    -------</span>
+</span><span data-line="260"><span class="sd">    str</span>
+</span><span data-line="261"><span class="sd">        The pre-signed URL of the requested static asset.</span>
+</span><span data-line="262">
+</span><span data-line="263"><span class="sd">    Raises</span>
+</span><span data-line="264"><span class="sd">    ------</span>
+</span><span data-line="265"><span class="sd">    KeyError</span>
+</span><span data-line="266"><span class="sd">        If the asset is not found in the collection.</span>
+</span><span data-line="267">
+</span><span data-line="268"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="269">    <span class="n">assets</span> <span class="o">=</span> <span class="n">_get_collection_assets</span><span class="p">(</span><span class="n">collection_id</span><span class="p">)</span>
+</span><span data-line="270">    <span class="n">asset_info</span> <span class="o">=</span> <span class="n">assets</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">asset_id</span><span class="p">)</span>
+</span><span data-line="271">
+</span><span data-line="272">    <span class="k">if</span> <span class="ow">not</span> <span class="n">asset_info</span> <span class="ow">or</span> <span class="s2">&quot;href&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">asset_info</span><span class="p">:</span>
+</span><span data-line="273">        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Asset &#39;</span><span class="si">{</span><span class="n">asset_id</span><span class="si">}</span><span class="s2">&#39; not found in collection &#39;</span><span class="si">{</span><span class="n">collection_id</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+</span><span data-line="274">
+</span><span data-line="275">    <span class="k">return</span> <span class="n">asset_info</span><span class="p">[</span><span class="s2">&quot;href&quot;</span><span class="p">]</span></div>
+
+</span><span data-line="276">
+</span><span data-line="277">
+</span><span data-line="278"><span class="k">def</span> <span class="nf">_get_geo_coord_url</span><span class="p">(</span><span class="n">uuid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span data-line="279">    <span class="k">if</span> <span class="p">(</span><span class="n">var</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MDL_GEO_COORD_URL&quot;</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="280">        <span class="k">return</span> <span class="n">var</span>
+</span><span data-line="281">
+</span><span data-line="282">    <span class="n">model_name</span> <span class="o">=</span> <span class="n">icon_grid</span><span class="o">.</span><span class="n">GRID_UUID_TO_MODEL</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
+</span><span data-line="283">    <span class="k">if</span> <span class="n">model_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="284">        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Grid UUID not found&quot;</span><span class="p">)</span>
+</span><span data-line="285">
+</span><span data-line="286">    <span class="n">base_model</span> <span class="o">=</span> <span class="n">model_name</span><span class="o">.</span><span class="n">removesuffix</span><span class="p">(</span><span class="s2">&quot;-eps&quot;</span><span class="p">)</span>
+</span><span data-line="287">    <span class="n">collection_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;ch.meteoschweiz.ogd-forecasting-</span><span class="si">{</span><span class="n">base_model</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span data-line="288">    <span class="n">asset_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;horizontal_constants_</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">.grib2&quot;</span>
+</span><span data-line="289">
+</span><span data-line="290">    <span class="k">return</span> <span class="n">get_collection_asset_url</span><span class="p">(</span><span class="n">collection_id</span><span class="p">,</span> <span class="n">asset_id</span><span class="p">)</span>
+</span><span data-line="291">
+</span><span data-line="292">
+</span><span data-line="293"><span class="k">def</span> <span class="nf">_no_coords</span><span class="p">(</span><span class="n">uuid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]:</span>
+</span><span data-line="294">    <span class="k">return</span> <span class="p">{}</span>
+</span><span data-line="295">
+</span><span data-line="296">
+</span><span data-line="297"><span class="k">def</span> <span class="nf">_geo_coords</span><span class="p">(</span><span class="n">uuid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]:</span>
+</span><span data-line="298">    <span class="n">url</span> <span class="o">=</span> <span class="n">_get_geo_coord_url</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
+</span><span data-line="299">    <span class="n">source</span> <span class="o">=</span> <span class="n">data_source</span><span class="o">.</span><span class="n">URLDataSource</span><span class="p">(</span><span class="n">urls</span><span class="o">=</span><span class="p">[</span><span class="n">url</span><span class="p">])</span>
+</span><span data-line="300">    <span class="n">ds</span> <span class="o">=</span> <span class="n">grib_decoder</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CLON&quot;</span><span class="p">,</span> <span class="s2">&quot;CLAT&quot;</span><span class="p">]},</span> <span class="n">geo_coords</span><span class="o">=</span><span class="n">_no_coords</span><span class="p">)</span>
+</span><span data-line="301">    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;lon&quot;</span><span class="p">:</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;CLON&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="s2">&quot;lat&quot;</span><span class="p">:</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;CLAT&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()}</span>
+</span><span data-line="302">
+</span><span data-line="303">
+<div class="viewcode-block" id="get_from_ogd">
+<a class="viewcode-back" href="../../generated/meteodatalab.ogd_api.html#meteodatalab.ogd_api.get_from_ogd">[docs]</a>
+</span><span data-line="304"><span class="k">def</span> <span class="nf">get_from_ogd</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
+</span><span data-line="305"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get data from OGD.</span>
+</span><span data-line="306">
+</span><span data-line="307"><span class="sd">    The request attributes define filters for the STAC search API according</span>
+</span><span data-line="308"><span class="sd">    to the forecast extension. It is recommended to enable caching through</span>
+</span><span data-line="309"><span class="sd">    earthkit-data. A warning message is emitted if the cache is disabled.</span>
+</span><span data-line="310">
+</span><span data-line="311"><span class="sd">    Parameters</span>
+</span><span data-line="312"><span class="sd">    ----------</span>
+</span><span data-line="313"><span class="sd">    request : Request</span>
+</span><span data-line="314"><span class="sd">        Asset search filters, must select a single asset.</span>
+</span><span data-line="315">
+</span><span data-line="316"><span class="sd">    Raises</span>
+</span><span data-line="317"><span class="sd">    ------</span>
+</span><span data-line="318"><span class="sd">    ValueError</span>
+</span><span data-line="319"><span class="sd">        when the request does not select exactly one asset.</span>
+</span><span data-line="320">
+</span><span data-line="321"><span class="sd">    Returns</span>
+</span><span data-line="322"><span class="sd">    -------</span>
+</span><span data-line="323"><span class="sd">    xarray.DataArray</span>
+</span><span data-line="324"><span class="sd">        A data array of the selected asset including GRIB metadata and coordinates.</span>
+</span><span data-line="325">
+</span><span data-line="326"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="327">    <span class="k">if</span> <span class="n">ekd</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cache-policy&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;off&quot;</span><span class="p">:</span>
+</span><span data-line="328">        <span class="n">doc</span> <span class="o">=</span> <span class="s2">&quot;https://earthkit-data.readthedocs.io/en/latest/examples/cache.html&quot;</span>
+</span><span data-line="329">        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Earthkit-data caching is recommended. See: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">doc</span><span class="p">)</span>
+</span><span data-line="330">
+</span><span data-line="331">    <span class="n">asset_urls</span> <span class="o">=</span> <span class="n">get_asset_urls</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+</span><span data-line="332">
+</span><span data-line="333">    <span class="n">source</span> <span class="o">=</span> <span class="n">data_source</span><span class="o">.</span><span class="n">URLDataSource</span><span class="p">(</span><span class="n">urls</span><span class="o">=</span><span class="n">asset_urls</span><span class="p">)</span>
+</span><span data-line="334">    <span class="k">return</span> <span class="n">grib_decoder</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+</span><span data-line="335">        <span class="n">source</span><span class="p">,</span>
+</span><span data-line="336">        <span class="p">{</span><span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">variable</span><span class="p">},</span>
+</span><span data-line="337">        <span class="n">geo_coords</span><span class="o">=</span><span class="n">_geo_coords</span><span class="p">,</span>
+</span><span data-line="338">    <span class="p">)[</span><span class="n">request</span><span class="o">.</span><span class="n">variable</span><span class="p">]</span></div>
+
+</span><span data-line="339">
+</span><span data-line="340">
+<div class="viewcode-block" id="download_from_ogd">
+<a class="viewcode-back" href="../../generated/meteodatalab.ogd_api.html#meteodatalab.ogd_api.download_from_ogd">[docs]</a>
+</span><span data-line="341"><span class="k">def</span> <span class="nf">download_from_ogd</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="342"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Download forecast asset and its static coordinate files from OGD.</span>
+</span><span data-line="343">
+</span><span data-line="344"><span class="sd">    The request attributes define filters for the STAC search API according</span>
+</span><span data-line="345"><span class="sd">    to the forecast extension.</span>
+</span><span data-line="346">
+</span><span data-line="347"><span class="sd">    In addition to the main asset, this function downloads static files</span>
+</span><span data-line="348"><span class="sd">    with horizontal and vertical coordinates, as the forecast item</span>
+</span><span data-line="349"><span class="sd">    does not include the horizontal or vertical coordinates.</span>
+</span><span data-line="350">
+</span><span data-line="351"><span class="sd">    Parameters</span>
+</span><span data-line="352"><span class="sd">    ----------</span>
+</span><span data-line="353"><span class="sd">    request : Request</span>
+</span><span data-line="354"><span class="sd">        Asset search filters, must select a single asset.</span>
+</span><span data-line="355"><span class="sd">    target : Path</span>
+</span><span data-line="356"><span class="sd">        Target path where to save the asset, must be a directory.</span>
+</span><span data-line="357">
+</span><span data-line="358"><span class="sd">    Raises</span>
+</span><span data-line="359"><span class="sd">    ------</span>
+</span><span data-line="360"><span class="sd">    ValueError</span>
+</span><span data-line="361"><span class="sd">        when the request does not select exactly one asset.</span>
+</span><span data-line="362"><span class="sd">    RuntimeError</span>
+</span><span data-line="363"><span class="sd">        if the checksum verification fails.</span>
+</span><span data-line="364">
+</span><span data-line="365"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="366">    <span class="k">if</span> <span class="n">target</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">target</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+</span><span data-line="367">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;target: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2"> must be a directory&quot;</span><span class="p">)</span>
+</span><span data-line="368">
+</span><span data-line="369">    <span class="k">if</span> <span class="ow">not</span> <span class="n">target</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+</span><span data-line="370">        <span class="n">target</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span data-line="371">
+</span><span data-line="372">    <span class="c1"># Download main forecast asset</span>
+</span><span data-line="373">    <span class="n">asset_urls</span> <span class="o">=</span> <span class="n">get_asset_urls</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+</span><span data-line="374">    <span class="k">for</span> <span class="n">asset_url</span> <span class="ow">in</span> <span class="n">asset_urls</span><span class="p">:</span>
+</span><span data-line="375">        <span class="n">_download_with_checksum</span><span class="p">(</span><span class="n">asset_url</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+</span><span data-line="376">
+</span><span data-line="377">    <span class="n">model_suffix</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">removeprefix</span><span class="p">(</span><span class="s2">&quot;ogd-forecasting-&quot;</span><span class="p">)</span>
+</span><span data-line="378">    <span class="n">collection_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;ch.meteoschweiz.</span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">collection</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span data-line="379">
+</span><span data-line="380">    <span class="c1"># Download coordinate files</span>
+</span><span data-line="381">    <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;horizontal&quot;</span><span class="p">,</span> <span class="s2">&quot;vertical&quot;</span><span class="p">]:</span>
+</span><span data-line="382">        <span class="n">asset_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_constants_</span><span class="si">{</span><span class="n">model_suffix</span><span class="si">}</span><span class="s2">-eps.grib2&quot;</span>
+</span><span data-line="383">        <span class="n">url</span> <span class="o">=</span> <span class="n">get_collection_asset_url</span><span class="p">(</span><span class="n">collection_id</span><span class="p">,</span> <span class="n">asset_id</span><span class="p">)</span>
+</span><span data-line="384">        <span class="n">_download_with_checksum</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
+
+</span><span data-line="385">
+</span><span data-line="386">
+</span><span data-line="387"><span class="k">def</span> <span class="nf">_file_hash</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+</span><span data-line="388">    <span class="nb">hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+</span><span data-line="389">    <span class="k">with</span> <span class="n">path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span><span data-line="390">        <span class="k">while</span> <span class="n">chunk</span> <span class="o">:=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">16</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">):</span>
+</span><span data-line="391">            <span class="nb">hash</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+</span><span data-line="392">    <span class="k">return</span> <span class="nb">hash</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+</span><span data-line="393">
+</span><span data-line="394">
+</span><span data-line="395"><span class="k">def</span> <span class="nf">_download_with_checksum</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="396">    <span class="n">filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+</span><span data-line="397">    <span class="n">path</span> <span class="o">=</span> <span class="n">target</span> <span class="o">/</span> <span class="n">filename</span> <span class="k">if</span> <span class="n">target</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="k">else</span> <span class="n">target</span>
+</span><span data-line="398">    <span class="n">hash_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.sha256&quot;</span><span class="p">)</span>
+</span><span data-line="399">
+</span><span data-line="400">    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+</span><span data-line="401">        <span class="k">if</span> <span class="n">hash_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="n">hash_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span> <span class="o">==</span> <span class="n">_file_hash</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+</span><span data-line="402">            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File already exists, skipping download: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span data-line="403">            <span class="k">return</span>
+</span><span data-line="404">
+</span><span data-line="405">    <span class="n">response</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span data-line="406">    <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+</span><span data-line="407">
+</span><span data-line="408">    <span class="nb">hash</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;X-Amz-Meta-Sha256&quot;</span><span class="p">)</span>
+</span><span data-line="409">    <span class="k">if</span> <span class="nb">hash</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="410">        <span class="n">hash_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="nb">hash</span><span class="p">)</span>
+</span><span data-line="411">
+</span><span data-line="412">    <span class="n">hasher</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+</span><span data-line="413">    <span class="k">with</span> <span class="n">path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span><span data-line="414">        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="mi">16</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">):</span>
+</span><span data-line="415">            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+</span><span data-line="416">            <span class="n">hasher</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+</span><span data-line="417">
+</span><span data-line="418">    <span class="k">if</span> <span class="nb">hash</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hash</span> <span class="o">!=</span> <span class="n">hasher</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">():</span>
+</span><span data-line="419">        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Checksum verification failed for </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span></pre></div>
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2024, MeteoSwiss</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials"></div>
+    </div>
+  </div>
+</footer>
+      <script src="../../_static/documentation_options.js?v=1dd76d02"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/shibuya.js?v=c477d091"></script></body>
+</html>

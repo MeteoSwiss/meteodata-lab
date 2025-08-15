@@ -1,0 +1,32 @@
+﻿operators.vertical\_interpolation
+=================================
+
+.. automodule:: meteodatalab.operators.vertical_interpolation
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      interpolate_k2any
+      interpolate_k2p
+      interpolate_k2theta
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

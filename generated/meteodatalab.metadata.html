@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="violet" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>metadata - meteodata-lab 0.5.0 documentation</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ogd_api" href="meteodatalab.ogd_api.html" /><link rel="prev" title="mch_model_data" href="meteodatalab.mch_model_data.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=397bb51e" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=76b6f612" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="metadata"/>
+<meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      
+      
+      <strong>meteodata-lab</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials"></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2 -translate-x-2"></span>
+          <span class="hamburger_3 -translate-x-1"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">meteodata-lab</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../reference.html">Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.config.html">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.data_cache.html">data_cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.data_source.html">data_source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.grib_decoder.html">grib_decoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.icon_grid.html">icon_grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.mars.html">mars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.mch_model_data.html">mch_model_data</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.ogd_api.html">ogd_api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.physical_constants.html">physical_constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.crop.html">operators.crop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.gis.html">operators.gis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.lateral_operators.html">operators.lateral_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.regrid.html">operators.regrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.atmo.html">operators.atmo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.brn.html">operators.brn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.hzerocl.html">operators.hzerocl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.pot_vortic.html">operators.pot_vortic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.radiation.html">operators.radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.relhum.html">operators.relhum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.rho.html">operators.rho</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.theta.html">operators.theta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.thetav.html">operators.thetav</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.wind.html">operators.wind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.time_operators.html">operators.time_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.vertical_extrapolation.html">operators.vertical_extrapolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.vertical_interpolation.html">operators.vertical_interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.vertical_reduction.html">operators.vertical_reduction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#meteodatalab.metadata.Grid"><code class="docutils literal notranslate"><span class="pre">Grid</span></code></a><ul>
+<li><a class="reference internal" href="#meteodatalab.metadata.Grid.lon_first_grid_point"><code class="docutils literal notranslate">lon_first_grid_point</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.metadata.Grid.lat_first_grid_point"><code class="docutils literal notranslate">lat_first_grid_point</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#meteodatalab.metadata.compute_origin"><code class="docutils literal notranslate"><span class="pre">compute_origin()</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.metadata.extract_hcoords"><code class="docutils literal notranslate"><span class="pre">extract_hcoords()</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.metadata.extract_pv"><code class="docutils literal notranslate"><span class="pre">extract_pv()</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.metadata.is_staggered_horizontal"><code class="docutils literal notranslate"><span class="pre">is_staggered_horizontal()</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.metadata.load_grid_reference"><code class="docutils literal notranslate"><span class="pre">load_grid_reference()</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.metadata.override"><code class="docutils literal notranslate"><span class="pre">override()</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.metadata.set_origin_xy"><code class="docutils literal notranslate"><span class="pre">set_origin_xy()</span></code></a></li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">meteodata-lab</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../reference.html"><span itemprop="name">Reference</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">metadata</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <section id="module-meteodatalab.metadata">
+<span id="metadata"></span><h1>metadata<a class="headerlink" href="#module-meteodatalab.metadata" title="Link to this heading">¶</a></h1>
+<p>Manage GRIB metadata.</p>
+<p class="rubric">Functions</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meteodatalab.metadata.compute_origin" title="meteodatalab.metadata.compute_origin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_origin</span></code></a>(ref_grid, field)</p></td>
+<td><p>Compute horizontal components of the origin dict.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract</span></code>(metadata)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meteodatalab.metadata.extract_hcoords" title="meteodatalab.metadata.extract_hcoords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_hcoords</span></code></a>(metadata)</p></td>
+<td><p>Extract horizontal coordinates.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meteodatalab.metadata.extract_pv" title="meteodatalab.metadata.extract_pv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_pv</span></code></a>(metadata)</p></td>
+<td><p>Extract hybrid level coefficients.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meteodatalab.metadata.is_staggered_horizontal" title="meteodatalab.metadata.is_staggered_horizontal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_staggered_horizontal</span></code></a>(field)</p></td>
+<td><p>Determine if the field is on a staggered horizontal grid.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meteodatalab.metadata.load_grid_reference" title="meteodatalab.metadata.load_grid_reference"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_grid_reference</span></code></a>(metadata)</p></td>
+<td><p>Construct a grid from a reference parameter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meteodatalab.metadata.override" title="meteodatalab.metadata.override"><code class="xref py py-obj docutils literal notranslate"><span class="pre">override</span></code></a>(metadata, **kwargs)</p></td>
+<td><p>Override GRIB metadata.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meteodatalab.metadata.set_origin_xy" title="meteodatalab.metadata.set_origin_xy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_origin_xy</span></code></a>(ds, ref_param)</p></td>
+<td><p>Set horizontal components of the origin attribute.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Classes</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meteodatalab.metadata.Grid" title="meteodatalab.metadata.Grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Grid</span></code></a>(lon_first_grid_point, lat_first_grid_point)</p></td>
+<td><p>Coordinates of the reference grid.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="meteodatalab.metadata.Grid">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meteodatalab.metadata.</span></span><span class="sig-name descname"><span class="pre">Grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lon_first_grid_point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat_first_grid_point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/metadata.html#Grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.metadata.Grid" title="Link to this definition">¶</a></dt>
+<dd><p>Coordinates of the reference grid.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="meteodatalab.metadata.Grid.lon_first_grid_point">
+<span class="sig-name descname"><span class="pre">lon_first_grid_point</span></span><a class="headerlink" href="#meteodatalab.metadata.Grid.lon_first_grid_point" title="Link to this definition">¶</a></dt>
+<dd><p>longitude of first grid point in rotated lat-lon CRS</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="meteodatalab.metadata.Grid.lat_first_grid_point">
+<span class="sig-name descname"><span class="pre">lat_first_grid_point</span></span><a class="headerlink" href="#meteodatalab.metadata.Grid.lat_first_grid_point" title="Link to this definition">¶</a></dt>
+<dd><p>latitude of first grid point in rotated lat-lon CRS</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meteodatalab.metadata.compute_origin">
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.metadata.</span></span><span class="sig-name descname"><span class="pre">compute_origin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_grid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#meteodatalab.metadata.Grid" title="meteodatalab.metadata.Grid"><span class="pre">Grid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/meteodatalab/metadata.html#compute_origin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.metadata.compute_origin" title="Link to this definition">¶</a></dt>
+<dd><p>Compute horizontal components of the origin dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref_grid</strong> (<a class="reference internal" href="#meteodatalab.metadata.Grid" title="meteodatalab.metadata.Grid"><em>Grid</em></a>) – reference grid</p></li>
+<li><p><strong>field</strong> (<em>xarray.DataArray</em>) – field for which to compute the origin</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Horizontal components of the origin</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meteodatalab.metadata.extract_hcoords">
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.metadata.</span></span><span class="sig-name descname"><span class="pre">extract_hcoords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Metadata</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataArray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/meteodatalab/metadata.html#extract_hcoords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.metadata.extract_hcoords" title="Link to this definition">¶</a></dt>
+<dd><p>Extract horizontal coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>metadata</strong> (<em>Metadata</em>) – GRIB metadata containing the grid definition.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Horizontal coordinates in geolatlon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, xarray.DataArray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meteodatalab.metadata.extract_pv">
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.metadata.</span></span><span class="sig-name descname"><span class="pre">extract_pv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Metadata</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataArray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/meteodatalab/metadata.html#extract_pv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.metadata.extract_pv" title="Link to this definition">¶</a></dt>
+<dd><p>Extract hybrid level coefficients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>metadata</strong> (<em>Metadata</em>) – GRIB metadata containing the pv metadata.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Hybrid level coefficients.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, xarray.DataArray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meteodatalab.metadata.is_staggered_horizontal">
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.metadata.</span></span><span class="sig-name descname"><span class="pre">is_staggered_horizontal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/meteodatalab/metadata.html#is_staggered_horizontal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.metadata.is_staggered_horizontal" title="Link to this definition">¶</a></dt>
+<dd><p>Determine if the field is on a staggered horizontal grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>field</strong> (<em>xr.DataArray</em>) – Field containing the grid definition.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if the field is a on regular grid without origin_x and origin_y set.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the field is on a staggered horizontal grid.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meteodatalab.metadata.load_grid_reference">
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.metadata.</span></span><span class="sig-name descname"><span class="pre">load_grid_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Metadata</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#meteodatalab.metadata.Grid" title="meteodatalab.metadata.Grid"><span class="pre">Grid</span></a></span></span><a class="reference internal" href="../_modules/meteodatalab/metadata.html#load_grid_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.metadata.load_grid_reference" title="Link to this definition">¶</a></dt>
+<dd><p>Construct a grid from a reference parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>metadata</strong> (<em>Metadata</em>) – GRIB metadata defining the reference grid.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>reference grid</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#meteodatalab.metadata.Grid" title="meteodatalab.metadata.Grid">Grid</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meteodatalab.metadata.override">
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.metadata.</span></span><span class="sig-name descname"><span class="pre">override</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Metadata</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/meteodatalab/metadata.html#override"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.metadata.override" title="Link to this definition">¶</a></dt>
+<dd><p>Override GRIB metadata.</p>
+<p>Note that no special consideration is made for maintaining consistency when
+overriding template definition keys such as productDefinitionTemplateNumber.
+Note that the origin components in x and y are left untouched.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metadata</strong> (<em>Metadata</em>) – Metadata of the input GRIB metadata</p></li>
+<li><p><strong>kwargs</strong> (<em>Any</em>) – Keyword arguments forwarded to earthkit-data GribMetadata override method</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Updated metadata along with the geography and parameter namespaces</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meteodatalab.metadata.set_origin_xy">
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.metadata.</span></span><span class="sig-name descname"><span class="pre">set_origin_xy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataArray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_param</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/meteodatalab/metadata.html#set_origin_xy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.metadata.set_origin_xy" title="Link to this definition">¶</a></dt>
+<dd><p>Set horizontal components of the origin attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ds</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>xarray.DataArray</em><em>]</em>) – Dataset of fields to update.</p></li>
+<li><p><strong>ref_param</strong> (<em>str</em>) – Name of the parameter field to use as a reference. Must be a key of ds.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>KeyError</strong> – if the ref_param key is not found in the input dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="meteodatalab.mch_model_data.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">mch_model_data</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="meteodatalab.ogd_api.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">ogd_api</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2024, MeteoSwiss</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials"></div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=1dd76d02"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/shibuya.js?v=c477d091"></script></body>
+</html>

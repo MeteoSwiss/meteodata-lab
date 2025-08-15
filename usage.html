@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="violet" data-content_root="./">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Usage - meteodata-lab 0.5.0 documentation</title><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Reference" href="reference.html" /><link rel="prev" title="Installation" href="installation.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="_static/pygments.css?v=397bb51e" />
+    <link rel="stylesheet" type="text/css" href="_static/shibuya.css?v=76b6f612" />
+    <link media="print" rel="stylesheet" type="text/css" href="_static/print.css?v=20ff2c19" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="Usage"/>
+<meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="index.html">
+      
+      
+      <strong>meteodata-lab</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials"></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2 -translate-x-2"></span>
+          <span class="hamburger_3 -translate-x-1"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">meteodata-lab</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.config.html">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.data_cache.html">data_cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.data_source.html">data_source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.grib_decoder.html">grib_decoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.icon_grid.html">icon_grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.mars.html">mars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.mch_model_data.html">mch_model_data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.metadata.html">metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.ogd_api.html">ogd_api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.physical_constants.html">physical_constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.crop.html">operators.crop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.gis.html">operators.gis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.lateral_operators.html">operators.lateral_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.regrid.html">operators.regrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.atmo.html">operators.atmo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.brn.html">operators.brn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.hzerocl.html">operators.hzerocl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.pot_vortic.html">operators.pot_vortic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.radiation.html">operators.radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.relhum.html">operators.relhum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.rho.html">operators.rho</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.theta.html">operators.theta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.thetav.html">operators.thetav</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.wind.html">operators.wind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.time_operators.html">operators.time_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.vertical_extrapolation.html">operators.vertical_extrapolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.vertical_interpolation.html">operators.vertical_interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.vertical_reduction.html">operators.vertical_reduction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#using-ogd-api-to-access-icon-ch1-2-eps-forecasts">Using <code class="xref py py-obj docutils literal notranslate"><span class="pre">ogd_api</span></code> to access ICON-CH1/2-EPS forecasts</a><ul>
+<li><a class="reference internal" href="#step-1-build-requests">Step 1: Build requests</a></li>
+<li><a class="reference internal" href="#step-2-retrieve-forecasts">Step 2: Retrieve forecasts</a></li>
+</ul>
+</li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">meteodata-lab</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Usage</strong>
+        <meta itemprop="position" content="2" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <section id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h1>
+<section id="using-ogd-api-to-access-icon-ch1-2-eps-forecasts">
+<h2>Using <a class="reference internal" href="generated/meteodatalab.ogd_api.html#module-meteodatalab.ogd_api" title="meteodatalab.ogd_api"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ogd_api</span></code></a> to access ICON-CH1/2-EPS forecasts<a class="headerlink" href="#using-ogd-api-to-access-icon-ch1-2-eps-forecasts" title="Link to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="generated/meteodatalab.ogd_api.html#module-meteodatalab.ogd_api" title="meteodatalab.ogd_api"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ogd_api</span></code></a> module provides a Python interface to the <a class="reference external" href="https://data.geo.admin.ch/api/stac/static/spec/v1/api.html">STAC search API</a> on data.geo.admin.ch.
+It enables querying and retrieving numerical weather prediction (NWP) data from <strong>MeteoSwiss</strong>, published through Switzerland’s <a class="reference external" href="https://www.meteoswiss.admin.ch/services-and-publications/service/open-data.html">Open Government Data (OGD) initiative</a> and extended for forecast-specific access.</p>
+<p>You can find interactive Jupyter notebooks demonstrating the usage of <a class="reference internal" href="generated/meteodatalab.ogd_api.html#module-meteodatalab.ogd_api" title="meteodatalab.ogd_api"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ogd_api</span></code></a> here: <a class="reference external" href="https://github.com/MeteoSwiss/opendata-nwp-demos">MeteoSwiss Open Data NWP Demos</a>.</p>
+<p>This example walks you through creating requests and retrieving forecast data.</p>
+<section id="step-1-build-requests">
+<h3>Step 1: Build requests<a class="headerlink" href="#step-1-build-requests" title="Link to this heading">¶</a></h3>
+<p>Use <a class="reference internal" href="generated/meteodatalab.ogd_api.html#meteodatalab.ogd_api.Request" title="meteodatalab.ogd_api.Request"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ogd_api.Request</span></code></a> to define a query, for example, to retrieve ICON-CH2-EPS total precipitation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+</span><span data-line="2"><span class="kn">from</span> <span class="nn">meteodatalab</span> <span class="kn">import</span> <span class="n">ogd_api</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="n">req</span> <span class="o">=</span> <span class="n">ogd_api</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+</span><span data-line="5">    <span class="n">collection</span><span class="o">=</span><span class="s2">&quot;ogd-forecasting-icon-ch2&quot;</span><span class="p">,</span>
+</span><span data-line="6">    <span class="n">variable</span><span class="o">=</span><span class="s2">&quot;TOT_PREC&quot;</span><span class="p">,</span>
+</span><span data-line="7">    <span class="n">reference_datetime</span><span class="o">=</span><span class="s2">&quot;latest&quot;</span><span class="p">,</span>
+</span><span data-line="8">    <span class="n">perturbed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span data-line="9">    <span class="n">horizon</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;P0DT2H&quot;</span>
+</span><span data-line="10"><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>Each argument in the request serves the following purpose:</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Argument</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">collection</span></code></p></td>
+<td><p>Forecast collection to use.</p>
+<p>Examples:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;ogd-forecasting-icon-ch1&quot;</span></code> (ICON-CH1-EPS)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;ogd-forecasting-icon-ch2&quot;</span></code> (ICON-CH2-EPS)</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">variable</span></code></p></td>
+<td><p>Meteorological variable of interest.</p>
+<p>Example: <code class="docutils literal notranslate"><span class="pre">&quot;TOT_PREC&quot;</span></code> for total precipitation.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">reference_datetime</span></code></p></td>
+<td><p>Initialization time of the forecast in <strong>UTC</strong>, provided as one of the following:</p>
+<ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime-objects">datetime.datetime</a> object
+(e.g., <code class="docutils literal notranslate"><span class="pre">datetime.datetime(2025,</span> <span class="pre">5,</span> <span class="pre">5,</span> <span class="pre">tzinfo=datetime.timezone.utc)</span></code>)</p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations">ISO 8601 datetime string</a> (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;2025-05-05T00:00:00Z&quot;</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;latest&quot;</span></code> to automatically select the most recent forecast based on the
+<code class="docutils literal notranslate"><span class="pre">reference_datetime</span></code> embedded in each individual asset URL (i.e., for a single
+combination of collection, variable, reference time, and horizon).</p>
+<p><strong>Note:</strong> When using <code class="docutils literal notranslate"><span class="pre">&quot;latest&quot;</span></code>, the selected reference time may vary across separate
+requests or files, depending on when they are executed while new data is being
+progressively pushed to the STAC API (i.e., assets are not published all at once).</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">perturbed</span></code></p></td>
+<td><p>If <code class="docutils literal notranslate"><span class="pre">True</span></code>, retrieves ensemble forecast members.
+If <code class="docutils literal notranslate"><span class="pre">False</span></code>, returns the deterministic (control) forecast.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">horizon</span></code></p></td>
+<td><p>Forecast lead time, provided as one of the following:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#timedelta-objects">datetime.timedelta</a> object (e.g., <code class="docutils literal notranslate"><span class="pre">datetime.timedelta(hours=2)</span></code>)</p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/ISO_8601#Durations">ISO 8601 duration string</a> (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;P0DT2H&quot;</span></code>)</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="step-2-retrieve-forecasts">
+<h3>Step 2: Retrieve forecasts<a class="headerlink" href="#step-2-retrieve-forecasts" title="Link to this heading">¶</a></h3>
+<p>To access the forecast data, you have two choices:</p>
+<ol class="arabic simple">
+<li><p>Load forecast data to Xarray with <a class="reference internal" href="generated/meteodatalab.ogd_api.html#meteodatalab.ogd_api.get_from_ogd" title="meteodatalab.ogd_api.get_from_ogd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_from_ogd</span></code></a></p></li>
+<li><p>Download forecast data with <a class="reference internal" href="generated/meteodatalab.ogd_api.html#meteodatalab.ogd_api.download_from_ogd" title="meteodatalab.ogd_api.download_from_ogd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download_from_ogd</span></code></a></p></li>
+</ol>
+<p><strong>1. Load forecast data to Xarray</strong></p>
+<p>We now send our request to the API and retrieve the resulting dataset using the <a class="reference internal" href="generated/meteodatalab.ogd_api.html#meteodatalab.ogd_api.get_from_ogd" title="meteodatalab.ogd_api.get_from_ogd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_from_ogd</span></code></a> function. The response is returned as an <code class="xref py py-obj docutils literal notranslate"><span class="pre">xarray.DataArray</span></code>, which is efficient for handling multi-dimensional data.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>You can use configure caching behaviour in <a class="reference external" href="https://earthkit-data.readthedocs.io/en/latest/">earthkit-data</a> to avoid re-downloading files:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;off&quot;</span></code> (default): no caching — files are always freshly downloaded</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;temporary&quot;</span></code>: auto-cleared after the session</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;user&quot;</span></code>: saves to a specific directory across sessions</p></li>
+</ul>
+<p>See the <a class="reference external" href="https://earthkit-data.readthedocs.io/en/latest/examples/cache.html">earthkit-data caching documentation</a> for more details.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span> <span class="nn">earthkit.data</span> <span class="kn">import</span> <span class="n">config</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="c1"># Enable temporary cache</span>
+</span><span data-line="4"><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;cache-policy&quot;</span><span class="p">,</span> <span class="s2">&quot;temporary&quot;</span><span class="p">)</span>
+</span><span data-line="5">
+</span><span data-line="6"><span class="c1"># Load data as xarray.DataArray</span>
+</span><span data-line="7"><span class="n">da</span> <span class="o">=</span> <span class="n">ogd_api</span><span class="o">.</span><span class="n">get_from_ogd</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<img alt="_images/DataArray_overview.png" src="_images/DataArray_overview.png" />
+<p><strong>2. Download forecast data</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="c1"># Define the target directory for saving the forecast files</span>
+</span><span data-line="4"><span class="n">target_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;forecast_files&quot;</span>
+</span><span data-line="5">
+</span><span data-line="6"><span class="c1"># Download the forecast files</span>
+</span><span data-line="7"><span class="n">ogd_api</span><span class="o">.</span><span class="n">download_from_ogd</span><span class="p">(</span><span class="n">req</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">)</span>
+</span><span data-line="8">
+</span><span data-line="9"><span class="c1"># List all downloaded files in the target directory</span>
+</span><span data-line="10"><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Downloaded files:&quot;</span><span class="p">)</span>
+</span><span data-line="11"><span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">target_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()):</span>
+</span><span data-line="12">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; - </span><span class="si">{</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>After downloading, you should find the following files inside the <code class="docutils literal notranslate"><span class="pre">forecast_files/</span></code> directory:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">horizontal_constants_icon-ch2-eps.grib2</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">horizontal_constants_icon-ch2-eps.sha256</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">icon-ch2-eps-&lt;today's-datetime&gt;-2-tot_prec-ctrl.grib2</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">icon-ch2-eps-&lt;today's-datetime&gt;-2-tot_prec-ctrl.sha256</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vertical_constants_icon-ch2-eps.grib2</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vertical_constants_icon-ch2-eps.sha256</span></code></p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Missing grid coordinates</strong></p>
+<p>Forecast GRIB files like <code class="docutils literal notranslate"><span class="pre">icon-ch2-eps-*.grib2</span></code> do <strong>not</strong> include horizontal or vertical coordinates (longitude, latitude, or height).
+Therefore, the horizontal and vertical constants are provided as separate files to fully describe the forecast grid. This applies when using
+<a class="reference internal" href="generated/meteodatalab.ogd_api.html#meteodatalab.ogd_api.download_from_ogd" title="meteodatalab.ogd_api.download_from_ogd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download_from_ogd</span></code></a>. If you use <a class="reference internal" href="generated/meteodatalab.ogd_api.html#meteodatalab.ogd_api.get_from_ogd" title="meteodatalab.ogd_api.get_from_ogd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_from_ogd</span></code></a>, the horizontal coordinates are automatically loaded
+and included as part of the <code class="xref py py-obj docutils literal notranslate"><span class="pre">xarray.DataArray</span></code>.</p>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p><strong>Checksum verification</strong></p>
+<p>During the download, each file’s integrity is verified using a SHA-256 checksum provided via HTTP headers.
+These checksums are saved as <code class="docutils literal notranslate"><span class="pre">.sha256</span></code> files and used to skip re-downloading valid existing files.</p>
+<p>Learn more about the data structure <a class="reference external" href="https://opendatadocs.meteoswiss.ch/e-forecast-data/e2-e3-numerical-weather-forecasting-model">here</a>.</p>
+</div>
+</section>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="installation.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Installation</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="reference.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Reference</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2024, MeteoSwiss</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials"></div>
+    </div>
+  </div>
+</footer>
+      <script src="_static/documentation_options.js?v=1dd76d02"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/shibuya.js?v=c477d091"></script></body>
+</html>

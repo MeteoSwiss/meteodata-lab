@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="violet" data-content_root="../../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.vertical_interpolation - meteodata-lab 0.5.0 documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=397bb51e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=76b6f612" />
+    <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="meteodatalab.operators.vertical_interpolation"/>
+<meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../../../index.html">
+      
+      
+      <strong>meteodata-lab</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials"></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2 -translate-x-2"></span>
+          <span class="hamburger_3 -translate-x-1"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">meteodata-lab</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.config.html">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.data_cache.html">data_cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.data_source.html">data_source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.grib_decoder.html">grib_decoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.icon_grid.html">icon_grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.mars.html">mars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.mch_model_data.html">mch_model_data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.metadata.html">metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.ogd_api.html">ogd_api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.physical_constants.html">physical_constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.crop.html">operators.crop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.gis.html">operators.gis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.lateral_operators.html">operators.lateral_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.regrid.html">operators.regrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.atmo.html">operators.atmo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.brn.html">operators.brn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.hzerocl.html">operators.hzerocl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.pot_vortic.html">operators.pot_vortic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.radiation.html">operators.radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.relhum.html">operators.relhum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.rho.html">operators.rho</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.theta.html">operators.theta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.thetav.html">operators.thetav</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.wind.html">operators.wind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.time_operators.html">operators.time_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.vertical_extrapolation.html">operators.vertical_extrapolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.vertical_interpolation.html">operators.vertical_interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.vertical_reduction.html">operators.vertical_reduction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../../index.html"><span itemprop="name">meteodata-lab</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../index.html"><span itemprop="name">Module code</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">meteodatalab.operators.vertical_interpolation</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <h1>Source code for meteodatalab.operators.vertical_interpolation</h1><div class="highlight"><pre>
+<span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;Vertical interpolation operators.&quot;&quot;&quot;</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="c1"># Standard library</span>
+</span><span data-line="4"><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Sequence</span>
+</span><span data-line="5">
+</span><span data-line="6"><span class="c1"># Third-party</span>
+</span><span data-line="7"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span data-line="8"><span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+</span><span data-line="9">
+</span><span data-line="10"><span class="c1"># First-party</span>
+</span><span data-line="11"><span class="kn">from</span> <span class="nn">meteodatalab.operators.support_operators</span> <span class="kn">import</span> <span class="p">(</span>
+</span><span data-line="12">    <span class="n">TargetCoordinates</span><span class="p">,</span>
+</span><span data-line="13">    <span class="n">TargetCoordinatesAttrs</span><span class="p">,</span>
+</span><span data-line="14">    <span class="n">init_field_with_vcoord</span><span class="p">,</span>
+</span><span data-line="15"><span class="p">)</span>
+</span><span data-line="16">
+</span><span data-line="17">
+<div class="viewcode-block" id="interpolate_k2p">
+<a class="viewcode-back" href="../../../generated/meteodatalab.operators.vertical_interpolation.html#meteodatalab.operators.vertical_interpolation.interpolate_k2p">[docs]</a>
+</span><span data-line="18"><span class="k">def</span> <span class="nf">interpolate_k2p</span><span class="p">(</span>
+</span><span data-line="19">    <span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
+</span><span data-line="20">    <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;linear_in_p&quot;</span><span class="p">,</span> <span class="s2">&quot;linear_in_lnp&quot;</span><span class="p">,</span> <span class="s2">&quot;nearest_sfc&quot;</span><span class="p">],</span>
+</span><span data-line="21">    <span class="n">p_field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
+</span><span data-line="22">    <span class="n">p_tc_values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+</span><span data-line="23">    <span class="n">p_tc_units</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Pa&quot;</span><span class="p">,</span> <span class="s2">&quot;hPa&quot;</span><span class="p">],</span>
+</span><span data-line="24"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
+</span><span data-line="25"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Interpolate a field from model (k) levels to pressure coordinates.</span>
+</span><span data-line="26">
+</span><span data-line="27"><span class="sd">    Example for vertical interpolation to isosurfaces of a target field,</span>
+</span><span data-line="28"><span class="sd">    which is strictly monotonically decreasing with height.</span>
+</span><span data-line="29">
+</span><span data-line="30">
+</span><span data-line="31">
+</span><span data-line="32"><span class="sd">    Parameters</span>
+</span><span data-line="33"><span class="sd">    ----------</span>
+</span><span data-line="34"><span class="sd">    field : xarray.DataArray</span>
+</span><span data-line="35"><span class="sd">        field to interpolate (only typeOfLevel=&quot;generalVerticalLayer&quot; is supported)</span>
+</span><span data-line="36"><span class="sd">    mode : str</span>
+</span><span data-line="37"><span class="sd">        interpolation algorithm, one of {&quot;linear_in_p&quot;, &quot;linear_in_lnp&quot;, &quot;nearest_sfc&quot;}</span>
+</span><span data-line="38"><span class="sd">    p_field : xarray.DataArray</span>
+</span><span data-line="39"><span class="sd">        pressure field on k levels in Pa</span>
+</span><span data-line="40"><span class="sd">        (only typeOfLevel=&quot;generalVerticalLayer&quot; is supported)</span>
+</span><span data-line="41"><span class="sd">    p_tc_values : list of float</span>
+</span><span data-line="42"><span class="sd">        pressure target coordinate values</span>
+</span><span data-line="43"><span class="sd">    p_tc_units : str</span>
+</span><span data-line="44"><span class="sd">        pressure target coordinate units</span>
+</span><span data-line="45">
+</span><span data-line="46"><span class="sd">    Returns</span>
+</span><span data-line="47"><span class="sd">    -------</span>
+</span><span data-line="48"><span class="sd">    field_on_tc : xarray.DataArray</span>
+</span><span data-line="49"><span class="sd">        field on target (i.e., pressure) coordinates</span>
+</span><span data-line="50">
+</span><span data-line="51"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="52">    <span class="c1"># TODO: check missing value consistency with GRIB2 (currently comparisons are</span>
+</span><span data-line="53">    <span class="c1">#       done with np.nan)</span>
+</span><span data-line="54">    <span class="c1">#       check that p_field is the pressure field, given in Pa (can only be done</span>
+</span><span data-line="55">    <span class="c1">#       if attributes are consequently set)</span>
+</span><span data-line="56">    <span class="c1">#       check that field and p_field are compatible (have the same</span>
+</span><span data-line="57">    <span class="c1">#       dimensions and sizes)</span>
+</span><span data-line="58">    <span class="c1">#       print warn message if result contains missing values</span>
+</span><span data-line="59">
+</span><span data-line="60">    <span class="c1"># Initializations</span>
+</span><span data-line="61">    <span class="c1"># ... supported interpolation modes</span>
+</span><span data-line="62">    <span class="n">interpolation_modes</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;linear_in_p&quot;</span><span class="p">,</span> <span class="s2">&quot;linear_in_lnp&quot;</span><span class="p">,</span> <span class="s2">&quot;nearest_sfc&quot;</span><span class="p">)</span>
+</span><span data-line="63">    <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">interpolation_modes</span><span class="p">:</span>
+</span><span data-line="64">        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;interpolate_k2p: unknown mode&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+</span><span data-line="65">    <span class="c1"># ... supported tc units and corresponding conversion factors to Pa</span>
+</span><span data-line="66">    <span class="n">p_tc_unit_conversions</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">Pa</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">hPa</span><span class="o">=</span><span class="mf">100.0</span><span class="p">)</span>
+</span><span data-line="67">    <span class="k">if</span> <span class="n">p_tc_units</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">p_tc_unit_conversions</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</span><span data-line="68">        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+</span><span data-line="69">            <span class="s2">&quot;interpolate_k2p: unsupported value of p_tc_units&quot;</span><span class="p">,</span> <span class="n">p_tc_units</span>
+</span><span data-line="70">        <span class="p">)</span>
+</span><span data-line="71">    <span class="c1"># ... supported range of pressure tc values (in Pa)</span>
+</span><span data-line="72">    <span class="n">p_tc_min</span> <span class="o">=</span> <span class="mf">1.0</span>
+</span><span data-line="73">    <span class="n">p_tc_max</span> <span class="o">=</span> <span class="mf">120000.0</span>
+</span><span data-line="74">
+</span><span data-line="75">    <span class="c1"># Define vertical target coordinates (tc)</span>
+</span><span data-line="76">    <span class="n">tc_factor</span> <span class="o">=</span> <span class="n">p_tc_unit_conversions</span><span class="p">[</span><span class="n">p_tc_units</span><span class="p">]</span>
+</span><span data-line="77">    <span class="n">tc_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">p_tc_values</span><span class="p">))</span> <span class="o">*</span> <span class="n">tc_factor</span>
+</span><span data-line="78">    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">((</span><span class="n">tc_values</span> <span class="o">&lt;</span> <span class="n">p_tc_min</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">tc_values</span> <span class="o">&gt;</span> <span class="n">p_tc_max</span><span class="p">)):</span>
+</span><span data-line="79">        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+</span><span data-line="80">            <span class="s2">&quot;interpolate_k2p: target coordinate value out of range &quot;</span>
+</span><span data-line="81">            <span class="sa">f</span><span class="s2">&quot;(must be in interval [</span><span class="si">{</span><span class="n">p_tc_min</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">p_tc_max</span><span class="si">}</span><span class="s2">]Pa)&quot;</span>
+</span><span data-line="82">        <span class="p">)</span>
+</span><span data-line="83">    <span class="n">tc</span> <span class="o">=</span> <span class="n">TargetCoordinates</span><span class="p">(</span>
+</span><span data-line="84">        <span class="n">type_of_level</span><span class="o">=</span><span class="s2">&quot;isobaricInPa&quot;</span><span class="p">,</span>
+</span><span data-line="85">        <span class="n">values</span><span class="o">=</span><span class="n">tc_values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+</span><span data-line="86">        <span class="n">attrs</span><span class="o">=</span><span class="n">TargetCoordinatesAttrs</span><span class="p">(</span>
+</span><span data-line="87">            <span class="n">units</span><span class="o">=</span><span class="s2">&quot;Pa&quot;</span><span class="p">,</span>
+</span><span data-line="88">            <span class="n">positive</span><span class="o">=</span><span class="s2">&quot;down&quot;</span><span class="p">,</span>
+</span><span data-line="89">            <span class="n">standard_name</span><span class="o">=</span><span class="s2">&quot;air_pressure&quot;</span><span class="p">,</span>
+</span><span data-line="90">            <span class="n">long_name</span><span class="o">=</span><span class="s2">&quot;pressure&quot;</span><span class="p">,</span>
+</span><span data-line="91">        <span class="p">),</span>
+</span><span data-line="92">    <span class="p">)</span>
+</span><span data-line="93">
+</span><span data-line="94">    <span class="c1"># Check that typeOfLevel is supported and equal for both field and p_field</span>
+</span><span data-line="95">    <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">vcoord_type</span> <span class="o">!=</span> <span class="s2">&quot;model_level&quot;</span><span class="p">:</span>
+</span><span data-line="96">        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+</span><span data-line="97">            <span class="s2">&quot;interpolate_k2p: field to interpolate must be defined on model levels&quot;</span>
+</span><span data-line="98">        <span class="p">)</span>
+</span><span data-line="99">    <span class="k">if</span> <span class="n">p_field</span><span class="o">.</span><span class="n">vcoord_type</span> <span class="o">!=</span> <span class="s2">&quot;model_level&quot;</span><span class="p">:</span>
+</span><span data-line="100">        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+</span><span data-line="101">            <span class="s2">&quot;interpolate_k2p: pressure field must be defined on model levels&quot;</span>
+</span><span data-line="102">        <span class="p">)</span>
+</span><span data-line="103">    <span class="c1"># Check that dimensions are the same for field and p_field</span>
+</span><span data-line="104">    <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">origin_z</span> <span class="o">!=</span> <span class="n">p_field</span><span class="o">.</span><span class="n">origin_z</span><span class="p">:</span>
+</span><span data-line="105">        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+</span><span data-line="106">            <span class="s2">&quot;interpolate_k2p: field and p_field must have equal vertical staggering&quot;</span>
+</span><span data-line="107">        <span class="p">)</span>
+</span><span data-line="108">
+</span><span data-line="109">    <span class="c1"># Prepare output field field_on_tc on target coordinates</span>
+</span><span data-line="110">    <span class="n">field_on_tc</span> <span class="o">=</span> <span class="n">init_field_with_vcoord</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">broadcast_like</span><span class="p">(</span><span class="n">p_field</span><span class="p">),</span> <span class="n">tc</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+</span><span data-line="111">
+</span><span data-line="112">    <span class="c1"># Interpolate</span>
+</span><span data-line="113">    <span class="c1"># ... prepare interpolation</span>
+</span><span data-line="114">    <span class="n">pkm1</span> <span class="o">=</span> <span class="n">p_field</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="115">    <span class="n">fkm1</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="116">
+</span><span data-line="117">    <span class="c1"># ... loop through tc values</span>
+</span><span data-line="118">    <span class="k">for</span> <span class="n">tc_idx</span><span class="p">,</span> <span class="n">p0</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tc_values</span><span class="p">):</span>
+</span><span data-line="119">        <span class="c1"># ... find the 3d field where pressure is &gt; p0 on level k</span>
+</span><span data-line="120">        <span class="c1"># and was &lt;= p0 on level k-1</span>
+</span><span data-line="121">        <span class="n">p2</span> <span class="o">=</span> <span class="n">p_field</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">p_field</span> <span class="o">&gt;</span> <span class="n">p0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">pkm1</span> <span class="o">&lt;=</span> <span class="n">p0</span><span class="p">))</span>
+</span><span data-line="122">        <span class="c1"># ... extract the index k of the vertical layer at which p2 adopts its minimum</span>
+</span><span data-line="123">        <span class="c1">#     (corresponds to search from top of atmosphere to bottom)</span>
+</span><span data-line="124">        <span class="c1"># ... note that if the condition above is not fulfilled, minind will</span>
+</span><span data-line="125">        <span class="c1"># be set to k_top</span>
+</span><span data-line="126">        <span class="n">minind</span> <span class="o">=</span> <span class="n">p2</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">p_tc_max</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s2">&quot;z&quot;</span><span class="p">)</span>
+</span><span data-line="127">        <span class="c1"># ... extract pressure and field at level k</span>
+</span><span data-line="128">        <span class="n">p2</span> <span class="o">=</span> <span class="n">p2</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">minind</span><span class="p">}]</span>
+</span><span data-line="129">        <span class="n">f2</span> <span class="o">=</span> <span class="n">field</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">minind</span><span class="p">}]</span>
+</span><span data-line="130">        <span class="c1"># ... extract pressure and field at level k-1</span>
+</span><span data-line="131">        <span class="c1"># ... note that f1 and p1 are both undefined, if minind equals k_top</span>
+</span><span data-line="132">        <span class="n">f1</span> <span class="o">=</span> <span class="n">fkm1</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">minind</span><span class="p">}]</span>
+</span><span data-line="133">        <span class="n">p1</span> <span class="o">=</span> <span class="n">pkm1</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">minind</span><span class="p">}]</span>
+</span><span data-line="134">
+</span><span data-line="135">        <span class="c1"># ... compute the interpolation weights</span>
+</span><span data-line="136">        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;linear_in_p&quot;</span><span class="p">:</span>
+</span><span data-line="137">            <span class="c1"># ... note that p1 is undefined, if minind equals k_top, so ratio will</span>
+</span><span data-line="138">            <span class="c1"># be undefined</span>
+</span><span data-line="139">            <span class="n">ratio</span> <span class="o">=</span> <span class="p">(</span><span class="n">p0</span> <span class="o">-</span> <span class="n">p1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">p2</span> <span class="o">-</span> <span class="n">p1</span><span class="p">)</span>
+</span><span data-line="140">
+</span><span data-line="141">        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;linear_in_lnp&quot;</span><span class="p">:</span>
+</span><span data-line="142">            <span class="c1"># ... note that p1 is undefined, if minind equals k_top, so ratio will</span>
+</span><span data-line="143">            <span class="c1">#  be undefined</span>
+</span><span data-line="144">            <span class="n">ratio</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p0</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p1</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p2</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p1</span><span class="p">))</span>
+</span><span data-line="145">
+</span><span data-line="146">        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;nearest_sfc&quot;</span><span class="p">:</span>
+</span><span data-line="147">            <span class="c1"># ... note that by construction, p2 is always defined;</span>
+</span><span data-line="148">            <span class="c1">#     this operation sets ratio to 0 if p1 (and by construction also f1)</span>
+</span><span data-line="149">            <span class="c1">#     is undefined; therefore, the interpolation formula below works</span>
+</span><span data-line="150">            <span class="c1">#     correctly also in this case</span>
+</span><span data-line="151">            <span class="n">ratio</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p0</span> <span class="o">-</span> <span class="n">p1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p0</span> <span class="o">-</span> <span class="n">p2</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+</span><span data-line="152">
+</span><span data-line="153">        <span class="c1"># ... interpolate and update field_on_tc</span>
+</span><span data-line="154">        <span class="n">field_on_tc</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">tc_idx</span><span class="p">}]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">ratio</span><span class="p">)</span> <span class="o">*</span> <span class="n">f1</span> <span class="o">+</span> <span class="n">ratio</span> <span class="o">*</span> <span class="n">f2</span>
+</span><span data-line="155">
+</span><span data-line="156">    <span class="k">return</span> <span class="n">field_on_tc</span></div>
+
+</span><span data-line="157">
+</span><span data-line="158">
+<div class="viewcode-block" id="interpolate_k2theta">
+<a class="viewcode-back" href="../../../generated/meteodatalab.operators.vertical_interpolation.html#meteodatalab.operators.vertical_interpolation.interpolate_k2theta">[docs]</a>
+</span><span data-line="159"><span class="k">def</span> <span class="nf">interpolate_k2theta</span><span class="p">(</span>
+</span><span data-line="160">    <span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
+</span><span data-line="161">    <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;low_fold&quot;</span><span class="p">,</span> <span class="s2">&quot;high_fold&quot;</span><span class="p">,</span> <span class="s2">&quot;undef_fold&quot;</span><span class="p">],</span>
+</span><span data-line="162">    <span class="n">th_field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
+</span><span data-line="163">    <span class="n">th_tc_values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+</span><span data-line="164">    <span class="n">th_tc_units</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;cK&quot;</span><span class="p">],</span>
+</span><span data-line="165">    <span class="n">h_field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
+</span><span data-line="166"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
+</span><span data-line="167"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Interpolate a field from model levels to potential temperature coordinates.</span>
+</span><span data-line="168">
+</span><span data-line="169"><span class="sd">       Example for vertical interpolation to isosurfaces of a target field</span>
+</span><span data-line="170"><span class="sd">       that is no monotonic function of height.</span>
+</span><span data-line="171">
+</span><span data-line="172"><span class="sd">    Parameters</span>
+</span><span data-line="173"><span class="sd">    ----------</span>
+</span><span data-line="174"><span class="sd">    field : xarray.DataArray</span>
+</span><span data-line="175"><span class="sd">        field to interpolate (only typeOfLevel=&quot;generalVerticalLayer&quot; is supported)</span>
+</span><span data-line="176"><span class="sd">    mode : str</span>
+</span><span data-line="177"><span class="sd">        interpolation algorithm, one of {&quot;low_fold&quot;, &quot;high_fold&quot;, &quot;undef_fold&quot;}</span>
+</span><span data-line="178"><span class="sd">    th_field : xarray.DataArray</span>
+</span><span data-line="179"><span class="sd">        potential temperature theta on k levels in K</span>
+</span><span data-line="180"><span class="sd">        (only typeOfLevel=&quot;generalVerticalLayer&quot; is supported)</span>
+</span><span data-line="181"><span class="sd">    th_tc_values : list of float</span>
+</span><span data-line="182"><span class="sd">        target coordinate values</span>
+</span><span data-line="183"><span class="sd">    th_tc_units : str</span>
+</span><span data-line="184"><span class="sd">        target coordinate units</span>
+</span><span data-line="185"><span class="sd">    h_field : xarray.DataArray</span>
+</span><span data-line="186"><span class="sd">        height on k levels (only typeOfLevel=&quot;generalVerticalLayer&quot; is supported)</span>
+</span><span data-line="187">
+</span><span data-line="188"><span class="sd">    Returns</span>
+</span><span data-line="189"><span class="sd">    -------</span>
+</span><span data-line="190"><span class="sd">    field_on_tc : xarray.DataArray</span>
+</span><span data-line="191"><span class="sd">        field on target (i.e., theta) coordinates</span>
+</span><span data-line="192">
+</span><span data-line="193"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="194">    <span class="c1"># TODO: check missing value consistency with GRIB2</span>
+</span><span data-line="195">    <span class="c1">#       (currently comparisons are done with np.nan)</span>
+</span><span data-line="196">    <span class="c1">#       check that th_field is the theta field, given in K</span>
+</span><span data-line="197">    <span class="c1">#       (can only be done if attributes are consequently set)</span>
+</span><span data-line="198">    <span class="c1">#       check that field, th_field, and h_field are compatible</span>
+</span><span data-line="199">    <span class="c1">#       print warn message if result contains missing values</span>
+</span><span data-line="200">
+</span><span data-line="201">    <span class="c1"># ATTENTION: the attribute &quot;positive&quot; is not set for generalVerticalLayer</span>
+</span><span data-line="202">    <span class="c1">#            we know that for COSMO it would be defined as positive:&quot;down&quot;;</span>
+</span><span data-line="203">    <span class="c1">#            for the time being,</span>
+</span><span data-line="204">    <span class="c1">#            we explicitly use the height field on model mid layer</span>
+</span><span data-line="205">    <span class="c1">#            surfaces as auxiliary field</span>
+</span><span data-line="206">
+</span><span data-line="207">    <span class="c1"># Parameters</span>
+</span><span data-line="208">    <span class="c1"># ... supported folding modes</span>
+</span><span data-line="209">    <span class="n">folding_modes</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;low_fold&quot;</span><span class="p">,</span> <span class="s2">&quot;high_fold&quot;</span><span class="p">,</span> <span class="s2">&quot;undef_fold&quot;</span><span class="p">)</span>
+</span><span data-line="210">    <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">folding_modes</span><span class="p">:</span>
+</span><span data-line="211">        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;interpolate_k2theta: unsupported mode&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+</span><span data-line="212">
+</span><span data-line="213">    <span class="c1"># ... supported tc units and corresponding conversion factor to K</span>
+</span><span data-line="214">    <span class="c1"># (i.e. to the same unit as theta); according to GRIB2</span>
+</span><span data-line="215">    <span class="c1">#     isentropic surfaces are coded in K; fieldextra codes</span>
+</span><span data-line="216">    <span class="c1">#     them in cK for NetCDF (to be checked)</span>
+</span><span data-line="217">    <span class="n">th_tc_unit_conversions</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">cK</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+</span><span data-line="218">    <span class="k">if</span> <span class="n">th_tc_units</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">th_tc_unit_conversions</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</span><span data-line="219">        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+</span><span data-line="220">            <span class="s2">&quot;interpolate_k2theta: unsupported value of th_tc_units&quot;</span><span class="p">,</span> <span class="n">th_tc_units</span>
+</span><span data-line="221">        <span class="p">)</span>
+</span><span data-line="222">    <span class="c1"># ... supported range of tc values (in K)</span>
+</span><span data-line="223">    <span class="n">th_tc_min</span> <span class="o">=</span> <span class="mf">1.0</span>
+</span><span data-line="224">    <span class="n">th_tc_max</span> <span class="o">=</span> <span class="mf">1000.0</span>
+</span><span data-line="225">    <span class="c1"># ... tc values outside range of meaningful values of height,</span>
+</span><span data-line="226">    <span class="c1"># used in tc interval search (in m amsl)</span>
+</span><span data-line="227">    <span class="n">h_min</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1000.0</span>
+</span><span data-line="228">    <span class="n">h_max</span> <span class="o">=</span> <span class="mf">100000.0</span>
+</span><span data-line="229">
+</span><span data-line="230">    <span class="c1"># Define vertical target coordinates</span>
+</span><span data-line="231">    <span class="c1"># Sorting cannot be exploited for optimizations, since theta is</span>
+</span><span data-line="232">    <span class="c1"># not monotonous wrt to height tc values are stored in K</span>
+</span><span data-line="233">    <span class="n">tc_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">th_tc_values</span><span class="p">)</span> <span class="o">*</span> <span class="n">th_tc_unit_conversions</span><span class="p">[</span><span class="n">th_tc_units</span><span class="p">]</span>
+</span><span data-line="234">    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">((</span><span class="n">tc_values</span> <span class="o">&lt;</span> <span class="n">th_tc_min</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">tc_values</span> <span class="o">&gt;</span> <span class="n">th_tc_max</span><span class="p">)):</span>
+</span><span data-line="235">        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+</span><span data-line="236">            <span class="s2">&quot;interpolate_k2theta: target coordinate value &quot;</span>
+</span><span data-line="237">            <span class="sa">f</span><span class="s2">&quot;out of range (must be in interval [</span><span class="si">{</span><span class="n">th_tc_min</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">th_tc_max</span><span class="si">}</span><span class="s2">]K)&quot;</span>
+</span><span data-line="238">        <span class="p">)</span>
+</span><span data-line="239">    <span class="n">tc</span> <span class="o">=</span> <span class="n">TargetCoordinates</span><span class="p">(</span>
+</span><span data-line="240">        <span class="n">type_of_level</span><span class="o">=</span><span class="s2">&quot;theta&quot;</span><span class="p">,</span>
+</span><span data-line="241">        <span class="n">values</span><span class="o">=</span><span class="n">tc_values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+</span><span data-line="242">        <span class="n">attrs</span><span class="o">=</span><span class="n">TargetCoordinatesAttrs</span><span class="p">(</span>
+</span><span data-line="243">            <span class="n">units</span><span class="o">=</span><span class="s2">&quot;K&quot;</span><span class="p">,</span>
+</span><span data-line="244">            <span class="n">positive</span><span class="o">=</span><span class="s2">&quot;up&quot;</span><span class="p">,</span>
+</span><span data-line="245">            <span class="n">standard_name</span><span class="o">=</span><span class="s2">&quot;air_potential_temperature&quot;</span><span class="p">,</span>
+</span><span data-line="246">            <span class="n">long_name</span><span class="o">=</span><span class="s2">&quot;potential temperature&quot;</span><span class="p">,</span>
+</span><span data-line="247">        <span class="p">),</span>
+</span><span data-line="248">    <span class="p">)</span>
+</span><span data-line="249">
+</span><span data-line="250">    <span class="c1"># Check that typeOfLevel is supported and equal for field, th_field, and h_field</span>
+</span><span data-line="251">    <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">vcoord_type</span> <span class="o">!=</span> <span class="s2">&quot;model_level&quot;</span> <span class="ow">or</span> <span class="n">field</span><span class="o">.</span><span class="n">origin_z</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
+</span><span data-line="252">        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+</span><span data-line="253">            <span class="s2">&quot;interpolate_k2theta: field to interpolate must &quot;</span>
+</span><span data-line="254">            <span class="s2">&quot;be defined on model_level layers&quot;</span>
+</span><span data-line="255">        <span class="p">)</span>
+</span><span data-line="256">    <span class="k">if</span> <span class="n">th_field</span><span class="o">.</span><span class="n">vcoord_type</span> <span class="o">!=</span> <span class="s2">&quot;model_level&quot;</span> <span class="ow">or</span> <span class="n">th_field</span><span class="o">.</span><span class="n">origin_z</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
+</span><span data-line="257">        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+</span><span data-line="258">            <span class="s2">&quot;interpolate_k2theta: theta field must be defined on model_level layers&quot;</span>
+</span><span data-line="259">        <span class="p">)</span>
+</span><span data-line="260">    <span class="k">if</span> <span class="n">h_field</span><span class="o">.</span><span class="n">vcoord_type</span> <span class="o">!=</span> <span class="s2">&quot;model_level&quot;</span> <span class="ow">or</span> <span class="n">h_field</span><span class="o">.</span><span class="n">origin_z</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
+</span><span data-line="261">        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+</span><span data-line="262">            <span class="s2">&quot;interpolate_k2theta: height field must be defined on model_level layers&quot;</span>
+</span><span data-line="263">        <span class="p">)</span>
+</span><span data-line="264">
+</span><span data-line="265">    <span class="c1"># Prepare output field field_on_tc on target coordinates</span>
+</span><span data-line="266">    <span class="n">field_on_tc</span> <span class="o">=</span> <span class="n">init_field_with_vcoord</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">broadcast_like</span><span class="p">(</span><span class="n">th_field</span><span class="p">),</span> <span class="n">tc</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+</span><span data-line="267">
+</span><span data-line="268">    <span class="c1"># Interpolate</span>
+</span><span data-line="269">    <span class="c1"># ... prepare interpolation</span>
+</span><span data-line="270">    <span class="n">thkm1</span> <span class="o">=</span> <span class="n">th_field</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="271">    <span class="n">fkm1</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="272">
+</span><span data-line="273">    <span class="c1"># ... loop through tc values</span>
+</span><span data-line="274">    <span class="k">for</span> <span class="n">tc_idx</span><span class="p">,</span> <span class="n">th0</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tc</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+</span><span data-line="275">        <span class="n">folding_coord_exception</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">h_field</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}],</span> <span class="kc">False</span><span class="p">)</span>
+</span><span data-line="276">        <span class="c1"># ... find the height field where theta is &gt;= th0 on level k and was &lt;= th0</span>
+</span><span data-line="277">        <span class="c1">#     on level k-1 or where theta is &lt;= th0 on level k</span>
+</span><span data-line="278">        <span class="c1">#     and was &gt;= th0 on level k-1</span>
+</span><span data-line="279">        <span class="n">h</span> <span class="o">=</span> <span class="n">h_field</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+</span><span data-line="280">            <span class="p">((</span><span class="n">th_field</span> <span class="o">&gt;=</span> <span class="n">th0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">thkm1</span> <span class="o">&lt;=</span> <span class="n">th0</span><span class="p">))</span> <span class="o">|</span> <span class="p">((</span><span class="n">th_field</span> <span class="o">&lt;=</span> <span class="n">th0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">thkm1</span> <span class="o">&gt;=</span> <span class="n">th0</span><span class="p">))</span>
+</span><span data-line="281">        <span class="p">)</span>
+</span><span data-line="282">        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;undef_fold&quot;</span><span class="p">:</span>
+</span><span data-line="283">            <span class="c1"># ... find condition where more than one interval is found, which</span>
+</span><span data-line="284">            <span class="c1"># contains the target coordinate value</span>
+</span><span data-line="285">            <span class="n">folding_coord_exception</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">notnull</span><span class="p">(),</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">])</span>
+</span><span data-line="286">            <span class="n">folding_coord_exception</span> <span class="o">=</span> <span class="n">folding_coord_exception</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+</span><span data-line="287">                <span class="n">folding_coord_exception</span> <span class="o">&gt;</span> <span class="mf">1.0</span>
+</span><span data-line="288">            <span class="p">)</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+</span><span data-line="289">        <span class="k">if</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;low_fold&quot;</span><span class="p">,</span> <span class="s2">&quot;undef_fold&quot;</span><span class="p">):</span>
+</span><span data-line="290">            <span class="c1"># ... extract the index k of the smallest height at which</span>
+</span><span data-line="291">            <span class="c1"># the condition is fulfilled</span>
+</span><span data-line="292">            <span class="n">tcind</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">h_max</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s2">&quot;z&quot;</span><span class="p">)</span>
+</span><span data-line="293">        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;high_fold&quot;</span><span class="p">:</span>
+</span><span data-line="294">            <span class="c1"># ... extract the index k of the largest height at which the condition</span>
+</span><span data-line="295">            <span class="c1"># is fulfilled</span>
+</span><span data-line="296">            <span class="n">tcind</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">h_min</span><span class="p">)</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s2">&quot;z&quot;</span><span class="p">)</span>
+</span><span data-line="297">
+</span><span data-line="298">        <span class="c1"># ... extract theta and field at level k</span>
+</span><span data-line="299">        <span class="n">th2</span> <span class="o">=</span> <span class="n">th_field</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">tcind</span><span class="p">}]</span>
+</span><span data-line="300">        <span class="n">f2</span> <span class="o">=</span> <span class="n">field</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">tcind</span><span class="p">}]</span>
+</span><span data-line="301">        <span class="c1"># ... extract theta and field at level k-1</span>
+</span><span data-line="302">        <span class="n">f1</span> <span class="o">=</span> <span class="n">fkm1</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">tcind</span><span class="p">}]</span>
+</span><span data-line="303">        <span class="n">th1</span> <span class="o">=</span> <span class="n">thkm1</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">tcind</span><span class="p">}]</span>
+</span><span data-line="304">
+</span><span data-line="305">        <span class="c1"># ... compute the interpolation weights</span>
+</span><span data-line="306">        <span class="n">ratio</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">th2</span> <span class="o">-</span> <span class="n">th1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">th0</span> <span class="o">-</span> <span class="n">th1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">th2</span> <span class="o">-</span> <span class="n">th1</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
+</span><span data-line="307">
+</span><span data-line="308">        <span class="c1"># ... interpolate and update field_on_tc</span>
+</span><span data-line="309">        <span class="n">field_on_tc</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">tc_idx</span><span class="p">}]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+</span><span data-line="310">            <span class="n">folding_coord_exception</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">ratio</span><span class="p">)</span> <span class="o">*</span> <span class="n">f1</span> <span class="o">+</span> <span class="n">ratio</span> <span class="o">*</span> <span class="n">f2</span>
+</span><span data-line="311">        <span class="p">)</span>
+</span><span data-line="312">
+</span><span data-line="313">    <span class="k">return</span> <span class="n">field_on_tc</span></div>
+
+</span><span data-line="314">
+</span><span data-line="315">
+<div class="viewcode-block" id="interpolate_k2any">
+<a class="viewcode-back" href="../../../generated/meteodatalab.operators.vertical_interpolation.html#meteodatalab.operators.vertical_interpolation.interpolate_k2any">[docs]</a>
+</span><span data-line="316"><span class="k">def</span> <span class="nf">interpolate_k2any</span><span class="p">(</span>
+</span><span data-line="317">    <span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
+</span><span data-line="318">    <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;low_fold&quot;</span><span class="p">,</span> <span class="s2">&quot;high_fold&quot;</span><span class="p">],</span>
+</span><span data-line="319">    <span class="n">tc_field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
+</span><span data-line="320">    <span class="n">tc</span><span class="p">:</span> <span class="n">TargetCoordinates</span><span class="p">,</span>
+</span><span data-line="321">    <span class="n">h_field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
+</span><span data-line="322"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
+</span><span data-line="323"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Interpolate a field from model levels to coordinates w.r.t. an arbitrary field.</span>
+</span><span data-line="324">
+</span><span data-line="325"><span class="sd">    Example for vertical interpolation to isosurfaces of a target field</span>
+</span><span data-line="326"><span class="sd">    that is no monotonic function of height.</span>
+</span><span data-line="327">
+</span><span data-line="328"><span class="sd">    Parameters</span>
+</span><span data-line="329"><span class="sd">    ----------</span>
+</span><span data-line="330"><span class="sd">    field : xarray.DataArray</span>
+</span><span data-line="331"><span class="sd">        field to interpolate (only typeOfLevel=&quot;generalVerticalLayer&quot; is supported)</span>
+</span><span data-line="332"><span class="sd">    mode : str</span>
+</span><span data-line="333"><span class="sd">        interpolation algorithm, one of {&quot;low_fold&quot;, &quot;high_fold&quot;}</span>
+</span><span data-line="334"><span class="sd">    tc_field : xarray.DataArray</span>
+</span><span data-line="335"><span class="sd">        target field</span>
+</span><span data-line="336"><span class="sd">        (only typeOfLevel=&quot;generalVerticalLayer&quot; is supported)</span>
+</span><span data-line="337"><span class="sd">    tc : TargetCoordinates</span>
+</span><span data-line="338"><span class="sd">        target coordinate definition</span>
+</span><span data-line="339"><span class="sd">    h_field : xarray.DataArray</span>
+</span><span data-line="340"><span class="sd">        height on k levels (only typeOfLevel=&quot;generalVerticalLayer&quot; is supported)</span>
+</span><span data-line="341">
+</span><span data-line="342"><span class="sd">    Returns</span>
+</span><span data-line="343"><span class="sd">    -------</span>
+</span><span data-line="344"><span class="sd">    field_on_tc : xarray.DataArray</span>
+</span><span data-line="345"><span class="sd">        field on target coordinates</span>
+</span><span data-line="346">
+</span><span data-line="347"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="348">    <span class="n">modes</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;low_fold&quot;</span><span class="p">,</span> <span class="s2">&quot;high_fold&quot;</span><span class="p">)</span>
+</span><span data-line="349">    <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">modes</span><span class="p">:</span>
+</span><span data-line="350">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported mode: </span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span data-line="351">
+</span><span data-line="352">    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">tc_field</span><span class="p">,</span> <span class="n">h_field</span><span class="p">):</span>
+</span><span data-line="353">        <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">vcoord_type</span> <span class="o">!=</span> <span class="s2">&quot;model_level&quot;</span> <span class="ow">or</span> <span class="n">f</span><span class="o">.</span><span class="n">origin_z</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
+</span><span data-line="354">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input fields must be defined on full model levels&quot;</span><span class="p">)</span>
+</span><span data-line="355">
+</span><span data-line="356">    <span class="c1"># ... tc values outside range of meaningful values of height,</span>
+</span><span data-line="357">    <span class="c1"># used in tc interval search (in m amsl)</span>
+</span><span data-line="358">    <span class="n">h_min</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1000.0</span>
+</span><span data-line="359">    <span class="n">h_max</span> <span class="o">=</span> <span class="mf">100000.0</span>
+</span><span data-line="360">
+</span><span data-line="361">    <span class="c1"># Prepare output field field_on_tc on target coordinates</span>
+</span><span data-line="362">    <span class="n">field_on_tc</span> <span class="o">=</span> <span class="n">init_field_with_vcoord</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">broadcast_like</span><span class="p">(</span><span class="n">tc_field</span><span class="p">),</span> <span class="n">tc</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+</span><span data-line="363">
+</span><span data-line="364">    <span class="c1"># Interpolate</span>
+</span><span data-line="365">    <span class="c1"># ... prepare interpolation</span>
+</span><span data-line="366">    <span class="n">tckm1</span> <span class="o">=</span> <span class="n">tc_field</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="367">    <span class="n">fkm1</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="368">
+</span><span data-line="369">    <span class="k">for</span> <span class="n">tc_idx</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tc</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+</span><span data-line="370">        <span class="c1"># ... find the height field where target is &gt;= value on level k and was &lt;= value</span>
+</span><span data-line="371">        <span class="c1">#     on level k-1 or where target is &lt;= value on level k</span>
+</span><span data-line="372">        <span class="c1">#     and was &gt;= value on level k-1</span>
+</span><span data-line="373">        <span class="n">h</span> <span class="o">=</span> <span class="n">h_field</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+</span><span data-line="374">            <span class="p">((</span><span class="n">tc_field</span> <span class="o">&gt;=</span> <span class="n">value</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">tckm1</span> <span class="o">&lt;=</span> <span class="n">value</span><span class="p">))</span>
+</span><span data-line="375">            <span class="o">|</span> <span class="p">((</span><span class="n">tc_field</span> <span class="o">&lt;=</span> <span class="n">value</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">tckm1</span> <span class="o">&gt;=</span> <span class="n">value</span><span class="p">))</span>
+</span><span data-line="376">        <span class="p">)</span>
+</span><span data-line="377">        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;low_fold&quot;</span><span class="p">:</span>
+</span><span data-line="378">            <span class="c1"># ... extract the index k of the smallest height at which</span>
+</span><span data-line="379">            <span class="c1"># the condition is fulfilled</span>
+</span><span data-line="380">            <span class="n">tcind</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">h_max</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s2">&quot;z&quot;</span><span class="p">)</span>
+</span><span data-line="381">        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;high_fold&quot;</span><span class="p">:</span>
+</span><span data-line="382">            <span class="c1"># ... extract the index k of the largest height at which the condition</span>
+</span><span data-line="383">            <span class="c1"># is fulfilled</span>
+</span><span data-line="384">            <span class="n">tcind</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">h_min</span><span class="p">)</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s2">&quot;z&quot;</span><span class="p">)</span>
+</span><span data-line="385">
+</span><span data-line="386">        <span class="c1"># ... extract target and field at level k</span>
+</span><span data-line="387">        <span class="n">t2</span> <span class="o">=</span> <span class="n">tc_field</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">tcind</span><span class="p">}]</span>
+</span><span data-line="388">        <span class="n">f2</span> <span class="o">=</span> <span class="n">field</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">tcind</span><span class="p">}]</span>
+</span><span data-line="389">        <span class="c1"># ... extract target and field at level k-1</span>
+</span><span data-line="390">        <span class="n">f1</span> <span class="o">=</span> <span class="n">fkm1</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">tcind</span><span class="p">}]</span>
+</span><span data-line="391">        <span class="n">t1</span> <span class="o">=</span> <span class="n">tckm1</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">tcind</span><span class="p">}]</span>
+</span><span data-line="392">
+</span><span data-line="393">        <span class="c1"># ... compute the interpolation weights</span>
+</span><span data-line="394">        <span class="n">ratio</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
+</span><span data-line="395">
+</span><span data-line="396">        <span class="c1"># ... interpolate and update field_on_tc</span>
+</span><span data-line="397">        <span class="n">field_on_tc</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">tc_idx</span><span class="p">}]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">ratio</span><span class="p">)</span> <span class="o">*</span> <span class="n">f1</span> <span class="o">+</span> <span class="n">ratio</span> <span class="o">*</span> <span class="n">f2</span>
+</span><span data-line="398">
+</span><span data-line="399">    <span class="k">return</span> <span class="n">field_on_tc</span></div>
+
+</span></pre></div>
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2024, MeteoSwiss</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials"></div>
+    </div>
+  </div>
+</footer>
+      <script src="../../../_static/documentation_options.js?v=1dd76d02"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/shibuya.js?v=c477d091"></script></body>
+</html>

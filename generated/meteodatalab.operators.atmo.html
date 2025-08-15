@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="violet" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>operators.atmo - meteodata-lab 0.5.0 documentation</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="operators.brn" href="meteodatalab.operators.brn.html" /><link rel="prev" title="operators.regrid" href="meteodatalab.operators.regrid.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=397bb51e" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=76b6f612" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="operators.atmo"/>
+<meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      
+      
+      <strong>meteodata-lab</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials"></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2 -translate-x-2"></span>
+          <span class="hamburger_3 -translate-x-1"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">meteodata-lab</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../reference.html">Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.config.html">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.data_cache.html">data_cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.data_source.html">data_source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.grib_decoder.html">grib_decoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.icon_grid.html">icon_grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.mars.html">mars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.mch_model_data.html">mch_model_data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.metadata.html">metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.ogd_api.html">ogd_api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.physical_constants.html">physical_constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.crop.html">operators.crop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.gis.html">operators.gis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.lateral_operators.html">operators.lateral_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.regrid.html">operators.regrid</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">operators.atmo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.brn.html">operators.brn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.hzerocl.html">operators.hzerocl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.pot_vortic.html">operators.pot_vortic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.radiation.html">operators.radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.relhum.html">operators.relhum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.rho.html">operators.rho</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.theta.html">operators.theta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.thetav.html">operators.thetav</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.wind.html">operators.wind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.time_operators.html">operators.time_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.vertical_extrapolation.html">operators.vertical_extrapolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.vertical_interpolation.html">operators.vertical_interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meteodatalab.operators.vertical_reduction.html">operators.vertical_reduction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#meteodatalab.operators.atmo.pv_qp"><code class="docutils literal notranslate"><span class="pre">pv_qp()</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.atmo.pv_si"><code class="docutils literal notranslate"><span class="pre">pv_si()</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.atmo.pv_sm"><code class="docutils literal notranslate"><span class="pre">pv_sm()</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.atmo.pv_sw"><code class="docutils literal notranslate"><span class="pre">pv_sw()</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.atmo.qv_pvp"><code class="docutils literal notranslate"><span class="pre">qv_pvp()</span></code></a></li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">meteodata-lab</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../reference.html"><span itemprop="name">Reference</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">operators.atmo</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <section id="module-meteodatalab.operators.atmo">
+<span id="operators-atmo"></span><h1>operators.atmo<a class="headerlink" href="#module-meteodatalab.operators.atmo" title="Link to this heading">¶</a></h1>
+<p>Atmospheric thermodynamic functions.</p>
+<p class="rubric">Functions</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meteodatalab.operators.atmo.pv_qp" title="meteodatalab.operators.atmo.pv_qp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pv_qp</span></code></a>(qv, p)</p></td>
+<td><p>Partial pressure of water vapor (from perfect gas law and approximating q~w).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meteodatalab.operators.atmo.pv_si" title="meteodatalab.operators.atmo.pv_si"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pv_si</span></code></a>(t)</p></td>
+<td><p>Pressure of water vapor at equilibrium over ice.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meteodatalab.operators.atmo.pv_sm" title="meteodatalab.operators.atmo.pv_sm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pv_sm</span></code></a>(t)</p></td>
+<td><p>Pressure of water vapor at equilibrium over mixed phase.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meteodatalab.operators.atmo.pv_sw" title="meteodatalab.operators.atmo.pv_sw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pv_sw</span></code></a>(t)</p></td>
+<td><p>Pressure of water vapor at equilibrium over liquid water.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meteodatalab.operators.atmo.qv_pvp" title="meteodatalab.operators.atmo.qv_pvp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">qv_pvp</span></code></a>(pv, p)</p></td>
+<td><p>Specific water vapor content (from perfect gas law and approximating q~w).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="meteodatalab.operators.atmo.pv_qp">
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.atmo.</span></span><span class="sig-name descname"><span class="pre">pv_qp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/operators/atmo.html#pv_qp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.atmo.pv_qp" title="Link to this definition">¶</a></dt>
+<dd><p>Partial pressure of water vapor (from perfect gas law and approximating q~w).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>qv</strong> (<em>xarray.DataArray</em>) – water vapor mixing ratio</p></li>
+<li><p><strong>p</strong> (<em>xarray.DataArray</em>) – pressure</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>partial pressure of water vapor (same unit as p)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>xarray.DataArray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meteodatalab.operators.atmo.pv_si">
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.atmo.</span></span><span class="sig-name descname"><span class="pre">pv_si</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/operators/atmo.html#pv_si"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.atmo.pv_si" title="Link to this definition">¶</a></dt>
+<dd><p>Pressure of water vapor at equilibrium over ice.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>xarray.DataArray</em>) – temperature (in Kelvin)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pressure of water vapor in Pascal</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>xarray.DataArray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meteodatalab.operators.atmo.pv_sm">
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.atmo.</span></span><span class="sig-name descname"><span class="pre">pv_sm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/operators/atmo.html#pv_sm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.atmo.pv_sm" title="Link to this definition">¶</a></dt>
+<dd><p>Pressure of water vapor at equilibrium over mixed phase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>xarray.DataArray</em>) – temperature (in Kelvin)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pressure of water vapor in Pascal</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>xarray.DataArray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meteodatalab.operators.atmo.pv_sw">
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.atmo.</span></span><span class="sig-name descname"><span class="pre">pv_sw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/operators/atmo.html#pv_sw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.atmo.pv_sw" title="Link to this definition">¶</a></dt>
+<dd><p>Pressure of water vapor at equilibrium over liquid water.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>xarray.DataArray</em>) – temperature (in Kelvin)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pressure of water vapor in Pascal</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>xarray.DataArray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meteodatalab.operators.atmo.qv_pvp">
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.atmo.</span></span><span class="sig-name descname"><span class="pre">qv_pvp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/operators/atmo.html#qv_pvp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.atmo.qv_pvp" title="Link to this definition">¶</a></dt>
+<dd><p>Specific water vapor content (from perfect gas law and approximating q~w).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pv</strong> (<em>xarray.DataArray</em>) – pressure of water vapor</p></li>
+<li><p><strong>p</strong> (<em>xarray.DataArray</em>) – pressure</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>specific water vapor (dimensionless)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>xarray.DataArray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="meteodatalab.operators.regrid.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">operators.regrid</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="meteodatalab.operators.brn.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">operators.brn</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2024, MeteoSwiss</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials"></div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=1dd76d02"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/shibuya.js?v=c477d091"></script></body>
+</html>

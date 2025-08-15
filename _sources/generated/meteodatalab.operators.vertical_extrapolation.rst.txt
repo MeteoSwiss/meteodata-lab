@@ -1,0 +1,32 @@
+﻿operators.vertical\_extrapolation
+=================================
+
+.. automodule:: meteodatalab.operators.vertical_extrapolation
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      extrapolate_geopotential_sfc2p
+      extrapolate_k2p
+      extrapolate_temperature_sfc2p
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

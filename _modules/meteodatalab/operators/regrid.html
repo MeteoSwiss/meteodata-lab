@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="violet" data-content_root="../../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.regrid - meteodata-lab 0.5.0 documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=397bb51e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=76b6f612" />
+    <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="meteodatalab.operators.regrid"/>
+<meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../../../index.html">
+      
+      
+      <strong>meteodata-lab</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials"></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2 -translate-x-2"></span>
+          <span class="hamburger_3 -translate-x-1"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">meteodata-lab</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.config.html">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.data_cache.html">data_cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.data_source.html">data_source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.grib_decoder.html">grib_decoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.icon_grid.html">icon_grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.mars.html">mars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.mch_model_data.html">mch_model_data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.metadata.html">metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.ogd_api.html">ogd_api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.physical_constants.html">physical_constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.crop.html">operators.crop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.gis.html">operators.gis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.lateral_operators.html">operators.lateral_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.regrid.html">operators.regrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.atmo.html">operators.atmo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.brn.html">operators.brn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.hzerocl.html">operators.hzerocl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.pot_vortic.html">operators.pot_vortic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.radiation.html">operators.radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.relhum.html">operators.relhum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.rho.html">operators.rho</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.theta.html">operators.theta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.thetav.html">operators.thetav</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.wind.html">operators.wind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.time_operators.html">operators.time_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.vertical_extrapolation.html">operators.vertical_extrapolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.vertical_interpolation.html">operators.vertical_interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generated/meteodatalab.operators.vertical_reduction.html">operators.vertical_reduction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../../index.html"><span itemprop="name">meteodata-lab</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../index.html"><span itemprop="name">Module code</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">meteodatalab.operators.regrid</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <h1>Source code for meteodatalab.operators.regrid</h1><div class="highlight"><pre>
+<span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;Regridding operator.&quot;&quot;&quot;</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="c1"># Standard library</span>
+</span><span data-line="4"><span class="kn">import</span> <span class="nn">dataclasses</span> <span class="k">as</span> <span class="nn">dc</span>
+</span><span data-line="5"><span class="kn">import</span> <span class="nn">typing</span>
+</span><span data-line="6"><span class="kn">import</span> <span class="nn">warnings</span>
+</span><span data-line="7"><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Literal</span>
+</span><span data-line="8">
+</span><span data-line="9"><span class="c1"># Third-party</span>
+</span><span data-line="10"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span data-line="11"><span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+</span><span data-line="12"><span class="kn">from</span> <span class="nn">numpy.typing</span> <span class="kn">import</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">NDArray</span>
+</span><span data-line="13">
+</span><span data-line="14"><span class="k">try</span><span class="p">:</span>
+</span><span data-line="15">    <span class="c1"># Third-party</span>
+</span><span data-line="16">    <span class="kn">from</span> <span class="nn">pyproj</span> <span class="kn">import</span> <span class="n">Transformer</span>
+</span><span data-line="17">    <span class="kn">from</span> <span class="nn">rasterio</span> <span class="kn">import</span> <span class="n">transform</span><span class="p">,</span> <span class="n">warp</span>
+</span><span data-line="18">    <span class="kn">from</span> <span class="nn">rasterio.crs</span> <span class="kn">import</span> <span class="n">CRS</span>
+</span><span data-line="19">    <span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">Delaunay</span>  <span class="c1"># type: ignore</span>
+</span><span data-line="20"><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+</span><span data-line="21">    <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;The regrid operator requires extra dependencies.&quot;</span><span class="p">)</span>
+</span><span data-line="22">
+</span><span data-line="23"><span class="c1"># Local</span>
+</span><span data-line="24"><span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">icon_grid</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">util</span>
+</span><span data-line="25"><span class="kn">from</span> <span class="nn">..grib_decoder</span> <span class="kn">import</span> <span class="n">set_code_flag</span>
+</span><span data-line="26">
+</span><span data-line="27"><span class="n">Resampling</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">warp</span><span class="o">.</span><span class="n">Resampling</span>
+</span><span data-line="28">
+</span><span data-line="29"><span class="c1"># For more information: check https://epsg.io/&lt;id&gt;</span>
+</span><span data-line="30"><span class="n">CRS_ALIASES</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="31">    <span class="s2">&quot;geolatlon&quot;</span><span class="p">:</span> <span class="s2">&quot;epsg:4326&quot;</span><span class="p">,</span>  <span class="c1"># WGS84</span>
+</span><span data-line="32">    <span class="s2">&quot;swiss&quot;</span><span class="p">:</span> <span class="s2">&quot;epsg:21781&quot;</span><span class="p">,</span>  <span class="c1"># Swiss CH1903 / LV03</span>
+</span><span data-line="33">    <span class="s2">&quot;swiss03&quot;</span><span class="p">:</span> <span class="s2">&quot;epsg:21781&quot;</span><span class="p">,</span>  <span class="c1"># Swiss CH1903 / LV03</span>
+</span><span data-line="34">    <span class="s2">&quot;swiss95&quot;</span><span class="p">:</span> <span class="s2">&quot;epsg:2056&quot;</span><span class="p">,</span>  <span class="c1"># Swiss CH1903+ / LV95</span>
+</span><span data-line="35">    <span class="s2">&quot;boaga-west&quot;</span><span class="p">:</span> <span class="s2">&quot;epsg:3003&quot;</span><span class="p">,</span>  <span class="c1"># Monte Mario / Italy zone 1</span>
+</span><span data-line="36">    <span class="s2">&quot;boaga-east&quot;</span><span class="p">:</span> <span class="s2">&quot;epsg:3004&quot;</span><span class="p">,</span>  <span class="c1"># Monte Mario / Italy zone 2</span>
+</span><span data-line="37">    <span class="s2">&quot;utm32n&quot;</span><span class="p">:</span> <span class="s2">&quot;epsg:32632&quot;</span><span class="p">,</span>  <span class="c1"># Universal Transverse Mercator zone 32N</span>
+</span><span data-line="38"><span class="p">}</span>
+</span><span data-line="39">
+</span><span data-line="40">
+</span><span data-line="41"><span class="k">def</span> <span class="nf">_get_crs</span><span class="p">(</span><span class="n">geo</span><span class="p">):</span>
+</span><span data-line="42">    <span class="k">if</span> <span class="n">geo</span><span class="p">[</span><span class="s2">&quot;gridType&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;rotated_ll&quot;</span><span class="p">:</span>
+</span><span data-line="43">        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Unsupported grid type&quot;</span><span class="p">)</span>
+</span><span data-line="44">
+</span><span data-line="45">    <span class="n">lon</span> <span class="o">=</span> <span class="n">geo</span><span class="p">[</span><span class="s2">&quot;longitudeOfSouthernPoleInDegrees&quot;</span><span class="p">]</span>
+</span><span data-line="46">    <span class="n">lat</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">geo</span><span class="p">[</span><span class="s2">&quot;latitudeOfSouthernPoleInDegrees&quot;</span><span class="p">]</span>
+</span><span data-line="47">
+</span><span data-line="48">    <span class="k">return</span> <span class="n">CRS</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span>
+</span><span data-line="49">        <span class="sa">f</span><span class="s2">&quot;+proj=ob_tran +o_proj=longlat +o_lat_p=</span><span class="si">{</span><span class="n">lat</span><span class="si">}</span><span class="s2"> +lon_0=</span><span class="si">{</span><span class="n">lon</span><span class="si">}</span><span class="s2"> +datum=WGS84&quot;</span>
+</span><span data-line="50">    <span class="p">)</span>
+</span><span data-line="51">
+</span><span data-line="52">
+</span><span data-line="53"><span class="k">def</span> <span class="nf">_normalise</span><span class="p">(</span><span class="n">angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span data-line="54">    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">fmod</span><span class="p">(</span><span class="n">angle</span> <span class="o">+</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">360</span><span class="p">)</span> <span class="o">-</span> <span class="mi">180</span>
+</span><span data-line="55">
+</span><span data-line="56">
+<div class="viewcode-block" id="RegularGrid">
+<a class="viewcode-back" href="../../../generated/meteodatalab.operators.regrid.html#meteodatalab.operators.regrid.RegularGrid">[docs]</a>
+</span><span data-line="57"><span class="nd">@dc</span><span class="o">.</span><span class="n">dataclass</span>
+</span><span data-line="58"><span class="k">class</span> <span class="nc">RegularGrid</span><span class="p">:</span>
+</span><span data-line="59"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Class defining a regular grid.</span>
+</span><span data-line="60">
+</span><span data-line="61"><span class="sd">    Attributes</span>
+</span><span data-line="62"><span class="sd">    ----------</span>
+</span><span data-line="63"><span class="sd">    crs : CRS</span>
+</span><span data-line="64"><span class="sd">        Coordinate reference system.</span>
+</span><span data-line="65"><span class="sd">    nx : int</span>
+</span><span data-line="66"><span class="sd">        Number of grid points in the x direction.</span>
+</span><span data-line="67"><span class="sd">    ny : int</span>
+</span><span data-line="68"><span class="sd">        Number of grid points in the y direction.</span>
+</span><span data-line="69"><span class="sd">    xmin : float</span>
+</span><span data-line="70"><span class="sd">        Coordinate of the first grid point in the x direction.</span>
+</span><span data-line="71"><span class="sd">    xmax : float</span>
+</span><span data-line="72"><span class="sd">        Coordinate of the last grid point in the x direction.</span>
+</span><span data-line="73"><span class="sd">    ymin : float</span>
+</span><span data-line="74"><span class="sd">        Coordinate of the first grid point in the y direction.</span>
+</span><span data-line="75"><span class="sd">    ymax : float</span>
+</span><span data-line="76"><span class="sd">        Coordinate of the last grid point in the y direction.</span>
+</span><span data-line="77">
+</span><span data-line="78"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="79">
+</span><span data-line="80">    <span class="n">crs</span><span class="p">:</span> <span class="n">CRS</span>
+</span><span data-line="81">    <span class="n">nx</span><span class="p">:</span> <span class="nb">int</span>
+</span><span data-line="82">    <span class="n">ny</span><span class="p">:</span> <span class="nb">int</span>
+</span><span data-line="83">    <span class="n">xmin</span><span class="p">:</span> <span class="nb">float</span>
+</span><span data-line="84">    <span class="n">xmax</span><span class="p">:</span> <span class="nb">float</span>
+</span><span data-line="85">    <span class="n">ymin</span><span class="p">:</span> <span class="nb">float</span>
+</span><span data-line="86">    <span class="n">ymax</span><span class="p">:</span> <span class="nb">float</span>
+</span><span data-line="87">
+<div class="viewcode-block" id="RegularGrid.from_field">
+<a class="viewcode-back" href="../../../generated/meteodatalab.operators.regrid.html#meteodatalab.operators.regrid.RegularGrid.from_field">[docs]</a>
+</span><span data-line="88">    <span class="nd">@classmethod</span>
+</span><span data-line="89">    <span class="k">def</span> <span class="nf">from_field</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">):</span>
+</span><span data-line="90"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract grid parameters from grib metadata.</span>
+</span><span data-line="91">
+</span><span data-line="92"><span class="sd">        Parameters</span>
+</span><span data-line="93"><span class="sd">        ----------</span>
+</span><span data-line="94"><span class="sd">        field : xarray.DataArray</span>
+</span><span data-line="95"><span class="sd">            field containing the relevant metadata.</span>
+</span><span data-line="96">
+</span><span data-line="97"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="98">        <span class="n">geo</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">geography</span>
+</span><span data-line="99">        <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
+</span><span data-line="100">            <span class="n">crs</span><span class="o">=</span><span class="n">_get_crs</span><span class="p">(</span><span class="n">geo</span><span class="p">),</span>
+</span><span data-line="101">            <span class="n">nx</span><span class="o">=</span><span class="n">geo</span><span class="p">[</span><span class="s2">&quot;Ni&quot;</span><span class="p">],</span>
+</span><span data-line="102">            <span class="n">ny</span><span class="o">=</span><span class="n">geo</span><span class="p">[</span><span class="s2">&quot;Nj&quot;</span><span class="p">],</span>
+</span><span data-line="103">            <span class="n">xmin</span><span class="o">=</span><span class="n">_normalise</span><span class="p">(</span><span class="n">geo</span><span class="p">[</span><span class="s2">&quot;longitudeOfFirstGridPointInDegrees&quot;</span><span class="p">]),</span>
+</span><span data-line="104">            <span class="n">xmax</span><span class="o">=</span><span class="n">_normalise</span><span class="p">(</span><span class="n">geo</span><span class="p">[</span><span class="s2">&quot;longitudeOfLastGridPointInDegrees&quot;</span><span class="p">]),</span>
+</span><span data-line="105">            <span class="n">ymin</span><span class="o">=</span><span class="n">geo</span><span class="p">[</span><span class="s2">&quot;latitudeOfFirstGridPointInDegrees&quot;</span><span class="p">],</span>
+</span><span data-line="106">            <span class="n">ymax</span><span class="o">=</span><span class="n">geo</span><span class="p">[</span><span class="s2">&quot;latitudeOfLastGridPointInDegrees&quot;</span><span class="p">],</span>
+</span><span data-line="107">        <span class="p">)</span>
+</span><span data-line="108">        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">dx</span> <span class="o">-</span> <span class="n">geo</span><span class="p">[</span><span class="s2">&quot;iDirectionIncrementInDegrees&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">1e-5</span><span class="p">:</span>
+</span><span data-line="109">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Inconsistent grid parameters&quot;</span><span class="p">)</span>
+</span><span data-line="110">        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">dy</span> <span class="o">-</span> <span class="n">geo</span><span class="p">[</span><span class="s2">&quot;jDirectionIncrementInDegrees&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">1e-5</span><span class="p">:</span>
+</span><span data-line="111">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Inconsistent grid parameters&quot;</span><span class="p">)</span>
+</span><span data-line="112">        <span class="k">return</span> <span class="n">obj</span></div>
+
+</span><span data-line="113">
+<div class="viewcode-block" id="RegularGrid.parse_regrid_operator">
+<a class="viewcode-back" href="../../../generated/meteodatalab.operators.regrid.html#meteodatalab.operators.regrid.RegularGrid.parse_regrid_operator">[docs]</a>
+</span><span data-line="114">    <span class="nd">@classmethod</span>
+</span><span data-line="115">    <span class="k">def</span> <span class="nf">parse_regrid_operator</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">op</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span data-line="116"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse fieldextra out_regrid_target string.</span>
+</span><span data-line="117">
+</span><span data-line="118"><span class="sd">        Parameters</span>
+</span><span data-line="119"><span class="sd">        ----------</span>
+</span><span data-line="120"><span class="sd">        op : str</span>
+</span><span data-line="121"><span class="sd">            fieldextra out_regrid_target definition</span>
+</span><span data-line="122"><span class="sd">            i.e. crs,xmin,ymin,xmay,ymax,dx,dy.</span>
+</span><span data-line="123">
+</span><span data-line="124"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="125">        <span class="n">crs_str</span><span class="p">,</span> <span class="o">*</span><span class="n">grid_params</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+</span><span data-line="126">        <span class="n">crs</span> <span class="o">=</span> <span class="n">CRS</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">CRS_ALIASES</span><span class="p">[</span><span class="n">crs_str</span><span class="p">])</span>
+</span><span data-line="127">        <span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">grid_params</span><span class="p">)</span>
+</span><span data-line="128">        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dx</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span> <span class="ow">or</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dy</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span><span class="p">:</span>
+</span><span data-line="129">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Inconsistent regrid parameters&quot;</span><span class="p">)</span>
+</span><span data-line="130">        <span class="n">nx</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span> <span class="o">/</span> <span class="n">dx</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span data-line="131">        <span class="n">ny</span> <span class="o">=</span> <span class="p">(</span><span class="n">ymax</span> <span class="o">-</span> <span class="n">ymin</span><span class="p">)</span> <span class="o">/</span> <span class="n">dy</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span data-line="132">        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">nx</span> <span class="o">-</span> <span class="nb">round</span><span class="p">(</span><span class="n">nx</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mf">1e-10</span> <span class="ow">or</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ny</span> <span class="o">-</span> <span class="nb">round</span><span class="p">(</span><span class="n">ny</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mf">1e-10</span><span class="p">:</span>
+</span><span data-line="133">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Inconsistent regrid parameters&quot;</span><span class="p">)</span>
+</span><span data-line="134">        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">crs</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">nx</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">ny</span><span class="p">)),</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span></div>
+
+</span><span data-line="135">
+<div class="viewcode-block" id="RegularGrid.to_crs">
+<a class="viewcode-back" href="../../../generated/meteodatalab.operators.regrid.html#meteodatalab.operators.regrid.RegularGrid.to_crs">[docs]</a>
+</span><span data-line="136">    <span class="k">def</span> <span class="nf">to_crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crs</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span data-line="137"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a new grid in the given coordinate reference system.</span>
+</span><span data-line="138">
+</span><span data-line="139"><span class="sd">        Parameters</span>
+</span><span data-line="140"><span class="sd">        ----------</span>
+</span><span data-line="141"><span class="sd">        crs : str</span>
+</span><span data-line="142"><span class="sd">            The coordinate reference system in which the output grid should be defined.</span>
+</span><span data-line="143">
+</span><span data-line="144"><span class="sd">        Returns</span>
+</span><span data-line="145"><span class="sd">        -------</span>
+</span><span data-line="146"><span class="sd">        RegularGrid or subtype</span>
+</span><span data-line="147"><span class="sd">            Output grid in the given coordinate reference system.</span>
+</span><span data-line="148">
+</span><span data-line="149"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="150">        <span class="n">dst_crs</span> <span class="o">=</span> <span class="n">CRS</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">crs</span><span class="p">)</span>
+</span><span data-line="151">        <span class="n">tx</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span>
+</span><span data-line="152">            <span class="nb">tuple</span><span class="p">[</span><span class="n">transform</span><span class="o">.</span><span class="n">Affine</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+</span><span data-line="153">            <span class="n">warp</span><span class="o">.</span><span class="n">calculate_default_transform</span><span class="p">(</span>
+</span><span data-line="154">                <span class="n">src_crs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">crs</span><span class="p">,</span>
+</span><span data-line="155">                <span class="n">dst_crs</span><span class="o">=</span><span class="n">dst_crs</span><span class="p">,</span>
+</span><span data-line="156">                <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nx</span><span class="p">,</span>
+</span><span data-line="157">                <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ny</span><span class="p">,</span>
+</span><span data-line="158">                <span class="n">left</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">,</span>
+</span><span data-line="159">                <span class="n">bottom</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span>
+</span><span data-line="160">                <span class="n">right</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">,</span>
+</span><span data-line="161">                <span class="n">top</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span>
+</span><span data-line="162">                <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+</span><span data-line="163">            <span class="p">),</span>
+</span><span data-line="164">        <span class="p">)</span>
+</span><span data-line="165">        <span class="n">a</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">AffineTransformer</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+</span><span data-line="166">        <span class="n">xmin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">xy</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+</span><span data-line="167">        <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">xy</span><span class="p">(</span><span class="n">height</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">width</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span>  <span class="c1"># row, col</span>
+</span><span data-line="168">        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="n">dst_crs</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span></div>
+
+</span><span data-line="169">
+</span><span data-line="170">    <span class="nd">@property</span>
+</span><span data-line="171">    <span class="k">def</span> <span class="nf">x</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span data-line="172">        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nx</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dx</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span>
+</span><span data-line="173">
+</span><span data-line="174">    <span class="nd">@property</span>
+</span><span data-line="175">    <span class="k">def</span> <span class="nf">y</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span data-line="176">        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ny</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dy</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span>
+</span><span data-line="177">
+</span><span data-line="178">    <span class="nd">@property</span>
+</span><span data-line="179">    <span class="k">def</span> <span class="nf">dx</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span data-line="180">        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</span><span data-line="181">
+</span><span data-line="182">    <span class="nd">@property</span>
+</span><span data-line="183">    <span class="k">def</span> <span class="nf">dy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span data-line="184">        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ny</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</span><span data-line="185">
+</span><span data-line="186">    <span class="nd">@property</span>
+</span><span data-line="187">    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">transform</span><span class="o">.</span><span class="n">Affine</span><span class="p">:</span>
+</span><span data-line="188">        <span class="k">return</span> <span class="n">transform</span><span class="o">.</span><span class="n">from_origin</span><span class="p">(</span>
+</span><span data-line="189">            <span class="n">west</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">xmin</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">dx</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+</span><span data-line="190">            <span class="n">north</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dy</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+</span><span data-line="191">            <span class="n">xsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dx</span><span class="p">,</span>
+</span><span data-line="192">            <span class="n">ysize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dy</span><span class="p">,</span>
+</span><span data-line="193">        <span class="p">)</span></div>
+
+</span><span data-line="194">
+</span><span data-line="195">
+</span><span data-line="196"><span class="k">def</span> <span class="nf">_udeg</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span data-line="197">    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">value</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">))</span>
+</span><span data-line="198">
+</span><span data-line="199">
+</span><span data-line="200"><span class="k">def</span> <span class="nf">_lon_from_utm_zone</span><span class="p">(</span><span class="n">zone</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span data-line="201">    <span class="k">if</span> <span class="n">zone</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">zone</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">zone</span> <span class="o">&gt;</span> <span class="mi">60</span><span class="p">:</span>
+</span><span data-line="202">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid value for UTM zone: </span><span class="si">{</span><span class="n">zone</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+</span><span data-line="203">
+</span><span data-line="204">    <span class="c1"># UTM zone are 6 degrees wide numbered from 1 starting at -180 to -174 degrees.</span>
+</span><span data-line="205">    <span class="n">offset</span> <span class="o">=</span> <span class="n">zone</span> <span class="o">*</span> <span class="mi">6</span>
+</span><span data-line="206">    <span class="k">return</span> <span class="n">offset</span> <span class="o">-</span> <span class="mi">183</span>
+</span><span data-line="207">
+</span><span data-line="208">
+</span><span data-line="209"><span class="k">def</span> <span class="nf">_grib_utm_m</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span data-line="210">    <span class="c1"># For UTM units, GRIB2 uses 10-2m whereas CRS uses m.</span>
+</span><span data-line="211">    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">value</span><span class="p">))</span>
+</span><span data-line="212">
+</span><span data-line="213">
+</span><span data-line="214"><span class="k">def</span> <span class="nf">_get_metadata</span><span class="p">(</span><span class="n">grid</span><span class="p">:</span> <span class="n">RegularGrid</span><span class="p">):</span>
+</span><span data-line="215">    <span class="k">if</span> <span class="n">grid</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">to_epsg</span><span class="p">()</span> <span class="o">==</span> <span class="mi">4326</span><span class="p">:</span>
+</span><span data-line="216">        <span class="c1"># geolatlon</span>
+</span><span data-line="217">        <span class="c1"># https://codes.ecmwf.int/grib/format/grib2/ctables/3/4/</span>
+</span><span data-line="218">        <span class="n">scanning_mode</span> <span class="o">=</span> <span class="n">set_code_flag</span><span class="p">([</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># positive y</span>
+</span><span data-line="219">        <span class="c1"># i, j direction increments given</span>
+</span><span data-line="220">        <span class="c1"># bit 5 left unset since the target grid is geolatlon</span>
+</span><span data-line="221">        <span class="c1"># both values are equivalent in this case</span>
+</span><span data-line="222">        <span class="n">resolution_components_flags</span> <span class="o">=</span> <span class="n">set_code_flag</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+</span><span data-line="223">        <span class="k">return</span> <span class="p">{</span>
+</span><span data-line="224">            <span class="s2">&quot;numberOfDataPoints&quot;</span><span class="p">:</span> <span class="n">grid</span><span class="o">.</span><span class="n">nx</span> <span class="o">*</span> <span class="n">grid</span><span class="o">.</span><span class="n">ny</span><span class="p">,</span>
+</span><span data-line="225">            <span class="s2">&quot;sourceOfGridDefinition&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>  <span class="c1"># defined by template number</span>
+</span><span data-line="226">            <span class="s2">&quot;numberOfOctectsForNumberOfPoints&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span><span data-line="227">            <span class="s2">&quot;interpretationOfNumberOfPoints&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span><span data-line="228">            <span class="s2">&quot;gridDefinitionTemplateNumber&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>  <span class="c1"># latlon</span>
+</span><span data-line="229">            <span class="s2">&quot;shapeOfTheEarth&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>  <span class="c1"># WGS 84</span>
+</span><span data-line="230">            <span class="s2">&quot;Ni&quot;</span><span class="p">:</span> <span class="n">grid</span><span class="o">.</span><span class="n">nx</span><span class="p">,</span>
+</span><span data-line="231">            <span class="s2">&quot;Nj&quot;</span><span class="p">:</span> <span class="n">grid</span><span class="o">.</span><span class="n">ny</span><span class="p">,</span>
+</span><span data-line="232">            <span class="s2">&quot;latitudeOfFirstGridPoint&quot;</span><span class="p">:</span> <span class="n">_udeg</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">ymin</span><span class="p">),</span>
+</span><span data-line="233">            <span class="s2">&quot;longitudeOfFirstGridPoint&quot;</span><span class="p">:</span> <span class="n">_udeg</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">xmin</span><span class="p">),</span>
+</span><span data-line="234">            <span class="s2">&quot;resolutionAndComponentFlags&quot;</span><span class="p">:</span> <span class="n">resolution_components_flags</span><span class="p">,</span>
+</span><span data-line="235">            <span class="s2">&quot;latitudeOfLastGridPoint&quot;</span><span class="p">:</span> <span class="n">_udeg</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">ymax</span><span class="p">),</span>
+</span><span data-line="236">            <span class="s2">&quot;longitudeOfLastGridPoint&quot;</span><span class="p">:</span> <span class="n">_udeg</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">xmax</span><span class="p">),</span>
+</span><span data-line="237">            <span class="s2">&quot;iDirectionIncrement&quot;</span><span class="p">:</span> <span class="n">_udeg</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">dx</span><span class="p">),</span>
+</span><span data-line="238">            <span class="s2">&quot;jDirectionIncrement&quot;</span><span class="p">:</span> <span class="n">_udeg</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">dy</span><span class="p">),</span>
+</span><span data-line="239">            <span class="s2">&quot;scanningMode&quot;</span><span class="p">:</span> <span class="n">scanning_mode</span><span class="p">,</span>
+</span><span data-line="240">        <span class="p">}</span>
+</span><span data-line="241">    <span class="k">elif</span> <span class="n">grid</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;proj&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;utm&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">grid</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;south&quot;</span><span class="p">):</span>
+</span><span data-line="242">        <span class="c1"># Transverse Mercator in northern hemisphere.</span>
+</span><span data-line="243">        <span class="c1"># https://codes.ecmwf.int/grib/format/grib2/ctables/3/4/</span>
+</span><span data-line="244">        <span class="n">scanning_mode</span> <span class="o">=</span> <span class="n">set_code_flag</span><span class="p">([</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># positive y</span>
+</span><span data-line="245">        <span class="c1"># i, j direction increments given relative to defined grid.</span>
+</span><span data-line="246">        <span class="n">resolution_components_flags</span> <span class="o">=</span> <span class="n">set_code_flag</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+</span><span data-line="247">        <span class="k">return</span> <span class="p">{</span>
+</span><span data-line="248">            <span class="s2">&quot;numberOfDataPoints&quot;</span><span class="p">:</span> <span class="n">grid</span><span class="o">.</span><span class="n">nx</span> <span class="o">*</span> <span class="n">grid</span><span class="o">.</span><span class="n">ny</span><span class="p">,</span>
+</span><span data-line="249">            <span class="s2">&quot;sourceOfGridDefinition&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>  <span class="c1"># defined by template number</span>
+</span><span data-line="250">            <span class="s2">&quot;numberOfOctectsForNumberOfPoints&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span><span data-line="251">            <span class="s2">&quot;interpretationOfNumberOfPoints&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span><span data-line="252">            <span class="s2">&quot;gridDefinitionTemplateNumber&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>  <span class="c1"># UTM</span>
+</span><span data-line="253">            <span class="s2">&quot;shapeOfTheEarth&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>  <span class="c1"># WGS 84</span>
+</span><span data-line="254">            <span class="s2">&quot;Ni&quot;</span><span class="p">:</span> <span class="n">grid</span><span class="o">.</span><span class="n">nx</span><span class="p">,</span>
+</span><span data-line="255">            <span class="s2">&quot;Nj&quot;</span><span class="p">:</span> <span class="n">grid</span><span class="o">.</span><span class="n">ny</span><span class="p">,</span>
+</span><span data-line="256">            <span class="s2">&quot;falseEasting&quot;</span><span class="p">:</span> <span class="n">_grib_utm_m</span><span class="p">(</span><span class="mi">500000</span><span class="p">),</span>
+</span><span data-line="257">            <span class="s2">&quot;falseNorthing&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>  <span class="c1"># Northern hemisphere</span>
+</span><span data-line="258">            <span class="s2">&quot;scaleFactorAtReferencePoint&quot;</span><span class="p">:</span> <span class="mf">0.9996</span><span class="p">,</span>
+</span><span data-line="259">            <span class="s2">&quot;longitudeOfReferencePoint&quot;</span><span class="p">:</span> <span class="n">_lon_from_utm_zone</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;zone&quot;</span><span class="p">)),</span>
+</span><span data-line="260">            <span class="s2">&quot;Di&quot;</span><span class="p">:</span> <span class="n">_grib_utm_m</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">dx</span><span class="p">),</span>
+</span><span data-line="261">            <span class="s2">&quot;Dj&quot;</span><span class="p">:</span> <span class="n">_grib_utm_m</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">dy</span><span class="p">),</span>
+</span><span data-line="262">            <span class="s2">&quot;X1&quot;</span><span class="p">:</span> <span class="n">_grib_utm_m</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">xmin</span><span class="p">),</span>
+</span><span data-line="263">            <span class="s2">&quot;X2&quot;</span><span class="p">:</span> <span class="n">_grib_utm_m</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">xmax</span><span class="p">),</span>
+</span><span data-line="264">            <span class="s2">&quot;Y1&quot;</span><span class="p">:</span> <span class="n">_grib_utm_m</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">ymin</span><span class="p">),</span>
+</span><span data-line="265">            <span class="s2">&quot;Y2&quot;</span><span class="p">:</span> <span class="n">_grib_utm_m</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">ymax</span><span class="p">),</span>
+</span><span data-line="266">            <span class="s2">&quot;resolutionAndComponentFlags&quot;</span><span class="p">:</span> <span class="n">resolution_components_flags</span><span class="p">,</span>
+</span><span data-line="267">            <span class="s2">&quot;scanningMode&quot;</span><span class="p">:</span> <span class="n">scanning_mode</span><span class="p">,</span>
+</span><span data-line="268">        <span class="p">}</span>
+</span><span data-line="269">    <span class="k">elif</span> <span class="n">grid</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;proj&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;ob_tran&quot;</span><span class="p">:</span>
+</span><span data-line="270">        <span class="c1"># rotlatlon</span>
+</span><span data-line="271">        <span class="c1"># https://codes.ecmwf.int/grib/format/grib2/ctables/3/4/</span>
+</span><span data-line="272">        <span class="n">scanning_mode</span> <span class="o">=</span> <span class="n">set_code_flag</span><span class="p">([</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># positive y</span>
+</span><span data-line="273">        <span class="c1"># i, j direction increments given</span>
+</span><span data-line="274">        <span class="n">resolution_components_flags</span> <span class="o">=</span> <span class="n">set_code_flag</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+</span><span data-line="275">        <span class="k">return</span> <span class="p">{</span>
+</span><span data-line="276">            <span class="s2">&quot;numberOfDataPoints&quot;</span><span class="p">:</span> <span class="n">grid</span><span class="o">.</span><span class="n">nx</span> <span class="o">*</span> <span class="n">grid</span><span class="o">.</span><span class="n">ny</span><span class="p">,</span>
+</span><span data-line="277">            <span class="s2">&quot;sourceOfGridDefinition&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>  <span class="c1"># defined by template number</span>
+</span><span data-line="278">            <span class="s2">&quot;numberOfOctectsForNumberOfPoints&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span><span data-line="279">            <span class="s2">&quot;interpretationOfNumberOfPoints&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span><span data-line="280">            <span class="s2">&quot;gridDefinitionTemplateNumber&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># rotlatlon</span>
+</span><span data-line="281">            <span class="s2">&quot;shapeOfTheEarth&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>  <span class="c1"># WGS 84</span>
+</span><span data-line="282">            <span class="s2">&quot;Ni&quot;</span><span class="p">:</span> <span class="n">grid</span><span class="o">.</span><span class="n">nx</span><span class="p">,</span>
+</span><span data-line="283">            <span class="s2">&quot;Nj&quot;</span><span class="p">:</span> <span class="n">grid</span><span class="o">.</span><span class="n">ny</span><span class="p">,</span>
+</span><span data-line="284">            <span class="s2">&quot;latitudeOfFirstGridPoint&quot;</span><span class="p">:</span> <span class="n">_udeg</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">ymin</span><span class="p">),</span>
+</span><span data-line="285">            <span class="s2">&quot;longitudeOfFirstGridPoint&quot;</span><span class="p">:</span> <span class="n">_udeg</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">xmin</span><span class="p">),</span>
+</span><span data-line="286">            <span class="s2">&quot;resolutionAndComponentFlags&quot;</span><span class="p">:</span> <span class="n">resolution_components_flags</span><span class="p">,</span>
+</span><span data-line="287">            <span class="s2">&quot;latitudeOfLastGridPoint&quot;</span><span class="p">:</span> <span class="n">_udeg</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">ymax</span><span class="p">),</span>
+</span><span data-line="288">            <span class="s2">&quot;longitudeOfLastGridPoint&quot;</span><span class="p">:</span> <span class="n">_udeg</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">xmax</span><span class="p">),</span>
+</span><span data-line="289">            <span class="s2">&quot;iDirectionIncrement&quot;</span><span class="p">:</span> <span class="n">_udeg</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">dx</span><span class="p">),</span>
+</span><span data-line="290">            <span class="s2">&quot;jDirectionIncrement&quot;</span><span class="p">:</span> <span class="n">_udeg</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">dy</span><span class="p">),</span>
+</span><span data-line="291">            <span class="s2">&quot;scanningMode&quot;</span><span class="p">:</span> <span class="n">scanning_mode</span><span class="p">,</span>
+</span><span data-line="292">            <span class="s2">&quot;latitudeOfSouthernPole&quot;</span><span class="p">:</span> <span class="n">_udeg</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">grid</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;o_lat_p&quot;</span><span class="p">)),</span>
+</span><span data-line="293">            <span class="s2">&quot;longitudeOfSouthernPole&quot;</span><span class="p">:</span> <span class="n">_udeg</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;lon_0&quot;</span><span class="p">)),</span>
+</span><span data-line="294">            <span class="s2">&quot;angleOfRotation&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+</span><span data-line="295">        <span class="p">}</span>
+</span><span data-line="296">    <span class="k">else</span><span class="p">:</span>
+</span><span data-line="297">        <span class="c1"># Rather than attempt to populate the GRIB definition in the general case, we</span>
+</span><span data-line="298">        <span class="c1"># just set the sourceOfGridDefinition to 255. Ideally we would also set</span>
+</span><span data-line="299">        <span class="c1"># gridDefinitionTemplateNumber to 65535, but eccodes attempts and fails to find</span>
+</span><span data-line="300">        <span class="c1"># a template by this number.</span>
+</span><span data-line="301">        <span class="k">return</span> <span class="p">{</span>
+</span><span data-line="302">            <span class="s2">&quot;sourceOfGridDefinition&quot;</span><span class="p">:</span> <span class="mi">255</span><span class="p">,</span>  <span class="c1"># grid definition does not apply</span>
+</span><span data-line="303">            <span class="s2">&quot;numberOfDataPoints&quot;</span><span class="p">:</span> <span class="n">grid</span><span class="o">.</span><span class="n">nx</span> <span class="o">*</span> <span class="n">grid</span><span class="o">.</span><span class="n">ny</span><span class="p">,</span>
+</span><span data-line="304">            <span class="s2">&quot;numberOfOctectsForNumberOfPoints&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span><span data-line="305">        <span class="p">}</span>
+</span><span data-line="306">
+</span><span data-line="307">
+<div class="viewcode-block" id="regrid">
+<a class="viewcode-back" href="../../../generated/meteodatalab.operators.regrid.html#meteodatalab.operators.regrid.regrid">[docs]</a>
+</span><span data-line="308"><span class="k">def</span> <span class="nf">regrid</span><span class="p">(</span>
+</span><span data-line="309">    <span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
+</span><span data-line="310">    <span class="n">dst</span><span class="p">:</span> <span class="n">RegularGrid</span><span class="p">,</span>
+</span><span data-line="311">    <span class="n">resampling</span><span class="p">:</span> <span class="n">Resampling</span><span class="p">,</span>
+</span><span data-line="312">    <span class="n">src</span><span class="p">:</span> <span class="n">RegularGrid</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="313"><span class="p">):</span>
+</span><span data-line="314"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Regrid a field.</span>
+</span><span data-line="315">
+</span><span data-line="316"><span class="sd">    Parameters</span>
+</span><span data-line="317"><span class="sd">    ----------</span>
+</span><span data-line="318"><span class="sd">    field : xarray.DataArray</span>
+</span><span data-line="319"><span class="sd">        Input field defined on a regular grid in rotated latlon coordinates.</span>
+</span><span data-line="320"><span class="sd">    dst : RegularGrid</span>
+</span><span data-line="321"><span class="sd">        Destination grid onto which to project the field.</span>
+</span><span data-line="322"><span class="sd">    resampling : Resampling</span>
+</span><span data-line="323"><span class="sd">        Resampling method, alias of rasterio.warp.Resampling.</span>
+</span><span data-line="324"><span class="sd">    src : RegularGrid, optional</span>
+</span><span data-line="325"><span class="sd">        Definition of the input field grid</span>
+</span><span data-line="326">
+</span><span data-line="327"><span class="sd">    Raises</span>
+</span><span data-line="328"><span class="sd">    ------</span>
+</span><span data-line="329"><span class="sd">    ValueError</span>
+</span><span data-line="330"><span class="sd">        If the input field is not defined on a regular grid in rotated latlon or</span>
+</span><span data-line="331"><span class="sd">        if the input field geography metadata does not have consistent grid parameters.</span>
+</span><span data-line="332">
+</span><span data-line="333"><span class="sd">    Returns</span>
+</span><span data-line="334"><span class="sd">    -------</span>
+</span><span data-line="335"><span class="sd">    xarray.DataArray</span>
+</span><span data-line="336"><span class="sd">        Field regridded in the destination grid.</span>
+</span><span data-line="337">
+</span><span data-line="338"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="339">    <span class="k">if</span> <span class="n">src</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="340">        <span class="n">src</span> <span class="o">=</span> <span class="n">RegularGrid</span><span class="o">.</span><span class="n">from_field</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+</span><span data-line="341">
+</span><span data-line="342">    <span class="k">def</span> <span class="nf">reproject_layer</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
+</span><span data-line="343">        <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dst</span><span class="o">.</span><span class="n">ny</span><span class="p">,</span> <span class="n">dst</span><span class="o">.</span><span class="n">nx</span><span class="p">))</span>
+</span><span data-line="344">        <span class="n">warp</span><span class="o">.</span><span class="n">reproject</span><span class="p">(</span>
+</span><span data-line="345">            <span class="n">source</span><span class="o">=</span><span class="n">field</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+</span><span data-line="346">            <span class="n">destination</span><span class="o">=</span><span class="n">output</span><span class="p">,</span>
+</span><span data-line="347">            <span class="n">src_crs</span><span class="o">=</span><span class="n">src</span><span class="o">.</span><span class="n">crs</span><span class="p">,</span>
+</span><span data-line="348">            <span class="n">src_transform</span><span class="o">=</span><span class="n">src</span><span class="o">.</span><span class="n">transform</span><span class="p">,</span>
+</span><span data-line="349">            <span class="n">dst_crs</span><span class="o">=</span><span class="n">dst</span><span class="o">.</span><span class="n">crs</span><span class="p">,</span>
+</span><span data-line="350">            <span class="n">dst_transform</span><span class="o">=</span><span class="n">dst</span><span class="o">.</span><span class="n">transform</span><span class="p">,</span>
+</span><span data-line="351">            <span class="n">resampling</span><span class="o">=</span><span class="n">resampling</span><span class="p">,</span>
+</span><span data-line="352">        <span class="p">)</span>
+</span><span data-line="353">        <span class="k">return</span> <span class="n">output</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</span><span data-line="354">
+</span><span data-line="355">    <span class="c1"># output dims renamed to workaround limitation that overlapping dims in the input</span>
+</span><span data-line="356">    <span class="c1"># must not change in size</span>
+</span><span data-line="357">    <span class="n">data</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">apply_ufunc</span><span class="p">(</span>
+</span><span data-line="358">        <span class="n">reproject_layer</span><span class="p">,</span>
+</span><span data-line="359">        <span class="n">field</span><span class="p">,</span>
+</span><span data-line="360">        <span class="n">input_core_dims</span><span class="o">=</span><span class="p">[[</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">]],</span>
+</span><span data-line="361">        <span class="n">output_core_dims</span><span class="o">=</span><span class="p">[[</span><span class="s2">&quot;y1&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">]],</span>
+</span><span data-line="362">        <span class="n">vectorize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span data-line="363">    <span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">&quot;x1&quot;</span><span class="p">:</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y1&quot;</span><span class="p">:</span> <span class="s2">&quot;y&quot;</span><span class="p">})</span>
+</span><span data-line="364">
+</span><span data-line="365">    <span class="n">attrs</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">attrs</span>
+</span><span data-line="366">    <span class="k">if</span> <span class="n">md</span> <span class="o">:=</span> <span class="n">_get_metadata</span><span class="p">(</span><span class="n">dst</span><span class="p">):</span>
+</span><span data-line="367">        <span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span> <span class="o">|</span> <span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="o">**</span><span class="n">md</span><span class="p">)</span>
+</span><span data-line="368">
+</span><span data-line="369">    <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">)</span></div>
+
+</span><span data-line="370">
+</span><span data-line="371">
+</span><span data-line="372"><span class="k">def</span> <span class="nf">_icon2regular</span><span class="p">(</span>
+</span><span data-line="373">    <span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">RegularGrid</span><span class="p">,</span> <span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">weights</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+</span><span data-line="374"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
+</span><span data-line="375">    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">indices</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="376">
+</span><span data-line="377">    <span class="k">def</span> <span class="nf">reproject_layer</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
+</span><span data-line="378">        <span class="n">out_shape</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">dst</span><span class="o">.</span><span class="n">ny</span><span class="p">,</span> <span class="n">dst</span><span class="o">.</span><span class="n">nx</span><span class="p">)</span>
+</span><span data-line="379">        <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="380">        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">values</span><span class="p">)):</span>
+</span><span data-line="381">            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Interpolation of missing values is not supported.&quot;</span><span class="p">)</span>
+</span><span data-line="382">        <span class="n">vmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="383">        <span class="n">vmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="384">        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;...ij,ij-&gt;...i&quot;</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+</span><span data-line="385">        <span class="n">masked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+</span><span data-line="386">        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">masked</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">out_shape</span><span class="p">)</span>
+</span><span data-line="387">
+</span><span data-line="388">    <span class="n">data</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">apply_ufunc</span><span class="p">(</span>
+</span><span data-line="389">        <span class="n">reproject_layer</span><span class="p">,</span>
+</span><span data-line="390">        <span class="n">field</span><span class="p">,</span>
+</span><span data-line="391">        <span class="n">input_core_dims</span><span class="o">=</span><span class="p">[[</span><span class="s2">&quot;cell&quot;</span><span class="p">]],</span>
+</span><span data-line="392">        <span class="n">output_core_dims</span><span class="o">=</span><span class="p">[[</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">]],</span>
+</span><span data-line="393">    <span class="p">)</span>
+</span><span data-line="394">
+</span><span data-line="395">    <span class="n">attrs</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">attrs</span>
+</span><span data-line="396">    <span class="k">if</span> <span class="n">md</span> <span class="o">:=</span> <span class="n">_get_metadata</span><span class="p">(</span><span class="n">dst</span><span class="p">):</span>
+</span><span data-line="397">        <span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span> <span class="o">|</span> <span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="o">**</span><span class="n">md</span><span class="p">)</span>
+</span><span data-line="398">
+</span><span data-line="399">    <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">)</span>
+</span><span data-line="400">
+</span><span data-line="401">
+<div class="viewcode-block" id="icon2geolatlon">
+<a class="viewcode-back" href="../../../generated/meteodatalab.operators.regrid.html#meteodatalab.operators.regrid.icon2geolatlon">[docs]</a>
+</span><span data-line="402"><span class="k">def</span> <span class="nf">icon2geolatlon</span><span class="p">(</span><span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
+</span><span data-line="403"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remap ICON native grid data to the geolatlon grid.</span>
+</span><span data-line="404">
+</span><span data-line="405"><span class="sd">    The interpolation is done with pre-computed weights based on the RBF</span>
+</span><span data-line="406"><span class="sd">    interpolation method as implemented in icon-tools from the DWD.</span>
+</span><span data-line="407">
+</span><span data-line="408"><span class="sd">    Parameters</span>
+</span><span data-line="409"><span class="sd">    ----------</span>
+</span><span data-line="410"><span class="sd">    field : xarray.DataArray</span>
+</span><span data-line="411"><span class="sd">        A field with data in the ICON native grid.</span>
+</span><span data-line="412">
+</span><span data-line="413"><span class="sd">    Returns</span>
+</span><span data-line="414"><span class="sd">    -------</span>
+</span><span data-line="415"><span class="sd">    xarray.DataArray</span>
+</span><span data-line="416"><span class="sd">        Field with data remapped to the geolatlon grid.</span>
+</span><span data-line="417">
+</span><span data-line="418"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="419">    <span class="n">gid</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;uuidOfHGrid&quot;</span><span class="p">)</span>
+</span><span data-line="420">    <span class="n">coeffs</span> <span class="o">=</span> <span class="n">icon_grid</span><span class="o">.</span><span class="n">get_remap_coeffs</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s2">&quot;geolatlon&quot;</span><span class="p">)</span>
+</span><span data-line="421">    <span class="n">indices</span> <span class="o">=</span> <span class="n">coeffs</span><span class="p">[</span><span class="s2">&quot;rbf_B_glbidx&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</span><span data-line="422">    <span class="n">weights</span> <span class="o">=</span> <span class="n">coeffs</span><span class="p">[</span><span class="s2">&quot;rbf_B_wgt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</span><span data-line="423">
+</span><span data-line="424">    <span class="n">dst</span> <span class="o">=</span> <span class="n">RegularGrid</span><span class="p">(</span>
+</span><span data-line="425">        <span class="n">crs</span><span class="o">=</span><span class="n">CRS</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="s2">&quot;epsg:4326&quot;</span><span class="p">),</span>
+</span><span data-line="426">        <span class="n">nx</span><span class="o">=</span><span class="n">coeffs</span><span class="o">.</span><span class="n">nx</span><span class="p">,</span>
+</span><span data-line="427">        <span class="n">ny</span><span class="o">=</span><span class="n">coeffs</span><span class="o">.</span><span class="n">ny</span><span class="p">,</span>
+</span><span data-line="428">        <span class="n">xmin</span><span class="o">=</span><span class="n">coeffs</span><span class="o">.</span><span class="n">xmin</span><span class="p">,</span>
+</span><span data-line="429">        <span class="n">ymin</span><span class="o">=</span><span class="n">coeffs</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span>
+</span><span data-line="430">        <span class="n">xmax</span><span class="o">=</span><span class="n">coeffs</span><span class="o">.</span><span class="n">xmax</span><span class="p">,</span>
+</span><span data-line="431">        <span class="n">ymax</span><span class="o">=</span><span class="n">coeffs</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span>
+</span><span data-line="432">    <span class="p">)</span>
+</span><span data-line="433">
+</span><span data-line="434">    <span class="k">return</span> <span class="n">_icon2regular</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span></div>
+
+</span><span data-line="435">
+</span><span data-line="436">
+<div class="viewcode-block" id="icon2rotlatlon">
+<a class="viewcode-back" href="../../../generated/meteodatalab.operators.regrid.html#meteodatalab.operators.regrid.icon2rotlatlon">[docs]</a>
+</span><span data-line="437"><span class="k">def</span> <span class="nf">icon2rotlatlon</span><span class="p">(</span><span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
+</span><span data-line="438"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remap ICON native grid data to the rotated latlon grid.</span>
+</span><span data-line="439">
+</span><span data-line="440"><span class="sd">    The interpolation is done with pre-computed weights based on the RBF</span>
+</span><span data-line="441"><span class="sd">    interpolation method as implemented in icon-tools from the DWD.</span>
+</span><span data-line="442">
+</span><span data-line="443"><span class="sd">    Parameters</span>
+</span><span data-line="444"><span class="sd">    ----------</span>
+</span><span data-line="445"><span class="sd">    field : xarray.DataArray</span>
+</span><span data-line="446"><span class="sd">        A field with data in the ICON native grid.</span>
+</span><span data-line="447">
+</span><span data-line="448"><span class="sd">    Returns</span>
+</span><span data-line="449"><span class="sd">    -------</span>
+</span><span data-line="450"><span class="sd">    xarray.DataArray</span>
+</span><span data-line="451"><span class="sd">        Field with data remapped to the rotated latlon grid.</span>
+</span><span data-line="452">
+</span><span data-line="453"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="454">    <span class="n">gid</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;uuidOfHGrid&quot;</span><span class="p">)</span>
+</span><span data-line="455">    <span class="n">coeffs</span> <span class="o">=</span> <span class="n">icon_grid</span><span class="o">.</span><span class="n">get_remap_coeffs</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s2">&quot;rotlatlon&quot;</span><span class="p">)</span>
+</span><span data-line="456">    <span class="n">indices</span> <span class="o">=</span> <span class="n">coeffs</span><span class="p">[</span><span class="s2">&quot;rbf_B_glbidx&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</span><span data-line="457">    <span class="n">weights</span> <span class="o">=</span> <span class="n">coeffs</span><span class="p">[</span><span class="s2">&quot;rbf_B_wgt&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</span><span data-line="458">
+</span><span data-line="459">    <span class="n">geo</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="460">        <span class="s2">&quot;gridType&quot;</span><span class="p">:</span> <span class="s2">&quot;rotated_ll&quot;</span><span class="p">,</span>
+</span><span data-line="461">        <span class="s2">&quot;longitudeOfSouthernPoleInDegrees&quot;</span><span class="p">:</span> <span class="n">coeffs</span><span class="o">.</span><span class="n">north_pole_lon</span> <span class="o">-</span> <span class="mi">180</span><span class="p">,</span>
+</span><span data-line="462">        <span class="s2">&quot;latitudeOfSouthernPoleInDegrees&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">coeffs</span><span class="o">.</span><span class="n">north_pole_lat</span><span class="p">,</span>
+</span><span data-line="463">    <span class="p">}</span>
+</span><span data-line="464">    <span class="n">dst</span> <span class="o">=</span> <span class="n">RegularGrid</span><span class="p">(</span>
+</span><span data-line="465">        <span class="n">crs</span><span class="o">=</span><span class="n">_get_crs</span><span class="p">(</span><span class="n">geo</span><span class="p">),</span>
+</span><span data-line="466">        <span class="n">nx</span><span class="o">=</span><span class="n">coeffs</span><span class="o">.</span><span class="n">nx</span><span class="p">,</span>
+</span><span data-line="467">        <span class="n">ny</span><span class="o">=</span><span class="n">coeffs</span><span class="o">.</span><span class="n">ny</span><span class="p">,</span>
+</span><span data-line="468">        <span class="n">xmin</span><span class="o">=</span><span class="n">coeffs</span><span class="o">.</span><span class="n">xmin</span><span class="p">,</span>
+</span><span data-line="469">        <span class="n">ymin</span><span class="o">=</span><span class="n">coeffs</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span>
+</span><span data-line="470">        <span class="n">xmax</span><span class="o">=</span><span class="n">coeffs</span><span class="o">.</span><span class="n">xmax</span><span class="p">,</span>
+</span><span data-line="471">        <span class="n">ymax</span><span class="o">=</span><span class="n">coeffs</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span>
+</span><span data-line="472">    <span class="p">)</span>
+</span><span data-line="473">
+</span><span data-line="474">    <span class="k">return</span> <span class="n">_icon2regular</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span></div>
+
+</span><span data-line="475">
+</span><span data-line="476">
+</span><span data-line="477"><span class="k">def</span> <span class="nf">_linear_weights</span><span class="p">(</span><span class="n">pts_src</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">pts_dst</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">]:</span>
+</span><span data-line="478"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute indices and weights for barycentric linear interpolation.&quot;&quot;&quot;</span>
+</span><span data-line="479">    <span class="n">tri</span> <span class="o">=</span> <span class="n">Delaunay</span><span class="p">(</span><span class="n">pts_src</span><span class="p">)</span>
+</span><span data-line="480">    <span class="n">simplex</span> <span class="o">=</span> <span class="n">tri</span><span class="o">.</span><span class="n">find_simplex</span><span class="p">(</span><span class="n">pts_dst</span><span class="p">)</span>
+</span><span data-line="481">    <span class="n">isfound</span> <span class="o">=</span> <span class="n">simplex</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span>
+</span><span data-line="482">    <span class="n">vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">tri</span><span class="o">.</span><span class="n">simplices</span><span class="p">,</span> <span class="n">simplex</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span data-line="483">    <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">isfound</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">vertices</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span><span data-line="484">
+</span><span data-line="485">    <span class="c1"># note that zero is a valid index</span>
+</span><span data-line="486">    <span class="c1"># however, a full line of zeros is interpreted as out of bounds</span>
+</span><span data-line="487">    <span class="c1"># in the interpolation step</span>
+</span><span data-line="488">
+</span><span data-line="489">    <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">tri</span><span class="o">.</span><span class="n">transform</span><span class="p">,</span> <span class="n">simplex</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span data-line="490">    <span class="n">delta</span> <span class="o">=</span> <span class="n">pts_dst</span> <span class="o">-</span> <span class="n">temp</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+</span><span data-line="491">    <span class="n">bary</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;njk,nk-&gt;nj&quot;</span><span class="p">,</span> <span class="n">temp</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:],</span> <span class="n">delta</span><span class="p">)</span>
+</span><span data-line="492">    <span class="n">wgts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">bary</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">bary</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)))</span>
+</span><span data-line="493">    <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">isfound</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">wgts</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span><span data-line="494">
+</span><span data-line="495">    <span class="k">return</span> <span class="n">indices</span><span class="p">,</span> <span class="n">weights</span>
+</span><span data-line="496">
+</span><span data-line="497">
+</span><span data-line="498"><span class="k">def</span> <span class="nf">_linear_weights_cropped_domain</span><span class="p">(</span>
+</span><span data-line="499">    <span class="n">pts_src</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">pts_dst</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">4e3</span>
+</span><span data-line="500"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">]:</span>
+</span><span data-line="501"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute linear interpolation weights from a cropped source grid.</span>
+</span><span data-line="502">
+</span><span data-line="503"><span class="sd">    Crops the source grid to a box with a buffer outside of the destination grid. The</span>
+</span><span data-line="504"><span class="sd">    default buffer is 4 km when using a meter-based coordinate system.</span>
+</span><span data-line="505">
+</span><span data-line="506"><span class="sd">    Both pts_src and pts_dst are expected to be rank 2 arrays representing a list of</span>
+</span><span data-line="507"><span class="sd">    points using the same coordinate system.</span>
+</span><span data-line="508"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="509">    <span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">pts_dst</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">buffer</span>
+</span><span data-line="510">    <span class="n">xmax</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">pts_dst</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">buffer</span>
+</span><span data-line="511">    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">pts_src</span><span class="p">)</span>
+</span><span data-line="512">    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmin</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">xmax</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ymin</span> <span class="o">&lt;</span> <span class="n">y</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">ymax</span><span class="p">)</span>
+</span><span data-line="513">    <span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+</span><span data-line="514">    <span class="n">indices</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">_linear_weights</span><span class="p">(</span><span class="n">pts_src</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">pts_dst</span><span class="p">)</span>
+</span><span data-line="515">    <span class="k">return</span> <span class="n">idx</span><span class="p">[</span><span class="n">indices</span><span class="p">],</span> <span class="n">weights</span>
+</span><span data-line="516">
+</span><span data-line="517">
+</span><span data-line="518"><span class="k">def</span> <span class="nf">_key_maker</span><span class="p">(</span><span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">RegularGrid</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="519">    <span class="n">md5</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;md5Section3&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</span><span data-line="520">    <span class="k">if</span> <span class="n">md5</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="521">        <span class="k">return</span> <span class="kc">None</span>
+</span><span data-line="522">    <span class="k">return</span> <span class="n">md5</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
+</span><span data-line="523">
+</span><span data-line="524">
+</span><span data-line="525"><span class="nd">@util</span><span class="o">.</span><span class="n">memoize</span><span class="p">(</span><span class="n">_key_maker</span><span class="p">)</span>
+</span><span data-line="526"><span class="k">def</span> <span class="nf">_compute_barycentric_weights</span><span class="p">(</span>
+</span><span data-line="527">    <span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">RegularGrid</span>
+</span><span data-line="528"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">]:</span>
+</span><span data-line="529">    <span class="n">utm_crs</span> <span class="o">=</span> <span class="s2">&quot;epsg:32632&quot;</span>  <span class="c1"># UTM zone 32N</span>
+</span><span data-line="530">
+</span><span data-line="531">    <span class="n">transformer_src</span> <span class="o">=</span> <span class="n">Transformer</span><span class="o">.</span><span class="n">from_crs</span><span class="p">(</span><span class="s2">&quot;epsg:4326&quot;</span><span class="p">,</span> <span class="n">utm_crs</span><span class="p">,</span> <span class="n">always_xy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span data-line="532">    <span class="n">points_src</span> <span class="o">=</span> <span class="n">transformer_src</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">lat</span><span class="p">)</span>
+</span><span data-line="533">
+</span><span data-line="534">    <span class="n">gx</span><span class="p">,</span> <span class="n">gy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">dst</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">dst</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+</span><span data-line="535">    <span class="n">transformer_dst</span> <span class="o">=</span> <span class="n">Transformer</span><span class="o">.</span><span class="n">from_crs</span><span class="p">(</span><span class="n">dst</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">wkt</span><span class="p">,</span> <span class="n">utm_crs</span><span class="p">,</span> <span class="n">always_xy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span data-line="536">    <span class="n">points_dst</span> <span class="o">=</span> <span class="n">transformer_dst</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">gx</span><span class="o">.</span><span class="n">flat</span><span class="p">,</span> <span class="n">gy</span><span class="o">.</span><span class="n">flat</span><span class="p">)</span>
+</span><span data-line="537">
+</span><span data-line="538">    <span class="n">xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">points_src</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+</span><span data-line="539">    <span class="n">uv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">points_dst</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+</span><span data-line="540">
+</span><span data-line="541">    <span class="k">return</span> <span class="n">_linear_weights_cropped_domain</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">uv</span><span class="p">)</span>
+</span><span data-line="542">
+</span><span data-line="543">
+<div class="viewcode-block" id="iconremap">
+<a class="viewcode-back" href="../../../generated/meteodatalab.operators.regrid.html#meteodatalab.operators.regrid.iconremap">[docs]</a>
+</span><span data-line="544"><span class="k">def</span> <span class="nf">iconremap</span><span class="p">(</span>
+</span><span data-line="545">    <span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">RegularGrid</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;byc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;byc&quot;</span>
+</span><span data-line="546"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
+</span><span data-line="547"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remap ICON native grid data to a regular grid.</span>
+</span><span data-line="548">
+</span><span data-line="549"><span class="sd">    Note that the interpolation method is linear.</span>
+</span><span data-line="550">
+</span><span data-line="551"><span class="sd">    Parameters</span>
+</span><span data-line="552"><span class="sd">    ----------</span>
+</span><span data-line="553"><span class="sd">    field : xarray.DataArray</span>
+</span><span data-line="554"><span class="sd">        A field with data in the ICON native grid.</span>
+</span><span data-line="555"><span class="sd">    dst : RegularGrid</span>
+</span><span data-line="556"><span class="sd">        A regular grid in any coordinate system.</span>
+</span><span data-line="557"><span class="sd">    method : Literal[&quot;byc&quot;]</span>
+</span><span data-line="558"><span class="sd">        Method used to perform the interpolation.</span>
+</span><span data-line="559">
+</span><span data-line="560"><span class="sd">        Available methods:</span>
+</span><span data-line="561"><span class="sd">        - byc: Barycentric linear interpolation.</span>
+</span><span data-line="562">
+</span><span data-line="563"><span class="sd">    Returns</span>
+</span><span data-line="564"><span class="sd">    -------</span>
+</span><span data-line="565"><span class="sd">    xarray.DataArray</span>
+</span><span data-line="566"><span class="sd">        Field with data remapped to the given swiss grid.</span>
+</span><span data-line="567">
+</span><span data-line="568"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="569">    <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;byc&quot;</span><span class="p">}:</span>
+</span><span data-line="570">        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;method: </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2"> is not implemented&quot;</span><span class="p">)</span>
+</span><span data-line="571">
+</span><span data-line="572">    <span class="n">indices</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">_compute_barycentric_weights</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
+</span><span data-line="573">
+</span><span data-line="574">    <span class="n">gx</span><span class="p">,</span> <span class="n">gy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">dst</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">dst</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+</span><span data-line="575">    <span class="n">transformer_geo</span> <span class="o">=</span> <span class="n">Transformer</span><span class="o">.</span><span class="n">from_crs</span><span class="p">(</span><span class="n">dst</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">wkt</span><span class="p">,</span> <span class="s2">&quot;epsg:4326&quot;</span><span class="p">,</span> <span class="n">always_xy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span data-line="576">    <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="n">transformer_geo</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">gx</span><span class="p">,</span> <span class="n">gy</span><span class="p">)</span>
+</span><span data-line="577">
+</span><span data-line="578">    <span class="k">return</span> <span class="n">_icon2regular</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span>
+</span><span data-line="579">        <span class="n">lon</span><span class="o">=</span><span class="p">((</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">),</span> <span class="n">lon</span><span class="p">),</span> <span class="n">lat</span><span class="o">=</span><span class="p">((</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">),</span> <span class="n">lat</span><span class="p">)</span>
+</span><span data-line="580">    <span class="p">)</span></div>
+
+</span></pre></div>
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2024, MeteoSwiss</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials"></div>
+    </div>
+  </div>
+</footer>
+      <script src="../../../_static/documentation_options.js?v=1dd76d02"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/shibuya.js?v=c477d091"></script></body>
+</html>

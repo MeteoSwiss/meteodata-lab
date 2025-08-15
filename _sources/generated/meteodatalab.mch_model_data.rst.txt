@@ -1,0 +1,32 @@
+﻿mch\_model\_data
+================
+
+.. automodule:: meteodatalab.mch_model_data
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      archive_to_fdb
+      get_from_fdb
+      get_from_polytope
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="violet" data-content_root="./">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>History - meteodata-lab 0.5.0 documentation</title><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="Credits" href="authors.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="_static/pygments.css?v=397bb51e" />
+    <link rel="stylesheet" type="text/css" href="_static/shibuya.css?v=76b6f612" />
+    <link media="print" rel="stylesheet" type="text/css" href="_static/print.css?v=20ff2c19" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="History"/>
+<meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="index.html">
+      
+      
+      <strong>meteodata-lab</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials"></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2 -translate-x-2"></span>
+          <span class="hamburger_3 -translate-x-1"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">meteodata-lab</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.config.html">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.data_cache.html">data_cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.data_source.html">data_source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.grib_decoder.html">grib_decoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.icon_grid.html">icon_grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.mars.html">mars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.mch_model_data.html">mch_model_data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.metadata.html">metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.ogd_api.html">ogd_api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.physical_constants.html">physical_constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.crop.html">operators.crop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.gis.html">operators.gis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.lateral_operators.html">operators.lateral_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.regrid.html">operators.regrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.atmo.html">operators.atmo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.brn.html">operators.brn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.hzerocl.html">operators.hzerocl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.pot_vortic.html">operators.pot_vortic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.radiation.html">operators.radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.relhum.html">operators.relhum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.rho.html">operators.rho</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.theta.html">operators.theta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.thetav.html">operators.thetav</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.wind.html">operators.wind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.time_operators.html">operators.time_operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.vertical_extrapolation.html">operators.vertical_extrapolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.vertical_interpolation.html">operators.vertical_interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/meteodatalab.operators.vertical_reduction.html">operators.vertical_reduction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#id2">0.5.0 (2025-08-15)</a><ul>
+<li><a class="reference internal" href="#additions">Additions</a></li>
+<li><a class="reference internal" href="#changes">Changes</a></li>
+<li><a class="reference internal" href="#deprecations">Deprecations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#rc1-2025-07-17">0.5.0-rc1 (2025-07-17)</a><ul>
+<li><a class="reference internal" href="#id3">Additions</a></li>
+<li><a class="reference internal" href="#fixes">Fixes</a></li>
+<li><a class="reference internal" href="#id4">Changes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id6">0.4.0 (2025-05-27)</a><ul>
+<li><a class="reference internal" href="#id7">Fixes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#rc1-2025-05-19">0.4.0-rc1 (2025-05-19)</a><ul>
+<li><a class="reference internal" href="#id9">Additions</a></li>
+<li><a class="reference internal" href="#id10">Fixes</a></li>
+<li><a class="reference internal" href="#breaking-changes">Breaking changes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id12">0.3.0 (2025-04-11)</a><ul>
+<li><a class="reference internal" href="#id13">Additions</a></li>
+<li><a class="reference internal" href="#id14">Fixes</a></li>
+<li><a class="reference internal" href="#id15">Breaking Changes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id17">0.2.0 (2025-03-20)</a><ul>
+<li><a class="reference internal" href="#id18">Additions</a></li>
+<li><a class="reference internal" href="#id19">Breaking Changes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#rc3-2023-12-18">0.2.0-rc3 (2023-12-18)</a></li>
+<li><a class="reference internal" href="#rc2-2023-12-11">0.2.0-rc2 (2023-12-11)</a></li>
+<li><a class="reference internal" href="#rc1-2023-12-01">0.2.0-rc1 (2023-12-01)</a></li>
+<li><a class="reference internal" href="#id22">0.1.0 (2023-07-11)</a></li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">meteodata-lab</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">History</strong>
+        <meta itemprop="position" content="2" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <section id="history">
+<h1>History<a class="headerlink" href="#history" title="Link to this heading">¶</a></h1>
+<section id="id2">
+<h2><a class="reference external" href="https://github.com/MeteoSwiss/meteodata-lab/compare/v0.5.0-rc1..v0.5.0">0.5.0</a> (2025-08-15)<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<section id="additions">
+<h3>Additions<a class="headerlink" href="#additions" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">param_id</span></code> mappings for short wave radiation</p></li>
+</ul>
+</section>
+<section id="changes">
+<h3>Changes<a class="headerlink" href="#changes" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>eccodes version requirement is updated to <code class="docutils literal notranslate"><span class="pre">&gt;=2.38,&lt;2.40</span></code></p></li>
+<li><p>Removed feature extraction request validation</p></li>
+</ul>
+</section>
+<section id="deprecations">
+<h3>Deprecations<a class="headerlink" href="#deprecations" title="Link to this heading">¶</a></h3>
+<p>To be removed in version 0.6</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">product</span></code> module</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tasking</span></code> module</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">grib_decoder.GribReader</span></code> class</p></li>
+</ul>
+</section>
+</section>
+<section id="rc1-2025-07-17">
+<h2><a class="reference external" href="https://github.com/MeteoSwiss/meteodata-lab/compare/v0.4.0..v0.5.0-rc1">0.5.0-rc1</a> (2025-07-17)<a class="headerlink" href="#rc1-2025-07-17" title="Link to this heading">¶</a></h2>
+<section id="id3">
+<h3>Additions<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">StreamDataSource</span></code></p></li>
+<li><p>Added in-memory cache to the <code class="docutils literal notranslate"><span class="pre">iconremap</span></code> function</p></li>
+</ul>
+</section>
+<section id="fixes">
+<h3>Fixes<a class="headerlink" href="#fixes" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Allow empty requests on the <code class="docutils literal notranslate"><span class="pre">FileDataSource</span></code></p></li>
+</ul>
+</section>
+<section id="id4">
+<h3>Changes<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Changed implementation to use earthkit-meteo</p>
+<ul>
+<li><p>relhum</p></li>
+<li><p>theta</p></li>
+<li><p>thetav</p></li>
+<li><p>wind speed</p></li>
+</ul>
+</li>
+<li><p>Numpy version requirement is updated to <code class="docutils literal notranslate"><span class="pre">&gt;=1.26.4,&lt;2.4.0</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="id6">
+<h2><a class="reference external" href="https://github.com/MeteoSwiss/meteodata-lab/compare/v0.4.0-rc1..v0.4.0">0.4.0</a> (2025-05-27)<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h2>
+<section id="id7">
+<h3>Fixes<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Fixed <code class="docutils literal notranslate"><span class="pre">ogd_api.get_asset_urls</span></code> pagination infinite loop.</p></li>
+</ul>
+</section>
+</section>
+<section id="rc1-2025-05-19">
+<h2><a class="reference external" href="https://github.com/MeteoSwiss/meteodata-lab/compare/v0.3.0..v0.4.0-rc1">0.4.0-rc1</a> (2025-05-19)<a class="headerlink" href="#rc1-2025-05-19" title="Link to this heading">¶</a></h2>
+<section id="id9">
+<h3>Additions<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Added the <code class="docutils literal notranslate"><span class="pre">extrapolate_k2p</span></code> operator (experimental).</p></li>
+<li><p>Added a <code class="docutils literal notranslate"><span class="pre">clip_lateral_boundary_strip</span></code> operator.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">load_boundary_idx_from_file</span></code> function to the <code class="docutils literal notranslate"><span class="pre">icon_grid</span></code> module.</p></li>
+<li><p>Added a script to generate the logo in the readme.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ogd_api</span></code>:</p>
+<ul>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">lead_time</span></code> and <code class="docutils literal notranslate"><span class="pre">ref_time</span></code> as aliases to <code class="docutils literal notranslate"><span class="pre">horizon</span></code> and <code class="docutils literal notranslate"><span class="pre">reference_datetime</span></code> parameters in the <code class="docutils literal notranslate"><span class="pre">Request</span></code> class.</p></li>
+<li><p>Added support for <code class="docutils literal notranslate"><span class="pre">reference_datetime</span></code> value <code class="docutils literal notranslate"><span class="pre">&quot;latest&quot;</span></code>.</p></li>
+<li><p>Added support for multiple <code class="docutils literal notranslate"><span class="pre">horizon</span></code>/<code class="docutils literal notranslate"><span class="pre">lead_time</span></code> values in the <code class="docutils literal notranslate"><span class="pre">Request</span></code> class.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id10">
+<h3>Fixes<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Doc: removed outdated content and fixed rendering issues</p></li>
+</ul>
+</section>
+<section id="breaking-changes">
+<h3>Breaking changes<a class="headerlink" href="#breaking-changes" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ogd_api.get_asset_url</span></code> renamed to <code class="docutils literal notranslate"><span class="pre">ogd_api.get_asset_urls</span></code> and now returns <code class="docutils literal notranslate"><span class="pre">list[str]</span></code>.</p></li>
+</ul>
+</section>
+</section>
+<section id="id12">
+<h2><a class="reference external" href="https://github.com/MeteoSwiss/meteodata-lab/compare/v0.2.0..v0.3.0">0.3.0</a> (2025-04-11)<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h2>
+<section id="id13">
+<h3>Additions<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Updated eccodes to version 2.38.3 which includes a binary distribution in PyPI.</p></li>
+<li><p>The python package is now pushed to PyPI.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ogd_api</span></code>:</p>
+<ul>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">get_collection_asset_url</span></code> function to fetch pre-signed URLs for static assets from a STAC collection.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">download_from_ogd</span></code> function performs checksum verification.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mars</span></code>:</p>
+<ul>
+<li><p>Added default number of levels for icon and kenda models.</p></li>
+<li><p>Added support for bounding box feature extraction requests.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id14">
+<h3>Fixes<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">regrid</span></code>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">regrid</span></code> and <code class="docutils literal notranslate"><span class="pre">iconremap</span></code> functions now correctly set the metadata section 3 for destinations grids in the CRS UTM 32N (Switzerland).</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id15">
+<h3>Breaking Changes<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">geo_coords_urls.yaml</span></code> file containing pre-signed URLs for coordinate files has been removed. Coordinate URLs are now resolved dynamically using the new get_collection_asset_url function.</p></li>
+<li><p>The URL domain in <code class="docutils literal notranslate"><span class="pre">ogd_api</span></code> has been changed from the integration to the production environment.</p></li>
+<li><p>The eccodes definitions are installed using the <code class="docutils literal notranslate"><span class="pre">eccodes-cosmo-resources-python</span></code> package from PyPI.</p></li>
+</ul>
+</section>
+</section>
+<section id="id17">
+<h2><a class="reference external" href="https://github.com/MeteoSwiss/meteodata-lab/compare/v0.2.0-rc3..v0.2.0">0.2.0</a> (2025-03-20)<a class="headerlink" href="#id17" title="Link to this heading">¶</a></h2>
+<section id="id18">
+<h3>Additions<a class="headerlink" href="#id18" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cli</span></code>: Added subcommand for the regrid operator</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data_source</span></code></p>
+<ul>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">URLDataSource</span></code>, <code class="docutils literal notranslate"><span class="pre">FDBDataSource</span></code>, <code class="docutils literal notranslate"><span class="pre">FileDataSource</span></code>, <code class="docutils literal notranslate"><span class="pre">PolytopeDataSource</span></code> as implementations of <code class="docutils literal notranslate"><span class="pre">DataSource</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">retrieve</span></code> accepts an argument of type <code class="docutils literal notranslate"><span class="pre">mars.Request</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">grib_decoder</span></code></p>
+<ul>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">save</span></code> function</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">load</span></code> supports the ICON native grid</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">geo_coords</span></code> optional argument to the <code class="docutils literal notranslate"><span class="pre">load</span></code> function</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mars</span></code>: Added <code class="docutils literal notranslate"><span class="pre">feature</span></code> attribute to the <code class="docutils literal notranslate"><span class="pre">mars.Request</span></code> class</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mch_model_data</span></code>: Added <code class="docutils literal notranslate"><span class="pre">archive_to_fdb</span></code> function</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ogd_api</span></code></p>
+<ul>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">get_from_ogd</span></code> function</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">ogd_api.Request</span></code> class</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">operators</span></code></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">regrid</span></code>: Added <code class="docutils literal notranslate"><span class="pre">icon2rotlatlon</span></code>, <code class="docutils literal notranslate"><span class="pre">icon2geolatlon</span></code> and <code class="docutils literal notranslate"><span class="pre">iconremap</span></code> functions</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">crop</span></code> module</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id19">
+<h3>Breaking Changes<a class="headerlink" href="#id19" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>The constants module is renamed to physical constants and the <code class="docutils literal notranslate"><span class="pre">pc_</span></code> prefix is dropped in favour of aliasing the module to <code class="docutils literal notranslate"><span class="pre">pc</span></code> at the call sites</p></li>
+<li><p>The grib definitions context is no longer derived from the request model attribute.
+In practice, all defined models required the cosmo definitions as IFS grib data does not define the model mars key.
+Setting <code class="docutils literal notranslate"><span class="pre">data_scope</span></code> config to <code class="docutils literal notranslate"><span class="pre">ifs</span></code> to disable the cosmo definitions context remains possible.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data_source.DataSource</span></code> is now an abstract base class</p></li>
+<li><p>Renamed dimension <code class="docutils literal notranslate"><span class="pre">time</span></code> to <code class="docutils literal notranslate"><span class="pre">lead_time</span></code> and changed its type from <code class="docutils literal notranslate"><span class="pre">int</span></code> to <code class="docutils literal notranslate"><span class="pre">numpy.timedelta64[ns]</span></code></p></li>
+<li><p>Added dimension <code class="docutils literal notranslate"><span class="pre">ref_time</span></code> with type <code class="docutils literal notranslate"><span class="pre">numpy.datetime64[ns]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DataArray</span></code> objects representing a field no longer have the <code class="docutils literal notranslate"><span class="pre">message</span></code>
+attribute but now have a <code class="docutils literal notranslate"><span class="pre">metadata</span></code> attribute that is an instance of
+<code class="docutils literal notranslate"><span class="pre">StandAloneGribMetadata</span></code> from earthkit-data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FDBDataSource</span></code>, <code class="docutils literal notranslate"><span class="pre">mch_model_data.get_from_fdb</span></code> and <code class="docutils literal notranslate"><span class="pre">mch_model_data.archive_to_fdb</span></code> require the <code class="docutils literal notranslate"><span class="pre">fdb</span></code> extra dependency</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PolytopeDataSource</span></code> and <code class="docutils literal notranslate"><span class="pre">mch_mode_data.get_from_polytope</span></code> requires the <code class="docutils literal notranslate"><span class="pre">polytope</span></code> extra dependency</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">operators.regrid</span></code> module now requires the <code class="docutils literal notranslate"><span class="pre">regrid</span></code> extra dependencies</p></li>
+</ul>
+</section>
+</section>
+<section id="rc3-2023-12-18">
+<h2><a class="reference external" href="https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.2.0-rc2..v0.2.0-rc3">0.2.0-rc3</a> (2023-12-18)<a class="headerlink" href="#rc3-2023-12-18" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Added vertical interpolation operator <code class="docutils literal notranslate"><span class="pre">interpolate_k2any</span></code></p></li>
+<li><p>Testing data marker determines the test data that should be used</p></li>
+<li><p>Removed the <code class="docutils literal notranslate"><span class="pre">system_definitions</span></code> module</p></li>
+</ul>
+</section>
+<section id="rc2-2023-12-11">
+<h2><a class="reference external" href="https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.2.0-rc1..v0.2.0-rc2">0.2.0-rc2</a> (2023-12-11)<a class="headerlink" href="#rc2-2023-12-11" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">product.run_products</span></code> function</p></li>
+<li><p>Updated field mappings</p></li>
+<li><p>Data cache will inject the step and number in the request depending on the file pattern</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mars.Request</span></code> now supports multiple params</p></li>
+</ul>
+</section>
+<section id="rc1-2023-12-01">
+<h2><a class="reference external" href="https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/compare/v0.1.0..v0.2.0-rc1">0.2.0-rc1</a> (2023-12-01)<a class="headerlink" href="#rc1-2023-12-01" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Added support for the FDB data source</p></li>
+<li><p>Added support for running tests on balfrin (FDB only)</p></li>
+<li><p>Added modules</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">config</span></code>: manage configuration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data_cache</span></code>: support fieldextra testing from FDB</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data_source</span></code>: enable reading from files or from FDB</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mars</span></code>: mars request validation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">product</span></code>: product description</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tasking</span></code>: dask delayed wrapper</p></li>
+</ul>
+</li>
+<li><p>Added operators</p>
+<ul>
+<li><p>atmo</p></li>
+<li><p>gis</p></li>
+<li><p>lateral_operators</p></li>
+<li><p>regrid</p></li>
+<li><p>relhum</p></li>
+<li><p>time_operators</p></li>
+<li><p>wind</p></li>
+</ul>
+</li>
+<li><p>Changed: flexpart operator no longer uses cosmo naming conventions</p></li>
+<li><p><strong>Breaking:</strong> removed the <code class="docutils literal notranslate"><span class="pre">load_fields</span></code> method from the GribReader class</p></li>
+<li><p><strong>Breaking:</strong> the <code class="docutils literal notranslate"><span class="pre">load</span></code> method of GribReader class now takes a mapping of labels to requests and returns a mapping of labels to <code class="docutils literal notranslate"><span class="pre">xarray.DataArray</span></code></p></li>
+</ul>
+</section>
+<section id="id22">
+<h2><a class="reference external" href="https://github.com/MeteoSwiss-APN/icon_data_processing_incubator/tree/v0.1.0">0.1.0</a> (2023-07-11)<a class="headerlink" href="#id22" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Added operators</p>
+<ul>
+<li><p>brn</p></li>
+<li><p>curl</p></li>
+<li><p>destagger</p></li>
+<li><p>diff</p></li>
+<li><p>flexpart (for IFS model output)</p></li>
+<li><p>hzerocl</p></li>
+<li><p>omega_slope</p></li>
+<li><p>pot_vortic</p></li>
+<li><p>rho</p></li>
+<li><p>theta</p></li>
+<li><p>thetav</p></li>
+<li><p>time_rate</p></li>
+<li><p>interpolate_k2p</p></li>
+<li><p>interpolate_k2theta</p></li>
+<li><p>minmax_k</p></li>
+<li><p>integrate_k</p></li>
+</ul>
+</li>
+<li><p>Added ninjo_k2th product</p></li>
+<li><p>Added GRIB data loader based on earthkit-data</p></li>
+</ul>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="authors.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Credits</div></div>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2024, MeteoSwiss</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials"></div>
+    </div>
+  </div>
+</footer>
+      <script src="_static/documentation_options.js?v=1dd76d02"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/shibuya.js?v=c477d091"></script></body>
+</html>

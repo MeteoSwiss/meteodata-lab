@@ -1,0 +1,30 @@
+﻿operators.theta
+===============
+
+.. automodule:: meteodatalab.operators.theta
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      compute_theta
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

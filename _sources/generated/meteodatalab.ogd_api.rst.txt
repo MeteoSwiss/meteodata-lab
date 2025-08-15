@@ -1,0 +1,40 @@
+﻿ogd\_api
+========
+
+.. automodule:: meteodatalab.ogd_api
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      download_from_ogd
+      get_asset_urls
+      get_collection_asset_url
+      get_from_ogd
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Collection
+      Request
+   
+   
+
+   
+   
+   
+
+
+

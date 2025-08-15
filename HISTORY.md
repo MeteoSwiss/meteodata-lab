@@ -179,6 +179,7 @@ To be removed in version 0.6
 - Added ninjo_k2th product
 - Added GRIB data loader based on earthkit-data
 
+[0.5.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.5.0-rc1..v0.5.0
 [0.5.0-rc1]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.4.0..v0.5.0-rc1
 [0.4.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.4.0-rc1..v0.4.0
 [0.4.0-rc1]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.3.0..v0.4.0-rc1

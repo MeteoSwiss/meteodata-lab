@@ -1,5 +1,21 @@
 # History
 
+## [0.5.0] (2025-08-15)
+
+### Additions
+- Added `param_id` mappings for short wave radiation
+
+### Changes
+- eccodes version requirement is updated to `>=2.38,<2.40`
+- Removed feature extraction request validation
+
+### Deprecations
+To be removed in version 0.6
+- `product` module
+- `tasking` module
+- `grib_decoder.GribReader` class
+
+
 ## [0.5.0-rc1] (2025-07-17)
 
 ### Additions
@@ -163,6 +179,7 @@
 - Added ninjo_k2th product
 - Added GRIB data loader based on earthkit-data
 
+[0.5.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.5.0-rc1..v0.5.0
 [0.5.0-rc1]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.4.0..v0.5.0-rc1
 [0.4.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.4.0-rc1..v0.4.0
 [0.4.0-rc1]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.3.0..v0.4.0-rc1

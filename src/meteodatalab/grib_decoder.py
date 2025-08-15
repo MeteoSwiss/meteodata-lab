@@ -23,6 +23,7 @@ from numpy.typing import DTypeLike
 
 # Local
 from . import data_source, icon_grid, mars, metadata, tasking
+from .util import warn_deprecation
 
 logger = logging.getLogger(__name__)
 
@@ -330,6 +331,10 @@ class GribReader:
             if the grid can not be constructed from the ref_param
 
         """
+        warn_deprecation(
+            "GribReader class will be removed in version 0.6. "
+            "Use top level load function instead."
+        )
         self.data_source = source
         self.geo_coords = geo_coords
         if ref_param is not None:

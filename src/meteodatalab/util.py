@@ -8,6 +8,7 @@ import heapq
 import itertools
 import logging
 import typing
+import warnings
 from collections.abc import Callable
 
 # Third-party
@@ -131,3 +132,7 @@ def memoize(key_maker: Callable[P, K], maxsize: int = 10) -> Callable[[F], F]:
         return wrapped
 
     return decorator
+
+
+def warn_deprecation(message: str) -> None:
+    warnings.warn(message, DeprecationWarning, stacklevel=2)

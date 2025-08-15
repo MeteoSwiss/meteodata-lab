@@ -8,6 +8,7 @@ from typing import NamedTuple
 
 # Local
 from . import data_source, grib_decoder, tasking
+from .util import warn_deprecation
 
 
 class Request(NamedTuple):
@@ -29,6 +30,7 @@ class Product(metaclass=ABCMeta):
         input_fields: dict[str, Request],
         delay_entire_product: bool = False,
     ):
+        warn_deprecation("product module will be removed in version 0.6")
         self._desc = ProductDescriptor(input_fields=input_fields)
         self._delay_entire_product = delay_entire_product
 
@@ -108,6 +110,8 @@ def run_products(
         Returns the collection of results.
 
     """
+    warn_deprecation("product module will be removed in version 0.6")
+
     reqs, aliases = _merge_requests(products)
 
     reader = grib_decoder.GribReader(source, ref_param=ref_param._asdict())

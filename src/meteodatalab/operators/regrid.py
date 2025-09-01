@@ -393,8 +393,8 @@ def _icon2regular(
     )
 
     attrs = field.attrs
-    if md := _get_metadata(dst):
-        attrs = attrs | metadata.override(field.metadata, **md)
+#    if md := _get_metadata(dst):
+#        attrs = attrs | metadata.override(field.metadata, **md)
 
     return xr.DataArray(data, attrs=attrs)
 
@@ -522,7 +522,7 @@ def _key_maker(field: xr.DataArray, dst: RegularGrid) -> tuple[str, str] | None:
     return md5, repr(dst)
 
 
-@util.memoize(_key_maker)
+# @util.memoize(_key_maker)
 def _compute_barycentric_weights(
     field: xr.DataArray, dst: RegularGrid
 ) -> tuple[NDArray, NDArray]:

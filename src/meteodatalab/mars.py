@@ -104,7 +104,7 @@ class Request:
     levtype: LevType = LevType.MODEL_LEVEL
     model: Model = Model.COSMO_1E
     stream: Stream = Stream.ENS_FORECAST
-    type: Type = Type.ENS_MEMBER
+    type: Type = Type.DETERMINISTIC
 
     feature: Any = dc.field(default=None)
 

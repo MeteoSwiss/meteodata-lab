@@ -50,8 +50,8 @@ class Stream(str, Enum):
 
 
 class Type(str, Enum):
-    DETERMINISTIC = "det"
-    ENS_MEMBER = "ememb"
+    DETERMINISTIC = "cf"
+    ENS_MEMBER = "pf"
     ENS_MEAN = "emean"
     ENS_STD_DEV = "estdv"
 

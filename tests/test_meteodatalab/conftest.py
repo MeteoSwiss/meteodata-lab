@@ -122,7 +122,7 @@ def request_template():
         "step": 0,
         "stream": "enfo",
         "time": "0300",
-        "type": "ememb",
+        "type": "cf",
     }
 
 

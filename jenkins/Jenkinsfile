@@ -15,6 +15,7 @@ pipeline {
             deleteDir()
         }
     }
+
     stages {
         stage('spack') {
             steps {
@@ -31,6 +32,7 @@ pipeline {
                 '''
             }
         }
+
         stage('setup env') {
             steps {
                 sh '''#!/usr/bin/env bash
@@ -39,13 +41,7 @@ pipeline {
                 '''
             }
         }
-        stage('type check'){
-            steps {
-                sh '''#!/usr/bin/env bash
-                .venv/bin/python -m mypy src tests
-                '''
-            }
-        }
+
         stage('test') {
             steps {
                 sh '''#!/usr/bin/env bash
@@ -56,5 +52,14 @@ pipeline {
                 '''
             }
         }
+
+        stage('type check'){
+            steps {
+                sh '''#!/usr/bin/env bash
+                .venv/bin/python -m mypy src tests
+                '''
+            }
+        }
+
     }
 }

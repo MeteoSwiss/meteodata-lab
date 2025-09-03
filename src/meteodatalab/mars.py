@@ -50,8 +50,8 @@ class Stream(str, Enum):
 
 
 class Type(str, Enum):
-    DETERMINISTIC = "det"
-    ENS_MEMBER = "ememb"
+    DETERMINISTIC = "cf"
+    ENS_MEMBER = "pf"
     ENS_MEAN = "emean"
     ENS_STD_DEV = "estdv"
 
@@ -104,7 +104,7 @@ class Request:
     levtype: LevType = LevType.MODEL_LEVEL
     model: Model = Model.COSMO_1E
     stream: Stream = Stream.ENS_FORECAST
-    type: Type = Type.ENS_MEMBER
+    type: Type = Type.DETERMINISTIC
 
     feature: Any = dc.field(default=None)
 

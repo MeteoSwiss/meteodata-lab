@@ -24,12 +24,6 @@ def machine():
     path = Path("/etc/xthostname")
     if path.exists():
         return path.read_text().strip()
-    hostname = subprocess.check_output(["hostname", "-s"]).decode()
-    match hostname.split("-"):
-        case "tsa", *_:
-            return "tsa"
-        case "arolla", *_:
-            return "arolla"
     return "unknown"
 
 
@@ -52,9 +46,7 @@ def unpack(work_dir: Path):
 @pytest.fixture
 def data_dir(request, machine, unpack):
     """Base data dir."""
-    if machine == "tsa":
-        base_dir = Path("/project/s83c/rz+/icon_data_processing_incubator/")
-    elif machine == "balfrin":
+    if machine == "balfrin":
         base_dir = Path("/store_new/mch/msopr/icon_workflow_2/")
     else:
         return None
@@ -87,7 +79,6 @@ def work_dir(tmp_path_factory):
 def fieldextra_path(machine):
     """Fieldextra path."""
     conf = {
-        "tsa": Path("/project/s83c/fieldextra/tsa"),
         "balfrin": Path("/scratch/mch/jenkins/fieldextra/balfrin"),
     }
     return conf.get(machine)
@@ -106,7 +97,7 @@ def setup_fdb(machine):
     os.environ["FDB5_DIR"] = view_path
     os.environ["FDB_HOME"] = os.environ["FDB5_DIR"]
     os.environ["FDB5_CONFIG_FILE"] = str(
-        root / f"src/meteodatalab/data/fdb_config_{machine}.yaml"
+        root / f"tests/test_meteodatalab/data/fdb_config_{machine}.yaml"
     )
     pytest.importorskip("pyfdb")
 
@@ -118,11 +109,10 @@ def request_template():
         "date": "20230201",
         "expver": "0001",
         "model": "COSMO-1E",
-        "number": 0,
         "step": 0,
         "stream": "enfo",
         "time": "0300",
-        "type": "ememb",
+        "type": "cf",
     }
 
 

@@ -19,7 +19,7 @@ def sample():
         "stream": "enfo",
         "param": 500028,  # U
         "time": "0000",
-        "type": "ememb",
+        "type": "cf",
         "step": 0,
     }
 

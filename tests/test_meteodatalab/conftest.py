@@ -109,7 +109,6 @@ def request_template():
         "date": "20230201",
         "expver": "0001",
         "model": "COSMO-1E",
-        "number": 0,
         "step": 0,
         "stream": "enfo",
         "time": "0300",

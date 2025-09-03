@@ -1,0 +1,42 @@
+﻿data\_source
+============
+
+.. automodule:: meteodatalab.data_source
+   :members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      cosmo_grib_defs
+      grib_def_ctx
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      DataSource
+      FDBDataSource
+      FileDataSource
+      PolytopeDataSource
+      StreamDataSource
+      URLDataSource
+   
+   
+
+   
+   
+   
+
+
+

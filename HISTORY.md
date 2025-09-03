@@ -1,5 +1,14 @@
 # History
 
+## [0.6.0] (2025-09-03)
+
+### Changes
+- Types in `mars.Request` were changed for deterministic and ensemble fields to `cf` and `pf` respectively, from `ememb`
+- The default `type` in a `mars.Request` is for deterministic fields `type=cf`
+
+### Deprecations
+- Support for unit testing on machines tsa and arolla
+
 ## [0.5.0] (2025-08-15)
 
 ### Additions

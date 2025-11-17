@@ -4,7 +4,6 @@ from __future__ import annotations
 
 # Standard library
 import dataclasses as dc
-import json
 import typing
 from collections.abc import Iterable
 from enum import Enum
@@ -56,22 +55,18 @@ class Type(str, Enum):
     ENS_STD_DEV = "estdv"
 
 
-class Point(typing.NamedTuple):
-    lat: float
-    lon: float
-
-
-@dc.dataclass(frozen=True)
-class Range:
-    start: int
-    end: int
-    step: int | None = None
-
-
 @cache
 def _load_mapping():
     mapping_path = files("meteodatalab.data").joinpath("field_mappings.yml")
     return yaml.safe_load(mapping_path.open())
+
+
+def _convert_lower_str(obj: Any) -> Any:
+    if isinstance(obj, dict):
+        return {key: _convert_lower_str(value) for key, value in obj.items()}
+    if isinstance(obj, list):
+        return [_convert_lower_str(value) for value in obj]
+    return str(obj).lower()
 
 
 N_LVL = {
@@ -113,11 +108,6 @@ class Request:
         return self
 
     def dump(self):
-        if pydantic.__version__.startswith("1"):
-            json_str = json.dumps(self, default=pydantic.json.pydantic_encoder)
-            obj = json.loads(json_str.replace("class_", "class"))
-            return {key: value for key, value in obj.items() if value is not None}
-
         root = pydantic.RootModel(self)
         return root.model_dump(
             mode="json",
@@ -157,8 +147,4 @@ class Request:
 
     def to_polytope(self) -> dict[str, typing.Any]:
         result = self.to_fdb()
-        if isinstance(result["param"], list):
-            param: str | list[str] = [str(p) for p in result["param"]]
-        else:
-            param = str(result["param"])
-        return result | {"param": param, "model": result["model"].lower()}
+        return _convert_lower_str(result)

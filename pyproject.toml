@@ -60,7 +60,7 @@ mypy = "*"
 pandas-stubs = "*"
 pre-commit = "*"
 pydocstyle = "*"
-pyfdb = { url = "https://github.com/ecmwf/pyfdb/archive/refs/tags/0.0.3.zip" }
+pyfdb = ">=0.1.3"
 pytest = "*"
 rstcheck = { version = "*", extras = ["sphinx"] }
 types-requests = "*"

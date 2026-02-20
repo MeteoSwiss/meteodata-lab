@@ -10,6 +10,7 @@ from collections.abc import Iterable
 from enum import Enum
 from functools import cache
 from importlib.resources import files
+from typing import Any
 
 # Third-party
 import pydantic
@@ -49,15 +50,10 @@ class Stream(str, Enum):
 
 
 class Type(str, Enum):
-    DETERMINISTIC = "det"
-    ENS_MEMBER = "ememb"
+    DETERMINISTIC = "cf"
+    ENS_MEMBER = "pf"
     ENS_MEAN = "emean"
     ENS_STD_DEV = "estdv"
-
-
-class FeatureType(str, Enum):
-    BOUNDINGBOX = "boundingbox"
-    TIMESERIES = "timeseries"
 
 
 class Point(typing.NamedTuple):
@@ -70,49 +66,6 @@ class Range:
     start: int
     end: int
     step: int | None = None
-
-
-@dc.dataclass(frozen=True)
-class BoundingBoxFeature:
-    points: list[tuple[float, ...]]
-    axes: tuple[str, ...] = ("latitude", "longitude")
-    type: typing.Literal[FeatureType.BOUNDINGBOX] = FeatureType.BOUNDINGBOX
-
-    @pydantic.model_validator(mode="after")
-    def validate(self):
-        min_axes = {"latitude", "longitude"}
-        max_axes = {"latitude", "longitude", "level"}
-        if len(self.points) != 2:
-            raise ValueError("points must contain two points")
-        if not (min_axes <= set(self.axes) <= max_axes):
-            msg = "axes must contain latitude, longitude and optionally level"
-            raise ValueError(msg)
-        if any(len(point) != len(self.axes) for point in self.points):
-            raise ValueError("points must have same number of components as axes")
-        return self
-
-
-@dc.dataclass(frozen=True)
-class TimeseriesFeature:
-    points: list[Point]
-    time_axis: typing.Literal["step", "date"]
-    range: Range | None = None
-    axes: tuple[str, str] = ("latitude", "longitude")
-    type: typing.Literal[FeatureType.TIMESERIES] = FeatureType.TIMESERIES
-
-    def validate_request(self, request: Request) -> None:
-        time_attr = getattr(request, self.time_axis)
-        if self.range is not None and time_attr is not None:
-            raise ValueError(
-                f"only one of {self.time_axis} or feature range must be defined"
-            )
-        elif self.range is None and time_attr is None:
-            raise ValueError(
-                f"one of {self.time_axis} or feature range must be defined"
-            )
-
-
-Feature = BoundingBoxFeature | TimeseriesFeature
 
 
 @cache
@@ -151,17 +104,12 @@ class Request:
     levtype: LevType = LevType.MODEL_LEVEL
     model: Model = Model.COSMO_1E
     stream: Stream = Stream.ENS_FORECAST
-    type: Type = Type.ENS_MEMBER
+    type: Type = Type.DETERMINISTIC
 
-    feature: Feature | None = dc.field(
-        default=None,
-        metadata=dict(discriminator="type"),
-    )
+    feature: Any = dc.field(default=None)
 
     @pydantic.model_validator(mode="after")
     def validate(self):
-        if isinstance(self.feature, TimeseriesFeature):
-            self.feature.validate_request(self)
         return self
 
     def dump(self):

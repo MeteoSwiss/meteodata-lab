@@ -19,7 +19,7 @@ def sample():
         "stream": "enfo",
         "param": 500028,  # U
         "time": "0000",
-        "type": "ememb",
+        "type": "cf",
         "step": 0,
     }
 
@@ -95,64 +95,6 @@ def test_any_staggering(sample):
     expected = sample | {
         "param": [500028, 500030, 500032],
         "levelist": list(range(1, 82)),
-    }
-
-    assert observed == expected
-
-
-def test_feature_bounding_box(sample):
-    feature = mars.BoundingBoxFeature(
-        points=[mars.Point(0.1, 0.2), mars.Point(0.3, 0.4)],
-    )
-
-    observed = mars.Request(
-        "U",
-        date="20200101",
-        time="0000",
-        step=0,
-        number=1,
-        feature=feature,
-    ).to_fdb()
-
-    expected = sample | {
-        "number": 1,
-        "feature": {
-            "type": "boundingbox",
-            "points": [[0.1, 0.2], [0.3, 0.4]],
-            "axes": ["latitude", "longitude"],
-        },
-    }
-
-    assert observed == expected
-
-
-def test_feature_timeseries(sample):
-    feature = mars.TimeseriesFeature(
-        points=[mars.Point(0.1, 0.2)],
-        range=mars.Range(start=0, end=300),
-        time_axis="step",
-    )
-
-    observed = mars.Request(
-        "U",
-        date="20200101",
-        time="0000",
-        number=1,
-        feature=feature,
-    ).to_fdb()
-
-    expected = {k: v for k, v in sample.items() if k != "step"} | {
-        "number": 1,
-        "feature": {
-            "type": "timeseries",
-            "points": [[0.1, 0.2]],
-            "axes": ["latitude", "longitude"],
-            "time_axis": "step",
-            "range": {
-                "start": 0,
-                "end": 300,
-            },
-        },
     }
 
     assert observed == expected

@@ -80,6 +80,9 @@ U_10M:
   cosmo:
     paramId: 500027
     vComponent: V_10M
+U_10M_AV:
+  cosmo:
+    paramId: 503743
 V_10M:
   ifs:
     name: 10v
@@ -87,6 +90,9 @@ V_10M:
   cosmo:
     paramId: 500029
     uComponent: U_10M
+V_10M_AV:
+  cosmo:
+    paramId: 503744
 T_2M:
   ifs:
     name: 2t
@@ -146,6 +152,12 @@ ASHFL_S:
     paramId: 146
   cosmo:
     paramId: 500087
+ASWDIR_S:
+  cosmo:
+    paramId: 500480
+ASWDIFD_S:
+  cosmo:
+    paramId: 500481
 EWSS:
   ifs:
     name: ewss
@@ -188,3 +200,6 @@ DBZ:
 POT_VORTIC:
   cosmo:
     paramId: 500544
+RELHUM:
+  cosmo:
+    paramId: 500037

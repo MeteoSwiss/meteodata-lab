@@ -79,7 +79,6 @@ def work_dir(tmp_path_factory):
 def fieldextra_path(machine):
     """Fieldextra path."""
     conf = {
-        "tsa": Path("/project/s83c/fieldextra/tsa"),
         "balfrin": Path("/scratch/mch/jenkins/fieldextra/balfrin"),
     }
     return conf.get(machine)
@@ -98,7 +97,7 @@ def setup_fdb(machine):
     os.environ["FDB5_DIR"] = view_path
     os.environ["FDB_HOME"] = os.environ["FDB5_DIR"]
     os.environ["FDB5_CONFIG_FILE"] = str(
-        root / f"src/meteodatalab/data/fdb_config_{machine}.yaml"
+        root / f"tests/test_meteodatalab/data/fdb_config_{machine}.yaml"
     )
     pytest.importorskip("pyfdb")
 
@@ -110,11 +109,10 @@ def request_template():
         "date": "20230201",
         "expver": "0001",
         "model": "COSMO-1E",
-        "number": 0,
         "step": 0,
         "stream": "enfo",
         "time": "0300",
-        "type": "ememb",
+        "type": "cf",
     }
 
 

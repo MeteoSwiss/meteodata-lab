@@ -67,7 +67,8 @@ def _collection_constants_model_suffix(collection: Collection | str) -> str:
         return mapping[collection_value]
     except KeyError as exc:
         raise KeyError(
-            f"No constants model suffix mapping defined for collection '{collection_value}'."
+            "No constants model suffix mapping defined "
+            f"for collection {collection_value!r}."
         ) from exc
 
 

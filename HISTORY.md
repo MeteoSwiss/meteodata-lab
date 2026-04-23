@@ -1,5 +1,11 @@
 # History
 
+## [0.7.0] (2026-04-24)
+
+### Changes
+- Add support for KENDA-CH1 analysis collection in ogd_api
+- update pyfdb to version 0.1.3
+
 ## [0.6.0] (2025-09-03)
 
 ### Changes

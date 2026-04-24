@@ -1,6 +1,6 @@
 # History
 
-## [0.7.0] (2026-04-24)
+## [0.7.0-rc1] (2026-04-24)
 
 ### Changes
 - Add support for KENDA-CH1 analysis collection in ogd_api
@@ -194,6 +194,7 @@ To be removed in version 0.6
 - Added ninjo_k2th product
 - Added GRIB data loader based on earthkit-data
 
+[0.7.0-rc1]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.0-rc1..v0.6.0
 [0.6.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.6.0..v0.5.0
 [0.5.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.5.0-rc1..v0.5.0
 [0.5.0-rc1]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.4.0..v0.5.0-rc1

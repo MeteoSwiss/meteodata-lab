@@ -3,7 +3,8 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from meteodatalab.grib_decoder import GribReader
+from meteodatalab.data_source import FileDataSource
+from meteodatalab.grib_decoder import load
 from meteodatalab.operators.destagger import destagger
 from meteodatalab.operators.vertical_reduction import integrate_k
 
@@ -26,9 +27,8 @@ def test_integ_z2z(field, k_max, operator, fx_op, data_dir, fieldextra):
     cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
     # load input data set
-    reader = GribReader.from_files([cdatafile, datafile])
-
-    ds = reader.load_fieldnames([field, "HHL"])
+    source = FileDataSource(datafiles=[str(datafile), str(cdatafile)])
+    ds = load(source, {"param": [field, "HHL"]})
     hhl = ds["HHL"]
     hfl = destagger(hhl, "z")
     # ATTENTION: attributes are lost in destagger operation

@@ -3,7 +3,8 @@ import pytest
 from numpy.testing import assert_allclose
 
 # First-party
-from meteodatalab.grib_decoder import GribReader
+from meteodatalab.data_source import FileDataSource
+from meteodatalab.grib_decoder import load
 from meteodatalab.operators.destagger import destagger
 from meteodatalab.operators.vertical_reduction import integrate_k
 
@@ -24,8 +25,8 @@ def test_integ_sfc2z(field, k_max, operator, fx_op, atol, rtol, data_dir, fielde
     k_top = 61
 
     # load input data set
-    reader = GribReader.from_files([cdatafile, datafile])
-    ds = reader.load_fieldnames([field, "HHL", "HSURF"])
+    source = FileDataSource(datafiles=[str(datafile), str(cdatafile)])
+    ds = load(source, {"param": [field, "HHL", "HSURF"]})
 
     hhl = ds["HHL"]
     hfl = destagger(hhl, "z")

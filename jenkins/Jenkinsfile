@@ -45,10 +45,7 @@ pipeline {
         stage('test') {
             steps {
                 sh '''#!/usr/bin/env bash
-                .venv/bin/pytest -m "not ifs" tests
-                '''
-                sh '''#!/usr/bin/env bash
-                .venv/bin/pytest -m ifs tests
+                .venv/bin/pytest tests
                 '''
             }
         }

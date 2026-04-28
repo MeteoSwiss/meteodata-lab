@@ -31,15 +31,15 @@ def test_load_icon_grid_balfrin_fallback(data_dir):
 def test_save(data_dir, tmp_path):
     datafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
-    reader = grib_decoder.GribReader.from_files([datafile])
-    ds = reader.load_fieldnames(["HHL"])
+    source = data_source.FileDataSource(datafiles=[str(datafile)])
+    ds = grib_decoder.load(source, "HHL")
 
     outfile = tmp_path / "output.grib"
     with outfile.open("wb") as f:
         grib_decoder.save(ds["HHL"], f, bits_per_value=24)
 
-    reader = grib_decoder.GribReader.from_files([outfile])
-    ds_new = reader.load_fieldnames(["HHL"])
+    source = data_source.FileDataSource(datafiles=[str(outfile)])
+    ds_new = grib_decoder.load(source, "HHL")
 
     ds["HHL"].attrs.pop("metadata")
     ds_new["HHL"].attrs.pop("metadata")
@@ -52,15 +52,15 @@ def test_save_field(data_dir, tmp_path, param):
     datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00010000"
     cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
-    reader = grib_decoder.GribReader.from_files([datafile, cdatafile])
-    ds = reader.load_fieldnames([param])
+    source = data_source.FileDataSource(datafiles=[str(datafile), str(cdatafile)])
+    ds = grib_decoder.load(source, {"param": [param]})
 
     outfile = tmp_path / "output.grib"
     with outfile.open("wb") as f:
         grib_decoder.save(ds[param], f)
 
-    reader = grib_decoder.GribReader.from_files([outfile, cdatafile])
-    ds_new = reader.load_fieldnames([param])
+    source = data_source.FileDataSource(datafiles=[str(outfile), str(cdatafile)])
+    ds_new = grib_decoder.load(source, {"param": [param]})
 
     ds[param].attrs.pop("metadata")
     ds_new[param].attrs.pop("metadata")

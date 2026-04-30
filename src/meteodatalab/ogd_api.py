@@ -34,6 +34,8 @@ class Collection(str, enum.Enum):
     ICON_CH1 = "ogd-forecasting-icon-ch1"
     #: Collection of icon-ch2-eps model outputs
     ICON_CH2 = "ogd-forecasting-icon-ch2"
+    #: Collection of kenda-ch1 model outputs
+    KENDA_CH1 = "ogd-analysis-kenda-ch1"
 
 
 def _forecast_prefix(field_name):
@@ -49,6 +51,25 @@ def _forecast_prefix(field_name):
 
 def _parse_datetime(value: str) -> dt.datetime:
     return dt.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S%z")
+
+
+def _collection_constants_model_suffix(collection: Collection | str) -> str:
+    """Return the model suffix used in static constants asset IDs."""
+    collection_value = str(collection)
+
+    mapping = {
+        Collection.ICON_CH1.value: "icon-ch1-eps",
+        Collection.ICON_CH2.value: "icon-ch2-eps",
+        Collection.KENDA_CH1.value: "kenda-ch1",
+    }
+
+    try:
+        return mapping[collection_value]
+    except KeyError as exc:
+        raise KeyError(
+            "No constants model suffix mapping defined "
+            f"for collection {collection_value!r}."
+        ) from exc
 
 
 @pdc.dataclass(
@@ -374,12 +395,12 @@ def download_from_ogd(request: Request, target: Path) -> None:
     for asset_url in asset_urls:
         _download_with_checksum(asset_url, target)
 
-    model_suffix = request.collection.removeprefix("ogd-forecasting-")
     collection_id = f"ch.meteoschweiz.{request.collection}"
+    model_suffix = _collection_constants_model_suffix(request.collection)
 
     # Download coordinate files
     for prefix in ["horizontal", "vertical"]:
-        asset_id = f"{prefix}_constants_{model_suffix}-eps.grib2"
+        asset_id = f"{prefix}_constants_{model_suffix}.grib2"
         url = get_collection_asset_url(collection_id, asset_id)
         _download_with_checksum(url, target)
 

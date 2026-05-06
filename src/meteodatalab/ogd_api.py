@@ -295,6 +295,11 @@ def get_collection_asset_url(collection_id: str, asset_id: str) -> str:
 
     return asset_info["href"]
 
+_MODEL_TO_COLLECTION = {
+    "forecasting-icon-ch1-eps": Collection.ICON_CH1,
+    "forecasting-icon-ch2-eps": Collection.ICON_CH2,
+    "analysis-kenda-ch1": Collection.KENDA_CH1,
+}
 
 def _get_geo_coord_url(uuid: UUID) -> str:
     if (var := os.environ.get("MDL_GEO_COORD_URL")) is not None:
@@ -304,8 +309,8 @@ def _get_geo_coord_url(uuid: UUID) -> str:
     if model_name is None:
         raise KeyError("Grid UUID not found")
 
-    base_model = model_name.removesuffix("-eps")
-    collection_id = f"ch.meteoschweiz.ogd-forecasting-{base_model}"
+    collection_name = _MODEL_TO_COLLECTION[model_name]
+    collection_id = f"ch.meteoschweiz.ogd-{collection_name}"
     asset_id = f"horizontal_constants_{model_name}.grib2"
 
     return get_collection_asset_url(collection_id, asset_id)

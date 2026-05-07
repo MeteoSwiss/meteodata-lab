@@ -118,7 +118,9 @@ def request_template():
 def fieldextra(tmp_path, data_dir, template_env, fieldextra_path):
     """Run fieldextra on a given field."""
 
-    resource.setrlimit(resource.RLIMIT_STACK, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
+    resource.setrlimit(
+        resource.RLIMIT_STACK, (resource.RLIM_INFINITY, resource.RLIM_INFINITY)
+    )
     os.environ["OMP_STACKSIZE"] = "500M"
 
     def f(

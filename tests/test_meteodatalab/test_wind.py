@@ -12,22 +12,34 @@ from meteodatalab.operators import wind
 
 @pytest.fixture
 def data(work_dir, request_template, setup_fdb):
-    source = FDBDataSource(request_template=request_template)
-    fields = {
-        "inputi": [(p, "sfc") for p in ("U_10M", "V_10M")],
-    }
-    files = {
-        "inputi": "lfff<ddhh>0000",
-    }
-    cache = DataCache(cache_dir=work_dir, fields=fields, files=files)
-    cache.populate(source)
-    yield cache
-    cache.clear()
+    callback = None
+
+    def f(model_name):
+        global callback
+        source = FDBDataSource(
+            request_template=request_template | {"model": model_name}
+        )
+        fields = {
+            "inputi": [(p, "sfc") for p in ("U_10M", "V_10M")],
+        }
+        files = {
+            "inputi": "lfff<ddhh>0000",
+        }
+        cache = DataCache(cache_dir=work_dir / model_name, fields=fields, files=files)
+        cache.populate(source)
+        callback = cache.clear
+        return cache
+
+    yield f
+    if callback is not None:
+        callback()
 
 
-def test_wind(data, fieldextra):
-    cache = data
-    source = FileDataSource(datafiles=[str(f) for f in cache.populated_files])
+def test_wind(data_dir, fieldextra):
+    datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
+    cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
+
+    source = FileDataSource(datafiles=[cdatafile, datafile])
     ds = load(source, {"param": ["U_10M", "V_10M"]})
     set_origin_xy(ds, ref_param="U_10M")
 
@@ -37,8 +49,7 @@ def test_wind(data, fieldextra):
     ff_10m = wind.speed(u_10m, v_10m)
     dd_10m = wind.direction(u_10m, v_10m)
 
-    conf_files = cache.conf_files | {"output": "<hh>_outfile.nc"}
-    fx_ds = fieldextra("wind", conf_files=conf_files)
+    fx_ds = fieldextra("wind")
 
     assert_allclose(ff_10m, fx_ds["FF_10M"], rtol=1e-6)
     assert_allclose(dd_10m, fx_ds["DD_10M"], atol=1e-4)
@@ -60,11 +71,10 @@ def test_wind(data, fieldextra):
     }
 
 
-@pytest.mark.data("iconremap")
 @pytest.mark.parametrize("model_name", ["icon-ch1-eps", "icon-ch2-eps"])
-def test_wind_icon(data_dir, fieldextra, model_name, geo_coords):
-    datafiles = [str(data_dir / f"{model_name.upper()}_lfff00000000_000")]
-    source = FileDataSource(datafiles=datafiles)
+def test_wind_icon(data, fieldextra, model_name, geo_coords):
+    cache = data(model_name.upper())
+    source = FileDataSource(datafiles=[str(f) for f in cache.populated_files])
     ds = load(source, {"param": ["U_10M", "V_10M"]}, geo_coords=geo_coords)
 
     u_10m = ds["U_10M"].isel(z=0)
@@ -73,11 +83,8 @@ def test_wind_icon(data_dir, fieldextra, model_name, geo_coords):
     ff_10m = wind.speed(u_10m, v_10m)
     dd_10m = wind.direction(u_10m, v_10m)
 
-    conf_files = {
-        "inputi": data_dir / f"{model_name.upper()}_lfff<DDHH>0000_000",
-        "output": "<HH>_outfile.nc",
-    }
-    root = "/oprusers/osm/opr/data/grid_descriptions"
+    conf_files = cache.conf_files | {"output": "<hh>_outfile.nc"}
+    root = "/oprusers/osm/opr.inn/data/grid_descriptions"
     icon_grid_description = {
         "icon-ch1-eps": f"{root}/icon_grid_0001_R19B08_mch.nc",
         "icon-ch2-eps": f"{root}/icon_grid_0002_R19B07_mch.nc",

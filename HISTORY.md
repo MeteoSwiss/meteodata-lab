@@ -1,10 +1,19 @@
 # History
 
+## [0.7.0-rc2] (2026-05-07)
+
+### Changes
+- `FDBDataSource` streams the data rather than write it to a local file
+- `mars.Request` timespan attribute added as a string without validation
+- Removed unused `mars.Type` keys `ENS_MEAN` and `ENS_STD_DEV`
+- Removed support for pydantic v1
+- pyfdb pinned to 0.1.3
+
 ## [0.7.0-rc1] (2026-04-24)
 
 ### Changes
 - Add support for KENDA-CH1 analysis collection in ogd_api
-- update pyfdb to version 0.1.3
+- Update pyfdb to version 0.1.3
 
 ## [0.6.0] (2025-09-03)
 
@@ -194,6 +203,7 @@ To be removed in version 0.6
 - Added ninjo_k2th product
 - Added GRIB data loader based on earthkit-data
 
+[0.7.0-rc2]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.0-rc1..v0.7.0-rc2
 [0.7.0-rc1]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.6.0..v0.7.0-rc1
 [0.6.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.5.0..v0.6.0
 [0.5.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.5.0-rc1..v0.5.0

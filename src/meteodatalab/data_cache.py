@@ -66,7 +66,10 @@ class DataCache:
             param_map.setdefault(levtype, []).append(param)
 
         for levtype, params in param_map.items():
-            req = {"param": params, "levtype": levtype}
+            req: dict[str, int | str | list[str]] = {
+                "param": params,
+                "levtype": levtype,
+            }
             if number is not None:
                 req["number"] = number
             if step is not None:

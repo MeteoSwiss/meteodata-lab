@@ -295,10 +295,11 @@ def get_collection_asset_url(collection_id: str, asset_id: str) -> str:
 
     return asset_info["href"]
 
+
 def _get_geo_coord_url(collection: Collection) -> str:
     if (var := os.environ.get("MDL_GEO_COORD_URL")) is not None:
         return var
-    
+
     mapping = {
         Collection.ICON_CH1: "forecasting-icon-ch1-eps",
         Collection.ICON_CH2: "forecasting-icon-ch2-eps",

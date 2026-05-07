@@ -21,7 +21,7 @@ import pydantic.dataclasses as pdc
 import xarray as xr
 
 # Local
-from . import data_source, grib_decoder, icon_grid, util
+from . import data_source, grib_decoder, util
 
 API_URL = "https://data.geo.admin.ch/api/stac/v1"
 

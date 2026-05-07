@@ -66,7 +66,7 @@ def test_retrieve_fdb(mock_from_source, mock_grib_def_ctx):
 
     assert mock_grib_def_ctx.mock_calls == [call("cosmo")]
     assert mock_from_source.mock_calls == [
-        call("fdb", mars.Request(param, **template).to_fdb()),
+        call("fdb", mars.Request(param, **template).to_fdb(), stream=True),
         call().__iter__(),
     ]
 
@@ -82,7 +82,7 @@ def test_retrieve_fdb_mars(mock_from_source, mock_grib_def_ctx):
 
     assert mock_grib_def_ctx.mock_calls == [call("cosmo")]
     assert mock_from_source.mock_calls == [
-        call("fdb", mars.Request(param, **template).to_fdb()),
+        call("fdb", mars.Request(param, **template).to_fdb(), stream=True),
         call().__iter__(),
     ]
 

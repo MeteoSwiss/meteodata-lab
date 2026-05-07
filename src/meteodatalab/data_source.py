@@ -125,7 +125,7 @@ class FDBDataSource(DataSource):
     def _retrieve(self, request: dict):
         req_kwargs = self.request_template | request
         req = mars.Request(**req_kwargs)
-        yield from ekd.from_source("fdb", req.to_fdb())
+        yield from ekd.from_source("fdb", req.to_fdb(), stream=True)
 
 
 @dc.dataclass

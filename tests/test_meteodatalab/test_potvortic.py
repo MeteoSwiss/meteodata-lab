@@ -1,36 +1,21 @@
 # Third-party
-import pytest
 from numpy.testing import assert_allclose
 
 # First-party
 import meteodatalab.operators.pot_vortic as pv
-from meteodatalab.data_cache import DataCache
-from meteodatalab.data_source import FDBDataSource
+from meteodatalab.data_source import FileDataSource
 from meteodatalab.grib_decoder import load
 from meteodatalab.metadata import set_origin_xy
 from meteodatalab.operators.internal.theta import compute_theta
 from meteodatalab.operators.rho import compute_rho_tot
 
 
-@pytest.fixture
-def data(work_dir, request_template, setup_fdb):
-    source = FDBDataSource(request_template=request_template)
-    fields = {
-        "inputi": [(p, "ml") for p in ("U", "V", "W", "P", "T", "QV", "QC", "QI")],
-        "inputc": [("HHL", "ml"), ("HSURF", "sfc"), ("FIS", "sfc")],
-    }
-    files = {
-        "inputi": "lfff<ddhh>0000",
-        "inputc": "lfff00000000c",
-    }
-    cache = DataCache(cache_dir=work_dir, fields=fields, files=files)
-    cache.populate(source)
-    yield source, cache
-    cache.clear()
+def test_pv(data_dir, fieldextra):
 
+    datafile = data_dir / "COSMO-1E/1h/ml_sl/000/lfff00000000"
+    cdatafile = data_dir / "COSMO-1E/1h/const/000/lfff00000000c"
 
-def test_pv(data, fieldextra):
-    source, cache = data
+    source = FileDataSource(datafiles=[cdatafile, datafile])
     ds = load(source, {"param": ["U", "V", "W", "P", "T", "QV", "QC", "QI", "HHL"]})
     set_origin_xy(ds, ref_param="HHL")
 
@@ -49,8 +34,7 @@ def test_pv(data, fieldextra):
         ds["U"], ds["V"], ds["W"], theta, rho_tot, ds["HHL"]
     )
 
-    conf_files = cache.conf_files | {"output": "<hh>_outfile.nc"}
-    fs_ds = fieldextra("POT_VORTIC", conf_files=conf_files)
+    fs_ds = fieldextra("POT_VORTIC")
 
     assert_allclose(
         fs_ds["POT_VORTIC"],

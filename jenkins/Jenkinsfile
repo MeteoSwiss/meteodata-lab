@@ -25,6 +25,7 @@ pipeline {
             steps {
                 sh '''#!/usr/bin/env bash
                 set -x
+                uenv image pull ${UENV_IMAGE}
                 uenv run --view=remote-devt ${UENV_IMAGE} -- bash scripts/setup_poetry.sh
                 '''
             }

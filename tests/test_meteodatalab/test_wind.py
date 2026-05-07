@@ -13,9 +13,12 @@ from meteodatalab.operators import wind
 @pytest.fixture
 def data(work_dir, request_template, setup_fdb):
     callback = None
+
     def f(model_name):
         global callback
-        source = FDBDataSource(request_template=request_template | {"model": model_name})
+        source = FDBDataSource(
+            request_template=request_template | {"model": model_name}
+        )
         fields = {
             "inputi": [(p, "sfc") for p in ("U_10M", "V_10M")],
         }
@@ -26,6 +29,7 @@ def data(work_dir, request_template, setup_fdb):
         cache.populate(source)
         callback = cache.clear
         return cache
+
     yield f
     if callback is not None:
         callback()
@@ -79,7 +83,7 @@ def test_wind_icon(data, fieldextra, model_name, geo_coords):
     ff_10m = wind.speed(u_10m, v_10m)
     dd_10m = wind.direction(u_10m, v_10m)
 
-    conf_files =  cache.conf_files | {"output": "<hh>_outfile.nc"}
+    conf_files = cache.conf_files | {"output": "<hh>_outfile.nc"}
     root = "/oprusers/osm/opr.inn/data/grid_descriptions"
     icon_grid_description = {
         "icon-ch1-eps": f"{root}/icon_grid_0001_R19B08_mch.nc",

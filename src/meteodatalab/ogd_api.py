@@ -295,7 +295,7 @@ def get_collection_asset_url(collection_id: str, asset_id: str) -> str:
 
     return asset_info["href"]
 
-def _get_geo_coord_url(uuid: UUID, collection: Collection) -> str:
+def _get_geo_coord_url(collection: Collection) -> str:
     if (var := os.environ.get("MDL_GEO_COORD_URL")) is not None:
         return var
     
@@ -304,10 +304,6 @@ def _get_geo_coord_url(uuid: UUID, collection: Collection) -> str:
         Collection.ICON_CH2: "forecasting-icon-ch2-eps",
         Collection.KENDA_CH1: "analysis-kenda-ch1",
     }
-
-    model_name = icon_grid.GRID_UUID_TO_MODEL.get(uuid)
-    if model_name is None:
-        raise KeyError("Grid UUID not found")
 
     collection_name = mapping[collection]
     asset_name = _collection_constants_model_suffix(collection).removesuffix("-eps")
@@ -322,7 +318,7 @@ def _no_coords(uuid: UUID) -> dict[str, xr.DataArray]:
 
 
 def _geo_coords(uuid: UUID, collection: Collection) -> dict[str, xr.DataArray]:
-    url = _get_geo_coord_url(uuid, collection)
+    url = _get_geo_coord_url(collection)
     source = data_source.URLDataSource(urls=[url])
     ds = grib_decoder.load(source, {"param": ["CLON", "CLAT"]}, geo_coords=_no_coords)
     return {"lon": ds["CLON"].squeeze(), "lat": ds["CLAT"].squeeze()}

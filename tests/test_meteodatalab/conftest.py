@@ -2,6 +2,7 @@
 
 # Standard library
 import os
+import resource
 import subprocess
 from pathlib import Path
 
@@ -14,7 +15,6 @@ from jinja2 import Environment, FileSystemLoader
 from meteodatalab import icon_grid
 
 root = Path(__file__).parents[2]
-view_path = str(root / "spack-env/.spack-env/view")
 
 
 @pytest.fixture(scope="session")
@@ -93,12 +93,9 @@ def template_env():
 
 
 @pytest.fixture(scope="session")
-def setup_fdb(machine):
-    os.environ["FDB5_DIR"] = view_path
-    os.environ["FDB_HOME"] = os.environ["FDB5_DIR"]
-    os.environ["FDB5_CONFIG_FILE"] = str(
-        root / f"tests/test_meteodatalab/data/fdb_config_{machine}.yaml"
-    )
+def setup_fdb():
+    os.environ["FDB_ENABLE_GRIBJUMP"] = "0"
+    os.environ["AUTO_LOAD_PLUGINS"] = "0"
     pytest.importorskip("pyfdb")
 
 
@@ -106,19 +103,25 @@ def setup_fdb(machine):
 def request_template():
     return {
         "class": "od",
-        "date": "20230201",
+        "date": "20260505",
         "expver": "0001",
-        "model": "COSMO-1E",
+        "model": "ICON-CH1-EPS",
         "step": 0,
         "stream": "enfo",
-        "time": "0300",
+        "time": "0000",
         "type": "cf",
+        "timespan": "none",
     }
 
 
 @pytest.fixture
 def fieldextra(tmp_path, data_dir, template_env, fieldextra_path):
     """Run fieldextra on a given field."""
+
+    resource.setrlimit(
+        resource.RLIMIT_STACK, (resource.RLIM_INFINITY, resource.RLIM_INFINITY)
+    )
+    os.environ["OMP_STACKSIZE"] = "500M"
 
     def f(
         product: str,

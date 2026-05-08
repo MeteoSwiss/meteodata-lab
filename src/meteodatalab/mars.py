@@ -4,7 +4,6 @@ from __future__ import annotations
 
 # Standard library
 import dataclasses as dc
-import json
 import typing
 from collections.abc import Iterable
 from enum import Enum
@@ -52,8 +51,8 @@ class Stream(str, Enum):
 class Type(str, Enum):
     DETERMINISTIC = "cf"
     ENS_MEMBER = "pf"
-    ENS_MEAN = "emean"
-    ENS_STD_DEV = "estdv"
+    CONTROL_FORECAST = "cf"
+    PERTURBED_FORECAST = "pf"
 
 
 class Point(typing.NamedTuple):
@@ -96,6 +95,7 @@ class Request:
     levelist: int | tuple[int, ...] | None = None
     number: int | tuple[int, ...] | None = None
     step: int | tuple[int, ...] | None = None
+    timespan: str = "none"
 
     class_: Class = dc.field(
         default=Class.OPERATIONAL_DATA,
@@ -113,11 +113,6 @@ class Request:
         return self
 
     def dump(self):
-        if pydantic.__version__.startswith("1"):
-            json_str = json.dumps(self, default=pydantic.json.pydantic_encoder)
-            obj = json.loads(json_str.replace("class_", "class"))
-            return {key: value for key, value in obj.items() if value is not None}
-
         root = pydantic.RootModel(self)
         return root.model_dump(
             mode="json",
@@ -153,7 +148,7 @@ class Request:
 
         obj = dc.replace(self, levelist=levelist)
         out = typing.cast(dict[str, typing.Any], obj.dump())
-        return out | {"param": self._param_id()}
+        return out | {"param": self._param_id(), "model": out["model"].lower()}
 
     def to_polytope(self) -> dict[str, typing.Any]:
         result = self.to_fdb()
@@ -161,4 +156,4 @@ class Request:
             param: str | list[str] = [str(p) for p in result["param"]]
         else:
             param = str(result["param"])
-        return result | {"param": param, "model": result["model"].lower()}
+        return result | {"param": param}

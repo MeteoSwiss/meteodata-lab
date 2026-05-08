@@ -14,13 +14,14 @@ def sample():
         "expver": "0001",
         "levtype": "ml",
         "levelist": list(range(1, 81)),
-        "model": "COSMO-1E",
+        "model": "cosmo-1e",
         "number": 0,
         "stream": "enfo",
         "param": 500028,  # U
         "time": "0000",
         "type": "cf",
         "step": 0,
+        "timespan": "none",
     }
 
 
@@ -46,7 +47,7 @@ def test_fdb_c2e(sample):
         step=0,
         model=mars.Model.COSMO_2E,
     ).to_fdb()
-    expected = sample | {"model": "COSMO-2E", "levelist": list(range(1, 61))}
+    expected = sample | {"model": "cosmo-2e", "levelist": list(range(1, 61))}
 
     assert observed == expected
 

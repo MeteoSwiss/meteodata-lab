@@ -303,7 +303,7 @@ def _get_geo_coord_url(uuid: UUID, collection: Collection) -> str:
     # check grid UUID matches CH1/2 grid
     model_name = icon_grid.GRID_UUID_TO_MODEL.get(uuid)
     if model_name is None:
-        raise KeyError("Grid UUID not found")
+        logger.warning("Grid UUID not found")
 
     mapping = {
         Collection.ICON_CH1: "forecasting-icon-ch1-eps",

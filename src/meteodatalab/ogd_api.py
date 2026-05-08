@@ -299,7 +299,7 @@ def get_collection_asset_url(collection_id: str, asset_id: str) -> str:
 def _get_geo_coord_url(uuid: UUID, collection: Collection) -> str:
     if (var := os.environ.get("MDL_GEO_COORD_URL")) is not None:
         return var
-    
+
     # check grid UUID matches CH1/2 grid
     model_name = icon_grid.GRID_UUID_TO_MODEL.get(uuid)
     if model_name is None:

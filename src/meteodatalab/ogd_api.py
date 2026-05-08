@@ -21,7 +21,7 @@ import pydantic.dataclasses as pdc
 import xarray as xr
 
 # Local
-from . import data_source, grib_decoder, util
+from . import data_source, grib_decoder, icon_grid, util
 
 API_URL = "https://data.geo.admin.ch/api/stac/v1"
 
@@ -296,9 +296,14 @@ def get_collection_asset_url(collection_id: str, asset_id: str) -> str:
     return asset_info["href"]
 
 
-def _get_geo_coord_url(collection: Collection) -> str:
+def _get_geo_coord_url(uuid: UUID, collection: Collection) -> str:
     if (var := os.environ.get("MDL_GEO_COORD_URL")) is not None:
         return var
+    
+    # check grid UUID matches CH1/2 grid
+    model_name = icon_grid.GRID_UUID_TO_MODEL.get(uuid)
+    if model_name is None:
+        raise KeyError("Grid UUID not found")
 
     mapping = {
         Collection.ICON_CH1: "forecasting-icon-ch1-eps",
@@ -319,7 +324,7 @@ def _no_coords(uuid: UUID) -> dict[str, xr.DataArray]:
 
 
 def _geo_coords(uuid: UUID, collection: Collection) -> dict[str, xr.DataArray]:
-    url = _get_geo_coord_url(collection)
+    url = _get_geo_coord_url(uuid, collection)
     source = data_source.URLDataSource(urls=[url])
     ds = grib_decoder.load(source, {"param": ["CLON", "CLAT"]}, geo_coords=_no_coords)
     return {"lon": ds["CLON"].squeeze(), "lat": ds["CLAT"].squeeze()}

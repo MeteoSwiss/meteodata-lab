@@ -9,7 +9,7 @@ import logging
 import os
 import re
 import typing
-from functools import lru_cache
+from functools import lru_cache, partial
 from pathlib import Path
 from urllib.parse import urlparse
 from uuid import UUID
@@ -296,17 +296,25 @@ def get_collection_asset_url(collection_id: str, asset_id: str) -> str:
     return asset_info["href"]
 
 
-def _get_geo_coord_url(uuid: UUID) -> str:
+def _get_geo_coord_url(uuid: UUID, collection: Collection) -> str:
     if (var := os.environ.get("MDL_GEO_COORD_URL")) is not None:
         return var
 
+    # check grid UUID matches CH1/2 grid
     model_name = icon_grid.GRID_UUID_TO_MODEL.get(uuid)
     if model_name is None:
-        raise KeyError("Grid UUID not found")
+        logger.warning("Grid UUID not found")
 
-    base_model = model_name.removesuffix("-eps")
-    collection_id = f"ch.meteoschweiz.ogd-forecasting-{base_model}"
-    asset_id = f"horizontal_constants_{model_name}.grib2"
+    mapping = {
+        Collection.ICON_CH1: "forecasting-icon-ch1-eps",
+        Collection.ICON_CH2: "forecasting-icon-ch2-eps",
+        Collection.KENDA_CH1: "analysis-kenda-ch1",
+    }
+
+    collection_name = mapping[collection]
+    asset_name = _collection_constants_model_suffix(collection).removesuffix("-eps")
+    collection_id = f"ch.meteoschweiz.ogd-{collection_name}"
+    asset_id = f"horizontal_constants_{asset_name}.grib2"
 
     return get_collection_asset_url(collection_id, asset_id)
 
@@ -315,8 +323,8 @@ def _no_coords(uuid: UUID) -> dict[str, xr.DataArray]:
     return {}
 
 
-def _geo_coords(uuid: UUID) -> dict[str, xr.DataArray]:
-    url = _get_geo_coord_url(uuid)
+def _geo_coords(uuid: UUID, collection: Collection) -> dict[str, xr.DataArray]:
+    url = _get_geo_coord_url(uuid, collection)
     source = data_source.URLDataSource(urls=[url])
     ds = grib_decoder.load(source, {"param": ["CLON", "CLAT"]}, geo_coords=_no_coords)
     return {"lon": ds["CLON"].squeeze(), "lat": ds["CLAT"].squeeze()}
@@ -355,7 +363,7 @@ def get_from_ogd(request: Request) -> xr.DataArray:
     return grib_decoder.load(
         source,
         {"param": request.variable},
-        geo_coords=_geo_coords,
+        geo_coords=partial(_geo_coords, collection=request.collection),
     )[request.variable]
 
 

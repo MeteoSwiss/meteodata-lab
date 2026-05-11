@@ -1,5 +1,10 @@
 # History
 
+## [0.7.0] (2026-05-11)
+
+### Fix
+- Horizontal coordinates are fetched from the appropriate collection asset for `KENDA-CH1`.
+
 ## [0.7.0-rc2] (2026-05-07)
 
 ### Changes
@@ -14,6 +19,12 @@
 ### Changes
 - Add support for KENDA-CH1 analysis collection in ogd_api
 - Update pyfdb to version 0.1.3
+
+### Removals
+- `grib_decoder.GribReader`
+- `product`
+- `tasking`
+- `operators.flexpart`
 
 ## [0.6.0] (2025-09-03)
 

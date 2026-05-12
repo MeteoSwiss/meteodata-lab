@@ -10,41 +10,38 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+      pages: write
+
     steps:
-    - uses: actions/checkout@v4
-    - uses: ammaraskar/sphinx-action@7.4.7
+    - name: Checkout current repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
       with:
-        pre-build-command: "pip install .[polytope,regrid]"
-        docs-folder: "docs/"
-    # Great extra actions to compose with:
-    # Create an artifact of the html output.
-    - uses: actions/upload-artifact@v4
-      with:
-        name: DocumentationHTML
-        path: docs/_build/
-    # Publish built docs to gh-pages branch.
-    # ===============================
-    - name: Commit documentation changes
+        python-version: 3.12
+        cache: poetry
+
+    - name: Install poetry and python package
       run: |
-        pwd
-        ls docs
-        echo ' '
-        ls docs/_build
-        git clone https://github.com/ammaraskar/sphinx-action-test.git --branch gh-pages --single-branch gh-pages
-        cp -r docs/_build/html/* gh-pages/
-        cd gh-pages
-        touch .nojekyll
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add .
-        git commit -m "Update documentation" -a || true
-        # The above command will fail if no changes were present, so we ignore
-        # that.
-    - name: Push changes
-      uses: ad-m/github-push-action@v0.8.0
+        python -m pip install --upgrade pip
+        python -m pip install poetry
+        poetry install
+
+    - name: Build documentation
+      env:
+        VERSION: ${{ github.ref_name }}
+        GITHUB_SHA: ${{ github.sha }}
+      # Set the buildId to the first 7 digits of the commit hash
+      run: BUILD_ID=$(echo ${GITHUB_SHA::7}) poetry run sphinx-build doc doc/_build/
+
+    - name: Publish documentation
+      uses: peaceiris/actions-gh-pages@v3
+
       with:
-        force: true
-        branch: gh-pages
-        directory: gh-pages
+        publish_branch: gh-pages
         github_token: ${{ secrets.GITHUB_TOKEN }}
-    # ===============================
+        publish_dir: doc/_build/
+        keep_files: true

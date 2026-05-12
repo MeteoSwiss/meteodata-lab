@@ -2,11 +2,11 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.regrid - meteodata-lab 0.6.0 documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.regrid - meteodata-lab main-15a32ff documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
-  </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=397bb51e" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=d48c410d" />
+  </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=ad592e98" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=44020203" />
     <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,7 @@
 }
 </style>
     <meta property="og:type" content="website"/><meta property="og:title" content="meteodatalab.operators.regrid"/>
-<meta name="twitter:card" content="summary"/>
+    <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
   <div class="sy-head-blur"></div>
@@ -43,8 +43,8 @@ data-aria-dark="Switch to auto color mode">
 </button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
         <div class="hamburger">
           <span class="hamburger_1"></span>
-          <span class="hamburger_2 -translate-x-2"></span>
-          <span class="hamburger_3 -translate-x-1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
         </div>
       </button>
     </div>
@@ -135,34 +135,34 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </div><div class="flex flex-col break-words justify-between">
-      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
-        <article class="yue" role="main">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <article class="yue" role="main">
           <h1>Source code for meteodatalab.operators.regrid</h1><div class="highlight"><pre>
 <span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;Regridding operator.&quot;&quot;&quot;</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="c1"># Standard library</span>
-</span><span data-line="4"><span class="kn">import</span> <span class="nn">dataclasses</span> <span class="k">as</span> <span class="nn">dc</span>
-</span><span data-line="5"><span class="kn">import</span> <span class="nn">typing</span>
-</span><span data-line="6"><span class="kn">import</span> <span class="nn">warnings</span>
-</span><span data-line="7"><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Literal</span>
+</span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dc</span>
+</span><span data-line="5"><span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
+</span><span data-line="6"><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+</span><span data-line="7"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 </span><span data-line="8">
 </span><span data-line="9"><span class="c1"># Third-party</span>
-</span><span data-line="10"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-</span><span data-line="11"><span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-</span><span data-line="12"><span class="kn">from</span> <span class="nn">numpy.typing</span> <span class="kn">import</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">NDArray</span>
+</span><span data-line="10"><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span data-line="11"><span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+</span><span data-line="12"><span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">NDArray</span>
 </span><span data-line="13">
 </span><span data-line="14"><span class="k">try</span><span class="p">:</span>
 </span><span data-line="15">    <span class="c1"># Third-party</span>
-</span><span data-line="16">    <span class="kn">from</span> <span class="nn">pyproj</span> <span class="kn">import</span> <span class="n">Transformer</span>
-</span><span data-line="17">    <span class="kn">from</span> <span class="nn">rasterio</span> <span class="kn">import</span> <span class="n">transform</span><span class="p">,</span> <span class="n">warp</span>
-</span><span data-line="18">    <span class="kn">from</span> <span class="nn">rasterio.crs</span> <span class="kn">import</span> <span class="n">CRS</span>
-</span><span data-line="19">    <span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">Delaunay</span>  <span class="c1"># type: ignore</span>
+</span><span data-line="16">    <span class="kn">from</span><span class="w"> </span><span class="nn">pyproj</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transformer</span>
+</span><span data-line="17">    <span class="kn">from</span><span class="w"> </span><span class="nn">rasterio</span><span class="w"> </span><span class="kn">import</span> <span class="n">transform</span><span class="p">,</span> <span class="n">warp</span>
+</span><span data-line="18">    <span class="kn">from</span><span class="w"> </span><span class="nn">rasterio.crs</span><span class="w"> </span><span class="kn">import</span> <span class="n">CRS</span>
+</span><span data-line="19">    <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial</span><span class="w"> </span><span class="kn">import</span> <span class="n">Delaunay</span>  <span class="c1"># type: ignore</span>
 </span><span data-line="20"><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
 </span><span data-line="21">    <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;The regrid operator requires extra dependencies.&quot;</span><span class="p">)</span>
 </span><span data-line="22">
 </span><span data-line="23"><span class="c1"># Local</span>
-</span><span data-line="24"><span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">icon_grid</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">util</span>
-</span><span data-line="25"><span class="kn">from</span> <span class="nn">..grib_decoder</span> <span class="kn">import</span> <span class="n">set_code_flag</span>
+</span><span data-line="24"><span class="kn">from</span><span class="w"> </span><span class="nn">..</span><span class="w"> </span><span class="kn">import</span> <span class="n">icon_grid</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">util</span>
+</span><span data-line="25"><span class="kn">from</span><span class="w"> </span><span class="nn">..grib_decoder</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_code_flag</span>
 </span><span data-line="26">
 </span><span data-line="27"><span class="n">Resampling</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">warp</span><span class="o">.</span><span class="n">Resampling</span>
 </span><span data-line="28">
@@ -178,7 +178,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="38"><span class="p">}</span>
 </span><span data-line="39">
 </span><span data-line="40">
-</span><span data-line="41"><span class="k">def</span> <span class="nf">_get_crs</span><span class="p">(</span><span class="n">geo</span><span class="p">):</span>
+</span><span data-line="41"><span class="k">def</span><span class="w"> </span><span class="nf">_get_crs</span><span class="p">(</span><span class="n">geo</span><span class="p">):</span>
 </span><span data-line="42">    <span class="k">if</span> <span class="n">geo</span><span class="p">[</span><span class="s2">&quot;gridType&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;rotated_ll&quot;</span><span class="p">:</span>
 </span><span data-line="43">        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Unsupported grid type&quot;</span><span class="p">)</span>
 </span><span data-line="44">
@@ -190,14 +190,14 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="50">    <span class="p">)</span>
 </span><span data-line="51">
 </span><span data-line="52">
-</span><span data-line="53"><span class="k">def</span> <span class="nf">_normalise</span><span class="p">(</span><span class="n">angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span data-line="53"><span class="k">def</span><span class="w"> </span><span class="nf">_normalise</span><span class="p">(</span><span class="n">angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 </span><span data-line="54">    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">fmod</span><span class="p">(</span><span class="n">angle</span> <span class="o">+</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">360</span><span class="p">)</span> <span class="o">-</span> <span class="mi">180</span>
 </span><span data-line="55">
 </span><span data-line="56">
 <div class="viewcode-block" id="RegularGrid">
 <a class="viewcode-back" href="../../../generated/meteodatalab.operators.regrid.html#meteodatalab.operators.regrid.RegularGrid">[docs]</a>
 </span><span data-line="57"><span class="nd">@dc</span><span class="o">.</span><span class="n">dataclass</span>
-</span><span data-line="58"><span class="k">class</span> <span class="nc">RegularGrid</span><span class="p">:</span>
+</span><span data-line="58"><span class="k">class</span><span class="w"> </span><span class="nc">RegularGrid</span><span class="p">:</span>
 </span><span data-line="59"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Class defining a regular grid.</span>
 </span><span data-line="60">
 </span><span data-line="61"><span class="sd">    Attributes</span>
@@ -230,7 +230,7 @@ data-aria-dark="Switch to auto color mode">
 <div class="viewcode-block" id="RegularGrid.from_field">
 <a class="viewcode-back" href="../../../generated/meteodatalab.operators.regrid.html#meteodatalab.operators.regrid.RegularGrid.from_field">[docs]</a>
 </span><span data-line="88">    <span class="nd">@classmethod</span>
-</span><span data-line="89">    <span class="k">def</span> <span class="nf">from_field</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">):</span>
+</span><span data-line="89">    <span class="k">def</span><span class="w"> </span><span class="nf">from_field</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">):</span>
 </span><span data-line="90"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract grid parameters from grib metadata.</span>
 </span><span data-line="91">
 </span><span data-line="92"><span class="sd">        Parameters</span>
@@ -259,7 +259,7 @@ data-aria-dark="Switch to auto color mode">
 <div class="viewcode-block" id="RegularGrid.parse_regrid_operator">
 <a class="viewcode-back" href="../../../generated/meteodatalab.operators.regrid.html#meteodatalab.operators.regrid.RegularGrid.parse_regrid_operator">[docs]</a>
 </span><span data-line="114">    <span class="nd">@classmethod</span>
-</span><span data-line="115">    <span class="k">def</span> <span class="nf">parse_regrid_operator</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">op</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span data-line="115">    <span class="k">def</span><span class="w"> </span><span class="nf">parse_regrid_operator</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">op</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 </span><span data-line="116"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse fieldextra out_regrid_target string.</span>
 </span><span data-line="117">
 </span><span data-line="118"><span class="sd">        Parameters</span>
@@ -283,7 +283,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="135">
 <div class="viewcode-block" id="RegularGrid.to_crs">
 <a class="viewcode-back" href="../../../generated/meteodatalab.operators.regrid.html#meteodatalab.operators.regrid.RegularGrid.to_crs">[docs]</a>
-</span><span data-line="136">    <span class="k">def</span> <span class="nf">to_crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crs</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span data-line="136">    <span class="k">def</span><span class="w"> </span><span class="nf">to_crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crs</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 </span><span data-line="137"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a new grid in the given coordinate reference system.</span>
 </span><span data-line="138">
 </span><span data-line="139"><span class="sd">        Parameters</span>
@@ -319,23 +319,23 @@ data-aria-dark="Switch to auto color mode">
 
 </span><span data-line="169">
 </span><span data-line="170">    <span class="nd">@property</span>
-</span><span data-line="171">    <span class="k">def</span> <span class="nf">x</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span data-line="171">    <span class="k">def</span><span class="w"> </span><span class="nf">x</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 </span><span data-line="172">        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nx</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dx</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span>
 </span><span data-line="173">
 </span><span data-line="174">    <span class="nd">@property</span>
-</span><span data-line="175">    <span class="k">def</span> <span class="nf">y</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span data-line="175">    <span class="k">def</span><span class="w"> </span><span class="nf">y</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 </span><span data-line="176">        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ny</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dy</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span>
 </span><span data-line="177">
 </span><span data-line="178">    <span class="nd">@property</span>
-</span><span data-line="179">    <span class="k">def</span> <span class="nf">dx</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span data-line="179">    <span class="k">def</span><span class="w"> </span><span class="nf">dx</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 </span><span data-line="180">        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 </span><span data-line="181">
 </span><span data-line="182">    <span class="nd">@property</span>
-</span><span data-line="183">    <span class="k">def</span> <span class="nf">dy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span data-line="183">    <span class="k">def</span><span class="w"> </span><span class="nf">dy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 </span><span data-line="184">        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ny</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 </span><span data-line="185">
 </span><span data-line="186">    <span class="nd">@property</span>
-</span><span data-line="187">    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">transform</span><span class="o">.</span><span class="n">Affine</span><span class="p">:</span>
+</span><span data-line="187">    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">transform</span><span class="o">.</span><span class="n">Affine</span><span class="p">:</span>
 </span><span data-line="188">        <span class="k">return</span> <span class="n">transform</span><span class="o">.</span><span class="n">from_origin</span><span class="p">(</span>
 </span><span data-line="189">            <span class="n">west</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">xmin</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">dx</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
 </span><span data-line="190">            <span class="n">north</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dy</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
@@ -345,11 +345,11 @@ data-aria-dark="Switch to auto color mode">
 
 </span><span data-line="194">
 </span><span data-line="195">
-</span><span data-line="196"><span class="k">def</span> <span class="nf">_udeg</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span data-line="196"><span class="k">def</span><span class="w"> </span><span class="nf">_udeg</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 </span><span data-line="197">    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">value</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">))</span>
 </span><span data-line="198">
 </span><span data-line="199">
-</span><span data-line="200"><span class="k">def</span> <span class="nf">_lon_from_utm_zone</span><span class="p">(</span><span class="n">zone</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span data-line="200"><span class="k">def</span><span class="w"> </span><span class="nf">_lon_from_utm_zone</span><span class="p">(</span><span class="n">zone</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 </span><span data-line="201">    <span class="k">if</span> <span class="n">zone</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">zone</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">zone</span> <span class="o">&gt;</span> <span class="mi">60</span><span class="p">:</span>
 </span><span data-line="202">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid value for UTM zone: </span><span class="si">{</span><span class="n">zone</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 </span><span data-line="203">
@@ -358,12 +358,12 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="206">    <span class="k">return</span> <span class="n">offset</span> <span class="o">-</span> <span class="mi">183</span>
 </span><span data-line="207">
 </span><span data-line="208">
-</span><span data-line="209"><span class="k">def</span> <span class="nf">_grib_utm_m</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span data-line="209"><span class="k">def</span><span class="w"> </span><span class="nf">_grib_utm_m</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 </span><span data-line="210">    <span class="c1"># For UTM units, GRIB2 uses 10-2m whereas CRS uses m.</span>
 </span><span data-line="211">    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">value</span><span class="p">))</span>
 </span><span data-line="212">
 </span><span data-line="213">
-</span><span data-line="214"><span class="k">def</span> <span class="nf">_get_metadata</span><span class="p">(</span><span class="n">grid</span><span class="p">:</span> <span class="n">RegularGrid</span><span class="p">):</span>
+</span><span data-line="214"><span class="k">def</span><span class="w"> </span><span class="nf">_get_metadata</span><span class="p">(</span><span class="n">grid</span><span class="p">:</span> <span class="n">RegularGrid</span><span class="p">):</span>
 </span><span data-line="215">    <span class="k">if</span> <span class="n">grid</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">to_epsg</span><span class="p">()</span> <span class="o">==</span> <span class="mi">4326</span><span class="p">:</span>
 </span><span data-line="216">        <span class="c1"># geolatlon</span>
 </span><span data-line="217">        <span class="c1"># https://codes.ecmwf.int/grib/format/grib2/ctables/3/4/</span>
@@ -459,7 +459,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="307">
 <div class="viewcode-block" id="regrid">
 <a class="viewcode-back" href="../../../generated/meteodatalab.operators.regrid.html#meteodatalab.operators.regrid.regrid">[docs]</a>
-</span><span data-line="308"><span class="k">def</span> <span class="nf">regrid</span><span class="p">(</span>
+</span><span data-line="308"><span class="k">def</span><span class="w"> </span><span class="nf">regrid</span><span class="p">(</span>
 </span><span data-line="309">    <span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
 </span><span data-line="310">    <span class="n">dst</span><span class="p">:</span> <span class="n">RegularGrid</span><span class="p">,</span>
 </span><span data-line="311">    <span class="n">resampling</span><span class="p">:</span> <span class="n">Resampling</span><span class="p">,</span>
@@ -493,7 +493,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="339">    <span class="k">if</span> <span class="n">src</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="340">        <span class="n">src</span> <span class="o">=</span> <span class="n">RegularGrid</span><span class="o">.</span><span class="n">from_field</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
 </span><span data-line="341">
-</span><span data-line="342">    <span class="k">def</span> <span class="nf">reproject_layer</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
+</span><span data-line="342">    <span class="k">def</span><span class="w"> </span><span class="nf">reproject_layer</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
 </span><span data-line="343">        <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dst</span><span class="o">.</span><span class="n">ny</span><span class="p">,</span> <span class="n">dst</span><span class="o">.</span><span class="n">nx</span><span class="p">))</span>
 </span><span data-line="344">        <span class="n">warp</span><span class="o">.</span><span class="n">reproject</span><span class="p">(</span>
 </span><span data-line="345">            <span class="n">source</span><span class="o">=</span><span class="n">field</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
@@ -524,12 +524,12 @@ data-aria-dark="Switch to auto color mode">
 
 </span><span data-line="370">
 </span><span data-line="371">
-</span><span data-line="372"><span class="k">def</span> <span class="nf">_icon2regular</span><span class="p">(</span>
+</span><span data-line="372"><span class="k">def</span><span class="w"> </span><span class="nf">_icon2regular</span><span class="p">(</span>
 </span><span data-line="373">    <span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">RegularGrid</span><span class="p">,</span> <span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">weights</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 </span><span data-line="374"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
 </span><span data-line="375">    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">indices</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 </span><span data-line="376">
-</span><span data-line="377">    <span class="k">def</span> <span class="nf">reproject_layer</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
+</span><span data-line="377">    <span class="k">def</span><span class="w"> </span><span class="nf">reproject_layer</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
 </span><span data-line="378">        <span class="n">out_shape</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">dst</span><span class="o">.</span><span class="n">ny</span><span class="p">,</span> <span class="n">dst</span><span class="o">.</span><span class="n">nx</span><span class="p">)</span>
 </span><span data-line="379">        <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 </span><span data-line="380">        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">values</span><span class="p">)):</span>
@@ -556,7 +556,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="401">
 <div class="viewcode-block" id="icon2geolatlon">
 <a class="viewcode-back" href="../../../generated/meteodatalab.operators.regrid.html#meteodatalab.operators.regrid.icon2geolatlon">[docs]</a>
-</span><span data-line="402"><span class="k">def</span> <span class="nf">icon2geolatlon</span><span class="p">(</span><span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
+</span><span data-line="402"><span class="k">def</span><span class="w"> </span><span class="nf">icon2geolatlon</span><span class="p">(</span><span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
 </span><span data-line="403"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remap ICON native grid data to the geolatlon grid.</span>
 </span><span data-line="404">
 </span><span data-line="405"><span class="sd">    The interpolation is done with pre-computed weights based on the RBF</span>
@@ -594,7 +594,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="436">
 <div class="viewcode-block" id="icon2rotlatlon">
 <a class="viewcode-back" href="../../../generated/meteodatalab.operators.regrid.html#meteodatalab.operators.regrid.icon2rotlatlon">[docs]</a>
-</span><span data-line="437"><span class="k">def</span> <span class="nf">icon2rotlatlon</span><span class="p">(</span><span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
+</span><span data-line="437"><span class="k">def</span><span class="w"> </span><span class="nf">icon2rotlatlon</span><span class="p">(</span><span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
 </span><span data-line="438"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remap ICON native grid data to the rotated latlon grid.</span>
 </span><span data-line="439">
 </span><span data-line="440"><span class="sd">    The interpolation is done with pre-computed weights based on the RBF</span>
@@ -635,7 +635,7 @@ data-aria-dark="Switch to auto color mode">
 
 </span><span data-line="475">
 </span><span data-line="476">
-</span><span data-line="477"><span class="k">def</span> <span class="nf">_linear_weights</span><span class="p">(</span><span class="n">pts_src</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">pts_dst</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">]:</span>
+</span><span data-line="477"><span class="k">def</span><span class="w"> </span><span class="nf">_linear_weights</span><span class="p">(</span><span class="n">pts_src</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">pts_dst</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">]:</span>
 </span><span data-line="478"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute indices and weights for barycentric linear interpolation.&quot;&quot;&quot;</span>
 </span><span data-line="479">    <span class="n">tri</span> <span class="o">=</span> <span class="n">Delaunay</span><span class="p">(</span><span class="n">pts_src</span><span class="p">)</span>
 </span><span data-line="480">    <span class="n">simplex</span> <span class="o">=</span> <span class="n">tri</span><span class="o">.</span><span class="n">find_simplex</span><span class="p">(</span><span class="n">pts_dst</span><span class="p">)</span>
@@ -656,7 +656,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="495">    <span class="k">return</span> <span class="n">indices</span><span class="p">,</span> <span class="n">weights</span>
 </span><span data-line="496">
 </span><span data-line="497">
-</span><span data-line="498"><span class="k">def</span> <span class="nf">_linear_weights_cropped_domain</span><span class="p">(</span>
+</span><span data-line="498"><span class="k">def</span><span class="w"> </span><span class="nf">_linear_weights_cropped_domain</span><span class="p">(</span>
 </span><span data-line="499">    <span class="n">pts_src</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">pts_dst</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">4e3</span>
 </span><span data-line="500"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">]:</span>
 </span><span data-line="501"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute linear interpolation weights from a cropped source grid.</span>
@@ -676,7 +676,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="515">    <span class="k">return</span> <span class="n">idx</span><span class="p">[</span><span class="n">indices</span><span class="p">],</span> <span class="n">weights</span>
 </span><span data-line="516">
 </span><span data-line="517">
-</span><span data-line="518"><span class="k">def</span> <span class="nf">_key_maker</span><span class="p">(</span><span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">RegularGrid</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="518"><span class="k">def</span><span class="w"> </span><span class="nf">_key_maker</span><span class="p">(</span><span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">RegularGrid</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="519">    <span class="n">md5</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;md5Section3&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 </span><span data-line="520">    <span class="k">if</span> <span class="n">md5</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="521">        <span class="k">return</span> <span class="kc">None</span>
@@ -684,7 +684,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="523">
 </span><span data-line="524">
 </span><span data-line="525"><span class="nd">@util</span><span class="o">.</span><span class="n">memoize</span><span class="p">(</span><span class="n">_key_maker</span><span class="p">)</span>
-</span><span data-line="526"><span class="k">def</span> <span class="nf">_compute_barycentric_weights</span><span class="p">(</span>
+</span><span data-line="526"><span class="k">def</span><span class="w"> </span><span class="nf">_compute_barycentric_weights</span><span class="p">(</span>
 </span><span data-line="527">    <span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">RegularGrid</span>
 </span><span data-line="528"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">]:</span>
 </span><span data-line="529">    <span class="n">utm_crs</span> <span class="o">=</span> <span class="s2">&quot;epsg:32632&quot;</span>  <span class="c1"># UTM zone 32N</span>
@@ -704,7 +704,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="543">
 <div class="viewcode-block" id="iconremap">
 <a class="viewcode-back" href="../../../generated/meteodatalab.operators.regrid.html#meteodatalab.operators.regrid.iconremap">[docs]</a>
-</span><span data-line="544"><span class="k">def</span> <span class="nf">iconremap</span><span class="p">(</span>
+</span><span data-line="544"><span class="k">def</span><span class="w"> </span><span class="nf">iconremap</span><span class="p">(</span>
 </span><span data-line="545">    <span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">RegularGrid</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;byc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;byc&quot;</span>
 </span><span data-line="546"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
 </span><span data-line="547"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remap ICON native grid data to a regular grid.</span>
@@ -769,8 +769,8 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=8fa8b3e9"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/documentation_options.js?v=a746b17c"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../../../_static/shibuya.js?v=e730760c"></script></body>
+      <script src="../../../_static/shibuya.js?v=cac61aee"></script></body>
 </html>

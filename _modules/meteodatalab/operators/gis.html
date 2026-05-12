@@ -2,11 +2,11 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.gis - meteodata-lab 0.6.0 documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.gis - meteodata-lab main-15a32ff documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
-  </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=397bb51e" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=d48c410d" />
+  </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=ad592e98" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=44020203" />
     <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,7 @@
 }
 </style>
     <meta property="og:type" content="website"/><meta property="og:title" content="meteodatalab.operators.gis"/>
-<meta name="twitter:card" content="summary"/>
+    <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
   <div class="sy-head-blur"></div>
@@ -43,8 +43,8 @@ data-aria-dark="Switch to auto color mode">
 </button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
         <div class="hamburger">
           <span class="hamburger_1"></span>
-          <span class="hamburger_2 -translate-x-2"></span>
-          <span class="hamburger_3 -translate-x-1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
         </div>
       </button>
     </div>
@@ -135,30 +135,30 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </div><div class="flex flex-col break-words justify-between">
-      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
-        <article class="yue" role="main">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <article class="yue" role="main">
           <h1>Source code for meteodatalab.operators.gis</h1><div class="highlight"><pre>
 <span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;Geospatial logic.&quot;&quot;&quot;</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="c1"># Standard library</span>
-</span><span data-line="4"><span class="kn">import</span> <span class="nn">dataclasses</span> <span class="k">as</span> <span class="nn">dc</span>
-</span><span data-line="5"><span class="kn">import</span> <span class="nn">typing</span>
-</span><span data-line="6"><span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Mapping</span>
+</span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dc</span>
+</span><span data-line="5"><span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
+</span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span>
 </span><span data-line="7">
 </span><span data-line="8"><span class="c1"># Third-party</span>
-</span><span data-line="9"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-</span><span data-line="10"><span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+</span><span data-line="9"><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span data-line="10"><span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 </span><span data-line="11">
 </span><span data-line="12"><span class="c1"># Local</span>
-</span><span data-line="13"><span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">metadata</span>
-</span><span data-line="14"><span class="kn">from</span> <span class="nn">..grib_decoder</span> <span class="kn">import</span> <span class="n">set_code_flag</span>
-</span><span data-line="15"><span class="kn">from</span> <span class="nn">.support_operators</span> <span class="kn">import</span> <span class="n">get_grid_coords</span>
+</span><span data-line="13"><span class="kn">from</span><span class="w"> </span><span class="nn">..</span><span class="w"> </span><span class="kn">import</span> <span class="n">metadata</span>
+</span><span data-line="14"><span class="kn">from</span><span class="w"> </span><span class="nn">..grib_decoder</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_code_flag</span>
+</span><span data-line="15"><span class="kn">from</span><span class="w"> </span><span class="nn">.support_operators</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_grid_coords</span>
 </span><span data-line="16">
 </span><span data-line="17">
 <div class="viewcode-block" id="RotLatLonGrid">
 <a class="viewcode-back" href="../../../generated/meteodatalab.operators.gis.html#meteodatalab.operators.gis.RotLatLonGrid">[docs]</a>
 </span><span data-line="18"><span class="nd">@dc</span><span class="o">.</span><span class="n">dataclass</span>
-</span><span data-line="19"><span class="k">class</span> <span class="nc">RotLatLonGrid</span><span class="p">:</span>
+</span><span data-line="19"><span class="k">class</span><span class="w"> </span><span class="nc">RotLatLonGrid</span><span class="p">:</span>
 </span><span data-line="20"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Class representing a rotated lat lon grid.</span>
 </span><span data-line="21">
 </span><span data-line="22"><span class="sd">    Attributes</span>
@@ -182,7 +182,7 @@ data-aria-dark="Switch to auto color mode">
 
 </span><span data-line="40">
 </span><span data-line="41">
-</span><span data-line="42"><span class="k">def</span> <span class="nf">_check_requirements</span><span class="p">(</span><span class="n">geo</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="42"><span class="k">def</span><span class="w"> </span><span class="nf">_check_requirements</span><span class="p">(</span><span class="n">geo</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="43">    <span class="n">requirements</span> <span class="o">=</span> <span class="p">{</span>
 </span><span data-line="44">        <span class="s2">&quot;angleOfRotationInDegrees&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
 </span><span data-line="45">        <span class="s2">&quot;gridType&quot;</span><span class="p">:</span> <span class="s2">&quot;rotated_ll&quot;</span><span class="p">,</span>
@@ -197,7 +197,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="54">
 <div class="viewcode-block" id="get_grid">
 <a class="viewcode-back" href="../../../generated/meteodatalab.operators.gis.html#meteodatalab.operators.gis.get_grid">[docs]</a>
-</span><span data-line="55"><span class="k">def</span> <span class="nf">get_grid</span><span class="p">(</span><span class="n">geo</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RotLatLonGrid</span><span class="p">:</span>
+</span><span data-line="55"><span class="k">def</span><span class="w"> </span><span class="nf">get_grid</span><span class="p">(</span><span class="n">geo</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RotLatLonGrid</span><span class="p">:</span>
 </span><span data-line="56"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get grid parameters for a given field.</span>
 </span><span data-line="57">
 </span><span data-line="58"><span class="sd">    Only fields defined on regular grids in rotlatlon coordinates,</span>
@@ -240,7 +240,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="94">
 <div class="viewcode-block" id="rot2geolatlon">
 <a class="viewcode-back" href="../../../generated/meteodatalab.operators.gis.html#meteodatalab.operators.gis.rot2geolatlon">[docs]</a>
-</span><span data-line="95"><span class="k">def</span> <span class="nf">rot2geolatlon</span><span class="p">(</span><span class="n">grid</span><span class="p">:</span> <span class="n">RotLatLonGrid</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]:</span>
+</span><span data-line="95"><span class="k">def</span><span class="w"> </span><span class="nf">rot2geolatlon</span><span class="p">(</span><span class="n">grid</span><span class="p">:</span> <span class="n">RotLatLonGrid</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]:</span>
 </span><span data-line="96"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute geographical lat lon values for a rotated lat lon grid.</span>
 </span><span data-line="97">
 </span><span data-line="98"><span class="sd">    Parameters</span>
@@ -294,7 +294,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="145">
 <div class="viewcode-block" id="geolatlon2swiss">
 <a class="viewcode-back" href="../../../generated/meteodatalab.operators.gis.html#meteodatalab.operators.gis.geolatlon2swiss">[docs]</a>
-</span><span data-line="146"><span class="k">def</span> <span class="nf">geolatlon2swiss</span><span class="p">(</span>
+</span><span data-line="146"><span class="k">def</span><span class="w"> </span><span class="nf">geolatlon2swiss</span><span class="p">(</span>
 </span><span data-line="147">    <span class="n">lon</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span>
 </span><span data-line="148"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]:</span>
 </span><span data-line="149"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert from geolatlon to swiss coordinates.</span>
@@ -342,7 +342,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="190">
 <div class="viewcode-block" id="vref_rot2geolatlon">
 <a class="viewcode-back" href="../../../generated/meteodatalab.operators.gis.html#meteodatalab.operators.gis.vref_rot2geolatlon">[docs]</a>
-</span><span data-line="191"><span class="k">def</span> <span class="nf">vref_rot2geolatlon</span><span class="p">(</span>
+</span><span data-line="191"><span class="k">def</span><span class="w"> </span><span class="nf">vref_rot2geolatlon</span><span class="p">(</span>
 </span><span data-line="192">    <span class="n">u</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span>
 </span><span data-line="193"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]:</span>
 </span><span data-line="194"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply coordinate rotation to vector field.</span>
@@ -405,7 +405,7 @@ data-aria-dark="Switch to auto color mode">
 
 </span><span data-line="251">
 </span><span data-line="252">
-</span><span data-line="253"><span class="k">def</span> <span class="nf">_vref_rot2geolatlon</span><span class="p">(</span>
+</span><span data-line="253"><span class="k">def</span><span class="w"> </span><span class="nf">_vref_rot2geolatlon</span><span class="p">(</span>
 </span><span data-line="254">    <span class="n">u</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
 </span><span data-line="255">    <span class="n">v</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
 </span><span data-line="256">    <span class="n">lon</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
@@ -453,8 +453,8 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=8fa8b3e9"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/documentation_options.js?v=a746b17c"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../../../_static/shibuya.js?v=e730760c"></script></body>
+      <script src="../../../_static/shibuya.js?v=cac61aee"></script></body>
 </html>

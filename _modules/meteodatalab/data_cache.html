@@ -2,11 +2,11 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.data_cache - meteodata-lab 0.6.0 documentation</title><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.data_cache - meteodata-lab main-15a32ff documentation</title><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
-  </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=397bb51e" />
-    <link rel="stylesheet" type="text/css" href="../../_static/shibuya.css?v=d48c410d" />
+  </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=ad592e98" />
+    <link rel="stylesheet" type="text/css" href="../../_static/shibuya.css?v=44020203" />
     <link media="print" rel="stylesheet" type="text/css" href="../../_static/print.css?v=20ff2c19" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,7 @@
 }
 </style>
     <meta property="og:type" content="website"/><meta property="og:title" content="meteodatalab.data_cache"/>
-<meta name="twitter:card" content="summary"/>
+    <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
   <div class="sy-head-blur"></div>
@@ -43,8 +43,8 @@ data-aria-dark="Switch to auto color mode">
 </button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
         <div class="hamburger">
           <span class="hamburger_1"></span>
-          <span class="hamburger_2 -translate-x-2"></span>
-          <span class="hamburger_3 -translate-x-1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
         </div>
       </button>
     </div>
@@ -135,8 +135,8 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </div><div class="flex flex-col break-words justify-between">
-      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
-        <article class="yue" role="main">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <article class="yue" role="main">
           <h1>Source code for meteodatalab.data_cache</h1><div class="highlight"><pre>
 <span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;Helper class to cache data.</span>
 </span><span data-line="2">
@@ -146,12 +146,12 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="6"><span class="sd">&quot;&quot;&quot;</span>
 </span><span data-line="7">
 </span><span data-line="8"><span class="c1"># Standard library</span>
-</span><span data-line="9"><span class="kn">import</span> <span class="nn">dataclasses</span> <span class="k">as</span> <span class="nn">dc</span>
-</span><span data-line="10"><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
-</span><span data-line="11"><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+</span><span data-line="9"><span class="kn">import</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dc</span>
+</span><span data-line="10"><span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
+</span><span data-line="11"><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 </span><span data-line="12">
 </span><span data-line="13"><span class="c1"># Local</span>
-</span><span data-line="14"><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">data_source</span>
+</span><span data-line="14"><span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">data_source</span>
 </span><span data-line="15">
 </span><span data-line="16"><span class="n">DEFAULT_FILES</span> <span class="o">=</span> <span class="p">{</span>
 </span><span data-line="17">    <span class="s2">&quot;inputi&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;mmm&gt;/lfff&lt;ddhh&gt;0000&quot;</span><span class="p">,</span>
@@ -162,7 +162,7 @@ data-aria-dark="Switch to auto color mode">
 <div class="viewcode-block" id="DataCache">
 <a class="viewcode-back" href="../../generated/meteodatalab.data_cache.html#meteodatalab.data_cache.DataCache">[docs]</a>
 </span><span data-line="22"><span class="nd">@dc</span><span class="o">.</span><span class="n">dataclass</span>
-</span><span data-line="23"><span class="k">class</span> <span class="nc">DataCache</span><span class="p">:</span>
+</span><span data-line="23"><span class="k">class</span><span class="w"> </span><span class="nc">DataCache</span><span class="p">:</span>
 </span><span data-line="24">    <span class="n">cache_dir</span><span class="p">:</span> <span class="n">Path</span>
 </span><span data-line="25">    <span class="n">fields</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">]</span>
 </span><span data-line="26">    <span class="n">files</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">DEFAULT_FILES</span><span class="p">)</span>
@@ -170,21 +170,21 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="28">    <span class="n">numbers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </span><span data-line="29">    <span class="n">_populated</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </span><span data-line="30">
-</span><span data-line="31">    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="31">    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span data-line="32">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
 </span><span data-line="33">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;fields keys must be a subset of files keys&quot;</span><span class="p">)</span>
 </span><span data-line="34">
 </span><span data-line="35">    <span class="nd">@property</span>
-</span><span data-line="36">    <span class="k">def</span> <span class="nf">populated_files</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
+</span><span data-line="36">    <span class="k">def</span><span class="w"> </span><span class="nf">populated_files</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
 </span><span data-line="37">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_populated</span>
 </span><span data-line="38">
 </span><span data-line="39">    <span class="nd">@property</span>
-</span><span data-line="40">    <span class="k">def</span> <span class="nf">conf_files</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]:</span>
+</span><span data-line="40">    <span class="k">def</span><span class="w"> </span><span class="nf">conf_files</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]:</span>
 </span><span data-line="41">        <span class="k">return</span> <span class="p">{</span>
 </span><span data-line="42">            <span class="n">label</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="n">pattern</span> <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
 </span><span data-line="43">        <span class="p">}</span>
 </span><span data-line="44">
-</span><span data-line="45">    <span class="k">def</span> <span class="nf">_iter_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="45">    <span class="k">def</span><span class="w"> </span><span class="nf">_iter_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span data-line="46">        <span class="c1"># support more patterns ?</span>
 </span><span data-line="47">        <span class="c1"># https://github.com/COSMO-ORG/fieldextra/blob/develop/documentation/README.user#L2797</span>
 </span><span data-line="48">        <span class="n">patterns</span> <span class="o">=</span> <span class="p">(</span>
@@ -202,34 +202,37 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="60">                <span class="n">hh</span> <span class="o">=</span> <span class="n">step</span> <span class="o">%</span> <span class="mi">24</span> <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
 </span><span data-line="61">                <span class="k">yield</span> <span class="n">label</span><span class="p">,</span> <span class="n">name</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mmm</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="n">dd</span><span class="o">=</span><span class="n">dd</span><span class="p">,</span> <span class="n">hh</span><span class="o">=</span><span class="n">hh</span><span class="p">),</span> <span class="n">number</span><span class="p">,</span> <span class="n">step</span>
 </span><span data-line="62">
-</span><span data-line="63">    <span class="k">def</span> <span class="nf">_iter_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">):</span>
+</span><span data-line="63">    <span class="k">def</span><span class="w"> </span><span class="nf">_iter_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">):</span>
 </span><span data-line="64">        <span class="n">param_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
 </span><span data-line="65">        <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">levtype</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">label</span><span class="p">]:</span>
 </span><span data-line="66">            <span class="n">param_map</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">levtype</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
 </span><span data-line="67">
 </span><span data-line="68">        <span class="k">for</span> <span class="n">levtype</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="n">param_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-</span><span data-line="69">            <span class="n">req</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span> <span class="s2">&quot;levtype&quot;</span><span class="p">:</span> <span class="n">levtype</span><span class="p">}</span>
-</span><span data-line="70">            <span class="k">if</span> <span class="n">number</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="71">                <span class="n">req</span><span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">number</span>
-</span><span data-line="72">            <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="73">                <span class="n">req</span><span class="p">[</span><span class="s2">&quot;step&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">step</span>
-</span><span data-line="74">            <span class="k">yield</span> <span class="n">req</span>
-</span><span data-line="75">
-</span><span data-line="76">    <span class="k">def</span> <span class="nf">populate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">data_source</span><span class="o">.</span><span class="n">DataSource</span><span class="p">):</span>
-</span><span data-line="77">        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">rel_path</span><span class="p">,</span> <span class="n">number</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iter_files</span><span class="p">():</span>
-</span><span data-line="78">            <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="n">rel_path</span>
-</span><span data-line="79">            <span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span data-line="80">
-</span><span data-line="81">            <span class="k">with</span> <span class="n">path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;ba&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-</span><span data-line="82">                <span class="k">for</span> <span class="n">req</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iter_requests</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">number</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
-</span><span data-line="83">                    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">source</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">req</span><span class="p">):</span>
-</span><span data-line="84">                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">message</span><span class="p">())</span>
-</span><span data-line="85">
-</span><span data-line="86">            <span class="bp">self</span><span class="o">.</span><span class="n">_populated</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-</span><span data-line="87">
-</span><span data-line="88">    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="89">        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_populated</span><span class="p">:</span>
-</span><span data-line="90">            <span class="n">path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span></div>
+</span><span data-line="69">            <span class="n">req</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="70">                <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span>
+</span><span data-line="71">                <span class="s2">&quot;levtype&quot;</span><span class="p">:</span> <span class="n">levtype</span><span class="p">,</span>
+</span><span data-line="72">            <span class="p">}</span>
+</span><span data-line="73">            <span class="k">if</span> <span class="n">number</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="74">                <span class="n">req</span><span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">number</span>
+</span><span data-line="75">            <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="76">                <span class="n">req</span><span class="p">[</span><span class="s2">&quot;step&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">step</span>
+</span><span data-line="77">            <span class="k">yield</span> <span class="n">req</span>
+</span><span data-line="78">
+</span><span data-line="79">    <span class="k">def</span><span class="w"> </span><span class="nf">populate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">data_source</span><span class="o">.</span><span class="n">DataSource</span><span class="p">):</span>
+</span><span data-line="80">        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">rel_path</span><span class="p">,</span> <span class="n">number</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iter_files</span><span class="p">():</span>
+</span><span data-line="81">            <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="n">rel_path</span>
+</span><span data-line="82">            <span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span data-line="83">
+</span><span data-line="84">            <span class="k">with</span> <span class="n">path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;ba&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span><span data-line="85">                <span class="k">for</span> <span class="n">req</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iter_requests</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">number</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+</span><span data-line="86">                    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">source</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">req</span><span class="p">):</span>
+</span><span data-line="87">                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">message</span><span class="p">())</span>
+</span><span data-line="88">
+</span><span data-line="89">            <span class="bp">self</span><span class="o">.</span><span class="n">_populated</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span><span data-line="90">
+</span><span data-line="91">    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="92">        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_populated</span><span class="p">:</span>
+</span><span data-line="93">            <span class="n">path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span></div>
 
 </span></pre></div>
         </article><button class="back-to-top" type="button">
@@ -258,8 +261,8 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=8fa8b3e9"></script>
-      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/documentation_options.js?v=a746b17c"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../../_static/shibuya.js?v=e730760c"></script></body>
+      <script src="../../_static/shibuya.js?v=cac61aee"></script></body>
 </html>

@@ -2,11 +2,11 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>ogd_api - meteodata-lab 0.6.0 documentation</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="physical_constants" href="meteodatalab.physical_constants.html" /><link rel="prev" title="metadata" href="meteodatalab.metadata.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>ogd_api - meteodata-lab main-15a32ff documentation</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="physical_constants" href="meteodatalab.physical_constants.html" /><link rel="prev" title="metadata" href="meteodatalab.metadata.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
-  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=397bb51e" />
-    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=d48c410d" />
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=ad592e98" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=44020203" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,7 @@
 }
 </style>
     <meta property="og:type" content="website"/><meta property="og:title" content="ogd_api"/>
-<meta name="twitter:card" content="summary"/>
+    <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
   <div class="sy-head-blur"></div>
@@ -43,8 +43,8 @@ data-aria-dark="Switch to auto color mode">
 </button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
         <div class="hamburger">
           <span class="hamburger_1"></span>
-          <span class="hamburger_2 -translate-x-2"></span>
-          <span class="hamburger_3 -translate-x-1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
         </div>
       </button>
     </div>
@@ -108,6 +108,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#meteodatalab.ogd_api.Collection"><code class="docutils literal notranslate"><span class="pre">Collection</span></code></a><ul>
 <li><a class="reference internal" href="#meteodatalab.ogd_api.Collection.ICON_CH1"><code class="docutils literal notranslate">ICON_CH1</span></code></a></li>
 <li><a class="reference internal" href="#meteodatalab.ogd_api.Collection.ICON_CH2"><code class="docutils literal notranslate">ICON_CH2</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.ogd_api.Collection.KENDA_CH1"><code class="docutils literal notranslate">KENDA_CH1</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#meteodatalab.ogd_api.Request"><code class="docutils literal notranslate"><span class="pre">Request</span></code></a></li>
@@ -147,8 +148,8 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </div><div class="flex flex-col break-words justify-between">
-      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
-        <article class="yue" role="main">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <article class="yue" role="main">
           <section id="module-meteodatalab.ogd_api">
 <span id="ogd-api"></span><h1>ogd_api<a class="headerlink" href="#module-meteodatalab.ogd_api" title="Link to this heading">¶</a></h1>
 <p>Open Government Data API helpers.</p>
@@ -197,6 +198,12 @@ data-aria-dark="Switch to auto color mode">
 <dt class="sig sig-object py" id="meteodatalab.ogd_api.Collection.ICON_CH2">
 <span class="sig-name descname"><span class="pre">ICON_CH2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ogd-forecasting-icon-ch2'</span></em><a class="headerlink" href="#meteodatalab.ogd_api.Collection.ICON_CH2" title="Link to this definition">¶</a></dt>
 <dd><p>Collection of icon-ch2-eps model outputs</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="meteodatalab.ogd_api.Collection.KENDA_CH1">
+<span class="sig-name descname"><span class="pre">KENDA_CH1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ogd-analysis-kenda-ch1'</span></em><a class="headerlink" href="#meteodatalab.ogd_api.Collection.KENDA_CH1" title="Link to this definition">¶</a></dt>
+<dd><p>Collection of kenda-ch1 model outputs</p>
 </dd></dl>
 
 </dd></dl>
@@ -359,8 +366,8 @@ earthkit-data. A warning message is emitted if the cache is disabled.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=8fa8b3e9"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/documentation_options.js?v=a746b17c"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../_static/shibuya.js?v=e730760c"></script></body>
+      <script src="../_static/shibuya.js?v=cac61aee"></script></body>
 </html>

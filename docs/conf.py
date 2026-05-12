@@ -20,7 +20,7 @@ import os
 import sys
 
 # First-party
-import meteodatalab
+import meteodatalab  # noqa: F401
 
 sys.path.insert(0, os.path.abspath(".."))
 

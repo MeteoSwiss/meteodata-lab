@@ -66,6 +66,13 @@ rstcheck = { version = "*", extras = ["sphinx"] }
 types-requests = "*"
 types-PyYAML = "*"
 
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+sphinx-mdinclude = "*"
+shibuya = "*"
+
 [tool.poetry.urls]
 source = "https://github.com/MeteoSwiss/meteodata-lab"
 documentation = "https://meteoswiss.github.io/meteodata-lab/"

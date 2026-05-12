@@ -35,7 +35,7 @@ jobs:
         VERSION: ${{ github.ref_name }}
         GITHUB_SHA: ${{ github.sha }}
       # Set the buildId to the first 7 digits of the commit hash
-      run: BUILD_ID=$(echo ${GITHUB_SHA::7}) poetry run sphinx-build doc doc/_build/
+      run: BUILD_ID=$(echo ${GITHUB_SHA::7}) poetry run sphinx-build docs docs/_build/
 
     - name: Publish documentation
       uses: peaceiris/actions-gh-pages@v3
@@ -43,5 +43,5 @@ jobs:
       with:
         publish_branch: gh-pages
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: doc/_build/
+        publish_dir: docs/_build/
         keep_files: true

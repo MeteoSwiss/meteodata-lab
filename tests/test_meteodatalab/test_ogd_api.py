@@ -2,7 +2,6 @@
 import datetime as dt
 import hashlib
 import typing
-import uuid
 from contextlib import nullcontext
 from pathlib import Path
 from unittest import mock

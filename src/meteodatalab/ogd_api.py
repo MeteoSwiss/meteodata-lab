@@ -55,7 +55,6 @@ def _parse_datetime(value: str) -> dt.datetime:
 
 def _collection_constants_model_suffix(collection: Collection) -> str:
     """Return the model suffix used in static constants asset IDs."""
-
     mapping = {
         Collection.ICON_CH1.value: "icon-ch1-eps",
         Collection.ICON_CH2.value: "icon-ch2-eps",

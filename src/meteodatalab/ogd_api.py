@@ -305,16 +305,12 @@ def _get_geo_coord_url(uuid: UUID, collection: Collection) -> str:
     if model_name is None:
         logger.warning("Grid UUID not found")
 
-    mapping = {
-        Collection.ICON_CH1: "forecasting-icon-ch1-eps",
-        Collection.ICON_CH2: "forecasting-icon-ch2-eps",
-        Collection.KENDA_CH1: "analysis-kenda-ch1",
-    }
+    # Collection name doesn't include "eps"
+    # while asset names keep the eps model suffix.
+    collection_id = f"ch.meteoschweiz.{collection}"
+    model_suffix = _collection_constants_model_suffix(collection)
 
-    collection_name = mapping[collection]
-    asset_name = _collection_constants_model_suffix(collection).removesuffix("-eps")
-    collection_id = f"ch.meteoschweiz.ogd-{collection_name}"
-    asset_id = f"horizontal_constants_{asset_name}.grib2"
+    asset_id = f"horizontal_constants_{model_suffix}.grib2"
 
     return get_collection_asset_url(collection_id, asset_id)
 

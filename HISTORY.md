@@ -1,5 +1,10 @@
 # History
 
+## [0.7.1] (2026-05-13)
+
+### Fix
+- ICON-CH1/2-EPS are fetched from the appropriate collection asset.
+
 ## [0.7.0] (2026-05-11)
 
 ### Fix
@@ -214,6 +219,7 @@ To be removed in version 0.6
 - Added ninjo_k2th product
 - Added GRIB data loader based on earthkit-data
 
+[0.7.1]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.0..v0.7.1
 [0.7.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.0-rc2..v0.7.0
 [0.7.0-rc2]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.0-rc1..v0.7.0-rc2
 [0.7.0-rc1]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.6.0..v0.7.0-rc1

@@ -53,10 +53,8 @@ def _parse_datetime(value: str) -> dt.datetime:
     return dt.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S%z")
 
 
-def _collection_constants_model_suffix(collection: Collection | str) -> str:
+def _collection_constants_model_suffix(collection: Collection) -> str:
     """Return the model suffix used in static constants asset IDs."""
-    collection_value = str(collection)
-
     mapping = {
         Collection.ICON_CH1.value: "icon-ch1-eps",
         Collection.ICON_CH2.value: "icon-ch2-eps",
@@ -64,11 +62,11 @@ def _collection_constants_model_suffix(collection: Collection | str) -> str:
     }
 
     try:
-        return mapping[collection_value]
+        return mapping[collection.value]
     except KeyError as exc:
         raise KeyError(
             "No constants model suffix mapping defined "
-            f"for collection {collection_value!r}."
+            f"for collection {collection.value!r}."
         ) from exc
 
 
@@ -305,16 +303,13 @@ def _get_geo_coord_url(uuid: UUID, collection: Collection) -> str:
     if model_name is None:
         logger.warning("Grid UUID not found")
 
-    mapping = {
-        Collection.ICON_CH1: "forecasting-icon-ch1-eps",
-        Collection.ICON_CH2: "forecasting-icon-ch2-eps",
-        Collection.KENDA_CH1: "analysis-kenda-ch1",
-    }
+    collection_id = f"ch.meteoschweiz.{collection.value}"
 
-    collection_name = mapping[collection]
-    asset_name = _collection_constants_model_suffix(collection).removesuffix("-eps")
-    collection_id = f"ch.meteoschweiz.ogd-{collection_name}"
-    asset_id = f"horizontal_constants_{asset_name}.grib2"
+    # Collection name doesn't include "eps"
+    # while asset names keep the eps model suffix.
+    model_suffix = _collection_constants_model_suffix(collection)
+
+    asset_id = f"horizontal_constants_{model_suffix}.grib2"
 
     return get_collection_asset_url(collection_id, asset_id)
 
@@ -363,7 +358,7 @@ def get_from_ogd(request: Request) -> xr.DataArray:
     return grib_decoder.load(
         source,
         {"param": request.variable},
-        geo_coords=partial(_geo_coords, collection=request.collection),
+        geo_coords=partial(_geo_coords, collection=Collection(request.collection)),
     )[request.variable]
 
 
@@ -404,7 +399,7 @@ def download_from_ogd(request: Request, target: Path) -> None:
         _download_with_checksum(asset_url, target)
 
     collection_id = f"ch.meteoschweiz.{request.collection}"
-    model_suffix = _collection_constants_model_suffix(request.collection)
+    model_suffix = _collection_constants_model_suffix(Collection(request.collection))
 
     # Download coordinate files
     for prefix in ["horizontal", "vertical"]:

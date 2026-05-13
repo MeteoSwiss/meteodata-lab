@@ -85,7 +85,9 @@ def direction(u: xr.DataArray, v: xr.DataArray) -> xr.DataArray:
         u_g = u
         v_g = v
     else:
-        raise ValueError(f"Differing or unknown vector references ({u.vref=}, {v.vref=})")
+        raise ValueError(
+            f"Differing or unknown vector references ({u.vref=}, {v.vref=})"
+        )
     name = {"U": "DD", "U_10M": "DD_10M"}[u.parameter["shortName"]]
     return xr.DataArray(
         rad2deg * np.arctan2(u_g, v_g) + 180,

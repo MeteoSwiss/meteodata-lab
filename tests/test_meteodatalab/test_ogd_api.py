@@ -5,6 +5,7 @@ import typing
 from contextlib import nullcontext
 from pathlib import Path
 from unittest import mock
+from uuid import UUID
 
 # Third-party
 import pydantic
@@ -302,7 +303,7 @@ model_to_uuid = {v: k for k, v in icon_grid.GRID_UUID_TO_MODEL.items()}
 
 
 @pytest.mark.parametrize(
-    "uuid,collection,expected_coll,expected_file",
+    "uuid,collection,exp_collection_id,exp_asset_id",
     [
         (
             model_to_uuid["icon-ch1-eps"],
@@ -326,11 +327,15 @@ model_to_uuid = {v: k for k, v in icon_grid.GRID_UUID_TO_MODEL.items()}
 )
 @mock.patch.object(ogd_api, "get_collection_asset_url")
 def test_get_geo_coord_url(
-    mock_get: mock.MagicMock, uuid, collection, expected_coll, expected_file
+    mock_get: mock.MagicMock,
+    uuid: UUID,
+    collection: ogd_api.Collection,
+    exp_collection_id: str,
+    exp_asset_id: str,
 ):
 
     mock_get.return_value = "some_url"
 
     assert "some_url" == ogd_api._get_geo_coord_url(uuid, collection)
 
-    assert mock_get.mock_calls == [mock.call(expected_coll, expected_file)]
+    assert mock_get.mock_calls == [mock.call(exp_collection_id, exp_asset_id)]

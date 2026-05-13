@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.wind - meteodata-lab main-15a32ff documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.wind - meteodata-lab main-65adb3f documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=ad592e98" />
@@ -184,57 +184,60 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="42">    <span class="n">name</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;U&quot;</span><span class="p">:</span> <span class="s2">&quot;SP&quot;</span><span class="p">,</span> <span class="s2">&quot;U_10M&quot;</span><span class="p">:</span> <span class="s2">&quot;SP_10M&quot;</span><span class="p">}[</span><span class="n">u</span><span class="o">.</span><span class="n">parameter</span><span class="p">[</span><span class="s2">&quot;shortName&quot;</span><span class="p">]]</span>
 </span><span data-line="43">    <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
 </span><span data-line="44">        <span class="n">wind</span><span class="o">.</span><span class="n">speed</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
-</span><span data-line="45">        <span class="n">attrs</span><span class="o">=</span><span class="n">override</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="n">name</span><span class="p">),</span>
-</span><span data-line="46">    <span class="p">)</span></div>
+</span><span data-line="45">        <span class="n">dims</span><span class="o">=</span><span class="n">u</span><span class="o">.</span><span class="n">dims</span><span class="p">,</span>
+</span><span data-line="46">        <span class="n">attrs</span><span class="o">=</span><span class="n">override</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="n">name</span><span class="p">),</span>
+</span><span data-line="47">    <span class="p">)</span></div>
 
-</span><span data-line="47">
 </span><span data-line="48">
+</span><span data-line="49">
 <div class="viewcode-block" id="direction">
 <a class="viewcode-back" href="../../../generated/meteodatalab.operators.wind.html#meteodatalab.operators.wind.direction">[docs]</a>
-</span><span data-line="49"><span class="k">def</span><span class="w"> </span><span class="nf">direction</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
-</span><span data-line="50"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the horizontal wind direction.</span>
-</span><span data-line="51">
-</span><span data-line="52"><span class="sd">    Note that terrain following grid deformation is not accounted for.</span>
-</span><span data-line="53"><span class="sd">    The input fields are required to be located on the mass points</span>
-</span><span data-line="54"><span class="sd">    of a grid defined in the rotated or geo latlon coordinate system.</span>
-</span><span data-line="55"><span class="sd">    The preferred unit is meters per second but any consistent unit system</span>
-</span><span data-line="56"><span class="sd">    acceptable.</span>
-</span><span data-line="57">
-</span><span data-line="58"><span class="sd">    Parameters</span>
-</span><span data-line="59"><span class="sd">    ----------</span>
-</span><span data-line="60"><span class="sd">    u : xarray.DataArray</span>
-</span><span data-line="61"><span class="sd">        the x component of the wind velocity [m/s].</span>
-</span><span data-line="62"><span class="sd">    v : xarray.DataArray</span>
-</span><span data-line="63"><span class="sd">        the y component of the wind velocity [m/s].</span>
-</span><span data-line="64">
-</span><span data-line="65"><span class="sd">    Raises</span>
-</span><span data-line="66"><span class="sd">    ------</span>
-</span><span data-line="67"><span class="sd">    ValueError</span>
-</span><span data-line="68"><span class="sd">        if any of the input fields is located on staggered points or on any</span>
-</span><span data-line="69"><span class="sd">        other than a grid in the rotated or geo latlon coordinate system.</span>
-</span><span data-line="70">
-</span><span data-line="71"><span class="sd">    Returns</span>
-</span><span data-line="72"><span class="sd">    -------</span>
-</span><span data-line="73"><span class="sd">    xarray.DataArray</span>
-</span><span data-line="74"><span class="sd">        the horizontal wind direction with respect to geographic North [deg].</span>
-</span><span data-line="75">
-</span><span data-line="76"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="77">    <span class="k">if</span> <span class="n">is_staggered_horizontal</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_staggered_horizontal</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
-</span><span data-line="78">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The wind components should not be staggered.&quot;</span><span class="p">)</span>
-</span><span data-line="79">
-</span><span data-line="80">    <span class="n">rad2deg</span> <span class="o">=</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
-</span><span data-line="81">    <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">vref</span> <span class="o">==</span> <span class="s2">&quot;native&quot;</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">vref</span> <span class="o">==</span> <span class="s2">&quot;native&quot;</span><span class="p">:</span>
-</span><span data-line="82">        <span class="n">u_g</span><span class="p">,</span> <span class="n">v_g</span> <span class="o">=</span> <span class="n">vref_rot2geolatlon</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-</span><span data-line="83">    <span class="k">elif</span> <span class="n">u</span><span class="o">.</span><span class="n">vref</span> <span class="o">==</span> <span class="s2">&quot;geo&quot;</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">vref</span> <span class="o">==</span> <span class="s2">&quot;geo&quot;</span><span class="p">:</span>
-</span><span data-line="84">        <span class="n">u_g</span> <span class="o">=</span> <span class="n">u</span>
-</span><span data-line="85">        <span class="n">v_g</span> <span class="o">=</span> <span class="n">v</span>
-</span><span data-line="86">    <span class="k">else</span><span class="p">:</span>
-</span><span data-line="87">        <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Differing or unknown vector references (</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">vref</span><span class="si">=}</span><span class="s2">, </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">vref</span><span class="si">=}</span><span class="s2">)&quot;</span><span class="p">)</span>
-</span><span data-line="88">    <span class="n">name</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;U&quot;</span><span class="p">:</span> <span class="s2">&quot;DD&quot;</span><span class="p">,</span> <span class="s2">&quot;U_10M&quot;</span><span class="p">:</span> <span class="s2">&quot;DD_10M&quot;</span><span class="p">}[</span><span class="n">u</span><span class="o">.</span><span class="n">parameter</span><span class="p">[</span><span class="s2">&quot;shortName&quot;</span><span class="p">]]</span>
-</span><span data-line="89">    <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
-</span><span data-line="90">        <span class="n">rad2deg</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">u_g</span><span class="p">,</span> <span class="n">v_g</span><span class="p">)</span> <span class="o">+</span> <span class="mi">180</span><span class="p">,</span>
-</span><span data-line="91">        <span class="n">attrs</span><span class="o">=</span><span class="n">override</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="n">name</span><span class="p">),</span>
-</span><span data-line="92">    <span class="p">)</span></div>
+</span><span data-line="50"><span class="k">def</span><span class="w"> </span><span class="nf">direction</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
+</span><span data-line="51"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the horizontal wind direction.</span>
+</span><span data-line="52">
+</span><span data-line="53"><span class="sd">    Note that terrain following grid deformation is not accounted for.</span>
+</span><span data-line="54"><span class="sd">    The input fields are required to be located on the mass points</span>
+</span><span data-line="55"><span class="sd">    of a grid defined in the rotated or geo latlon coordinate system.</span>
+</span><span data-line="56"><span class="sd">    The preferred unit is meters per second but any consistent unit system</span>
+</span><span data-line="57"><span class="sd">    acceptable.</span>
+</span><span data-line="58">
+</span><span data-line="59"><span class="sd">    Parameters</span>
+</span><span data-line="60"><span class="sd">    ----------</span>
+</span><span data-line="61"><span class="sd">    u : xarray.DataArray</span>
+</span><span data-line="62"><span class="sd">        the x component of the wind velocity [m/s].</span>
+</span><span data-line="63"><span class="sd">    v : xarray.DataArray</span>
+</span><span data-line="64"><span class="sd">        the y component of the wind velocity [m/s].</span>
+</span><span data-line="65">
+</span><span data-line="66"><span class="sd">    Raises</span>
+</span><span data-line="67"><span class="sd">    ------</span>
+</span><span data-line="68"><span class="sd">    ValueError</span>
+</span><span data-line="69"><span class="sd">        if any of the input fields is located on staggered points or on any</span>
+</span><span data-line="70"><span class="sd">        other than a grid in the rotated or geo latlon coordinate system.</span>
+</span><span data-line="71">
+</span><span data-line="72"><span class="sd">    Returns</span>
+</span><span data-line="73"><span class="sd">    -------</span>
+</span><span data-line="74"><span class="sd">    xarray.DataArray</span>
+</span><span data-line="75"><span class="sd">        the horizontal wind direction with respect to geographic North [deg].</span>
+</span><span data-line="76">
+</span><span data-line="77"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="78">    <span class="k">if</span> <span class="n">is_staggered_horizontal</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_staggered_horizontal</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+</span><span data-line="79">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The wind components should not be staggered.&quot;</span><span class="p">)</span>
+</span><span data-line="80">
+</span><span data-line="81">    <span class="n">rad2deg</span> <span class="o">=</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+</span><span data-line="82">    <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">vref</span> <span class="o">==</span> <span class="s2">&quot;native&quot;</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">vref</span> <span class="o">==</span> <span class="s2">&quot;native&quot;</span><span class="p">:</span>
+</span><span data-line="83">        <span class="n">u_g</span><span class="p">,</span> <span class="n">v_g</span> <span class="o">=</span> <span class="n">vref_rot2geolatlon</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+</span><span data-line="84">    <span class="k">elif</span> <span class="n">u</span><span class="o">.</span><span class="n">vref</span> <span class="o">==</span> <span class="s2">&quot;geo&quot;</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">vref</span> <span class="o">==</span> <span class="s2">&quot;geo&quot;</span><span class="p">:</span>
+</span><span data-line="85">        <span class="n">u_g</span> <span class="o">=</span> <span class="n">u</span>
+</span><span data-line="86">        <span class="n">v_g</span> <span class="o">=</span> <span class="n">v</span>
+</span><span data-line="87">    <span class="k">else</span><span class="p">:</span>
+</span><span data-line="88">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span><span data-line="89">            <span class="sa">f</span><span class="s2">&quot;Differing or unknown vector references (</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">vref</span><span class="si">=}</span><span class="s2">, </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">vref</span><span class="si">=}</span><span class="s2">)&quot;</span>
+</span><span data-line="90">        <span class="p">)</span>
+</span><span data-line="91">    <span class="n">name</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;U&quot;</span><span class="p">:</span> <span class="s2">&quot;DD&quot;</span><span class="p">,</span> <span class="s2">&quot;U_10M&quot;</span><span class="p">:</span> <span class="s2">&quot;DD_10M&quot;</span><span class="p">}[</span><span class="n">u</span><span class="o">.</span><span class="n">parameter</span><span class="p">[</span><span class="s2">&quot;shortName&quot;</span><span class="p">]]</span>
+</span><span data-line="92">    <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
+</span><span data-line="93">        <span class="n">rad2deg</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">u_g</span><span class="p">,</span> <span class="n">v_g</span><span class="p">)</span> <span class="o">+</span> <span class="mi">180</span><span class="p">,</span>
+</span><span data-line="94">        <span class="n">attrs</span><span class="o">=</span><span class="n">override</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="n">name</span><span class="p">),</span>
+</span><span data-line="95">    <span class="p">)</span></div>
 
 </span></pre></div>
         </article><button class="back-to-top" type="button">
@@ -263,7 +266,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=a746b17c"></script>
+      <script src="../../../_static/documentation_options.js?v=d7dcdfb4"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/shibuya.js?v=cac61aee"></script></body>

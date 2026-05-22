@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.thetav - meteodata-lab main-65adb3f documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.thetav - meteodata-lab main-3fe5323 documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=ad592e98" />
@@ -168,13 +168,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="26"><span class="sd">        virtual potential temperature in K</span>
 </span><span data-line="27">
 </span><span data-line="28"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="29">    <span class="n">pb</span><span class="p">,</span> <span class="n">tb</span><span class="p">,</span> <span class="n">qvb</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">qv</span><span class="p">)</span>
-</span><span data-line="30">
-</span><span data-line="31">    <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
-</span><span data-line="32">        <span class="n">data</span><span class="o">=</span><span class="n">thermo</span><span class="o">.</span><span class="n">virtual_potential_temperature</span><span class="p">(</span><span class="n">tb</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">qvb</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">pb</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
-</span><span data-line="33">        <span class="n">dims</span><span class="o">=</span><span class="n">pb</span><span class="o">.</span><span class="n">dims</span><span class="p">,</span>
-</span><span data-line="34">        <span class="n">attrs</span><span class="o">=</span><span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="s2">&quot;THETA_V&quot;</span><span class="p">),</span>
-</span><span data-line="35">    <span class="p">)</span></div>
+</span><span data-line="29">    <span class="n">result</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">apply_ufunc</span><span class="p">(</span><span class="n">thermo</span><span class="o">.</span><span class="n">virtual_potential_temperature</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">qv</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+</span><span data-line="30">    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">assign_attrs</span><span class="p">(</span><span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="s2">&quot;THETA_V&quot;</span><span class="p">))</span></div>
 
 </span></pre></div>
         </article><button class="back-to-top" type="button">
@@ -203,7 +198,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=d7dcdfb4"></script>
+      <script src="../../../_static/documentation_options.js?v=049bfc96"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/shibuya.js?v=cac61aee"></script></body>

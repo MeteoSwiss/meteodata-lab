@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.relhum - meteodata-lab main-65adb3f documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.relhum - meteodata-lab main-3fe5323 documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=ad592e98" />
@@ -206,25 +206,23 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="64">    <span class="c1"># Convert mixing ratio (w) to specific humidity (q)</span>
 </span><span data-line="65">    <span class="n">q</span> <span class="o">=</span> <span class="n">w</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span>
 </span><span data-line="66">
-</span><span data-line="67">    <span class="n">pb</span><span class="p">,</span> <span class="n">tb</span><span class="p">,</span> <span class="n">qb</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
-</span><span data-line="68">
-</span><span data-line="69">    <span class="c1"># Use the mapped saturation vapor pressure phase</span>
-</span><span data-line="70">    <span class="n">svp_phase</span> <span class="o">=</span> <span class="n">phase_conditions</span><span class="p">[</span><span class="n">phase</span><span class="p">][</span><span class="s2">&quot;svp_phase&quot;</span><span class="p">]</span>
-</span><span data-line="71">
-</span><span data-line="72">    <span class="c1"># Compute relative humidity using earthkit-meteo operators</span>
-</span><span data-line="73">    <span class="n">rh</span> <span class="o">=</span> <span class="p">(</span>
-</span><span data-line="74">        <span class="mi">100</span>
-</span><span data-line="75">        <span class="o">*</span> <span class="n">thermo</span><span class="o">.</span><span class="n">vapour_pressure_from_specific_humidity</span><span class="p">(</span><span class="n">qb</span><span class="p">,</span> <span class="n">pb</span><span class="p">)</span>
-</span><span data-line="76">        <span class="o">/</span> <span class="n">thermo</span><span class="o">.</span><span class="n">saturation_vapour_pressure</span><span class="p">(</span><span class="n">tb</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="n">svp_phase</span><span class="p">)</span>
+</span><span data-line="67">    <span class="c1"># Use the mapped saturation vapor pressure phase</span>
+</span><span data-line="68">    <span class="n">svp_phase</span> <span class="o">=</span> <span class="n">phase_conditions</span><span class="p">[</span><span class="n">phase</span><span class="p">][</span><span class="s2">&quot;svp_phase&quot;</span><span class="p">]</span>
+</span><span data-line="69">
+</span><span data-line="70">    <span class="c1"># Compute relative humidity using earthkit-meteo operators</span>
+</span><span data-line="71">    <span class="n">rh</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="72">        <span class="mi">100</span>
+</span><span data-line="73">        <span class="o">*</span> <span class="n">xr</span><span class="o">.</span><span class="n">apply_ufunc</span><span class="p">(</span><span class="n">thermo</span><span class="o">.</span><span class="n">vapour_pressure_from_specific_humidity</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+</span><span data-line="74">        <span class="o">/</span> <span class="n">xr</span><span class="o">.</span><span class="n">apply_ufunc</span><span class="p">(</span>
+</span><span data-line="75">            <span class="n">thermo</span><span class="o">.</span><span class="n">saturation_vapour_pressure</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;phase&quot;</span><span class="p">:</span> <span class="n">svp_phase</span><span class="p">}</span>
+</span><span data-line="76">        <span class="p">)</span>
 </span><span data-line="77">    <span class="p">)</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="p">)</span>
 </span><span data-line="78">
 </span><span data-line="79">    <span class="c1"># Return RH with appropriate metadata</span>
-</span><span data-line="80">    <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
-</span><span data-line="81">        <span class="n">data</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
-</span><span data-line="82">        <span class="n">attrs</span><span class="o">=</span><span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span>
-</span><span data-line="83">            <span class="n">t</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="n">phase_conditions</span><span class="p">[</span><span class="n">phase</span><span class="p">][</span><span class="s2">&quot;shortName&quot;</span><span class="p">]</span>
-</span><span data-line="84">        <span class="p">),</span>
-</span><span data-line="85">    <span class="p">)</span></div>
+</span><span data-line="80">    <span class="n">attrs</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span>
+</span><span data-line="81">        <span class="n">t</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="n">phase_conditions</span><span class="p">[</span><span class="n">phase</span><span class="p">][</span><span class="s2">&quot;shortName&quot;</span><span class="p">]</span>
+</span><span data-line="82">    <span class="p">)</span>
+</span><span data-line="83">    <span class="k">return</span> <span class="n">rh</span><span class="o">.</span><span class="n">assign_attrs</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span></div>
 
 </span></pre></div>
         </article><button class="back-to-top" type="button">
@@ -253,7 +251,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=d7dcdfb4"></script>
+      <script src="../../../_static/documentation_options.js?v=049bfc96"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/shibuya.js?v=cac61aee"></script></body>

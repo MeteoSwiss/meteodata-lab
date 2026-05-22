@@ -71,9 +71,13 @@ def relhum(
     rh = (
         100
         * xr.apply_ufunc(thermo.vapour_pressure_from_specific_humidity, q, p)
-        / xr.apply_ufunc(thermo.saturation_vapour_pressure, t, kwargs={"phase": svp_phase})
+        / xr.apply_ufunc(
+            thermo.saturation_vapour_pressure, t, kwargs={"phase": svp_phase}
+        )
     ).clip(0, max)
 
     # Return RH with appropriate metadata
-    attrs = metadata.override(t.metadata, shortName=phase_conditions[phase]["shortName"])
+    attrs = metadata.override(
+        t.metadata, shortName=phase_conditions[phase]["shortName"]
+    )
     return rh.assign_attrs(attrs)

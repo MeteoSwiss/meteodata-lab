@@ -1,5 +1,10 @@
 # History
 
+## [0.7.2] (2026-05-22)
+
+### Fix
+- Operators `wind.speed`, `relhum`, `theta` and `thetav` no longer produce DataArrays with missing coords.
+
 ## [0.7.1] (2026-05-13)
 
 ### Fix
@@ -219,6 +224,7 @@ To be removed in version 0.6
 - Added ninjo_k2th product
 - Added GRIB data loader based on earthkit-data
 
+[0.7.2]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.1..v0.7.2
 [0.7.1]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.0..v0.7.1
 [0.7.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.0-rc2..v0.7.0
 [0.7.0-rc2]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.0-rc1..v0.7.0-rc2

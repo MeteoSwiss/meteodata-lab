@@ -29,10 +29,5 @@ def compute_theta(p: xr.DataArray, t: xr.DataArray) -> xr.DataArray:
         potential temperature in K
 
     """
-    pb, tb = xr.broadcast(p, t)
-
-    return xr.DataArray(
-        thermo.potential_temperature(tb.values, pb.values),
-        dims=pb.dims,
-        attrs=metadata.override(p.metadata, shortName="PT"),
-    )
+    result = xr.apply_ufunc(thermo.potential_temperature, t, p)
+    return result.assign_attrs(metadata.override(p.metadata, shortName="PT"))

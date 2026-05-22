@@ -40,11 +40,8 @@ def speed(u: xr.DataArray, v: xr.DataArray) -> xr.DataArray:
         raise ValueError("The wind components should not be staggered.")
 
     name = {"U": "SP", "U_10M": "SP_10M"}[u.parameter["shortName"]]
-    return xr.DataArray(
-        wind.speed(u.values, v.values),
-        dims=u.dims,
-        attrs=override(u.metadata, shortName=name),
-    )
+    result = xr.apply_ufunc(wind.speed, u, v)
+    return result.assign_attrs(override(u.metadata, shortName=name))
 
 
 def direction(u: xr.DataArray, v: xr.DataArray) -> xr.DataArray:

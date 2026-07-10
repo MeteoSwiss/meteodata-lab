@@ -14,6 +14,7 @@ def test_brn(data_dir, fieldextra):
 
     source = FileDataSource(datafiles=[datafile, cdatafile])
     ds = load(source, {"param": ["P", "T", "QV", "U", "V", "HHL", "HSURF"]})
+    breakpoint()
     set_origin_xy(ds, "HHL")
 
     brn = mbrn.fbrn(

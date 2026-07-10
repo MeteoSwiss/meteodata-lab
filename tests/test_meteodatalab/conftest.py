@@ -103,12 +103,12 @@ def setup_fdb():
 def request_template():
     return {
         "class": "od",
-        "date": "20260505",
+        "date": "20260707",
         "expver": "0001",
         "model": "ICON-CH1-EPS",
         "step": 0,
         "stream": "enfo",
-        "time": "0000",
+        "time": "0900",
         "type": "cf",
         "timespan": "none",
     }

@@ -348,7 +348,7 @@ def get_from_ogd(request: Request) -> xr.DataArray:
         A data array of the selected asset including GRIB metadata and coordinates.
 
     """
-    if ekd.settings.get("cache-policy") == "off":
+    if ekd.config.get("cache-policy") == "off":
         doc = "https://earthkit-data.readthedocs.io/en/latest/examples/cache.html"
         logger.warning("Earthkit-data caching is recommended. See: %s", doc)
 

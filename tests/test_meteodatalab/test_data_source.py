@@ -35,8 +35,9 @@ def test_retrieve_files(mock_from_source, mock_grib_def_ctx):
     assert mock_grib_def_ctx.mock_calls == [call("cosmo")]
     assert mock_from_source.mock_calls == [
         call("file", datafiles),
-        call().sel({"param": param}),
-        call().sel().__iter__(),
+        call().to_fieldlist(),
+        call().to_fieldlist().sel({'metadata.param': 'bar'}),
+        call().to_fieldlist().sel().__iter__()
     ]
 
 
@@ -51,8 +52,9 @@ def test_retrieve_files_tuple(mock_from_source, mock_grib_def_ctx):
     assert mock_grib_def_ctx.mock_calls == [call("cosmo")]
     assert mock_from_source.mock_calls == [
         call("file", datafiles),
-        call().sel({"param": param, "levtype": levtype}),
-        call().sel().__iter__(),
+        call().to_fieldlist(),
+        call().to_fieldlist().sel({'metadata.param': 'bar', 'metadata.levtype': 'ml'}),
+        call().to_fieldlist().sel().__iter__()
     ]
 
 
@@ -67,7 +69,8 @@ def test_retrieve_fdb(mock_from_source, mock_grib_def_ctx):
     assert mock_grib_def_ctx.mock_calls == [call("cosmo")]
     assert mock_from_source.mock_calls == [
         call("fdb", mars.Request(param, **template).to_fdb(), stream=True),
-        call().__iter__(),
+        call().to_fieldlist(),
+        call().to_fieldlist().__iter__(),
     ]
 
 
@@ -83,7 +86,8 @@ def test_retrieve_fdb_mars(mock_from_source, mock_grib_def_ctx):
     assert mock_grib_def_ctx.mock_calls == [call("cosmo")]
     assert mock_from_source.mock_calls == [
         call("fdb", mars.Request(param, **template).to_fdb(), stream=True),
-        call().__iter__(),
+        call().to_fieldlist(),
+        call().to_fieldlist().__iter__(),
     ]
 
 

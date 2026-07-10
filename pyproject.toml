@@ -27,13 +27,18 @@ packages = [
     { include = "meteodatalab", from = "src" },
 ]
 
+[[tool.poetry.source]]
+name = "pypi-mch"
+url = "https://service.meteoswiss.ch/nexus/repository/python-all/simple"
+priority = "supplemental"
+
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
 click = "^8.1.7"
-earthkit-data = { version = ">=0.11,<1", extras = ["covjsonkit"] }
+earthkit-data = { version = ">=1.0,<2", extras = ["covjsonkit"] }
 earthkit-meteo = ">=0.4.0"
-eccodes = ">=2.38,<2.40"
-eccodes-cosmo-resources-python = "~2.38"
+eccodes = "~2.47"
+eccodes-cosmo-resources-python-internal = {version = "~2.47", source = "pypi-mch"}
 numpy = ">=1.26.4,<2.4.0"
 polytope-client = { version = "^0.7.4", optional = true }
 pydantic = "^2.0"

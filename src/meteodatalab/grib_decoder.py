@@ -53,7 +53,6 @@ class GribField(typing.Protocol):
     def metadata(self, *args, **kwargs) -> typing.Any: ...
     def message(self) -> bytes: ...
     def to_numpy(self, dtype: DTypeLike) -> np.ndarray: ...
-    def to_latlon(self) -> dict[str, np.ndarray]: ...
 
 
 class MissingData(RuntimeError):
@@ -98,9 +97,10 @@ def _get_hcoords(
         else:
             return geo_coords(grid_uuid), hdims
 
+    lats, lons = field.geography.latlons()
     hcoords = {
-        dim: xr.DataArray(dims=("y", "x"), data=values)
-        for dim, values in field.to_latlon().items()
+        "lat": xr.DataArray(dims=("y", "x"), data=lats),
+        "lon": xr.DataArray(dims=("y", "x"), data=lons),
     }
     hdims = ("y", "x")
     return hcoords, hdims
@@ -115,7 +115,7 @@ def _to_timedelta(value, unit) -> np.timedelta64:
 
 
 def _get_key(field, dims):
-    md = field.metadata()
+    md = field.metadata
     step = md["step"]
     unit = "h" if isinstance(step, int) else None
     extra = {
@@ -151,10 +151,10 @@ class _FieldBuffer:
         self.values[key] = field.to_numpy(dtype=np.float32)
 
         if not self.metadata:
-            md = field.metadata().override()
+            handle = field.handle.clone(headers_only=True)
             self.metadata = {
-                "metadata": md,
-                **metadata.extract(md),
+                "handle": handle,
+                **metadata.extract(),
             }
 
         if not self.hcoords:

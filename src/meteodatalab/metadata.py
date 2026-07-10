@@ -8,7 +8,6 @@ import typing
 # Third-party
 import numpy as np
 import xarray as xr
-from earthkit.data.core.metadata import Metadata  # type: ignore
 
 # Local
 from . import grib_decoder
@@ -23,7 +22,7 @@ VCOORD_TYPE = {
 }
 
 
-def extract(metadata: Metadata) -> dict[str, typing.Any]:
+def extract(metadata: dict[str, typing.Any]) -> dict[str, typing.Any]:
     if metadata.get("gridType") == "unstructured_grid":
         vref_flag = False
     else:
@@ -34,16 +33,59 @@ def extract(metadata: Metadata) -> dict[str, typing.Any]:
     level_type = metadata.get("typeOfLevel")
     vcoord_type, zshift = VCOORD_TYPE.get(level_type, (level_type, 0.0))
 
+    parameter = metadata.get("parameter")
+    geography = metadata.get("geography")
+    if hasattr(metadata, "as_namespace"):
+        if not parameter:
+            parameter = metadata.as_namespace("parameter")
+        if not geography:
+            geography = metadata.as_namespace("geography")
+    if not parameter:
+        parameter = {
+            k: v for k, v in metadata.items()
+            if k in _PARAMETER_KEYS
+        }
+    if not geography:
+        geography = {
+            k: v for k, v in metadata.items()
+            if k in _GEOGRAPHY_KEYS
+        }
+
     return {
-        "parameter": metadata.as_namespace("parameter"),
-        "geography": metadata.as_namespace("geography"),
+        "parameter": parameter,
+        "geography": geography,
         "vref": "native" if vref_flag else "geo",
         "vcoord_type": vcoord_type,
         "origin_z": zshift,
     }
 
 
-def override(metadata: Metadata, **kwargs: typing.Any) -> dict[str, typing.Any]:
+_PARAMETER_KEYS = {
+    "shortName", "paramId", "name", "units", "centre",
+    "centreDescription", "classOfModel", "typeOfGeneratingProcess",
+    "generatingProcessIdentifier", "backgroundForecastGenerationProcessId",
+    "numberOfForecastInAn Ensemble", "typeOfEnsembleForecast",
+    "numberOfMembersInEnsemble", "perturbationNumber",
+    "statisticalProcessIdentifier", "experimentVersionNumber",
+    "dataSource", "abridgedGrbit", "missingValue",
+}
+
+_GEOGRAPHY_KEYS = {
+    "Nx", "Ny", "Ni", "Nj", "gridType",
+    "longitudeOfFirstGridPointInDegrees", "latitudeOfFirstGridPointInDegrees",
+    "longitudeOfLastGridPointInDegrees", "latitudeOfLastGridPointInDegrees",
+    "iDirectionIncrementInDegrees", "jDirectionIncrementInDegrees",
+    "iScansPositively", "iScansNegatively", "jScansPositively", "jPointsAreConsecutive",
+    "longitudeOfSouthernPoleInDegrees", "latitudeOfSouthernPoleInDegrees",
+    "numberOfPoints", "rows", "columns",
+    "angleOfRotationOfFirstGridPointInDegrees", "angleOfRotationInDegrees",
+    "resolutionAndComponentFlags",
+    "earthRadius", "reducedGaussianNumberOfRows",
+    "reducedGaussianNumberOfColumns",
+}
+
+
+def override(metadata: dict[str, typing.Any], **kwargs: typing.Any) -> dict[str, typing.Any]:
     """Override GRIB metadata.
 
     Note that no special consideration is made for maintaining consistency when
@@ -52,10 +94,10 @@ def override(metadata: Metadata, **kwargs: typing.Any) -> dict[str, typing.Any]:
 
     Parameters
     ----------
-    metadata : Metadata
-        Metadata of the input GRIB metadata
+    metadata : dict[str, Any]
+        Metadata dict of the input GRIB metadata
     kwargs : Any
-        Keyword arguments forwarded to earthkit-data GribMetadata override method
+        Keyword arguments to override in the metadata
 
     Returns
     -------
@@ -63,13 +105,13 @@ def override(metadata: Metadata, **kwargs: typing.Any) -> dict[str, typing.Any]:
         Updated metadata along with the geography and parameter namespaces
 
     """
-    if metadata["editionNumber"] == 1:
+    if metadata.get("editionNumber", 1) == 1:
         return {
             "metadata": metadata,
             **extract(metadata),
         }
 
-    md = metadata.override(**kwargs)
+    md = metadata | kwargs
 
     return {
         "metadata": md,
@@ -94,7 +136,7 @@ class Grid:
     lat_first_grid_point: float
 
 
-def load_grid_reference(metadata: Metadata) -> Grid:
+def load_grid_reference(metadata: dict[str, typing.Any]) -> Grid:
     """Construct a grid from a reference parameter.
 
     Parameters
@@ -144,7 +186,7 @@ def compute_origin(ref_grid: Grid, field: xr.DataArray) -> dict[str, float]:
     }
 
 
-def _uses_icon_grid(metadata: Metadata) -> bool:
+def _uses_icon_grid(metadata: dict[str, typing.Any]) -> bool:
     """Determine if the data is on a MeteoSwiss ICON grid.
 
     Parameters
@@ -159,10 +201,10 @@ def _uses_icon_grid(metadata: Metadata) -> bool:
 
     """
     return (
-        metadata.get("centre", default="") == "lssw"
+        metadata.get("centre", "") == "lssw"
         and (
-            metadata.get("generatingProcessIdentifier", default=0) == 141
-            or metadata.get("generatingProcessIdentifier", default=0) == 142
+            metadata.get("generatingProcessIdentifier", 0) == 141
+            or metadata.get("generatingProcessIdentifier", 0) == 142
         )
         and metadata.get("gridType") == "unstructured_grid"
     )
@@ -200,7 +242,7 @@ def set_origin_xy(ds: dict[str, xr.DataArray], ref_param: str) -> None:
         field.attrs |= compute_origin(ref_grid, field)
 
 
-def extract_pv(metadata: Metadata) -> dict[str, xr.DataArray]:
+def extract_pv(metadata: dict[str, typing.Any]) -> dict[str, xr.DataArray]:
     """Extract hybrid level coefficients.
 
     Parameters
@@ -226,13 +268,14 @@ def extract_pv(metadata: Metadata) -> dict[str, xr.DataArray]:
     }
 
 
-def extract_hcoords(metadata: Metadata) -> dict[str, xr.DataArray]:
+def extract_hcoords(metadata: dict[str, typing.Any]) -> dict[str, xr.DataArray]:
     """Extract horizontal coordinates.
 
     Parameters
     ----------
-    metadata : Metadata
-        GRIB metadata containing the grid definition.
+    metadata : dict[str, Any]
+        GRIB metadata dict containing the grid definition. May have a
+        'geography' key with a geography component object.
 
     Returns
     -------
@@ -240,7 +283,14 @@ def extract_hcoords(metadata: Metadata) -> dict[str, xr.DataArray]:
         Horizontal coordinates in geolatlon.
 
     """
-    geo = metadata.geography
+    geo = metadata.get("geography")
+    if geo is None and hasattr(metadata, "geography"):
+        geo = metadata.geography
+    if geo is None:
+        raise ValueError(
+            "Metadata does not contain a geography component. "
+            "Horizontal coordinates cannot be extracted."
+        )
     return {
         "lat": xr.DataArray(dims=("y", "x"), data=geo.latitudes().reshape(geo.shape())),
         "lon": xr.DataArray(

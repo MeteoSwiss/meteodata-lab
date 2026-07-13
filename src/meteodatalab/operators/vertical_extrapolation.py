@@ -62,7 +62,7 @@ def extrapolate_temperature_sfc2p(
     y = _vertical_extrapolation_y_term(t_sfc, p_sfc, h_sfc, p_target)
     res = t_sfc * (1 + y + (y**2) / 2 + (y**3) / 6)
     res.attrs = metadata.override(
-        t_sfc.metadata, shortName="T", typeOfLevel="isobaricInPa"
+        t_sfc.message_b64, shortName="T", typeOfLevel="isobaricInPa"
     )
     res = _assign_vcoord(res, p_target)
     return res
@@ -117,7 +117,7 @@ def extrapolate_geopotential_sfc2p(
         1 + y / 2 + (y**2) / 6
     )
     res.attrs = metadata.override(
-        t_sfc.metadata, shortName="FI", typeOfLevel="isobaricInPa"
+        t_sfc.message_b64, shortName="FI", typeOfLevel="isobaricInPa"
     )
     res = _assign_vcoord(res, p_target)
     return res
@@ -161,7 +161,7 @@ def extrapolate_k2p(
 
     """
     return _assign_vcoord(field[{"z": [-1]}], p_target).assign_attrs(
-        metadata.override(field.metadata, typeOfLevel="isobaricInPa")
+        metadata.override(field.message_b64, typeOfLevel="isobaricInPa")
     )
 
 

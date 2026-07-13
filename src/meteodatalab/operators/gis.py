@@ -238,13 +238,13 @@ def vref_rot2geolatlon(
         xr.DataArray(
             u_g,
             attrs=metadata.override(
-                u.metadata, resolutionAndComponentFlags=resolution_components_flags
+                u.message_b64, resolutionAndComponentFlags=resolution_components_flags
             ),
         ),
         xr.DataArray(
             v_g,
             attrs=metadata.override(
-                v.metadata, resolutionAndComponentFlags=resolution_components_flags
+                v.message_b64, resolutionAndComponentFlags=resolution_components_flags
             ),
         ),
     )

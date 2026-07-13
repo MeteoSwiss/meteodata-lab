@@ -1,6 +1,7 @@
 """Manage GRIB metadata."""
 
 # Standard library
+import base64
 import dataclasses as dc
 import logging
 import typing
@@ -8,6 +9,8 @@ import typing
 # Third-party
 import numpy as np
 import xarray as xr
+from earthkit.data import Field
+from earthkit.data.field.grib.create import create_grib_field_from_message
 
 # Local
 from . import grib_decoder
@@ -22,70 +25,78 @@ VCOORD_TYPE = {
 }
 
 
-def extract(metadata: dict[str, typing.Any]) -> dict[str, typing.Any]:
-    if metadata.get("gridType") == "unstructured_grid":
+def extract(field: Field) -> dict[str, typing.Any]:
+    """Extract GRIB field metadata.
+
+    Parameters
+    ----------
+    field : Field
+        GRIB field from which to extract metadata.
+
+    Returns
+    -------
+    dict[str, Any]
+        Dictionary containing parameter, geography, vref, vcoord_type,
+        and origin_z metadata extracted from the field.
+
+    """
+    if field.metadata("gridType") == "unstructured_grid":
         vref_flag = False
     else:
         [vref_flag] = grib_decoder.get_code_flag(
-            metadata.get("resolutionAndComponentFlags"), [5]
+            typing.cast(int, field.metadata("resolutionAndComponentFlags")), [5]
         )
 
-    level_type = metadata.get("typeOfLevel")
+    level_type = typing.cast(str, field.metadata("typeOfLevel"))
     vcoord_type, zshift = VCOORD_TYPE.get(level_type, (level_type, 0.0))
 
-    parameter = metadata.get("parameter")
-    geography = metadata.get("geography")
-    if hasattr(metadata, "as_namespace"):
-        if not parameter:
-            parameter = metadata.as_namespace("parameter")
-        if not geography:
-            geography = metadata.as_namespace("geography")
-    if not parameter:
-        parameter = {
-            k: v for k, v in metadata.items()
-            if k in _PARAMETER_KEYS
-        }
-    if not geography:
-        geography = {
-            k: v for k, v in metadata.items()
-            if k in _GEOGRAPHY_KEYS
-        }
-
     return {
-        "parameter": parameter,
-        "geography": geography,
+        "parameter": field.parameter.to_dict(),
+        "geography": field.geography.to_dict(),
         "vref": "native" if vref_flag else "geo",
         "vcoord_type": vcoord_type,
         "origin_z": zshift,
+        "uses_icon_grid": _uses_icon_grid(field),
     }
 
 
-_PARAMETER_KEYS = {
-    "shortName", "paramId", "name", "units", "centre",
-    "centreDescription", "classOfModel", "typeOfGeneratingProcess",
-    "generatingProcessIdentifier", "backgroundForecastGenerationProcessId",
-    "numberOfForecastInAn Ensemble", "typeOfEnsembleForecast",
-    "numberOfMembersInEnsemble", "perturbationNumber",
-    "statisticalProcessIdentifier", "experimentVersionNumber",
-    "dataSource", "abridgedGrbit", "missingValue",
-}
+def serialise_field(field: Field) -> str:
+    """Serialise a GRIB field to a base64-encoded string.
 
-_GEOGRAPHY_KEYS = {
-    "Nx", "Ny", "Ni", "Nj", "gridType",
-    "longitudeOfFirstGridPointInDegrees", "latitudeOfFirstGridPointInDegrees",
-    "longitudeOfLastGridPointInDegrees", "latitudeOfLastGridPointInDegrees",
-    "iDirectionIncrementInDegrees", "jDirectionIncrementInDegrees",
-    "iScansPositively", "iScansNegatively", "jScansPositively", "jPointsAreConsecutive",
-    "longitudeOfSouthernPoleInDegrees", "latitudeOfSouthernPoleInDegrees",
-    "numberOfPoints", "rows", "columns",
-    "angleOfRotationOfFirstGridPointInDegrees", "angleOfRotationInDegrees",
-    "resolutionAndComponentFlags",
-    "earthRadius", "reducedGaussianNumberOfRows",
-    "reducedGaussianNumberOfColumns",
-}
+    Parameters
+    ----------
+    field : Field
+        GRIB field to serialise.
+
+    Returns
+    -------
+    str
+        Base64-encoded GRIB message.
+
+    """
+    message = field._get_grib().message(deflate=True)
+    return base64.b64encode(message).decode()
 
 
-def override(metadata: dict[str, typing.Any], **kwargs: typing.Any) -> dict[str, typing.Any]:
+def deserialise_field(value: str) -> Field:
+    """Deserialise a base64-encoded GRIB message to a Field object.
+
+    Parameters
+    ----------
+    value : str
+        Base64-encoded GRIB message.
+
+    Returns
+    -------
+    Field
+        GRIB field with no values loaded.
+
+    """
+    message = base64.b64decode(value.encode())
+    return create_grib_field_from_message(message, no_values=True)
+
+
+def override(message: str, **kwargs: typing.Any) -> dict[str, typing.Any]:
     """Override GRIB metadata.
 
     Note that no special consideration is made for maintaining consistency when
@@ -94,10 +105,10 @@ def override(metadata: dict[str, typing.Any], **kwargs: typing.Any) -> dict[str,
 
     Parameters
     ----------
-    metadata : dict[str, Any]
-        Metadata dict of the input GRIB metadata
+    metadata : Metadata
+        Metadata of the input GRIB metadata
     kwargs : Any
-        Keyword arguments to override in the metadata
+        Keyword arguments forwarded to earthkit-data GribMetadata override method
 
     Returns
     -------
@@ -105,17 +116,18 @@ def override(metadata: dict[str, typing.Any], **kwargs: typing.Any) -> dict[str,
         Updated metadata along with the geography and parameter namespaces
 
     """
-    if metadata.get("editionNumber", 1) == 1:
+    field = deserialise_field(message)
+    if field.metadata("editionNumber") == 1:
         return {
-            "metadata": metadata,
-            **extract(metadata),
+            "message_b64": message,
+            **extract(field),
         }
 
-    md = metadata | kwargs
+    field.set(kwargs, sync=True)
 
     return {
-        "metadata": md,
-        **extract(md),
+        "message_b64": serialise_field(field),
+        **extract(field),
     }
 
 
@@ -136,7 +148,7 @@ class Grid:
     lat_first_grid_point: float
 
 
-def load_grid_reference(metadata: dict[str, typing.Any]) -> Grid:
+def load_grid_reference(field: Field) -> Grid:
     """Construct a grid from a reference parameter.
 
     Parameters
@@ -151,8 +163,8 @@ def load_grid_reference(metadata: dict[str, typing.Any]) -> Grid:
 
     """
     return Grid(
-        metadata["longitudeOfFirstGridPointInDegrees"],
-        metadata["latitudeOfFirstGridPointInDegrees"],
+        field.metadata("longitudeOfFirstGridPointInDegrees"),
+        field.metadata("latitudeOfFirstGridPointInDegrees"),
     )
 
 
@@ -186,7 +198,7 @@ def compute_origin(ref_grid: Grid, field: xr.DataArray) -> dict[str, float]:
     }
 
 
-def _uses_icon_grid(metadata: dict[str, typing.Any]) -> bool:
+def _uses_icon_grid(field: Field) -> bool:
     """Determine if the data is on a MeteoSwiss ICON grid.
 
     Parameters
@@ -201,12 +213,9 @@ def _uses_icon_grid(metadata: dict[str, typing.Any]) -> bool:
 
     """
     return (
-        metadata.get("centre", "") == "lssw"
-        and (
-            metadata.get("generatingProcessIdentifier", 0) == 141
-            or metadata.get("generatingProcessIdentifier", 0) == 142
-        )
-        and metadata.get("gridType") == "unstructured_grid"
+        field.metadata("centre") == "lssw"
+        and field.metadata("generatingProcessIdentifier") in (141, 142)
+        and field.metadata("gridType") == "unstructured_grid"
     )
 
 
@@ -229,7 +238,9 @@ def set_origin_xy(ds: dict[str, xr.DataArray], ref_param: str) -> None:
     if ref_param not in ds:
         raise KeyError(f"ref_param {ref_param} not present in dataset.")
 
-    if _uses_icon_grid(ds[ref_param].metadata):
+    ref_field = deserialise_field(ds[ref_param].message_b64)
+
+    if _uses_icon_grid(ref_field):
         _logger.warning(
             "Data is on the ICON grid, not setting origin values. "
             "Setting the origin components is intended for support with horizontal "
@@ -237,45 +248,18 @@ def set_origin_xy(ds: dict[str, xr.DataArray], ref_param: str) -> None:
         )
         return
 
-    ref_grid = load_grid_reference(ds[ref_param].metadata)
+    ref_grid = load_grid_reference(ref_field)
     for field in ds.values():
         field.attrs |= compute_origin(ref_grid, field)
 
 
-def extract_pv(metadata: dict[str, typing.Any]) -> dict[str, xr.DataArray]:
-    """Extract hybrid level coefficients.
-
-    Parameters
-    ----------
-    metadata : Metadata
-        GRIB metadata containing the pv metadata.
-
-    Returns
-    -------
-    dict[str, xarray.DataArray]
-        Hybrid level coefficients.
-
-    """
-    pv = metadata.get("pv")
-
-    if pv is None:
-        return {}
-
-    i = len(pv) // 2
-    return {
-        "ak": xr.DataArray(pv[:i], dims="z"),
-        "bk": xr.DataArray(pv[i:], dims="z"),
-    }
-
-
-def extract_hcoords(metadata: dict[str, typing.Any]) -> dict[str, xr.DataArray]:
+def extract_hcoords(message_b64: str) -> dict[str, xr.DataArray]:
     """Extract horizontal coordinates.
 
     Parameters
     ----------
-    metadata : dict[str, Any]
-        GRIB metadata dict containing the grid definition. May have a
-        'geography' key with a geography component object.
+    metadata : str
+        GRIB metadata containing the grid definition.
 
     Returns
     -------
@@ -283,19 +267,11 @@ def extract_hcoords(metadata: dict[str, typing.Any]) -> dict[str, xr.DataArray]:
         Horizontal coordinates in geolatlon.
 
     """
-    geo = metadata.get("geography")
-    if geo is None and hasattr(metadata, "geography"):
-        geo = metadata.geography
-    if geo is None:
-        raise ValueError(
-            "Metadata does not contain a geography component. "
-            "Horizontal coordinates cannot be extracted."
-        )
+    field = deserialise_field(message_b64)
+    lat, lon = field.geography.latlons()
     return {
-        "lat": xr.DataArray(dims=("y", "x"), data=geo.latitudes().reshape(geo.shape())),
-        "lon": xr.DataArray(
-            dims=("y", "x"), data=geo.longitudes().reshape(geo.shape())
-        ),
+        "lat": xr.DataArray(dims=("y", "x"), data=lat),
+        "lon": xr.DataArray(dims=("y", "x"), data=lon),
     }
 
 
@@ -318,7 +294,7 @@ def is_staggered_horizontal(field: xr.DataArray) -> bool:
         True if the field is on a staggered horizontal grid.
 
     """
-    if _uses_icon_grid(field.metadata):
+    if field.attrs.get("uses_icon_grid", False):
         return False
 
     if "origin_x" not in field.attrs or "origin_y" not in field.attrs:

@@ -88,7 +88,7 @@ def clip_lateral_boundary_strip(
     return xr.DataArray(
         field,
         attrs=metadata.override(
-            field.metadata,
+            field.message_b64,
             uuidOfHGrid=new_uuid.hex,
             numberOfDataPoints=field.size,
         ),

@@ -12,5 +12,5 @@ def compute_theta(p, t):
     p0 = 1.0e5
     return xr.DataArray(
         data=(p0 / p) ** pc.rdocp * t,
-        attrs=metadata.override(p.metadata, shortName="PT"),
+        attrs=metadata.override(p.message_b64, shortName="PT"),
     )

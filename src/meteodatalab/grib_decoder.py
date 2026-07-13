@@ -320,11 +320,11 @@ def save(
         If the field does not have a metadata attribute.
 
     """
-    if not hasattr(field, "metadata"):
+    if not hasattr(field, "message_b64"):
         msg = "The metadata attribute is required to write to the GRIB format."
         raise ValueError(msg)
 
-    md = field.metadata
+    grib_field = metadata.deserialise_field(field.message_b64)
 
     idx = {
         dim: field.coords[key]
@@ -333,10 +333,13 @@ def save(
     }
 
     step_unit = UnitOfTime.MINUTE
-    time_range_unit = UnitOfTime(md.get("indicatorOfUnitForTimeRange", 255)).unit
-    time_range = _to_timedelta(md.get("lengthOfTimeRange", 0), unit=time_range_unit)
+    time_range_unit = grib_field.get("metadata.indicatorOfUnitForTimeRange", 255)
+    time_range = _to_timedelta(
+        grib_field.get("metadata.lengthOfTimeRange", 0),
+        unit=UnitOfTime(time_range_unit).unit,
+    )
 
-    if md.get("numberOfTimeRange", 1) != 1:
+    if grib_field.get("metadata.numberOfTimeRange", 1) != 1:
         raise NotImplementedError("Unsupported value for numberOfTimeRange")
 
     def to_grib(loc: dict[str, xr.DataArray]):
@@ -354,13 +357,15 @@ def save(
             "dataTime": loc["ref_time"].dt.strftime("%H%M").item(),
         }
 
+    encoder = ekd.create_encoder("grib", template=grib_field)
     for idx_slice in product(*idx.values()):
         loc = {dim: value for dim, value in zip(idx.keys(), idx_slice)}
-        array = field.sel(loc).values
-        metadata = md.override(to_grib(loc))
-
-        fs = ekd.FieldList.from_numpy(array, metadata)
-        fs.write(file_handle, bits_per_value=bits_per_value)
+        encoded = encoder.encode(
+            values=field.sel(loc).values,
+            bitsPerValue=bits_per_value,
+            **to_grib(loc),
+        )
+        encoded.to_file(file_handle)
 
 
 def get_code_flag(value: int, indices: Sequence[int]) -> list[bool]:

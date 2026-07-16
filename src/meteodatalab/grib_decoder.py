@@ -43,7 +43,7 @@ class ChainGet(UserDict):
 
     def __getitem__(self, key):
         for mapping in self._maps:
-            result = mapping.get(key, default=self._sentinel)
+            result = mapping.get(key, self._sentinel)
             if result is not self._sentinel:
                 return result
         raise KeyError(f"{key} not found")
@@ -113,8 +113,8 @@ def _get_key(field, dims):
     unit = "h" if isinstance(step, int) else None
     extra = {
         "metadata.ref_time": _parse_datetime(
-            field.metadata["dataDate"],
-            field.metadata["dataTime"],
+            field.metadata("dataDate"),
+            field.metadata("dataTime"),
         ),
         "metadata.step": _to_timedelta(step, unit),
     }

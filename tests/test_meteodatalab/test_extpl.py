@@ -30,7 +30,7 @@ def test_extrapolate_sfc2p(data_dir):
     ds = grib_decoder.load(fds, {"param": ["HSURF", "T_2M", "PS", "HHL", "T", "P"]})
     set_origin_xy(ds, ref_param="HHL")
     hfl = destagger(ds["HHL"], "z")
-    fi = (hfl * pc.g).assign_attrs(override(hfl.attrs["metadata"], shortName="FI"))
+    fi = (hfl * pc.g).assign_attrs(override(hfl.attrs["message_b64"], shortName="FI"))
 
     # call extrapolation operator for geopotential
     expected = interpolate_k2p(fi, "linear_in_lnp", ds["P"], [target_p], "hPa").squeeze(
@@ -78,4 +78,4 @@ def test_extrapolate_k2p(data_dir):
     res = extrapolate_k2p(ds["QV"], target_p * 100.0).squeeze("z")
 
     assert_allclose(res, expected)
-    assert res.metadata.get("typeOfLevel") == "isobaricInPa"
+    assert res.vcoord_type == "pressure"

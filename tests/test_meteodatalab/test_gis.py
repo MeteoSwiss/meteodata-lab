@@ -7,7 +7,7 @@ from numpy.testing import assert_allclose
 # First-party
 from meteodatalab.data_source import FileDataSource
 from meteodatalab.grib_decoder import get_code_flag, load
-from meteodatalab.metadata import set_origin_xy
+from meteodatalab.metadata import set_origin_xy, deserialise_field
 from meteodatalab.operators import gis
 
 
@@ -52,8 +52,9 @@ def test_vref_rot2geolatlon(data_dir, fieldextra):
 
     u_g, v_g = gis.vref_rot2geolatlon(ds["U_10M"], ds["V_10M"])
 
+    field = deserialise_field(u_g.message_b64)
     assert get_code_flag(
-        u_g.metadata.get("resolutionAndComponentFlags"),
+        field.metadata("resolutionAndComponentFlags"),
         [3, 4, 5],
     ) == [True, True, False]
     fx_ds = fieldextra("n2geog")

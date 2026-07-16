@@ -50,13 +50,21 @@ def extract(field: Field) -> dict[str, typing.Any]:
     level_type = typing.cast(str, field.metadata("typeOfLevel"))
     vcoord_type, zshift = VCOORD_TYPE.get(level_type, (level_type, 0.0))
 
+    md = typing.cast(
+        dict[str, typing.Any],
+        field.get(
+            collections=["metadata.parameter", "metadata.geography"],
+            output="dict",
+        ),
+    )
     return {
-        "parameter": field.parameter.to_dict(),
-        "geography": field.geography.to_dict(),
+        "parameter": md["metadata.parameter"],
+        "geography": md["metadata.geography"],
         "vref": "native" if vref_flag else "geo",
         "vcoord_type": vcoord_type,
         "origin_z": zshift,
         "uses_icon_grid": _uses_icon_grid(field),
+        "uuidOfHGrid": field.get("metadata.uuidOfHGrid"),
     }
 
 
@@ -123,11 +131,15 @@ def override(message: str, **kwargs: typing.Any) -> dict[str, typing.Any]:
             **extract(field),
         }
 
-    field.set(kwargs, sync=True)
+    overrides = {f"metadata.{key}": value for key, value in kwargs.items()}
+    result = field.set(overrides, sync=True)
+
+    if result is None:
+        raise RuntimeError("failed to override metadata")
 
     return {
-        "message_b64": serialise_field(field),
-        **extract(field),
+        "message_b64": serialise_field(result),
+        **extract(result),
     }
 
 

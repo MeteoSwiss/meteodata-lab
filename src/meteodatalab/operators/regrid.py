@@ -416,7 +416,7 @@ def icon2geolatlon(field: xr.DataArray) -> xr.DataArray:
         Field with data remapped to the geolatlon grid.
 
     """
-    gid = field.metadata.get("uuidOfHGrid")
+    gid = field.attrs.get("uuidOfHGrid")
     coeffs = icon_grid.get_remap_coeffs(gid, "geolatlon")
     indices = coeffs["rbf_B_glbidx"].values
     weights = coeffs["rbf_B_wgt"].values
@@ -451,7 +451,7 @@ def icon2rotlatlon(field: xr.DataArray) -> xr.DataArray:
         Field with data remapped to the rotated latlon grid.
 
     """
-    gid = field.metadata.get("uuidOfHGrid")
+    gid = field.attrs.get("uuidOfHGrid")
     coeffs = icon_grid.get_remap_coeffs(gid, "rotlatlon")
     indices = coeffs["rbf_B_glbidx"].values
     weights = coeffs["rbf_B_wgt"].values
@@ -516,7 +516,8 @@ def _linear_weights_cropped_domain(
 
 
 def _key_maker(field: xr.DataArray, dst: RegularGrid) -> tuple[str, str] | None:
-    md5 = field.metadata.get("md5Section3", None)
+    grib_field = metadata.deserialise_field(field.message_b64)
+    md5 = grib_field.get("metadata.md5Section3", None)
     if md5 is None:
         return None
     return md5, repr(dst)

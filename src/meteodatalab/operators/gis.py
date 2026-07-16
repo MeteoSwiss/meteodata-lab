@@ -221,8 +221,8 @@ def vref_rot2geolatlon(
     if metadata.is_staggered_horizontal(u) or metadata.is_staggered_horizontal(v):
         raise ValueError("The vector fields must be destaggered.")
     if (
-        u.metadata.get("gridDefinitionTemplateNumber") != 1
-        or v.metadata.get("gridDefinitionTemplateNumber") != 1
+        u.geography.get("gridType") != "rotated_ll"
+        or v.geography.get("gridType") != "rotated_ll"
     ):
         raise ValueError("The vector fields must be defined on a rotated lat lon grid.")
 

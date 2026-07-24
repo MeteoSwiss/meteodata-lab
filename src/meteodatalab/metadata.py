@@ -9,8 +9,8 @@ import typing
 # Third-party
 import numpy as np
 import xarray as xr
-from earthkit.data import Field
-from earthkit.data.field.grib.create import create_grib_field_from_message
+from earthkit.data import Field  # type: ignore
+from earthkit.data.field.grib.create import create_grib_field_from_message  # type: ignore
 
 # Local
 from . import grib_decoder

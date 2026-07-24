@@ -103,7 +103,7 @@ def setup_fdb():
 def request_template():
     return {
         "class": "od",
-        "date": "20260709",
+        "date": "20260723",
         "expver": "0001",
         "model": "ICON-CH1-EPS",
         "step": 0,

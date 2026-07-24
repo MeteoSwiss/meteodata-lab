@@ -417,6 +417,10 @@ def icon2geolatlon(field: xr.DataArray) -> xr.DataArray:
 
     """
     gid = field.attrs.get("uuidOfHGrid")
+
+    if gid is None:
+        raise KeyError("Field is missing uuidOfHGrid attribute")
+
     coeffs = icon_grid.get_remap_coeffs(gid, "geolatlon")
     indices = coeffs["rbf_B_glbidx"].values
     weights = coeffs["rbf_B_wgt"].values
@@ -452,6 +456,10 @@ def icon2rotlatlon(field: xr.DataArray) -> xr.DataArray:
 
     """
     gid = field.attrs.get("uuidOfHGrid")
+
+    if gid is None:
+        raise KeyError("Field is missing uuidOfHGrid attribute")
+
     coeffs = icon_grid.get_remap_coeffs(gid, "rotlatlon")
     indices = coeffs["rbf_B_glbidx"].values
     weights = coeffs["rbf_B_wgt"].values

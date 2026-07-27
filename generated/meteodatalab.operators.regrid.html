@@ -2,11 +2,11 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>operators.regrid - meteodata-lab main-3fe5323 documentation</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="operators.atmo" href="meteodatalab.operators.atmo.html" /><link rel="prev" title="operators.lateral_operators" href="meteodatalab.operators.lateral_operators.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>operators.regrid - meteodata-lab main-c9be13a documentation</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="operators.atmo" href="meteodatalab.operators.atmo.html" /><link rel="prev" title="operators.lateral_operators" href="meteodatalab.operators.lateral_operators.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=ad592e98" />
-    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=44020203" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,8 @@
   --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
 }
 </style>
-    <meta property="og:type" content="website"/><meta property="og:title" content="operators.regrid"/>
+    
+  <meta property="og:type" content="website"/><meta property="og:title" content="operators.regrid"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -106,16 +107,16 @@ data-aria-dark="Switch to auto color mode">
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
 <li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid"><code class="docutils literal notranslate"><span class="pre">RegularGrid</span></code></a><ul>
-<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.crs"><code class="docutils literal notranslate">crs</span></code></a></li>
-<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.nx"><code class="docutils literal notranslate">nx</span></code></a></li>
-<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.ny"><code class="docutils literal notranslate">ny</span></code></a></li>
-<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.xmin"><code class="docutils literal notranslate">xmin</span></code></a></li>
-<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.xmax"><code class="docutils literal notranslate">xmax</span></code></a></li>
-<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.ymin"><code class="docutils literal notranslate">ymin</span></code></a></li>
-<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.ymax"><code class="docutils literal notranslate">ymax</span></code></a></li>
-<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.from_field"><code class="docutils literal notranslate">from_field()</span></code></a></li>
-<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.parse_regrid_operator"><code class="docutils literal notranslate">parse_regrid_operator()</span></code></a></li>
-<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.to_crs"><code class="docutils literal notranslate">to_crs()</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.crs"><code class="docutils literal notranslate"><span class="pre">RegularGrid.crs</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.nx"><code class="docutils literal notranslate"><span class="pre">RegularGrid.nx</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.ny"><code class="docutils literal notranslate"><span class="pre">RegularGrid.ny</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.xmin"><code class="docutils literal notranslate"><span class="pre">RegularGrid.xmin</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.xmax"><code class="docutils literal notranslate"><span class="pre">RegularGrid.xmax</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.ymin"><code class="docutils literal notranslate"><span class="pre">RegularGrid.ymin</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.ymax"><code class="docutils literal notranslate"><span class="pre">RegularGrid.ymax</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.from_field"><code class="docutils literal notranslate"><span class="pre">RegularGrid.from_field()</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.parse_regrid_operator"><code class="docutils literal notranslate"><span class="pre">RegularGrid.parse_regrid_operator()</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid.to_crs"><code class="docutils literal notranslate"><span class="pre">RegularGrid.to_crs()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#meteodatalab.operators.regrid.icon2geolatlon"><code class="docutils literal notranslate"><span class="pre">icon2geolatlon()</span></code></a></li>
@@ -157,7 +158,7 @@ data-aria-dark="Switch to auto color mode">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
           <section id="module-meteodatalab.operators.regrid">
-<span id="operators-regrid"></span><h1>operators.regrid<a class="headerlink" href="#module-meteodatalab.operators.regrid" title="Link to this heading">¶</a></h1>
+<span id="operators-regrid"></span><h1>operators.regrid<a class="headerlink" href="#module-meteodatalab.operators.regrid" title="Link to this heading">#</a></h1>
 <p>Regridding operator.</p>
 <p class="rubric">Functions</p>
 <div class="table-wrapper autosummary longtable docutils container">
@@ -190,11 +191,11 @@ data-aria-dark="Switch to auto color mode">
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="meteodatalab.operators.regrid.RegularGrid">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.regrid.</span></span><span class="sig-name descname"><span class="pre">RegularGrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CRS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ny</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/operators/regrid.html#RegularGrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.regrid.</span></span><span class="sig-name descname"><span class="pre">RegularGrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CRS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ny</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/operators/regrid.html#RegularGrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid" title="Link to this definition">#</a></dt>
 <dd><p>Class defining a regular grid.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="meteodatalab.operators.regrid.RegularGrid.crs">
-<span class="sig-name descname"><span class="pre">crs</span></span><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.crs" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">crs</span></span><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.crs" title="Link to this definition">#</a></dt>
 <dd><p>Coordinate reference system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -205,7 +206,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="meteodatalab.operators.regrid.RegularGrid.nx">
-<span class="sig-name descname"><span class="pre">nx</span></span><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.nx" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">nx</span></span><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.nx" title="Link to this definition">#</a></dt>
 <dd><p>Number of grid points in the x direction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -216,7 +217,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="meteodatalab.operators.regrid.RegularGrid.ny">
-<span class="sig-name descname"><span class="pre">ny</span></span><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.ny" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">ny</span></span><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.ny" title="Link to this definition">#</a></dt>
 <dd><p>Number of grid points in the y direction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -227,7 +228,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="meteodatalab.operators.regrid.RegularGrid.xmin">
-<span class="sig-name descname"><span class="pre">xmin</span></span><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.xmin" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">xmin</span></span><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.xmin" title="Link to this definition">#</a></dt>
 <dd><p>Coordinate of the first grid point in the x direction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -238,7 +239,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="meteodatalab.operators.regrid.RegularGrid.xmax">
-<span class="sig-name descname"><span class="pre">xmax</span></span><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.xmax" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">xmax</span></span><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.xmax" title="Link to this definition">#</a></dt>
 <dd><p>Coordinate of the last grid point in the x direction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -249,7 +250,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="meteodatalab.operators.regrid.RegularGrid.ymin">
-<span class="sig-name descname"><span class="pre">ymin</span></span><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.ymin" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">ymin</span></span><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.ymin" title="Link to this definition">#</a></dt>
 <dd><p>Coordinate of the first grid point in the y direction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -260,7 +261,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="meteodatalab.operators.regrid.RegularGrid.ymax">
-<span class="sig-name descname"><span class="pre">ymax</span></span><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.ymax" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">ymax</span></span><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.ymax" title="Link to this definition">#</a></dt>
 <dd><p>Coordinate of the last grid point in the y direction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -271,7 +272,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py method">
 <dt class="sig sig-object py" id="meteodatalab.operators.regrid.RegularGrid.from_field">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/operators/regrid.html#RegularGrid.from_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.from_field" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/operators/regrid.html#RegularGrid.from_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.from_field" title="Link to this definition">#</a></dt>
 <dd><p>Extract grid parameters from grib metadata.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -282,7 +283,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py method">
 <dt class="sig sig-object py" id="meteodatalab.operators.regrid.RegularGrid.parse_regrid_operator">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_regrid_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/operators/regrid.html#RegularGrid.parse_regrid_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.parse_regrid_operator" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_regrid_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/operators/regrid.html#RegularGrid.parse_regrid_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.parse_regrid_operator" title="Link to this definition">#</a></dt>
 <dd><p>Parse fieldextra out_regrid_target string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -294,7 +295,7 @@ i.e. crs,xmin,ymin,xmay,ymax,dx,dy.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="meteodatalab.operators.regrid.RegularGrid.to_crs">
-<span class="sig-name descname"><span class="pre">to_crs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/operators/regrid.html#RegularGrid.to_crs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.to_crs" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_crs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/operators/regrid.html#RegularGrid.to_crs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.regrid.RegularGrid.to_crs" title="Link to this definition">#</a></dt>
 <dd><p>Return a new grid in the given coordinate reference system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -313,7 +314,7 @@ i.e. crs,xmin,ymin,xmay,ymax,dx,dy.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="meteodatalab.operators.regrid.icon2geolatlon">
-<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.regrid.</span></span><span class="sig-name descname"><span class="pre">icon2geolatlon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataArray</span></span></span><a class="reference internal" href="../_modules/meteodatalab/operators/regrid.html#icon2geolatlon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.regrid.icon2geolatlon" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.regrid.</span></span><span class="sig-name descname"><span class="pre">icon2geolatlon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataArray</span></span></span><a class="reference internal" href="../_modules/meteodatalab/operators/regrid.html#icon2geolatlon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.regrid.icon2geolatlon" title="Link to this definition">#</a></dt>
 <dd><p>Remap ICON native grid data to the geolatlon grid.</p>
 <p>The interpolation is done with pre-computed weights based on the RBF
 interpolation method as implemented in icon-tools from the DWD.</p>
@@ -332,7 +333,7 @@ interpolation method as implemented in icon-tools from the DWD.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="meteodatalab.operators.regrid.icon2rotlatlon">
-<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.regrid.</span></span><span class="sig-name descname"><span class="pre">icon2rotlatlon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataArray</span></span></span><a class="reference internal" href="../_modules/meteodatalab/operators/regrid.html#icon2rotlatlon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.regrid.icon2rotlatlon" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.regrid.</span></span><span class="sig-name descname"><span class="pre">icon2rotlatlon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataArray</span></span></span><a class="reference internal" href="../_modules/meteodatalab/operators/regrid.html#icon2rotlatlon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.regrid.icon2rotlatlon" title="Link to this definition">#</a></dt>
 <dd><p>Remap ICON native grid data to the rotated latlon grid.</p>
 <p>The interpolation is done with pre-computed weights based on the RBF
 interpolation method as implemented in icon-tools from the DWD.</p>
@@ -351,7 +352,7 @@ interpolation method as implemented in icon-tools from the DWD.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="meteodatalab.operators.regrid.iconremap">
-<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.regrid.</span></span><span class="sig-name descname"><span class="pre">iconremap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid" title="meteodatalab.operators.regrid.RegularGrid"><span class="pre">RegularGrid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'byc'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'byc'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataArray</span></span></span><a class="reference internal" href="../_modules/meteodatalab/operators/regrid.html#iconremap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.regrid.iconremap" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.regrid.</span></span><span class="sig-name descname"><span class="pre">iconremap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid" title="meteodatalab.operators.regrid.RegularGrid"><span class="pre">RegularGrid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'byc'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'byc'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataArray</span></span></span><a class="reference internal" href="../_modules/meteodatalab/operators/regrid.html#iconremap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.regrid.iconremap" title="Link to this definition">#</a></dt>
 <dd><p>Remap ICON native grid data to a regular grid.</p>
 <p>Note that the interpolation method is linear.</p>
 <dl class="field-list simple">
@@ -376,7 +377,7 @@ interpolation method as implemented in icon-tools from the DWD.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="meteodatalab.operators.regrid.regrid">
-<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.regrid.</span></span><span class="sig-name descname"><span class="pre">regrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid" title="meteodatalab.operators.regrid.RegularGrid"><span class="pre">RegularGrid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">resampling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Resampling</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid" title="meteodatalab.operators.regrid.RegularGrid"><span class="pre">RegularGrid</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/operators/regrid.html#regrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.regrid.regrid" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.regrid.</span></span><span class="sig-name descname"><span class="pre">regrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid" title="meteodatalab.operators.regrid.RegularGrid"><span class="pre">RegularGrid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">resampling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Resampling</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#meteodatalab.operators.regrid.RegularGrid" title="meteodatalab.operators.regrid.RegularGrid"><span class="pre">RegularGrid</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/operators/regrid.html#regrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.regrid.regrid" title="Link to this definition">#</a></dt>
 <dd><p>Regrid a field.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -442,8 +443,8 @@ interpolation method as implemented in icon-tools from the DWD.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=049bfc96"></script>
+      <script src="../_static/documentation_options.js?v=5c1e3c2a"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../_static/shibuya.js?v=cac61aee"></script></body>
+      <script src="../_static/shibuya.js?v=50760d75"></script></body>
 </html>

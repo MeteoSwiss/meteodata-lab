@@ -2,11 +2,11 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.data_source - meteodata-lab main-3fe5323 documentation</title><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.data_source - meteodata-lab main-c9be13a documentation</title><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=ad592e98" />
-    <link rel="stylesheet" type="text/css" href="../../_static/shibuya.css?v=44020203" />
+    <link rel="stylesheet" type="text/css" href="../../_static/shibuya.css?v=2ceb65ce" />
     <link media="print" rel="stylesheet" type="text/css" href="../../_static/print.css?v=20ff2c19" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,8 @@
   --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
 }
 </style>
-    <meta property="og:type" content="website"/><meta property="og:title" content="meteodatalab.data_source"/>
+    
+  <meta property="og:type" content="website"/><meta property="og:title" content="meteodatalab.data_source"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -276,7 +277,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="125">    <span class="k">def</span><span class="w"> </span><span class="nf">_retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 </span><span data-line="126">        <span class="n">req_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_template</span> <span class="o">|</span> <span class="n">request</span>
 </span><span data-line="127">        <span class="n">req</span> <span class="o">=</span> <span class="n">mars</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="o">**</span><span class="n">req_kwargs</span><span class="p">)</span>
-</span><span data-line="128">        <span class="k">yield from</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">&quot;fdb&quot;</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">to_fdb</span><span class="p">(),</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+</span><span data-line="128">        <span class="k">yield from</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">&quot;fdb&quot;</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">to_fdb</span><span class="p">(),</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">to_fieldlist</span><span class="p">()</span></div>
 
 </span><span data-line="129">
 </span><span data-line="130">
@@ -291,8 +292,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="137">        <span class="k">if</span> <span class="n">req_kwargs</span><span class="p">:</span>
 </span><span data-line="138">            <span class="c1"># validate only if there is a request</span>
 </span><span data-line="139">            <span class="n">_</span> <span class="o">=</span> <span class="n">mars</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="o">**</span><span class="n">req_kwargs</span><span class="p">)</span>
-</span><span data-line="140">        <span class="n">fs</span> <span class="o">=</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">&quot;file&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">datafiles</span><span class="p">)</span>
-</span><span data-line="141">        <span class="k">yield from</span> <span class="n">fs</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">req_kwargs</span><span class="p">)</span></div>
+</span><span data-line="140">        <span class="n">fs</span> <span class="o">=</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">&quot;file&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">datafiles</span><span class="p">)</span><span class="o">.</span><span class="n">to_fieldlist</span><span class="p">()</span>
+</span><span data-line="141">        <span class="k">yield from</span> <span class="n">fs</span><span class="o">.</span><span class="n">sel</span><span class="p">({</span><span class="sa">f</span><span class="s2">&quot;metadata.</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">req_kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span></div>
 
 </span><span data-line="142">
 </span><span data-line="143">
@@ -320,7 +321,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="163">            <span class="n">asynchronous</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span data-line="164">        <span class="p">)</span>
 </span><span data-line="165">        <span class="n">urls</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pointers</span><span class="p">]</span>
-</span><span data-line="166">        <span class="k">yield from</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="n">urls</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+</span><span data-line="166">        <span class="k">yield from</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="n">urls</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">to_fieldlist</span><span class="p">()</span></div>
 
 </span><span data-line="167">
 </span><span data-line="168">
@@ -332,8 +333,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="172">
 </span><span data-line="173">    <span class="k">def</span><span class="w"> </span><span class="nf">_retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 </span><span data-line="174">        <span class="n">req_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_template</span> <span class="o">|</span> <span class="n">request</span>
-</span><span data-line="175">        <span class="n">fs</span> <span class="o">=</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">urls</span><span class="p">)</span>
-</span><span data-line="176">        <span class="k">yield from</span> <span class="n">fs</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="o">**</span><span class="n">req_kwargs</span><span class="p">)</span></div>
+</span><span data-line="175">        <span class="n">fs</span> <span class="o">=</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">urls</span><span class="p">)</span><span class="o">.</span><span class="n">to_fieldlist</span><span class="p">()</span>
+</span><span data-line="176">        <span class="k">yield from</span> <span class="n">fs</span><span class="o">.</span><span class="n">sel</span><span class="p">({</span><span class="sa">f</span><span class="s2">&quot;metadata.</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">req_kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span></div>
 
 </span><span data-line="177">
 </span><span data-line="178">
@@ -345,7 +346,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="182">
 </span><span data-line="183">    <span class="k">def</span><span class="w"> </span><span class="nf">_retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 </span><span data-line="184">        <span class="n">req_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_template</span> <span class="o">|</span> <span class="n">request</span>
-</span><span data-line="185">        <span class="n">fs</span> <span class="o">=</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">&quot;stream&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="p">)</span>
+</span><span data-line="185">        <span class="n">fs</span> <span class="o">=</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">&quot;stream&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="p">)</span><span class="o">.</span><span class="n">to_fieldlist</span><span class="p">()</span>
 </span><span data-line="186">        <span class="k">if</span> <span class="n">req_kwargs</span><span class="p">:</span>
 </span><span data-line="187">            <span class="n">_</span> <span class="o">=</span> <span class="n">mars</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="o">**</span><span class="n">req_kwargs</span><span class="p">)</span>
 </span><span data-line="188">            <span class="k">yield from</span> <span class="p">(</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fs</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_match_request</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">req_kwargs</span><span class="p">))</span>
@@ -355,17 +356,16 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="192">    <span class="nd">@staticmethod</span>
 </span><span data-line="193">    <span class="k">def</span><span class="w"> </span><span class="nf">_match_request</span><span class="p">(</span><span class="n">field</span><span class="p">:</span> <span class="n">ekd</span><span class="o">.</span><span class="n">Field</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 </span><span data-line="194"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the field matches the request.&quot;&quot;&quot;</span>
-</span><span data-line="195">        <span class="n">md</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="p">()</span>
-</span><span data-line="196">        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-</span><span data-line="197">            <span class="n">field_value</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-</span><span data-line="198">            <span class="k">if</span> <span class="n">md</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="199">                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Metadata key &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; not found in field metadata.&quot;</span><span class="p">)</span>
-</span><span data-line="200">            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Container</span><span class="p">):</span>
-</span><span data-line="201">                <span class="k">if</span> <span class="n">field_value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-</span><span data-line="202">                    <span class="k">return</span> <span class="kc">False</span>
-</span><span data-line="203">            <span class="k">elif</span> <span class="n">field_value</span> <span class="o">!=</span> <span class="n">value</span><span class="p">:</span>
-</span><span data-line="204">                <span class="k">return</span> <span class="kc">False</span>
-</span><span data-line="205">        <span class="k">return</span> <span class="kc">True</span></div>
+</span><span data-line="195">        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span data-line="196">            <span class="n">field_value</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;metadata.</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</span><span data-line="197">            <span class="k">if</span> <span class="n">field_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="198">                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Metadata key &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; not found in field metadata.&quot;</span><span class="p">)</span>
+</span><span data-line="199">            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Container</span><span class="p">):</span>
+</span><span data-line="200">                <span class="k">if</span> <span class="n">field_value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+</span><span data-line="201">                    <span class="k">return</span> <span class="kc">False</span>
+</span><span data-line="202">            <span class="k">elif</span> <span class="n">field_value</span> <span class="o">!=</span> <span class="n">value</span><span class="p">:</span>
+</span><span data-line="203">                <span class="k">return</span> <span class="kc">False</span>
+</span><span data-line="204">        <span class="k">return</span> <span class="kc">True</span></div>
 
 </span></pre></div>
         </article><button class="back-to-top" type="button">
@@ -394,8 +394,8 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=049bfc96"></script>
+      <script src="../../_static/documentation_options.js?v=5c1e3c2a"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../../_static/shibuya.js?v=cac61aee"></script></body>
+      <script src="../../_static/shibuya.js?v=50760d75"></script></body>
 </html>

@@ -15,12 +15,13 @@
    .. autosummary::
    
       compute_origin
+      deserialise_field
       extract
       extract_hcoords
-      extract_pv
       is_staggered_horizontal
       load_grid_reference
       override
+      serialise_field
       set_origin_xy
    
    

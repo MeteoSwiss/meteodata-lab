@@ -2,11 +2,11 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>operators.gis - meteodata-lab main-3fe5323 documentation</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="operators.lateral_operators" href="meteodatalab.operators.lateral_operators.html" /><link rel="prev" title="operators.crop" href="meteodatalab.operators.crop.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>operators.gis - meteodata-lab main-c9be13a documentation</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="operators.lateral_operators" href="meteodatalab.operators.lateral_operators.html" /><link rel="prev" title="operators.crop" href="meteodatalab.operators.crop.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=ad592e98" />
-    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=44020203" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,8 @@
   --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
 }
 </style>
-    <meta property="og:type" content="website"/><meta property="og:title" content="operators.gis"/>
+    
+  <meta property="og:type" content="website"/><meta property="og:title" content="operators.gis"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -106,10 +107,10 @@ data-aria-dark="Switch to auto color mode">
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
 <li><a class="reference internal" href="#meteodatalab.operators.gis.RotLatLonGrid"><code class="docutils literal notranslate"><span class="pre">RotLatLonGrid</span></code></a><ul>
-<li><a class="reference internal" href="#meteodatalab.operators.gis.RotLatLonGrid.rlon"><code class="docutils literal notranslate">rlon</span></code></a></li>
-<li><a class="reference internal" href="#meteodatalab.operators.gis.RotLatLonGrid.rlat"><code class="docutils literal notranslate">rlat</span></code></a></li>
-<li><a class="reference internal" href="#meteodatalab.operators.gis.RotLatLonGrid.north_pole_lon"><code class="docutils literal notranslate">north_pole_lon</span></code></a></li>
-<li><a class="reference internal" href="#meteodatalab.operators.gis.RotLatLonGrid.north_pole_lat"><code class="docutils literal notranslate">north_pole_lat</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.gis.RotLatLonGrid.rlon"><code class="docutils literal notranslate"><span class="pre">RotLatLonGrid.rlon</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.gis.RotLatLonGrid.rlat"><code class="docutils literal notranslate"><span class="pre">RotLatLonGrid.rlat</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.gis.RotLatLonGrid.north_pole_lon"><code class="docutils literal notranslate"><span class="pre">RotLatLonGrid.north_pole_lon</span></code></a></li>
+<li><a class="reference internal" href="#meteodatalab.operators.gis.RotLatLonGrid.north_pole_lat"><code class="docutils literal notranslate"><span class="pre">RotLatLonGrid.north_pole_lat</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#meteodatalab.operators.gis.geolatlon2swiss"><code class="docutils literal notranslate"><span class="pre">geolatlon2swiss()</span></code></a></li>
@@ -151,7 +152,7 @@ data-aria-dark="Switch to auto color mode">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
           <section id="module-meteodatalab.operators.gis">
-<span id="operators-gis"></span><h1>operators.gis<a class="headerlink" href="#module-meteodatalab.operators.gis" title="Link to this heading">¶</a></h1>
+<span id="operators-gis"></span><h1>operators.gis<a class="headerlink" href="#module-meteodatalab.operators.gis" title="Link to this heading">#</a></h1>
 <p>Geospatial logic.</p>
 <p class="rubric">Functions</p>
 <div class="table-wrapper autosummary longtable docutils container">
@@ -184,11 +185,11 @@ data-aria-dark="Switch to auto color mode">
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="meteodatalab.operators.gis.RotLatLonGrid">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.gis.</span></span><span class="sig-name descname"><span class="pre">RotLatLonGrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rlon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rlat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">north_pole_lon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">north_pole_lat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/operators/gis.html#RotLatLonGrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.gis.RotLatLonGrid" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.gis.</span></span><span class="sig-name descname"><span class="pre">RotLatLonGrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rlon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rlat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">north_pole_lon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">north_pole_lat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meteodatalab/operators/gis.html#RotLatLonGrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.gis.RotLatLonGrid" title="Link to this definition">#</a></dt>
 <dd><p>Class representing a rotated lat lon grid.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="meteodatalab.operators.gis.RotLatLonGrid.rlon">
-<span class="sig-name descname"><span class="pre">rlon</span></span><a class="headerlink" href="#meteodatalab.operators.gis.RotLatLonGrid.rlon" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">rlon</span></span><a class="headerlink" href="#meteodatalab.operators.gis.RotLatLonGrid.rlon" title="Link to this definition">#</a></dt>
 <dd><p>longitude values in degrees of the grid points in the rotated lat lon CRS.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -199,7 +200,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="meteodatalab.operators.gis.RotLatLonGrid.rlat">
-<span class="sig-name descname"><span class="pre">rlat</span></span><a class="headerlink" href="#meteodatalab.operators.gis.RotLatLonGrid.rlat" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">rlat</span></span><a class="headerlink" href="#meteodatalab.operators.gis.RotLatLonGrid.rlat" title="Link to this definition">#</a></dt>
 <dd><p>latitude values in degrees of the grid points in the rotated lat lon CRS.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -210,7 +211,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="meteodatalab.operators.gis.RotLatLonGrid.north_pole_lon">
-<span class="sig-name descname"><span class="pre">north_pole_lon</span></span><a class="headerlink" href="#meteodatalab.operators.gis.RotLatLonGrid.north_pole_lon" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">north_pole_lon</span></span><a class="headerlink" href="#meteodatalab.operators.gis.RotLatLonGrid.north_pole_lon" title="Link to this definition">#</a></dt>
 <dd><p>longitude of the rotated north pole in degrees.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -221,7 +222,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="meteodatalab.operators.gis.RotLatLonGrid.north_pole_lat">
-<span class="sig-name descname"><span class="pre">north_pole_lat</span></span><a class="headerlink" href="#meteodatalab.operators.gis.RotLatLonGrid.north_pole_lat" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">north_pole_lat</span></span><a class="headerlink" href="#meteodatalab.operators.gis.RotLatLonGrid.north_pole_lat" title="Link to this definition">#</a></dt>
 <dd><p>latitude of the rotated north pole in degrees.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -234,7 +235,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py function">
 <dt class="sig sig-object py" id="meteodatalab.operators.gis.geolatlon2swiss">
-<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.gis.</span></span><span class="sig-name descname"><span class="pre">geolatlon2swiss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataArray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataArray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/meteodatalab/operators/gis.html#geolatlon2swiss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.gis.geolatlon2swiss" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.gis.</span></span><span class="sig-name descname"><span class="pre">geolatlon2swiss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataArray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataArray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/meteodatalab/operators/gis.html#geolatlon2swiss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.gis.geolatlon2swiss" title="Link to this definition">#</a></dt>
 <dd><p>Convert from geolatlon to swiss coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -256,7 +257,7 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py function">
 <dt class="sig sig-object py" id="meteodatalab.operators.gis.get_grid">
-<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.gis.</span></span><span class="sig-name descname"><span class="pre">get_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#meteodatalab.operators.gis.RotLatLonGrid" title="meteodatalab.operators.gis.RotLatLonGrid"><span class="pre">RotLatLonGrid</span></a></span></span><a class="reference internal" href="../_modules/meteodatalab/operators/gis.html#get_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.gis.get_grid" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.gis.</span></span><span class="sig-name descname"><span class="pre">get_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#meteodatalab.operators.gis.RotLatLonGrid" title="meteodatalab.operators.gis.RotLatLonGrid"><span class="pre">RotLatLonGrid</span></a></span></span><a class="reference internal" href="../_modules/meteodatalab/operators/gis.html#get_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.gis.get_grid" title="Link to this definition">#</a></dt>
 <dd><p>Get grid parameters for a given field.</p>
 <p>Only fields defined on regular grids in rotlatlon coordinates,
 without rotation nor flipped axes are supported.</p>
@@ -278,7 +279,7 @@ without rotation nor flipped axes are supported.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="meteodatalab.operators.gis.rot2geolatlon">
-<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.gis.</span></span><span class="sig-name descname"><span class="pre">rot2geolatlon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#meteodatalab.operators.gis.RotLatLonGrid" title="meteodatalab.operators.gis.RotLatLonGrid"><span class="pre">RotLatLonGrid</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataArray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataArray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/meteodatalab/operators/gis.html#rot2geolatlon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.gis.rot2geolatlon" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.gis.</span></span><span class="sig-name descname"><span class="pre">rot2geolatlon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#meteodatalab.operators.gis.RotLatLonGrid" title="meteodatalab.operators.gis.RotLatLonGrid"><span class="pre">RotLatLonGrid</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataArray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataArray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/meteodatalab/operators/gis.html#rot2geolatlon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.gis.rot2geolatlon" title="Link to this definition">#</a></dt>
 <dd><p>Compute geographical lat lon values for a rotated lat lon grid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -296,7 +297,7 @@ geographical lat lon CRS.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="meteodatalab.operators.gis.vref_rot2geolatlon">
-<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.gis.</span></span><span class="sig-name descname"><span class="pre">vref_rot2geolatlon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataArray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataArray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/meteodatalab/operators/gis.html#vref_rot2geolatlon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.gis.vref_rot2geolatlon" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">meteodatalab.operators.gis.</span></span><span class="sig-name descname"><span class="pre">vref_rot2geolatlon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataArray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataArray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataArray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/meteodatalab/operators/gis.html#vref_rot2geolatlon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meteodatalab.operators.gis.vref_rot2geolatlon" title="Link to this definition">#</a></dt>
 <dd><p>Apply coordinate rotation to vector field.</p>
 <p>When converting from rotated lat lon to geo lat lon, the
 orientation of the grid changes and vector fields for which
@@ -364,8 +365,8 @@ to be realigned.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=049bfc96"></script>
+      <script src="../_static/documentation_options.js?v=5c1e3c2a"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../_static/shibuya.js?v=cac61aee"></script></body>
+      <script src="../_static/shibuya.js?v=50760d75"></script></body>
 </html>

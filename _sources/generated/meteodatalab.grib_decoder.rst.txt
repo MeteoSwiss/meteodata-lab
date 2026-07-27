@@ -28,8 +28,7 @@
 
    .. autosummary::
    
-      ChainMap
-      GribField
+      ChainGet
       UnitOfTime
    
    

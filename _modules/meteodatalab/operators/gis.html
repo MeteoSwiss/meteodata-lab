@@ -2,11 +2,11 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.gis - meteodata-lab main-3fe5323 documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.gis - meteodata-lab main-c9be13a documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=ad592e98" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=44020203" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=2ceb65ce" />
     <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,8 @@
   --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
 }
 </style>
-    <meta property="og:type" content="website"/><meta property="og:title" content="meteodatalab.operators.gis"/>
+    
+  <meta property="og:type" content="website"/><meta property="og:title" content="meteodatalab.operators.gis"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -375,8 +376,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="221">    <span class="k">if</span> <span class="n">metadata</span><span class="o">.</span><span class="n">is_staggered_horizontal</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="ow">or</span> <span class="n">metadata</span><span class="o">.</span><span class="n">is_staggered_horizontal</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
 </span><span data-line="222">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The vector fields must be destaggered.&quot;</span><span class="p">)</span>
 </span><span data-line="223">    <span class="k">if</span> <span class="p">(</span>
-</span><span data-line="224">        <span class="n">u</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gridDefinitionTemplateNumber&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span>
-</span><span data-line="225">        <span class="ow">or</span> <span class="n">v</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gridDefinitionTemplateNumber&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span>
+</span><span data-line="224">        <span class="n">u</span><span class="o">.</span><span class="n">geography</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gridType&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;rotated_ll&quot;</span>
+</span><span data-line="225">        <span class="ow">or</span> <span class="n">v</span><span class="o">.</span><span class="n">geography</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gridType&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;rotated_ll&quot;</span>
 </span><span data-line="226">    <span class="p">):</span>
 </span><span data-line="227">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The vector fields must be defined on a rotated lat lon grid.&quot;</span><span class="p">)</span>
 </span><span data-line="228">
@@ -392,13 +393,13 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="238">        <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
 </span><span data-line="239">            <span class="n">u_g</span><span class="p">,</span>
 </span><span data-line="240">            <span class="n">attrs</span><span class="o">=</span><span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span>
-</span><span data-line="241">                <span class="n">u</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">resolutionAndComponentFlags</span><span class="o">=</span><span class="n">resolution_components_flags</span>
+</span><span data-line="241">                <span class="n">u</span><span class="o">.</span><span class="n">message_b64</span><span class="p">,</span> <span class="n">resolutionAndComponentFlags</span><span class="o">=</span><span class="n">resolution_components_flags</span>
 </span><span data-line="242">            <span class="p">),</span>
 </span><span data-line="243">        <span class="p">),</span>
 </span><span data-line="244">        <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
 </span><span data-line="245">            <span class="n">v_g</span><span class="p">,</span>
 </span><span data-line="246">            <span class="n">attrs</span><span class="o">=</span><span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span>
-</span><span data-line="247">                <span class="n">v</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">resolutionAndComponentFlags</span><span class="o">=</span><span class="n">resolution_components_flags</span>
+</span><span data-line="247">                <span class="n">v</span><span class="o">.</span><span class="n">message_b64</span><span class="p">,</span> <span class="n">resolutionAndComponentFlags</span><span class="o">=</span><span class="n">resolution_components_flags</span>
 </span><span data-line="248">            <span class="p">),</span>
 </span><span data-line="249">        <span class="p">),</span>
 </span><span data-line="250">    <span class="p">)</span></div>
@@ -453,8 +454,8 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=049bfc96"></script>
+      <script src="../../../_static/documentation_options.js?v=5c1e3c2a"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../../../_static/shibuya.js?v=cac61aee"></script></body>
+      <script src="../../../_static/shibuya.js?v=50760d75"></script></body>
 </html>

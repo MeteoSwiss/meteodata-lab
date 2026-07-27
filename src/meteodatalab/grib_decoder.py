@@ -321,7 +321,7 @@ def save(
 
     """
     if not hasattr(field, "message_b64"):
-        msg = "The metadata attribute is required to write to the GRIB format."
+        msg = "The message_b64 attribute is required to write to the GRIB format."
         raise ValueError(msg)
 
     grib_field = metadata.deserialise_field(field.message_b64)

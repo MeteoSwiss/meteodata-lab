@@ -14,7 +14,7 @@ def test_clip_lateral_boundary_strip(data_dir):
     reader = data_source.FileDataSource(datafiles=[datafile])
     ds = grib_decoder.load(reader, {"param": ["T_2M"]})
     ori = ds["T_2M"]
-    ori_uuid = ori.metadata.get("uuidOfHGrid")
+    ori_uuid = ori.attrs.get("uuidOfHGrid")
 
     res_14 = clip.clip_lateral_boundary_strip(ori, 14)
     res_7 = clip.clip_lateral_boundary_strip(ori, 7)
@@ -23,15 +23,15 @@ def test_clip_lateral_boundary_strip(data_dir):
     assert res_14.size < res_7.size < ori.size
 
     # check that the new UUID differs from the original depending on the parameter
-    res_14_uuid = res_14.metadata.get("uuidOfHGrid")
-    res_7_uuid = res_7.metadata.get("uuidOfHGrid")
+    res_14_uuid = res_14.attrs.get("uuidOfHGrid")
+    res_7_uuid = res_7.attrs.get("uuidOfHGrid")
     assert res_14_uuid != ori_uuid
     assert res_7_uuid != ori_uuid
     assert res_14_uuid != res_7_uuid
 
     # check that the new UUID is the same for same parameter
     res_14_clone = clip.clip_lateral_boundary_strip(ori, 14)
-    assert res_14_uuid == res_14_clone.metadata.get("uuidOfHGrid")
+    assert res_14_uuid == res_14_clone.attrs.get("uuidOfHGrid")
 
 
 @pytest.mark.data("iconremap")

@@ -78,6 +78,6 @@ def relhum(
 
     # Return RH with appropriate metadata
     attrs = metadata.override(
-        t.metadata, shortName=phase_conditions[phase]["shortName"]
+        t.message_b64, shortName=phase_conditions[phase]["shortName"]
     )
     return rh.assign_attrs(attrs)

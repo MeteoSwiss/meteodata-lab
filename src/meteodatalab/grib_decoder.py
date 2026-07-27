@@ -17,7 +17,6 @@ import earthkit.data as ekd  # type: ignore
 import numpy as np
 import pandas as pd
 import xarray as xr
-from numpy.typing import DTypeLike
 
 # Local
 from . import data_source, icon_grid, mars, metadata
@@ -36,24 +35,18 @@ GeoCoordsCbk = Callable[[UUID], dict[str, xr.DataArray]]
 Request = str | tuple | dict | mars.Request
 
 
-class ChainMap(UserDict):
+class ChainGet(UserDict):
+    _sentinel = object()
+
     def __init__(self, *maps):
         self._maps = maps
 
     def __getitem__(self, key):
         for mapping in self._maps:
-            try:
-                return mapping[key]
-            except KeyError:
-                pass
+            result = mapping.get(key, self._sentinel)
+            if result is not self._sentinel:
+                return result
         raise KeyError(f"{key} not found")
-
-
-class GribField(typing.Protocol):
-    def metadata(self, *args, **kwargs) -> typing.Any: ...
-    def message(self) -> bytes: ...
-    def to_numpy(self, dtype: DTypeLike) -> np.ndarray: ...
-    def to_latlon(self) -> dict[str, np.ndarray]: ...
 
 
 class MissingData(RuntimeError):
@@ -82,7 +75,7 @@ def _is_ensemble(field) -> bool:
 
 
 def _get_hcoords(
-    field: GribField, geo_coords: GeoCoordsCbk | None
+    field: ekd.Field, geo_coords: GeoCoordsCbk | None
 ) -> tuple[dict[str, xr.DataArray], tuple[str, ...]]:
     hdims: tuple[str, ...]
     if field.metadata("gridType") == "unstructured_grid":
@@ -98,9 +91,10 @@ def _get_hcoords(
         else:
             return geo_coords(grid_uuid), hdims
 
+    lats, lons = field.geography.latlons()
     hcoords = {
-        dim: xr.DataArray(dims=("y", "x"), data=values)
-        for dim, values in field.to_latlon().items()
+        "lat": xr.DataArray(dims=("y", "x"), data=lats),
+        "lon": xr.DataArray(dims=("y", "x"), data=lons),
     }
     hdims = ("y", "x")
     return hcoords, hdims
@@ -115,15 +109,17 @@ def _to_timedelta(value, unit) -> np.timedelta64:
 
 
 def _get_key(field, dims):
-    md = field.metadata()
-    step = md["step"]
+    step = field.metadata("step")
     unit = "h" if isinstance(step, int) else None
     extra = {
-        "ref_time": _parse_datetime(md["dataDate"], md["dataTime"]),
-        "step": _to_timedelta(step, unit),
+        "metadata.ref_time": _parse_datetime(
+            field.metadata("dataDate"),
+            field.metadata("dataTime"),
+        ),
+        "metadata.step": _to_timedelta(step, unit),
     }
-    dim_keys = (DIM_MAP[dim] for dim in dims)
-    mapping = ChainMap(extra, md)
+    dim_keys = (f"metadata.{DIM_MAP[dim]}" for dim in dims)
+    mapping = ChainGet(extra, field)
     return tuple(mapping[key] for key in dim_keys)
 
 
@@ -140,7 +136,7 @@ class _FieldBuffer:
         if not is_ensemble:
             self.dims = self.dims[1:]
 
-    def load(self, field: GribField, geo_coords: GeoCoordsCbk | None) -> None:
+    def load(self, field: ekd.Field, geo_coords: GeoCoordsCbk | None) -> None:
         key = _get_key(field, self.dims)
         name = field.metadata(NAME_KEY)
         logger.debug("Received field for param: %s, key: %s", name, key)
@@ -151,10 +147,9 @@ class _FieldBuffer:
         self.values[key] = field.to_numpy(dtype=np.float32)
 
         if not self.metadata:
-            md = field.metadata().override()
             self.metadata = {
-                "metadata": md,
-                **metadata.extract(md),
+                "message_b64": metadata.serialise_field(field),
+                **metadata.extract(field),
             }
 
         if not self.hcoords:
@@ -322,14 +317,14 @@ def save(
     Raises
     ------
     ValueError
-        If the field does not have a metadata attribute.
+        If the field does not have a message_b64 attribute.
 
     """
-    if not hasattr(field, "metadata"):
-        msg = "The metadata attribute is required to write to the GRIB format."
+    if not hasattr(field, "message_b64"):
+        msg = "The message_b64 attribute is required to write to the GRIB format."
         raise ValueError(msg)
 
-    md = field.metadata
+    grib_field = metadata.deserialise_field(field.message_b64)
 
     idx = {
         dim: field.coords[key]
@@ -338,10 +333,13 @@ def save(
     }
 
     step_unit = UnitOfTime.MINUTE
-    time_range_unit = UnitOfTime(md.get("indicatorOfUnitForTimeRange", 255)).unit
-    time_range = _to_timedelta(md.get("lengthOfTimeRange", 0), unit=time_range_unit)
+    time_range_unit = grib_field.get("metadata.indicatorOfUnitForTimeRange", 255)
+    time_range = _to_timedelta(
+        grib_field.get("metadata.lengthOfTimeRange", 0),
+        unit=UnitOfTime(time_range_unit).unit,
+    )
 
-    if md.get("numberOfTimeRange", 1) != 1:
+    if grib_field.get("metadata.numberOfTimeRange", 1) != 1:
         raise NotImplementedError("Unsupported value for numberOfTimeRange")
 
     def to_grib(loc: dict[str, xr.DataArray]):
@@ -359,13 +357,15 @@ def save(
             "dataTime": loc["ref_time"].dt.strftime("%H%M").item(),
         }
 
+    encoder = ekd.create_encoder("grib", template=grib_field)
     for idx_slice in product(*idx.values()):
         loc = {dim: value for dim, value in zip(idx.keys(), idx_slice)}
-        array = field.sel(loc).values
-        metadata = md.override(to_grib(loc))
-
-        fs = ekd.FieldList.from_numpy(array, metadata)
-        fs.write(file_handle, bits_per_value=bits_per_value)
+        encoded = encoder.encode(
+            values=field.sel(loc).values,
+            bitsPerValue=bits_per_value,
+            **to_grib(loc),
+        )
+        encoded.to_file(file_handle)
 
 
 def get_code_flag(value: int, indices: Sequence[int]) -> list[bool]:

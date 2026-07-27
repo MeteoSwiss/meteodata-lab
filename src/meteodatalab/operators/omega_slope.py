@@ -72,7 +72,7 @@ def omega_slope(
         data=res,
         attrs=metadata.override(
             # Eta-coordinate vertical velocity
-            etadot.metadata,
+            etadot.message_b64,
             discipline=0,
             parameterCategory=2,
             parameterNumber=32,

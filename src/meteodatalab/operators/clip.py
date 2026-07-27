@@ -62,10 +62,10 @@ def clip_lateral_boundary_strip(
         https://www.cosmo-model.org/content/model/documentation/core/iconTutorial_dwd_2023.pdf
 
     """
-    if not field.metadata.get("gridType") == "unstructured_grid":
+    if not field.geography.get("gridType") == "unstructured_grid":
         raise ValueError("Field must be on an unstructured grid.")
 
-    original_grid_uuid = UUID(field.metadata.get("uuidOfHGrid"))
+    original_grid_uuid = UUID(field.attrs.get("uuidOfHGrid"))
 
     if idx is None:
         idx = load_boundary_idx_from_file(original_grid_uuid)
@@ -88,7 +88,7 @@ def clip_lateral_boundary_strip(
     return xr.DataArray(
         field,
         attrs=metadata.override(
-            field.metadata,
+            field.message_b64,
             uuidOfHGrid=new_uuid.hex,
             numberOfDataPoints=field.size,
         ),

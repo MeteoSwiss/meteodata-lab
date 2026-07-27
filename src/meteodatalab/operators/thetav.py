@@ -27,4 +27,4 @@ def fthetav(p: xr.DataArray, t: xr.DataArray, qv: xr.DataArray) -> xr.DataArray:
 
     """
     result = xr.apply_ufunc(thermo.virtual_potential_temperature, t, qv, p)
-    return result.assign_attrs(metadata.override(t.metadata, shortName="THETA_V"))
+    return result.assign_attrs(metadata.override(t.message_b64, shortName="THETA_V"))

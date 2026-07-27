@@ -103,12 +103,12 @@ def setup_fdb():
 def request_template():
     return {
         "class": "od",
-        "date": "20260505",
+        "date": "20260723",
         "expver": "0001",
         "model": "ICON-CH1-EPS",
         "step": 0,
         "stream": "enfo",
-        "time": "0000",
+        "time": "0600",
         "type": "cf",
         "timespan": "none",
     }
@@ -157,3 +157,8 @@ def fieldextra(tmp_path, data_dir, template_env, fieldextra_path):
 @pytest.fixture
 def geo_coords():
     return icon_grid.load_grid_from_balfrin()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def suppress_definitions_warning():
+    os.environ["ECCODES_VERSION_CHECK_OFF"] = "1"

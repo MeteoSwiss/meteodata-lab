@@ -75,5 +75,5 @@ def fhzerocl(
 
     return xr.DataArray(
         data=hzerocl.where(hzerocl > 0),
-        attrs=metadata.override(t.metadata, shortName="HZEROCL"),
+        attrs=metadata.override(t.message_b64, shortName="HZEROCL"),
     )

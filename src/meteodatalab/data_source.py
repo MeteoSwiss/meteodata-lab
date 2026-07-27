@@ -125,7 +125,7 @@ class FDBDataSource(DataSource):
     def _retrieve(self, request: dict):
         req_kwargs = self.request_template | request
         req = mars.Request(**req_kwargs)
-        yield from ekd.from_source("fdb", req.to_fdb(), stream=True)
+        yield from ekd.from_source("fdb", req.to_fdb(), stream=True).to_fieldlist()
 
 
 @dc.dataclass
@@ -137,8 +137,8 @@ class FileDataSource(DataSource):
         if req_kwargs:
             # validate only if there is a request
             _ = mars.Request(**req_kwargs)
-        fs = ekd.from_source("file", self.datafiles)
-        yield from fs.sel(req_kwargs)
+        fs = ekd.from_source("file", self.datafiles).to_fieldlist()
+        yield from fs.sel({f"metadata.{k}": v for k, v in req_kwargs.items()})
 
 
 @dc.dataclass
@@ -163,7 +163,7 @@ class PolytopeDataSource(DataSource):
             asynchronous=False,
         )
         urls = [p["location"] for p in pointers]
-        yield from ekd.from_source("url", urls, stream=True)
+        yield from ekd.from_source("url", urls, stream=True).to_fieldlist()
 
 
 @dc.dataclass
@@ -172,8 +172,8 @@ class URLDataSource(DataSource):
 
     def _retrieve(self, request: dict):
         req_kwargs = self.request_template | request
-        fs = ekd.from_source("url", self.urls)
-        yield from fs.sel(**req_kwargs)
+        fs = ekd.from_source("url", self.urls).to_fieldlist()
+        yield from fs.sel({f"metadata.{k}": v for k, v in req_kwargs.items()})
 
 
 @dc.dataclass
@@ -182,7 +182,7 @@ class StreamDataSource(DataSource):
 
     def _retrieve(self, request: dict):
         req_kwargs = self.request_template | request
-        fs = ekd.from_source("stream", self.stream)
+        fs = ekd.from_source("stream", self.stream).to_fieldlist()
         if req_kwargs:
             _ = mars.Request(**req_kwargs)
             yield from (field for field in fs if self._match_request(field, req_kwargs))
@@ -192,10 +192,9 @@ class StreamDataSource(DataSource):
     @staticmethod
     def _match_request(field: ekd.Field, request: dict) -> bool:
         """Check if the field matches the request."""
-        md = field.metadata()
         for key, value in request.items():
-            field_value = md.get(key, None)
-            if md is None:
+            field_value = field.get(f"metadata.{key}", None)
+            if field_value is None:
                 raise KeyError(f"Metadata key '{key}' not found in field metadata.")
             if isinstance(value, Container):
                 if field_value not in value:

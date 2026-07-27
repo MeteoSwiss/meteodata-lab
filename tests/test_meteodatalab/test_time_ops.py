@@ -9,12 +9,17 @@ from numpy.testing import assert_allclose
 import meteodatalab.operators.time_operators as time_ops
 from meteodatalab.data_source import FileDataSource
 from meteodatalab.grib_decoder import load
+from meteodatalab.metadata import deserialise_field
 from meteodatalab.operators import radiation
 
 
-def _assert_keys(field, mapping):
-    for key, value in mapping.items():
-        assert field.metadata.get(key) == value
+def assert_metadata(field, expected):
+    grib_field = deserialise_field(field.message_b64)
+    observed = grib_field.metadata(
+        expected.keys(),
+        output="dict",
+    )
+    assert observed == {f"metadata.{key}": value for key, value in expected.items()}
 
 
 @pytest.mark.data("reduced-time")
@@ -54,7 +59,7 @@ def test_delta(data_dir, fieldextra):
         "indicatorOfUnitForTimeRange": 0,
         "lengthOfTimeRange": 3 * 60,
     }
-    _assert_keys(observed, md)
+    assert_metadata(observed, md)
 
 
 @pytest.mark.data("reduced-time")
@@ -105,7 +110,7 @@ def test_resample_average(data_dir, fieldextra):
         "indicatorOfUnitForTimeRange": 0,
         "lengthOfTimeRange": 60,
     }
-    _assert_keys(observed, md)
+    assert_metadata(observed, md)
 
 
 @pytest.mark.data("reduced-time")

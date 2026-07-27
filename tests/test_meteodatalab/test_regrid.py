@@ -9,6 +9,7 @@ from numpy.testing import assert_allclose, assert_array_less
 # First-party
 from meteodatalab.data_source import FileDataSource
 from meteodatalab.grib_decoder import load
+from meteodatalab.metadata import deserialise_field
 from meteodatalab.operators.hzerocl import fhzerocl
 
 try:
@@ -49,6 +50,15 @@ def assert_close_enough(src, dst, rel):
             )
         else:
             assert getattr(src, field.name) == getattr(dst, field.name)
+
+
+def assert_metadata(field, expected):
+    grib_field = deserialise_field(field.message_b64)
+    observed = grib_field.metadata(
+        expected.keys(),
+        output="dict",
+    )
+    assert observed == {f"metadata.{key}": value for key, value in expected.items()}
 
 
 def test_to_crs():
@@ -177,8 +187,13 @@ def test_icon2swiss_small(data_dir, fieldextra, model_name, geo_coords):
     assert observed.sel(y=18, x=10).lat == pytest.approx(47.032020, 1e-5)
 
     # Verify that the metadata grid fields that we can override are correct.
-    assert observed.metadata["sourceOfGridDefinition"] == 255
-    assert observed.metadata["numberOfDataPoints"] == 19 * 11
+    assert_metadata(
+        observed,
+        {
+            "sourceOfGridDefinition": 255,
+            "numberOfDataPoints": 19 * 11,
+        },
+    )
 
 
 @pytest.mark.data("iconremap")
@@ -215,14 +230,19 @@ def test_icon2utm(data_dir, fieldextra, model_name, geo_coords):
     assert observed.sel(y=18, x=10).lat == pytest.approx(46.997704, 1e-5)
 
     # Verify the geography is set correctly.
-    assert observed.metadata["sourceOfGridDefinition"] == 0
-    assert observed.metadata["numberOfDataPoints"] == 19 * 11
-    assert observed.metadata["gridDefinitionTemplateNumber"] == 12
-    assert observed.metadata["longitudeOfReferencePoint"] == 9.0
-    assert observed.metadata["iDirectionIncrementGridLength"] == 100000
-    assert observed.metadata["jDirectionIncrementGridLength"] == 50000
-    assert observed.metadata["X1"] == 37600000
-    assert observed.metadata["Y2"] == 520600000
+    assert_metadata(
+        observed,
+        {
+            "sourceOfGridDefinition": 0,
+            "numberOfDataPoints": 19 * 11,
+            "gridDefinitionTemplateNumber": 12,
+            "longitudeOfReferencePoint": 9.0,
+            "iDirectionIncrementGridLength": 100000,
+            "jDirectionIncrementGridLength": 50000,
+            "X1": 37600000,
+            "Y2": 520600000,
+        },
+    )
 
 
 @pytest.mark.skip(reason="the byc method in fx is not optimised (>30min on icon-ch1)")

@@ -41,8 +41,8 @@ def test_save(data_dir, tmp_path):
     source = data_source.FileDataSource(datafiles=[str(outfile)])
     ds_new = grib_decoder.load(source, "HHL")
 
-    ds["HHL"].attrs.pop("metadata")
-    ds_new["HHL"].attrs.pop("metadata")
+    ds["HHL"].attrs.pop("message_b64")
+    ds_new["HHL"].attrs.pop("message_b64")
 
     xr.testing.assert_identical(ds["HHL"], ds_new["HHL"])
 
@@ -62,7 +62,7 @@ def test_save_field(data_dir, tmp_path, param):
     source = data_source.FileDataSource(datafiles=[str(outfile), str(cdatafile)])
     ds_new = grib_decoder.load(source, {"param": [param]})
 
-    ds[param].attrs.pop("metadata")
-    ds_new[param].attrs.pop("metadata")
+    ds[param].attrs.pop("message_b64")
+    ds_new[param].attrs.pop("message_b64")
 
     xr.testing.assert_identical(ds[param], ds_new[param])

@@ -221,8 +221,8 @@ def vref_rot2geolatlon(
     if metadata.is_staggered_horizontal(u) or metadata.is_staggered_horizontal(v):
         raise ValueError("The vector fields must be destaggered.")
     if (
-        u.metadata.get("gridDefinitionTemplateNumber") != 1
-        or v.metadata.get("gridDefinitionTemplateNumber") != 1
+        u.geography.get("gridType") != "rotated_ll"
+        or v.geography.get("gridType") != "rotated_ll"
     ):
         raise ValueError("The vector fields must be defined on a rotated lat lon grid.")
 
@@ -238,13 +238,13 @@ def vref_rot2geolatlon(
         xr.DataArray(
             u_g,
             attrs=metadata.override(
-                u.metadata, resolutionAndComponentFlags=resolution_components_flags
+                u.message_b64, resolutionAndComponentFlags=resolution_components_flags
             ),
         ),
         xr.DataArray(
             v_g,
             attrs=metadata.override(
-                v.metadata, resolutionAndComponentFlags=resolution_components_flags
+                v.message_b64, resolutionAndComponentFlags=resolution_components_flags
             ),
         ),
     )

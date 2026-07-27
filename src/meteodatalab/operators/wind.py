@@ -41,7 +41,7 @@ def speed(u: xr.DataArray, v: xr.DataArray) -> xr.DataArray:
 
     name = {"U": "SP", "U_10M": "SP_10M"}[u.parameter["shortName"]]
     result = xr.apply_ufunc(wind.speed, u, v)
-    return result.assign_attrs(override(u.metadata, shortName=name))
+    return result.assign_attrs(override(u.message_b64, shortName=name))
 
 
 def direction(u: xr.DataArray, v: xr.DataArray) -> xr.DataArray:
@@ -88,5 +88,5 @@ def direction(u: xr.DataArray, v: xr.DataArray) -> xr.DataArray:
     name = {"U": "DD", "U_10M": "DD_10M"}[u.parameter["shortName"]]
     return xr.DataArray(
         rad2deg * np.arctan2(u_g, v_g) + 180,
-        attrs=override(u.metadata, shortName=name),
+        attrs=override(u.message_b64, shortName=name),
     )

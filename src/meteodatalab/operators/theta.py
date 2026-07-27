@@ -30,4 +30,4 @@ def compute_theta(p: xr.DataArray, t: xr.DataArray) -> xr.DataArray:
 
     """
     result = xr.apply_ufunc(thermo.potential_temperature, t, p)
-    return result.assign_attrs(metadata.override(p.metadata, shortName="PT"))
+    return result.assign_attrs(metadata.override(p.message_b64, shortName="PT"))

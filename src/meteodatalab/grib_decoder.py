@@ -317,7 +317,7 @@ def save(
     Raises
     ------
     ValueError
-        If the field does not have a metadata attribute.
+        If the field does not have a message_b64 attribute.
 
     """
     if not hasattr(field, "message_b64"):

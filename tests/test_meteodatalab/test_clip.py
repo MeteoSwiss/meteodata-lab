@@ -6,6 +6,7 @@ import xarray as xr
 from meteodatalab import data_source, grib_decoder
 from meteodatalab.operators import clip
 
+
 @pytest.mark.data("iconremap")
 def test_clip_lateral_boundary_strip(data_dir):
     datafile = str(data_dir / "ICON-CH1-EPS_lfff00000000_000")
@@ -31,7 +32,6 @@ def test_clip_lateral_boundary_strip(data_dir):
     # check that the new UUID is the same for same parameter
     res_14_clone = clip.clip_lateral_boundary_strip(ori, 14)
     assert res_14_uuid == res_14_clone.attrs.get("uuidOfHGrid")
-
 
 
 @pytest.mark.data("iconremap")

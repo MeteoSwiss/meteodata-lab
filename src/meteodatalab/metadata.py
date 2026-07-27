@@ -10,7 +10,9 @@ import typing
 import numpy as np
 import xarray as xr
 from earthkit.data import Field  # type: ignore
-from earthkit.data.field.grib.create import create_grib_field_from_message  # type: ignore
+from earthkit.data.field.grib.create import (
+    create_grib_field_from_message,  # type: ignore
+)
 
 # Local
 from . import grib_decoder
@@ -30,7 +32,7 @@ def extract(field: Field) -> dict[str, typing.Any]:
 
     Parameters
     ----------
-    field : Field
+    field : earthkit.data.Field
         GRIB field from which to extract metadata.
 
     Returns
@@ -73,7 +75,7 @@ def serialise_field(field: Field) -> str:
 
     Parameters
     ----------
-    field : Field
+    field : earthkit.data.Field
         GRIB field to serialise.
 
     Returns
@@ -96,7 +98,7 @@ def deserialise_field(value: str) -> Field:
 
     Returns
     -------
-    Field
+    earthkit.data.Field
         GRIB field with no values loaded.
 
     """
@@ -109,14 +111,13 @@ def override(message: str, **kwargs: typing.Any) -> dict[str, typing.Any]:
 
     Note that no special consideration is made for maintaining consistency when
     overriding template definition keys such as productDefinitionTemplateNumber.
-    Note that the origin components in x and y are left untouched.
 
     Parameters
     ----------
-    metadata : Metadata
-        Metadata of the input GRIB metadata
+    message : str
+        Serialised GRIB message with original values
     kwargs : Any
-        Keyword arguments forwarded to earthkit-data GribMetadata override method
+        Metadata keys and values that are overridden in the output
 
     Returns
     -------
@@ -165,8 +166,8 @@ def load_grid_reference(field: Field) -> Grid:
 
     Parameters
     ----------
-    metadata : Metadata
-        GRIB metadata defining the reference grid.
+    field : earthkit.data.Field
+        Field defining the reference grid.
 
     Returns
     -------
@@ -215,8 +216,8 @@ def _uses_icon_grid(field: Field) -> bool:
 
     Parameters
     ----------
-    metadata : Metadata
-        GRIB metadata containing the grid definition.
+    field : earthkit.data.Field
+        Field containing the grid definition.
 
     Returns
     -------
@@ -270,8 +271,8 @@ def extract_hcoords(message_b64: str) -> dict[str, xr.DataArray]:
 
     Parameters
     ----------
-    metadata : str
-        GRIB metadata containing the grid definition.
+    message_b64 : str
+        Serialised GRIB message containing the grid definition.
 
     Returns
     -------

@@ -15,7 +15,10 @@ from meteodatalab.operators import radiation
 
 def assert_metadata(field, expected):
     grib_field = deserialise_field(field.message_b64)
-    observed = grib_field.metadata(expected.keys(), output="dict", )
+    observed = grib_field.metadata(
+        expected.keys(),
+        output="dict",
+    )
     assert observed == {f"metadata.{key}": value for key, value in expected.items()}
 
 

@@ -36,8 +36,8 @@ def test_retrieve_files(mock_from_source, mock_grib_def_ctx):
     assert mock_from_source.mock_calls == [
         call("file", datafiles),
         call().to_fieldlist(),
-        call().to_fieldlist().sel({'metadata.param': 'bar'}),
-        call().to_fieldlist().sel().__iter__()
+        call().to_fieldlist().sel({"metadata.param": "bar"}),
+        call().to_fieldlist().sel().__iter__(),
     ]
 
 
@@ -53,8 +53,8 @@ def test_retrieve_files_tuple(mock_from_source, mock_grib_def_ctx):
     assert mock_from_source.mock_calls == [
         call("file", datafiles),
         call().to_fieldlist(),
-        call().to_fieldlist().sel({'metadata.param': 'bar', 'metadata.levtype': 'ml'}),
-        call().to_fieldlist().sel().__iter__()
+        call().to_fieldlist().sel({"metadata.param": "bar", "metadata.levtype": "ml"}),
+        call().to_fieldlist().sel().__iter__(),
     ]
 
 

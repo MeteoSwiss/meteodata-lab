@@ -54,7 +54,10 @@ def assert_close_enough(src, dst, rel):
 
 def assert_metadata(field, expected):
     grib_field = deserialise_field(field.message_b64)
-    observed = grib_field.metadata(expected.keys(), output="dict", )
+    observed = grib_field.metadata(
+        expected.keys(),
+        output="dict",
+    )
     assert observed == {f"metadata.{key}": value for key, value in expected.items()}
 
 
@@ -184,10 +187,13 @@ def test_icon2swiss_small(data_dir, fieldextra, model_name, geo_coords):
     assert observed.sel(y=18, x=10).lat == pytest.approx(47.032020, 1e-5)
 
     # Verify that the metadata grid fields that we can override are correct.
-    assert_metadata(observed, {
-        "sourceOfGridDefinition": 255,
-        "numberOfDataPoints": 19 * 11,
-    })
+    assert_metadata(
+        observed,
+        {
+            "sourceOfGridDefinition": 255,
+            "numberOfDataPoints": 19 * 11,
+        },
+    )
 
 
 @pytest.mark.data("iconremap")
@@ -224,16 +230,19 @@ def test_icon2utm(data_dir, fieldextra, model_name, geo_coords):
     assert observed.sel(y=18, x=10).lat == pytest.approx(46.997704, 1e-5)
 
     # Verify the geography is set correctly.
-    assert_metadata(observed, {
-        "sourceOfGridDefinition": 0,
-        "numberOfDataPoints": 19 * 11,
-        "gridDefinitionTemplateNumber": 12,
-        "longitudeOfReferencePoint": 9.0,
-        "iDirectionIncrementGridLength": 100000,
-        "jDirectionIncrementGridLength": 50000,
-        "X1": 37600000,
-        "Y2": 520600000,
-    })
+    assert_metadata(
+        observed,
+        {
+            "sourceOfGridDefinition": 0,
+            "numberOfDataPoints": 19 * 11,
+            "gridDefinitionTemplateNumber": 12,
+            "longitudeOfReferencePoint": 9.0,
+            "iDirectionIncrementGridLength": 100000,
+            "jDirectionIncrementGridLength": 50000,
+            "X1": 37600000,
+            "Y2": 520600000,
+        },
+    )
 
 
 @pytest.mark.skip(reason="the byc method in fx is not optimised (>30min on icon-ch1)")

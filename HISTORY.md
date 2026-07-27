@@ -1,5 +1,15 @@
 # History
 
+## [0.8.0] (2026-07-27)
+
+### Changes
+- Earthkit-data 1.0 is now required
+- eccodes and eccodes-cosmo-resources-python updated to version 2.47
+- Field metadata attribute is renamed to `message_b64` and is now a GRIB message without values encoded in base64
+- Added optional attribute `UuidOfHGrid`
+- `metadata` functions changed signature to accept either `earthkit.data.Field` instances or the base64 encoded GRIB message
+- Added `serialise_field` and `deserialise_field` functions to the `metadata` module
+
 ## [0.7.2] (2026-05-22)
 
 ### Fix
@@ -224,6 +234,7 @@ To be removed in version 0.6
 - Added ninjo_k2th product
 - Added GRIB data loader based on earthkit-data
 
+[0.8.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.2..v0.8.0
 [0.7.2]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.1..v0.7.2
 [0.7.1]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.0..v0.7.1
 [0.7.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.0-rc2..v0.7.0

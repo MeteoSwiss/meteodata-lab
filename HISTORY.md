@@ -1,5 +1,11 @@
 # History
 
+## [0.8.1] (2026-08-28)
+
+### Changes
+- Allow python versions 3.13 and 3.14
+- Drop python version 3.10
+
 ## [0.8.0] (2026-07-27)
 
 ### Changes
@@ -234,6 +240,7 @@ To be removed in version 0.6
 - Added ninjo_k2th product
 - Added GRIB data loader based on earthkit-data
 
+[0.8.1]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.8.0..v0.8.1
 [0.8.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.2..v0.8.0
 [0.7.2]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.1..v0.7.2
 [0.7.1]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.0..v0.7.1

@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.icon_grid - meteodata-lab main-c9be13a documentation</title><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.icon_grid - meteodata-lab main-6b6bf7b documentation</title><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=ad592e98" />
@@ -139,7 +139,7 @@ data-aria-dark="Switch to auto color mode">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
           <h1>Source code for meteodatalab.icon_grid</h1><div class="highlight"><pre>
-<span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;ICON native grid helper functions.&quot;&quot;&quot;</span>
+<span></span><span data-line="1"><span class="sd">"""ICON native grid helper functions."""</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="c1"># Standard library</span>
 </span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
@@ -153,8 +153,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="12"><span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 </span><span data-line="13">
 </span><span data-line="14"><span class="n">GRID_UUID_TO_MODEL</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="15">    <span class="n">UUID</span><span class="p">(</span><span class="s2">&quot;17643da2-5749-59b6-44d2-54a3cd6e2bc0&quot;</span><span class="p">):</span> <span class="s2">&quot;icon-ch1-eps&quot;</span><span class="p">,</span>
-</span><span data-line="16">    <span class="n">UUID</span><span class="p">(</span><span class="s2">&quot;bbbd5a09-8554-9924-3c7a-4aa4c8762920&quot;</span><span class="p">):</span> <span class="s2">&quot;icon-ch2-eps&quot;</span><span class="p">,</span>
+</span><span data-line="15">    <span class="n">UUID</span><span class="p">(</span><span class="s2">"17643da2-5749-59b6-44d2-54a3cd6e2bc0"</span><span class="p">):</span> <span class="s2">"icon-ch1-eps"</span><span class="p">,</span>
+</span><span data-line="16">    <span class="n">UUID</span><span class="p">(</span><span class="s2">"bbbd5a09-8554-9924-3c7a-4aa4c8762920"</span><span class="p">):</span> <span class="s2">"icon-ch2-eps"</span><span class="p">,</span>
 </span><span data-line="17"><span class="p">}</span>
 </span><span data-line="18">
 </span><span data-line="19">
@@ -163,7 +163,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="20"><span class="k">def</span><span class="w"> </span><span class="nf">load_grid_from_file</span><span class="p">(</span>
 </span><span data-line="21">    <span class="n">uuid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">grid_paths</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">UUID</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span>
 </span><span data-line="22"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]:</span>
-</span><span data-line="23"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the clat and clon grid coordinates from .nc format file.</span>
+</span><span data-line="23"><span class="w">    </span><span class="sd">"""Load the clat and clon grid coordinates from .nc format file.</span>
 </span><span data-line="24">
 </span><span data-line="25"><span class="sd">    Parameters</span>
 </span><span data-line="26"><span class="sd">    ----------</span>
@@ -183,23 +183,23 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="40"><span class="sd">        Dataset containing clon and clat coordinates of the ICON grid cell centers for</span>
 </span><span data-line="41"><span class="sd">        the model.</span>
 </span><span data-line="42">
-</span><span data-line="43"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="43"><span class="sd">    """</span>
 </span><span data-line="44">    <span class="n">grid_path</span> <span class="o">=</span> <span class="n">grid_paths</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
 </span><span data-line="45">    <span class="k">if</span> <span class="n">grid_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="46">        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
-</span><span data-line="47">            <span class="s2">&quot;No grid file for UUID </span><span class="si">%s</span><span class="s2">. Known UUIDs are </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">grid_paths</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</span><span data-line="47">            <span class="s2">"No grid file for UUID </span><span class="si">%s</span><span class="s2">. Known UUIDs are </span><span class="si">%s</span><span class="s2">."</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">grid_paths</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 </span><span data-line="48">        <span class="p">)</span>
 </span><span data-line="49">    <span class="n">rad2deg</span> <span class="o">=</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
 </span><span data-line="50">    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">grid_path</span><span class="p">)</span>
-</span><span data-line="51">    <span class="n">result</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[[</span><span class="s2">&quot;clon&quot;</span><span class="p">,</span> <span class="s2">&quot;clat&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">reset_coords</span><span class="p">()</span> <span class="o">*</span> <span class="n">rad2deg</span>
-</span><span data-line="52">    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;lon&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">clon</span><span class="p">,</span> <span class="s2">&quot;lat&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">clat</span><span class="p">}</span></div>
+</span><span data-line="51">    <span class="n">result</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[[</span><span class="s2">"clon"</span><span class="p">,</span> <span class="s2">"clat"</span><span class="p">]]</span><span class="o">.</span><span class="n">reset_coords</span><span class="p">()</span> <span class="o">*</span> <span class="n">rad2deg</span>
+</span><span data-line="52">    <span class="k">return</span> <span class="p">{</span><span class="s2">"lon"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">clon</span><span class="p">,</span> <span class="s2">"lat"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">clat</span><span class="p">}</span></div>
 
 </span><span data-line="53">
 </span><span data-line="54">
 <div class="viewcode-block" id="load_boundary_idx_from_file">
 <a class="viewcode-back" href="../../generated/meteodatalab.icon_grid.html#meteodatalab.icon_grid.load_boundary_idx_from_file">[docs]</a>
 </span><span data-line="55"><span class="k">def</span><span class="w"> </span><span class="nf">load_boundary_idx_from_file</span><span class="p">(</span><span class="n">uuid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
-</span><span data-line="56"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the lateral boundary strip index from .nc format file.</span>
+</span><span data-line="56"><span class="w">    </span><span class="sd">"""Load the lateral boundary strip index from .nc format file.</span>
 </span><span data-line="57">
 </span><span data-line="58"><span class="sd">    Parameters</span>
 </span><span data-line="59"><span class="sd">    ----------</span>
@@ -211,22 +211,22 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="65"><span class="sd">    xr.DataArray</span>
 </span><span data-line="66"><span class="sd">        Lateral boundary strip index for the given grid.</span>
 </span><span data-line="67">
-</span><span data-line="68"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="69">    <span class="n">grid_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/scratch/mch/jenkins/icon/pool/data/ICON/mch/grids/&quot;</span><span class="p">)</span>
+</span><span data-line="68"><span class="sd">    """</span>
+</span><span data-line="69">    <span class="n">grid_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"/scratch/mch/jenkins/icon/pool/data/ICON/mch/grids/"</span><span class="p">)</span>
 </span><span data-line="70">    <span class="n">grid_paths</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="71">        <span class="n">UUID</span><span class="p">(</span><span class="s2">&quot;17643da2-5749-59b6-44d2-54a3cd6e2bc0&quot;</span><span class="p">):</span> <span class="n">grid_dir</span>
-</span><span data-line="72">        <span class="o">/</span> <span class="s2">&quot;icon-1/icon_grid_0001_R19B08_mch.nc&quot;</span><span class="p">,</span>
-</span><span data-line="73">        <span class="n">UUID</span><span class="p">(</span><span class="s2">&quot;bbbd5a09-8554-9924-3c7a-4aa4c8762920&quot;</span><span class="p">):</span> <span class="n">grid_dir</span>
-</span><span data-line="74">        <span class="o">/</span> <span class="s2">&quot;icon-2/icon_grid_0002_R19B07_mch.nc&quot;</span><span class="p">,</span>
+</span><span data-line="71">        <span class="n">UUID</span><span class="p">(</span><span class="s2">"17643da2-5749-59b6-44d2-54a3cd6e2bc0"</span><span class="p">):</span> <span class="n">grid_dir</span>
+</span><span data-line="72">        <span class="o">/</span> <span class="s2">"icon-1/icon_grid_0001_R19B08_mch.nc"</span><span class="p">,</span>
+</span><span data-line="73">        <span class="n">UUID</span><span class="p">(</span><span class="s2">"bbbd5a09-8554-9924-3c7a-4aa4c8762920"</span><span class="p">):</span> <span class="n">grid_dir</span>
+</span><span data-line="74">        <span class="o">/</span> <span class="s2">"icon-2/icon_grid_0002_R19B07_mch.nc"</span><span class="p">,</span>
 </span><span data-line="75">    <span class="p">}</span>
 </span><span data-line="76">    <span class="n">grid_path</span> <span class="o">=</span> <span class="n">grid_paths</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
 </span><span data-line="77">    <span class="k">if</span> <span class="n">grid_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="78">        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
-</span><span data-line="79">            <span class="s2">&quot;No grid file for UUID </span><span class="si">%s</span><span class="s2">. Known UUIDs are </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">grid_paths</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</span><span data-line="79">            <span class="s2">"No grid file for UUID </span><span class="si">%s</span><span class="s2">. Known UUIDs are </span><span class="si">%s</span><span class="s2">."</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">grid_paths</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 </span><span data-line="80">        <span class="p">)</span>
 </span><span data-line="81">    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">grid_path</span><span class="p">)</span>
-</span><span data-line="82">    <span class="k">return</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;refin_c_ctrl&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">assign_attrs</span><span class="p">(</span>
-</span><span data-line="83">        <span class="n">uuidOfHGrid</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;uuidOfHGrid&quot;</span><span class="p">],</span>
+</span><span data-line="82">    <span class="k">return</span> <span class="n">ds</span><span class="p">[</span><span class="s2">"refin_c_ctrl"</span><span class="p">]</span><span class="o">.</span><span class="n">assign_attrs</span><span class="p">(</span>
+</span><span data-line="83">        <span class="n">uuidOfHGrid</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"uuidOfHGrid"</span><span class="p">],</span>
 </span><span data-line="84">    <span class="p">)</span></div>
 
 </span><span data-line="85">
@@ -234,13 +234,13 @@ data-aria-dark="Switch to auto color mode">
 <div class="viewcode-block" id="load_grid_from_balfrin">
 <a class="viewcode-back" href="../../generated/meteodatalab.icon_grid.html#meteodatalab.icon_grid.load_grid_from_balfrin">[docs]</a>
 </span><span data-line="87"><span class="k">def</span><span class="w"> </span><span class="nf">load_grid_from_balfrin</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">UUID</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]]:</span>
-</span><span data-line="88"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a grid source to load grid files when running on balfrin.&quot;&quot;&quot;</span>
-</span><span data-line="89">    <span class="n">grid_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/scratch/mch/jenkins/icon/pool/data/ICON/mch/grids/&quot;</span><span class="p">)</span>
+</span><span data-line="88"><span class="w">    </span><span class="sd">"""Return a grid source to load grid files when running on balfrin."""</span>
+</span><span data-line="89">    <span class="n">grid_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"/scratch/mch/jenkins/icon/pool/data/ICON/mch/grids/"</span><span class="p">)</span>
 </span><span data-line="90">    <span class="n">grid_paths</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="91">        <span class="n">UUID</span><span class="p">(</span><span class="s2">&quot;17643da2-5749-59b6-44d2-54a3cd6e2bc0&quot;</span><span class="p">):</span> <span class="n">grid_dir</span>
-</span><span data-line="92">        <span class="o">/</span> <span class="s2">&quot;icon-1/icon_grid_0001_R19B08_mch.nc&quot;</span><span class="p">,</span>
-</span><span data-line="93">        <span class="n">UUID</span><span class="p">(</span><span class="s2">&quot;bbbd5a09-8554-9924-3c7a-4aa4c8762920&quot;</span><span class="p">):</span> <span class="n">grid_dir</span>
-</span><span data-line="94">        <span class="o">/</span> <span class="s2">&quot;icon-2/icon_grid_0002_R19B07_mch.nc&quot;</span><span class="p">,</span>
+</span><span data-line="91">        <span class="n">UUID</span><span class="p">(</span><span class="s2">"17643da2-5749-59b6-44d2-54a3cd6e2bc0"</span><span class="p">):</span> <span class="n">grid_dir</span>
+</span><span data-line="92">        <span class="o">/</span> <span class="s2">"icon-1/icon_grid_0001_R19B08_mch.nc"</span><span class="p">,</span>
+</span><span data-line="93">        <span class="n">UUID</span><span class="p">(</span><span class="s2">"bbbd5a09-8554-9924-3c7a-4aa4c8762920"</span><span class="p">):</span> <span class="n">grid_dir</span>
+</span><span data-line="94">        <span class="o">/</span> <span class="s2">"icon-2/icon_grid_0002_R19B07_mch.nc"</span><span class="p">,</span>
 </span><span data-line="95">    <span class="p">}</span>
 </span><span data-line="96">    <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">load_grid_from_file</span><span class="p">,</span> <span class="n">grid_paths</span><span class="o">=</span><span class="n">grid_paths</span><span class="p">)</span></div>
 
@@ -249,9 +249,9 @@ data-aria-dark="Switch to auto color mode">
 <div class="viewcode-block" id="get_remap_coeffs">
 <a class="viewcode-back" href="../../generated/meteodatalab.icon_grid.html#meteodatalab.icon_grid.get_remap_coeffs">[docs]</a>
 </span><span data-line="99"><span class="k">def</span><span class="w"> </span><span class="nf">get_remap_coeffs</span><span class="p">(</span>
-</span><span data-line="100">    <span class="n">grid_uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">grid_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;rotlatlon&quot;</span><span class="p">,</span> <span class="s2">&quot;geolatlon&quot;</span><span class="p">]</span>
+</span><span data-line="100">    <span class="n">grid_uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">grid_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"rotlatlon"</span><span class="p">,</span> <span class="s2">"geolatlon"</span><span class="p">]</span>
 </span><span data-line="101"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
-</span><span data-line="102"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get ICON native grid remap indices and weights.</span>
+</span><span data-line="102"><span class="w">    </span><span class="sd">"""Get ICON native grid remap indices and weights.</span>
 </span><span data-line="103">
 </span><span data-line="104"><span class="sd">    Parameters</span>
 </span><span data-line="105"><span class="sd">    ----------</span>
@@ -270,10 +270,10 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="118"><span class="sd">    xarray.Dataset</span>
 </span><span data-line="119"><span class="sd">        Dataset of the remap indices and weights.</span>
 </span><span data-line="120">
-</span><span data-line="121"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="121"><span class="sd">    """</span>
 </span><span data-line="122">    <span class="n">model</span> <span class="o">=</span> <span class="n">GRID_UUID_TO_MODEL</span><span class="p">[</span><span class="n">UUID</span><span class="p">(</span><span class="n">grid_uuid</span><span class="p">)]</span>
 </span><span data-line="123">    <span class="n">coeffs_path</span> <span class="o">=</span> <span class="p">(</span>
-</span><span data-line="124">        <span class="sa">f</span><span class="s2">&quot;/store_new/mch/msopr/icon_workflow_2/iconremap-weights/</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">grid_type</span><span class="si">}</span><span class="s2">.nc&quot;</span>
+</span><span data-line="124">        <span class="sa">f</span><span class="s2">"/store_new/mch/msopr/icon_workflow_2/iconremap-weights/</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">grid_type</span><span class="si">}</span><span class="s2">.nc"</span>
 </span><span data-line="125">    <span class="p">)</span>
 </span><span data-line="126">    <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">coeffs_path</span><span class="p">)</span></div>
 
@@ -304,8 +304,8 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=5c1e3c2a"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=4acd523c"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/shibuya.js?v=50760d75"></script></body>
 </html>

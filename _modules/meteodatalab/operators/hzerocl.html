@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.hzerocl - meteodata-lab main-c9be13a documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.hzerocl - meteodata-lab main-6b6bf7b documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=ad592e98" />
@@ -139,7 +139,7 @@ data-aria-dark="Switch to auto color mode">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
           <h1>Source code for meteodatalab.operators.hzerocl</h1><div class="highlight"><pre>
-<span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;Algorithm for computation of height of zero degree isotherm.&quot;&quot;&quot;</span>
+<span></span><span data-line="1"><span class="sd">"""Algorithm for computation of height of zero degree isotherm."""</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="c1"># Standard library</span>
 </span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
@@ -158,7 +158,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="15"><span class="k">def</span><span class="w"> </span><span class="nf">fhzerocl</span><span class="p">(</span>
 </span><span data-line="16">    <span class="n">t</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">hhl</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">extrapolate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 </span><span data-line="17"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
-</span><span data-line="18"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Height of the zero deg C isotherm in m amsl.</span>
+</span><span data-line="18"><span class="w">    </span><span class="sd">"""Height of the zero deg C isotherm in m amsl.</span>
 </span><span data-line="19">
 </span><span data-line="20"><span class="sd">    The algorithm searches from the top of the atmosphere downwards.</span>
 </span><span data-line="21"><span class="sd">    When extrapolation is enabled, the search may extend past the lowest</span>
@@ -180,12 +180,12 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="37"><span class="sd">    xr.DataArray</span>
 </span><span data-line="38"><span class="sd">        Height of the zero deg C isotherm in m amsl.</span>
 </span><span data-line="39">
-</span><span data-line="40"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="40"><span class="sd">    """</span>
 </span><span data-line="41">    <span class="c1"># Physical constants</span>
 </span><span data-line="42">    <span class="n">t0</span> <span class="o">=</span> <span class="mf">273.15</span>
 </span><span data-line="43">
 </span><span data-line="44">    <span class="c1"># Heights of layer mid surfaces (where t is defined)</span>
-</span><span data-line="45">    <span class="n">hfl</span> <span class="o">=</span> <span class="n">destagger</span><span class="p">(</span><span class="n">hhl</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">)</span>
+</span><span data-line="45">    <span class="n">hfl</span> <span class="o">=</span> <span class="n">destagger</span><span class="p">(</span><span class="n">hhl</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">)</span>
 </span><span data-line="46">
 </span><span data-line="47">    <span class="n">tkm1</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </span><span data-line="48">
@@ -195,30 +195,30 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="52">
 </span><span data-line="53">    <span class="c1"># The previous condition can be satisfied on multiple levels.</span>
 </span><span data-line="54">    <span class="c1"># Take the k indices of the maximum height value where the condition is satisfied</span>
-</span><span data-line="55">    <span class="n">maxind</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">height0</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s2">&quot;z&quot;</span><span class="p">))</span>
+</span><span data-line="55">    <span class="n">maxind</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">height0</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s2">"z"</span><span class="p">))</span>
 </span><span data-line="56">
 </span><span data-line="57">    <span class="k">if</span> <span class="n">extrapolate</span><span class="p">:</span>
 </span><span data-line="58">        <span class="c1"># The full column is below freezing</span>
-</span><span data-line="59">        <span class="n">below_ground</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span> <span class="o">&lt;</span> <span class="n">t0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">)</span>
+</span><span data-line="59">        <span class="n">below_ground</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span> <span class="o">&lt;</span> <span class="n">t0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="s2">"z"</span><span class="p">)</span>
 </span><span data-line="60">        <span class="c1"># Temperature is increasing with decreasing altitude</span>
-</span><span data-line="61">        <span class="n">positive_dt</span> <span class="o">=</span> <span class="n">t</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">}]</span> <span class="o">&gt;</span> <span class="mf">1e-10</span>
+</span><span data-line="61">        <span class="n">positive_dt</span> <span class="o">=</span> <span class="n">t</span><span class="p">[{</span><span class="s2">"z"</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[{</span><span class="s2">"z"</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">}]</span> <span class="o">&gt;</span> <span class="mf">1e-10</span>
 </span><span data-line="62">        <span class="c1"># Allow t0 to be outside of the [height1, height2] range</span>
 </span><span data-line="63">        <span class="n">cond</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">below_ground</span><span class="p">,</span> <span class="n">positive_dt</span><span class="p">)</span>
 </span><span data-line="64">        <span class="n">maxind</span> <span class="o">=</span> <span class="n">maxind</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="o">~</span><span class="n">cond</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 </span><span data-line="65">
 </span><span data-line="66">    <span class="c1"># Compute the 2D fields with height values where T is &gt; 0 and &lt; 0 on level below</span>
-</span><span data-line="67">    <span class="n">height2</span> <span class="o">=</span> <span class="n">hfl</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">maxind</span><span class="p">}]</span>
+</span><span data-line="67">    <span class="n">height2</span> <span class="o">=</span> <span class="n">hfl</span><span class="p">[{</span><span class="s2">"z"</span><span class="p">:</span> <span class="n">maxind</span><span class="p">}]</span>
 </span><span data-line="68">    <span class="c1"># Compute the 2D fields with height values where T is &lt; 0 and &gt; 0 on level above</span>
-</span><span data-line="69">    <span class="n">height1</span> <span class="o">=</span> <span class="n">hfl</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">maxind</span> <span class="o">-</span> <span class="mi">1</span><span class="p">}]</span>
+</span><span data-line="69">    <span class="n">height1</span> <span class="o">=</span> <span class="n">hfl</span><span class="p">[{</span><span class="s2">"z"</span><span class="p">:</span> <span class="n">maxind</span> <span class="o">-</span> <span class="mi">1</span><span class="p">}]</span>
 </span><span data-line="70">    <span class="c1"># The height level where T == t0 must be between [height1, height2]</span>
-</span><span data-line="71">    <span class="n">t2</span> <span class="o">=</span> <span class="n">t</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">maxind</span><span class="p">}]</span>
-</span><span data-line="72">    <span class="n">t1</span> <span class="o">=</span> <span class="n">tkm1</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">maxind</span><span class="p">}]</span>
+</span><span data-line="71">    <span class="n">t2</span> <span class="o">=</span> <span class="n">t</span><span class="p">[{</span><span class="s2">"z"</span><span class="p">:</span> <span class="n">maxind</span><span class="p">}]</span>
+</span><span data-line="72">    <span class="n">t1</span> <span class="o">=</span> <span class="n">tkm1</span><span class="p">[{</span><span class="s2">"z"</span><span class="p">:</span> <span class="n">maxind</span><span class="p">}]</span>
 </span><span data-line="73">
 </span><span data-line="74">    <span class="n">hzerocl</span> <span class="o">=</span> <span class="n">height1</span> <span class="o">+</span> <span class="p">(</span><span class="n">height2</span> <span class="o">-</span> <span class="n">height1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">t0</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)</span>
 </span><span data-line="75">
 </span><span data-line="76">    <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
 </span><span data-line="77">        <span class="n">data</span><span class="o">=</span><span class="n">hzerocl</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">hzerocl</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">),</span>
-</span><span data-line="78">        <span class="n">attrs</span><span class="o">=</span><span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">message_b64</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="s2">&quot;HZEROCL&quot;</span><span class="p">),</span>
+</span><span data-line="78">        <span class="n">attrs</span><span class="o">=</span><span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">message_b64</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="s2">"HZEROCL"</span><span class="p">),</span>
 </span><span data-line="79">    <span class="p">)</span></div>
 
 </span></pre></div>
@@ -248,8 +248,8 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=5c1e3c2a"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=4acd523c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/shibuya.js?v=50760d75"></script></body>
 </html>

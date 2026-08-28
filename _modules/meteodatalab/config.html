@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.config - meteodata-lab main-c9be13a documentation</title><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.config - meteodata-lab main-6b6bf7b documentation</title><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=ad592e98" />
@@ -139,7 +139,7 @@ data-aria-dark="Switch to auto color mode">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
           <h1>Source code for meteodatalab.config</h1><div class="highlight"><pre>
-<span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;global configuration for meteodatalab.&quot;&quot;&quot;</span>
+<span></span><span data-line="1"><span class="sd">"""global configuration for meteodatalab."""</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="c1"># Standard library</span>
 </span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
@@ -152,7 +152,7 @@ data-aria-dark="Switch to auto color mode">
 <a class="viewcode-back" href="../../generated/meteodatalab.config.html#meteodatalab.config.set_values">[docs]</a>
 </span><span data-line="10"><span class="nd">@contextmanager</span>
 </span><span data-line="11"><span class="k">def</span><span class="w"> </span><span class="nf">set_values</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span data-line="12"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Temporarily set configuration values within a context manager.</span>
+</span><span data-line="12"><span class="w">    </span><span class="sd">"""Temporarily set configuration values within a context manager.</span>
 </span><span data-line="13">
 </span><span data-line="14"><span class="sd">    Parameters</span>
 </span><span data-line="15"><span class="sd">    ----------</span>
@@ -162,14 +162,14 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="19"><span class="sd">    **kwargs :</span>
 </span><span data-line="20"><span class="sd">        the configuration key-value pairs to set.</span>
 </span><span data-line="21">
-</span><span data-line="22"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="23">    <span class="n">record</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;insert&quot;</span><span class="p">,</span> <span class="s2">&quot;replace&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="22"><span class="sd">    """</span>
+</span><span data-line="23">    <span class="n">record</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">"insert"</span><span class="p">,</span> <span class="s2">"replace"</span><span class="p">],</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
 </span><span data-line="24">
 </span><span data-line="25">    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 </span><span data-line="26">        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
-</span><span data-line="27">            <span class="n">record</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;replace&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+</span><span data-line="27">            <span class="n">record</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">"replace"</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
 </span><span data-line="28">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="29">            <span class="n">record</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;insert&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+</span><span data-line="29">            <span class="n">record</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">"insert"</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 </span><span data-line="30">
 </span><span data-line="31">        <span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 </span><span data-line="32">
@@ -178,7 +178,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="35">    <span class="k">finally</span><span class="p">:</span>
 </span><span data-line="36">        <span class="k">for</span> <span class="n">op</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
 </span><span data-line="37">            <span class="n">d</span> <span class="o">=</span> <span class="n">config</span>
-</span><span data-line="38">            <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">&quot;replace&quot;</span><span class="p">:</span>
+</span><span data-line="38">            <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">"replace"</span><span class="p">:</span>
 </span><span data-line="39">                <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 </span><span data-line="40">            <span class="k">else</span><span class="p">:</span>  <span class="c1"># insert</span>
 </span><span data-line="41">                <span class="n">d</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
@@ -192,7 +192,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="46">    <span class="n">default</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span data-line="47">    <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">config</span><span class="p">,</span>
 </span><span data-line="48"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-</span><span data-line="49"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get values from global config.</span>
+</span><span data-line="49"><span class="w">    </span><span class="sd">"""Get values from global config.</span>
 </span><span data-line="50">
 </span><span data-line="51"><span class="sd">    Parameters</span>
 </span><span data-line="52"><span class="sd">    ----------</span>
@@ -203,7 +203,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="57"><span class="sd">    config: dict, optional</span>
 </span><span data-line="58"><span class="sd">        config object holding the mapping. Default value is the global config</span>
 </span><span data-line="59">
-</span><span data-line="60"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="60"><span class="sd">    """</span>
 </span><span data-line="61">    <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
 
 </span></pre></div>
@@ -233,8 +233,8 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=5c1e3c2a"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=4acd523c"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/shibuya.js?v=50760d75"></script></body>
 </html>

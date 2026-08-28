@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.vertical_extrapolation - meteodata-lab main-c9be13a documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.vertical_extrapolation - meteodata-lab main-6b6bf7b documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=ad592e98" />
@@ -139,7 +139,7 @@ data-aria-dark="Switch to auto color mode">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
           <h1>Source code for meteodatalab.operators.vertical_extrapolation</h1><div class="highlight"><pre>
-<span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;Vertical extrapolation operators.&quot;&quot;&quot;</span>
+<span></span><span data-line="1"><span class="sd">"""Vertical extrapolation operators."""</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="c1"># Standard library</span>
 </span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
@@ -166,7 +166,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="23">    <span class="n">p_sfc</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
 </span><span data-line="24">    <span class="n">p_target</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 </span><span data-line="25"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
-</span><span data-line="26"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Extrapolate temperature to a target pressure level.</span>
+</span><span data-line="26"><span class="w">    </span><span class="sd">"""Extrapolate temperature to a target pressure level.</span>
 </span><span data-line="27">
 </span><span data-line="28"><span class="sd">    Implements the algorithm described in [1]_. The algorithm extrapolates</span>
 </span><span data-line="29"><span class="sd">    temperature from the surface to a target pressure level using a</span>
@@ -201,11 +201,11 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="58"><span class="sd">    ----------</span>
 </span><span data-line="59"><span class="sd">    .. [1] https://www.umr-cnrm.fr/gmapdoc/IMG/pdf/ykfpos46t1r1.pdf</span>
 </span><span data-line="60">
-</span><span data-line="61"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="61"><span class="sd">    """</span>
 </span><span data-line="62">    <span class="n">y</span> <span class="o">=</span> <span class="n">_vertical_extrapolation_y_term</span><span class="p">(</span><span class="n">t_sfc</span><span class="p">,</span> <span class="n">p_sfc</span><span class="p">,</span> <span class="n">h_sfc</span><span class="p">,</span> <span class="n">p_target</span><span class="p">)</span>
 </span><span data-line="63">    <span class="n">res</span> <span class="o">=</span> <span class="n">t_sfc</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="mi">6</span><span class="p">)</span>
 </span><span data-line="64">    <span class="n">res</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span>
-</span><span data-line="65">        <span class="n">t_sfc</span><span class="o">.</span><span class="n">message_b64</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="n">typeOfLevel</span><span class="o">=</span><span class="s2">&quot;isobaricInPa&quot;</span>
+</span><span data-line="65">        <span class="n">t_sfc</span><span class="o">.</span><span class="n">message_b64</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="s2">"T"</span><span class="p">,</span> <span class="n">typeOfLevel</span><span class="o">=</span><span class="s2">"isobaricInPa"</span>
 </span><span data-line="66">    <span class="p">)</span>
 </span><span data-line="67">    <span class="n">res</span> <span class="o">=</span> <span class="n">_assign_vcoord</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">p_target</span><span class="p">)</span>
 </span><span data-line="68">    <span class="k">return</span> <span class="n">res</span></div>
@@ -220,7 +220,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="74">    <span class="n">p_sfc</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
 </span><span data-line="75">    <span class="n">p_target</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 </span><span data-line="76"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
-</span><span data-line="77"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Extrapolate geopotential to a target pressure level.</span>
+</span><span data-line="77"><span class="w">    </span><span class="sd">"""Extrapolate geopotential to a target pressure level.</span>
 </span><span data-line="78">
 </span><span data-line="79"><span class="sd">    Implements the algorithm described in [1]_. The algorithm extrapolates</span>
 </span><span data-line="80"><span class="sd">    geopotential from the surface to a target pressure level using a</span>
@@ -255,7 +255,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="109"><span class="sd">    ----------</span>
 </span><span data-line="110"><span class="sd">    .. [1] https://www.umr-cnrm.fr/gmapdoc/IMG/pdf/ykfpos46t1r1.pdf</span>
 </span><span data-line="111">
-</span><span data-line="112"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="112"><span class="sd">    """</span>
 </span><span data-line="113">    <span class="n">y</span> <span class="o">=</span> <span class="n">_vertical_extrapolation_y_term</span><span class="p">(</span>
 </span><span data-line="114">        <span class="n">t_sfc</span><span class="p">,</span> <span class="n">p_sfc</span><span class="p">,</span> <span class="n">h_sfc</span><span class="p">,</span> <span class="n">p_target</span><span class="p">,</span> <span class="n">lapse_rate</span><span class="o">=</span><span class="n">LAPSE_RATE</span>
 </span><span data-line="115">    <span class="p">)</span>
@@ -263,7 +263,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="117">        <span class="mi">1</span> <span class="o">+</span> <span class="n">y</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">6</span>
 </span><span data-line="118">    <span class="p">)</span>
 </span><span data-line="119">    <span class="n">res</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span>
-</span><span data-line="120">        <span class="n">t_sfc</span><span class="o">.</span><span class="n">message_b64</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="s2">&quot;FI&quot;</span><span class="p">,</span> <span class="n">typeOfLevel</span><span class="o">=</span><span class="s2">&quot;isobaricInPa&quot;</span>
+</span><span data-line="120">        <span class="n">t_sfc</span><span class="o">.</span><span class="n">message_b64</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="s2">"FI"</span><span class="p">,</span> <span class="n">typeOfLevel</span><span class="o">=</span><span class="s2">"isobaricInPa"</span>
 </span><span data-line="121">    <span class="p">)</span>
 </span><span data-line="122">    <span class="n">res</span> <span class="o">=</span> <span class="n">_assign_vcoord</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">p_target</span><span class="p">)</span>
 </span><span data-line="123">    <span class="k">return</span> <span class="n">res</span></div>
@@ -275,11 +275,11 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="126"><span class="k">def</span><span class="w"> </span><span class="nf">extrapolate_k2p</span><span class="p">(</span>
 </span><span data-line="127">    <span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
 </span><span data-line="128">    <span class="n">p_target</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-</span><span data-line="129">    <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;constant&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;constant&quot;</span><span class="p">,</span>
+</span><span data-line="129">    <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"constant"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"constant"</span><span class="p">,</span>
 </span><span data-line="130"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
-</span><span data-line="131"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Extrapolate a field to a target pressure level.</span>
+</span><span data-line="131"><span class="w">    </span><span class="sd">"""Extrapolate a field to a target pressure level.</span>
 </span><span data-line="132">
-</span><span data-line="133"><span class="sd">    Currently, only the &#39;constant&#39; extrapolation mode is implemented, where</span>
+</span><span data-line="133"><span class="sd">    Currently, only the 'constant' extrapolation mode is implemented, where</span>
 </span><span data-line="134"><span class="sd">    the extrapolation is done by simply extending the values of the</span>
 </span><span data-line="135"><span class="sd">    lowermost model level to the target pressure level.</span>
 </span><span data-line="136">
@@ -297,7 +297,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="148"><span class="sd">    p_target : float</span>
 </span><span data-line="149"><span class="sd">        Target pressure level [Pa].</span>
 </span><span data-line="150"><span class="sd">    mode : str, optional</span>
-</span><span data-line="151"><span class="sd">        Extrapolation mode. Currently only &#39;constant&#39; is implemented.</span>
+</span><span data-line="151"><span class="sd">        Extrapolation mode. Currently only 'constant' is implemented.</span>
 </span><span data-line="152">
 </span><span data-line="153"><span class="sd">    Returns</span>
 </span><span data-line="154"><span class="sd">    -------</span>
@@ -308,9 +308,9 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="159"><span class="sd">    ----------</span>
 </span><span data-line="160"><span class="sd">    .. [1] https://www.umr-cnrm.fr/gmapdoc/IMG/pdf/ykfpos46t1r1.pdf</span>
 </span><span data-line="161">
-</span><span data-line="162"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="163">    <span class="k">return</span> <span class="n">_assign_vcoord</span><span class="p">(</span><span class="n">field</span><span class="p">[{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}],</span> <span class="n">p_target</span><span class="p">)</span><span class="o">.</span><span class="n">assign_attrs</span><span class="p">(</span>
-</span><span data-line="164">        <span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">message_b64</span><span class="p">,</span> <span class="n">typeOfLevel</span><span class="o">=</span><span class="s2">&quot;isobaricInPa&quot;</span><span class="p">)</span>
+</span><span data-line="162"><span class="sd">    """</span>
+</span><span data-line="163">    <span class="k">return</span> <span class="n">_assign_vcoord</span><span class="p">(</span><span class="n">field</span><span class="p">[{</span><span class="s2">"z"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}],</span> <span class="n">p_target</span><span class="p">)</span><span class="o">.</span><span class="n">assign_attrs</span><span class="p">(</span>
+</span><span data-line="164">        <span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">message_b64</span><span class="p">,</span> <span class="n">typeOfLevel</span><span class="o">=</span><span class="s2">"isobaricInPa"</span><span class="p">)</span>
 </span><span data-line="165">    <span class="p">)</span></div>
 
 </span><span data-line="166">
@@ -340,13 +340,13 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="190">
 </span><span data-line="191"><span class="k">def</span><span class="w"> </span><span class="nf">_assign_vcoord</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">p_target</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
 </span><span data-line="192">    <span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="193">        <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;Pa&quot;</span><span class="p">,</span>
-</span><span data-line="194">        <span class="s2">&quot;positive&quot;</span><span class="p">:</span> <span class="s2">&quot;down&quot;</span><span class="p">,</span>
-</span><span data-line="195">        <span class="s2">&quot;standard_name&quot;</span><span class="p">:</span> <span class="s2">&quot;air_pressure&quot;</span><span class="p">,</span>
-</span><span data-line="196">        <span class="s2">&quot;long_name&quot;</span><span class="p">:</span> <span class="s2">&quot;pressure&quot;</span><span class="p">,</span>
+</span><span data-line="193">        <span class="s2">"units"</span><span class="p">:</span> <span class="s2">"Pa"</span><span class="p">,</span>
+</span><span data-line="194">        <span class="s2">"positive"</span><span class="p">:</span> <span class="s2">"down"</span><span class="p">,</span>
+</span><span data-line="195">        <span class="s2">"standard_name"</span><span class="p">:</span> <span class="s2">"air_pressure"</span><span class="p">,</span>
+</span><span data-line="196">        <span class="s2">"long_name"</span><span class="p">:</span> <span class="s2">"pressure"</span><span class="p">,</span>
 </span><span data-line="197">    <span class="p">}</span>
 </span><span data-line="198">    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="p">[</span><span class="n">p_target</span><span class="p">])</span>
-</span><span data-line="199">    <span class="n">x</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span>
+</span><span data-line="199">    <span class="n">x</span><span class="p">[</span><span class="s2">"z"</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span>
 </span><span data-line="200">    <span class="k">return</span> <span class="n">x</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
@@ -375,8 +375,8 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=5c1e3c2a"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=4acd523c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/shibuya.js?v=50760d75"></script></body>
 </html>

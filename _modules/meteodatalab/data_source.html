@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.data_source - meteodata-lab main-c9be13a documentation</title><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.data_source - meteodata-lab main-6b6bf7b documentation</title><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=ad592e98" />
@@ -139,7 +139,7 @@ data-aria-dark="Switch to auto color mode">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
           <h1>Source code for meteodatalab.data_source</h1><div class="highlight"><pre>
-<span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;Data source helper class.&quot;&quot;&quot;</span>
+<span></span><span data-line="1"><span class="sd">"""Data source helper class."""</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="c1"># Standard library</span>
 </span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dc</span>
@@ -166,28 +166,28 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="25"><span class="c1"># Local</span>
 </span><span data-line="26"><span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span><span class="p">,</span> <span class="n">mars</span>
 </span><span data-line="27">
-</span><span data-line="28"><span class="n">definitions</span> <span class="o">=</span> <span class="n">ContextVar</span><span class="p">(</span><span class="s2">&quot;definitions&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;vendor&quot;</span><span class="p">)</span>
+</span><span data-line="28"><span class="n">definitions</span> <span class="o">=</span> <span class="n">ContextVar</span><span class="p">(</span><span class="s2">"definitions"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"vendor"</span><span class="p">)</span>
 </span><span data-line="29">
 </span><span data-line="30">
 <div class="viewcode-block" id="cosmo_grib_defs">
 <a class="viewcode-back" href="../../generated/meteodatalab.data_source.html#meteodatalab.data_source.cosmo_grib_defs">[docs]</a>
 </span><span data-line="31"><span class="nd">@contextmanager</span>
 </span><span data-line="32"><span class="k">def</span><span class="w"> </span><span class="nf">cosmo_grib_defs</span><span class="p">():</span>
-</span><span data-line="33"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Enable COSMO GRIB definitions.&quot;&quot;&quot;</span>
-</span><span data-line="34">    <span class="k">if</span> <span class="n">definitions</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;cosmo&quot;</span><span class="p">:</span>
+</span><span data-line="33"><span class="w">    </span><span class="sd">"""Enable COSMO GRIB definitions."""</span>
+</span><span data-line="34">    <span class="k">if</span> <span class="n">definitions</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"cosmo"</span><span class="p">:</span>
 </span><span data-line="35">        <span class="k">yield</span>
 </span><span data-line="36">        <span class="k">return</span>
 </span><span data-line="37">
-</span><span data-line="38">    <span class="n">token</span> <span class="o">=</span> <span class="n">definitions</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;cosmo&quot;</span><span class="p">)</span>
+</span><span data-line="38">    <span class="n">token</span> <span class="o">=</span> <span class="n">definitions</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">"cosmo"</span><span class="p">)</span>
 </span><span data-line="39">    <span class="n">restore</span> <span class="o">=</span> <span class="n">eccodes</span><span class="o">.</span><span class="n">codes_definition_path</span><span class="p">()</span>
 </span><span data-line="40">    <span class="n">paths</span> <span class="o">=</span> <span class="p">(</span>
 </span><span data-line="41">        <span class="n">eccodes_cosmo_resources</span><span class="o">.</span><span class="n">get_definitions_path</span><span class="p">(),</span>
 </span><span data-line="42">        <span class="n">Path</span><span class="p">(</span><span class="n">restore</span><span class="p">),</span>
 </span><span data-line="43">    <span class="p">)</span>
 </span><span data-line="44">    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
-</span><span data-line="45">        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/MEMFS&quot;</span><span class="p">):</span>
-</span><span data-line="46">            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> does not exist&quot;</span><span class="p">)</span>
-</span><span data-line="47">    <span class="n">defs_path</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">paths</span><span class="p">))</span>
+</span><span data-line="45">        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"/MEMFS"</span><span class="p">):</span>
+</span><span data-line="46">            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> does not exist"</span><span class="p">)</span>
+</span><span data-line="47">    <span class="n">defs_path</span> <span class="o">=</span> <span class="s2">":"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">paths</span><span class="p">))</span>
 </span><span data-line="48">    <span class="n">eccodes</span><span class="o">.</span><span class="n">codes_set_definitions_path</span><span class="p">(</span><span class="n">defs_path</span><span class="p">)</span>
 </span><span data-line="49">    <span class="k">try</span><span class="p">:</span>
 </span><span data-line="50">        <span class="k">yield</span>
@@ -198,9 +198,9 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="54">
 </span><span data-line="55">
 </span><span data-line="56"><span class="k">def</span><span class="w"> </span><span class="nf">grib_def_ctx</span><span class="p">(</span><span class="n">grib_def</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span data-line="57">    <span class="k">if</span> <span class="s2">&quot;ECCODES_DEFINITION_PATH&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="ow">or</span> <span class="s2">&quot;GRIB_DEFINITION_PATH&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+</span><span data-line="57">    <span class="k">if</span> <span class="s2">"ECCODES_DEFINITION_PATH"</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="ow">or</span> <span class="s2">"GRIB_DEFINITION_PATH"</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
 </span><span data-line="58">        <span class="k">return</span> <span class="n">nullcontext</span><span class="p">()</span>
-</span><span data-line="59">    <span class="k">if</span> <span class="n">grib_def</span> <span class="o">==</span> <span class="s2">&quot;cosmo&quot;</span><span class="p">:</span>
+</span><span data-line="59">    <span class="k">if</span> <span class="n">grib_def</span> <span class="o">==</span> <span class="s2">"cosmo"</span><span class="p">:</span>
 </span><span data-line="60">        <span class="k">return</span> <span class="n">cosmo_grib_defs</span><span class="p">()</span>
 </span><span data-line="61">    <span class="k">return</span> <span class="n">nullcontext</span><span class="p">()</span>
 </span><span data-line="62">
@@ -217,7 +217,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="69">    <span class="k">def</span><span class="w"> </span><span class="nf">retrieve</span><span class="p">(</span>
 </span><span data-line="70">        <span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="n">mars</span><span class="o">.</span><span class="n">Request</span>
 </span><span data-line="71">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">:</span>
-</span><span data-line="72"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stream GRIB fields from files or FDB.</span>
+</span><span data-line="72"><span class="w">        </span><span class="sd">"""Stream GRIB fields from files or FDB.</span>
 </span><span data-line="73">
 </span><span data-line="74"><span class="sd">        Request for data from the source in the mars language.</span>
 </span><span data-line="75">
@@ -238,8 +238,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="90"><span class="sd">        GribField</span>
 </span><span data-line="91"><span class="sd">            GribField instances containing the requested data.</span>
 </span><span data-line="92">
-</span><span data-line="93"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span data-line="94">        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;request of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">request</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported.&quot;</span><span class="p">)</span></div>
+</span><span data-line="93"><span class="sd">        """</span>
+</span><span data-line="94">        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"request of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">request</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported."</span><span class="p">)</span></div>
 
 </span><span data-line="95">
 </span><span data-line="96">    <span class="nd">@retrieve</span><span class="o">.</span><span class="n">register</span>
@@ -247,7 +247,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="98">        <span class="c1"># The presence of the yield keyword makes this def a generator.</span>
 </span><span data-line="99">        <span class="c1"># As a result, the context manager will remain active until the</span>
 </span><span data-line="100">        <span class="c1"># exhaustion of the data source iterator.</span>
-</span><span data-line="101">        <span class="n">grib_def</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data_scope&quot;</span><span class="p">,</span> <span class="s2">&quot;cosmo&quot;</span><span class="p">)</span>
+</span><span data-line="101">        <span class="n">grib_def</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"data_scope"</span><span class="p">,</span> <span class="s2">"cosmo"</span><span class="p">)</span>
 </span><span data-line="102">        <span class="k">with</span> <span class="n">grib_def_ctx</span><span class="p">(</span><span class="n">grib_def</span><span class="p">):</span>
 </span><span data-line="103">            <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retrieve</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 </span><span data-line="104">
@@ -257,12 +257,12 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="108">
 </span><span data-line="109">    <span class="nd">@retrieve</span><span class="o">.</span><span class="n">register</span>
 </span><span data-line="110">    <span class="k">def</span><span class="w"> </span><span class="nf">_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">:</span>
-</span><span data-line="111">        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">retrieve</span><span class="p">({</span><span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span>
+</span><span data-line="111">        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">retrieve</span><span class="p">({</span><span class="s2">"param"</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span>
 </span><span data-line="112">
 </span><span data-line="113">    <span class="nd">@retrieve</span><span class="o">.</span><span class="n">register</span>
 </span><span data-line="114">    <span class="k">def</span><span class="w"> </span><span class="nf">_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">:</span>
 </span><span data-line="115">        <span class="n">param</span><span class="p">,</span> <span class="n">levtype</span> <span class="o">=</span> <span class="n">request</span>
-</span><span data-line="116">        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">retrieve</span><span class="p">({</span><span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="n">param</span><span class="p">,</span> <span class="s2">&quot;levtype&quot;</span><span class="p">:</span> <span class="n">levtype</span><span class="p">})</span>
+</span><span data-line="116">        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">retrieve</span><span class="p">({</span><span class="s2">"param"</span><span class="p">:</span> <span class="n">param</span><span class="p">,</span> <span class="s2">"levtype"</span><span class="p">:</span> <span class="n">levtype</span><span class="p">})</span>
 </span><span data-line="117">
 </span><span data-line="118">    <span class="nd">@abstractmethod</span>
 </span><span data-line="119">    <span class="k">def</span><span class="w"> </span><span class="nf">_retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
@@ -277,7 +277,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="125">    <span class="k">def</span><span class="w"> </span><span class="nf">_retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 </span><span data-line="126">        <span class="n">req_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_template</span> <span class="o">|</span> <span class="n">request</span>
 </span><span data-line="127">        <span class="n">req</span> <span class="o">=</span> <span class="n">mars</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="o">**</span><span class="n">req_kwargs</span><span class="p">)</span>
-</span><span data-line="128">        <span class="k">yield from</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">&quot;fdb&quot;</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">to_fdb</span><span class="p">(),</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">to_fieldlist</span><span class="p">()</span></div>
+</span><span data-line="128">        <span class="k">yield from</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">"fdb"</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">to_fdb</span><span class="p">(),</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">to_fieldlist</span><span class="p">()</span></div>
 
 </span><span data-line="129">
 </span><span data-line="130">
@@ -292,8 +292,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="137">        <span class="k">if</span> <span class="n">req_kwargs</span><span class="p">:</span>
 </span><span data-line="138">            <span class="c1"># validate only if there is a request</span>
 </span><span data-line="139">            <span class="n">_</span> <span class="o">=</span> <span class="n">mars</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="o">**</span><span class="n">req_kwargs</span><span class="p">)</span>
-</span><span data-line="140">        <span class="n">fs</span> <span class="o">=</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">&quot;file&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">datafiles</span><span class="p">)</span><span class="o">.</span><span class="n">to_fieldlist</span><span class="p">()</span>
-</span><span data-line="141">        <span class="k">yield from</span> <span class="n">fs</span><span class="o">.</span><span class="n">sel</span><span class="p">({</span><span class="sa">f</span><span class="s2">&quot;metadata.</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">req_kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span></div>
+</span><span data-line="140">        <span class="n">fs</span> <span class="o">=</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">"file"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">datafiles</span><span class="p">)</span><span class="o">.</span><span class="n">to_fieldlist</span><span class="p">()</span>
+</span><span data-line="141">        <span class="k">yield from</span> <span class="n">fs</span><span class="o">.</span><span class="n">sel</span><span class="p">({</span><span class="sa">f</span><span class="s2">"metadata.</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">"</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">req_kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span></div>
 
 </span><span data-line="142">
 </span><span data-line="143">
@@ -307,7 +307,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="149">    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span data-line="150">        <span class="k">if</span> <span class="n">PolytopeClient</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="151">            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-</span><span data-line="152">                <span class="s2">&quot;Please install polytope-client to use the polytope data source&quot;</span>
+</span><span data-line="152">                <span class="s2">"Please install polytope-client to use the polytope data source"</span>
 </span><span data-line="153">            <span class="p">)</span>
 </span><span data-line="154">        <span class="bp">self</span><span class="o">.</span><span class="n">polytope_client</span> <span class="o">=</span> <span class="n">PolytopeClient</span><span class="p">()</span>
 </span><span data-line="155">
@@ -320,8 +320,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="162">            <span class="n">pointer</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 </span><span data-line="163">            <span class="n">asynchronous</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span data-line="164">        <span class="p">)</span>
-</span><span data-line="165">        <span class="n">urls</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pointers</span><span class="p">]</span>
-</span><span data-line="166">        <span class="k">yield from</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="n">urls</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">to_fieldlist</span><span class="p">()</span></div>
+</span><span data-line="165">        <span class="n">urls</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="s2">"location"</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pointers</span><span class="p">]</span>
+</span><span data-line="166">        <span class="k">yield from</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">"url"</span><span class="p">,</span> <span class="n">urls</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">to_fieldlist</span><span class="p">()</span></div>
 
 </span><span data-line="167">
 </span><span data-line="168">
@@ -333,8 +333,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="172">
 </span><span data-line="173">    <span class="k">def</span><span class="w"> </span><span class="nf">_retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 </span><span data-line="174">        <span class="n">req_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_template</span> <span class="o">|</span> <span class="n">request</span>
-</span><span data-line="175">        <span class="n">fs</span> <span class="o">=</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">urls</span><span class="p">)</span><span class="o">.</span><span class="n">to_fieldlist</span><span class="p">()</span>
-</span><span data-line="176">        <span class="k">yield from</span> <span class="n">fs</span><span class="o">.</span><span class="n">sel</span><span class="p">({</span><span class="sa">f</span><span class="s2">&quot;metadata.</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">req_kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span></div>
+</span><span data-line="175">        <span class="n">fs</span> <span class="o">=</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">"url"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">urls</span><span class="p">)</span><span class="o">.</span><span class="n">to_fieldlist</span><span class="p">()</span>
+</span><span data-line="176">        <span class="k">yield from</span> <span class="n">fs</span><span class="o">.</span><span class="n">sel</span><span class="p">({</span><span class="sa">f</span><span class="s2">"metadata.</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">"</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">req_kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span></div>
 
 </span><span data-line="177">
 </span><span data-line="178">
@@ -346,7 +346,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="182">
 </span><span data-line="183">    <span class="k">def</span><span class="w"> </span><span class="nf">_retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 </span><span data-line="184">        <span class="n">req_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_template</span> <span class="o">|</span> <span class="n">request</span>
-</span><span data-line="185">        <span class="n">fs</span> <span class="o">=</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">&quot;stream&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="p">)</span><span class="o">.</span><span class="n">to_fieldlist</span><span class="p">()</span>
+</span><span data-line="185">        <span class="n">fs</span> <span class="o">=</span> <span class="n">ekd</span><span class="o">.</span><span class="n">from_source</span><span class="p">(</span><span class="s2">"stream"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="p">)</span><span class="o">.</span><span class="n">to_fieldlist</span><span class="p">()</span>
 </span><span data-line="186">        <span class="k">if</span> <span class="n">req_kwargs</span><span class="p">:</span>
 </span><span data-line="187">            <span class="n">_</span> <span class="o">=</span> <span class="n">mars</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="o">**</span><span class="n">req_kwargs</span><span class="p">)</span>
 </span><span data-line="188">            <span class="k">yield from</span> <span class="p">(</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fs</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_match_request</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">req_kwargs</span><span class="p">))</span>
@@ -355,11 +355,11 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="191">
 </span><span data-line="192">    <span class="nd">@staticmethod</span>
 </span><span data-line="193">    <span class="k">def</span><span class="w"> </span><span class="nf">_match_request</span><span class="p">(</span><span class="n">field</span><span class="p">:</span> <span class="n">ekd</span><span class="o">.</span><span class="n">Field</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="194"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the field matches the request.&quot;&quot;&quot;</span>
+</span><span data-line="194"><span class="w">        </span><span class="sd">"""Check if the field matches the request."""</span>
 </span><span data-line="195">        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-</span><span data-line="196">            <span class="n">field_value</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;metadata.</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</span><span data-line="196">            <span class="n">field_value</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">"metadata.</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 </span><span data-line="197">            <span class="k">if</span> <span class="n">field_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="198">                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Metadata key &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; not found in field metadata.&quot;</span><span class="p">)</span>
+</span><span data-line="198">                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Metadata key '</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">' not found in field metadata."</span><span class="p">)</span>
 </span><span data-line="199">            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Container</span><span class="p">):</span>
 </span><span data-line="200">                <span class="k">if</span> <span class="n">field_value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
 </span><span data-line="201">                    <span class="k">return</span> <span class="kc">False</span>
@@ -394,8 +394,8 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=5c1e3c2a"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=4acd523c"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/shibuya.js?v=50760d75"></script></body>
 </html>

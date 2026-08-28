@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.radiation - meteodata-lab main-c9be13a documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.radiation - meteodata-lab main-6b6bf7b documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=ad592e98" />
@@ -139,7 +139,7 @@ data-aria-dark="Switch to auto color mode">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
           <h1>Source code for meteodatalab.operators.radiation</h1><div class="highlight"><pre>
-<span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;Radiation related operators.&quot;&quot;&quot;</span>
+<span></span><span data-line="1"><span class="sd">"""Radiation related operators."""</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="c1"># Third-party</span>
 </span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
@@ -152,7 +152,7 @@ data-aria-dark="Switch to auto color mode">
 <div class="viewcode-block" id="compute_athd_s">
 <a class="viewcode-back" href="../../../generated/meteodatalab.operators.radiation.html#meteodatalab.operators.radiation.compute_athd_s">[docs]</a>
 </span><span data-line="11"><span class="k">def</span><span class="w"> </span><span class="nf">compute_athd_s</span><span class="p">(</span><span class="n">athb_s</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">tsurf</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
-</span><span data-line="12"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute incoming longwave radiation at surface level.</span>
+</span><span data-line="12"><span class="w">    </span><span class="sd">"""Compute incoming longwave radiation at surface level.</span>
 </span><span data-line="13">
 </span><span data-line="14"><span class="sd">    Parameters</span>
 </span><span data-line="15"><span class="sd">    ----------</span>
@@ -166,10 +166,10 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="23"><span class="sd">    xarray.DataArray</span>
 </span><span data-line="24"><span class="sd">        Average downward longwave radiation at the surface [W m-2]</span>
 </span><span data-line="25">
-</span><span data-line="26"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="26"><span class="sd">    """</span>
 </span><span data-line="27">    <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
 </span><span data-line="28">        <span class="n">data</span><span class="o">=</span><span class="n">athb_s</span> <span class="o">/</span> <span class="n">pc</span><span class="o">.</span><span class="n">emissivity_surface</span> <span class="o">+</span> <span class="n">pc</span><span class="o">.</span><span class="n">boltzman_cst</span> <span class="o">*</span> <span class="n">tsurf</span><span class="o">**</span><span class="mi">4</span><span class="p">,</span>
-</span><span data-line="29">        <span class="n">attrs</span><span class="o">=</span><span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">athb_s</span><span class="o">.</span><span class="n">message_b64</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="s2">&quot;ATHD_S&quot;</span><span class="p">),</span>
+</span><span data-line="29">        <span class="n">attrs</span><span class="o">=</span><span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">athb_s</span><span class="o">.</span><span class="n">message_b64</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="s2">"ATHD_S"</span><span class="p">),</span>
 </span><span data-line="30">    <span class="p">)</span></div>
 
 </span><span data-line="31">
@@ -177,7 +177,7 @@ data-aria-dark="Switch to auto color mode">
 <div class="viewcode-block" id="compute_swdown">
 <a class="viewcode-back" href="../../../generated/meteodatalab.operators.radiation.html#meteodatalab.operators.radiation.compute_swdown">[docs]</a>
 </span><span data-line="33"><span class="k">def</span><span class="w"> </span><span class="nf">compute_swdown</span><span class="p">(</span><span class="n">diffuse</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">direct</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
-</span><span data-line="34"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute downward shortwave radiation.</span>
+</span><span data-line="34"><span class="w">    </span><span class="sd">"""Compute downward shortwave radiation.</span>
 </span><span data-line="35">
 </span><span data-line="36"><span class="sd">    Parameters</span>
 </span><span data-line="37"><span class="sd">    ----------</span>
@@ -191,10 +191,10 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="45"><span class="sd">    xarray.DataArray</span>
 </span><span data-line="46"><span class="sd">        downward shortwave radiation at surface level.</span>
 </span><span data-line="47">
-</span><span data-line="48"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="48"><span class="sd">    """</span>
 </span><span data-line="49">    <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
 </span><span data-line="50">        <span class="n">data</span><span class="o">=</span><span class="p">(</span><span class="n">diffuse</span> <span class="o">+</span> <span class="n">direct</span><span class="p">)</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-</span><span data-line="51">        <span class="n">attrs</span><span class="o">=</span><span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">diffuse</span><span class="o">.</span><span class="n">message_b64</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="s2">&quot;ASOD_S&quot;</span><span class="p">),</span>
+</span><span data-line="51">        <span class="n">attrs</span><span class="o">=</span><span class="n">metadata</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">diffuse</span><span class="o">.</span><span class="n">message_b64</span><span class="p">,</span> <span class="n">shortName</span><span class="o">=</span><span class="s2">"ASOD_S"</span><span class="p">),</span>
 </span><span data-line="52">    <span class="p">)</span></div>
 
 </span></pre></div>
@@ -224,8 +224,8 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=5c1e3c2a"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=4acd523c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/shibuya.js?v=50760d75"></script></body>
 </html>

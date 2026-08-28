@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.crop - meteodata-lab main-c9be13a documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.operators.crop - meteodata-lab main-6b6bf7b documentation</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=ad592e98" />
@@ -139,7 +139,7 @@ data-aria-dark="Switch to auto color mode">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
           <h1>Source code for meteodatalab.operators.crop</h1><div class="highlight"><pre>
-<span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;Horizontal cropping operator.&quot;&quot;&quot;</span>
+<span></span><span data-line="1"><span class="sd">"""Horizontal cropping operator."""</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="c1"># Standard library</span>
 </span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
@@ -166,7 +166,7 @@ data-aria-dark="Switch to auto color mode">
 <div class="viewcode-block" id="crop">
 <a class="viewcode-back" href="../../../generated/meteodatalab.operators.crop.html#meteodatalab.operators.crop.crop">[docs]</a>
 </span><span data-line="22"><span class="k">def</span><span class="w"> </span><span class="nf">crop</span><span class="p">(</span><span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">bounds</span><span class="p">:</span> <span class="n">Bounds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
-</span><span data-line="23"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Crop the field to the given bounds.</span>
+</span><span data-line="23"><span class="w">    </span><span class="sd">"""Crop the field to the given bounds.</span>
 </span><span data-line="24">
 </span><span data-line="25"><span class="sd">    Only fields defined on regular grids in rotlatlon coordinates,</span>
 </span><span data-line="26"><span class="sd">    without rotation nor flipped axes are supported.</span>
@@ -191,7 +191,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="45"><span class="sd">    xarray.DataArray</span>
 </span><span data-line="46"><span class="sd">        The data is set to cropped domain and the metadata is updated accordingly.</span>
 </span><span data-line="47">
-</span><span data-line="48"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="48"><span class="sd">    """</span>
 </span><span data-line="49">    <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">bounds</span>
 </span><span data-line="50">
 </span><span data-line="51">    <span class="n">sizes</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">sizes</span>
@@ -199,10 +199,10 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="53">        <span class="n">xmin</span> <span class="o">&gt;</span> <span class="n">xmax</span>
 </span><span data-line="54">        <span class="ow">or</span> <span class="n">ymin</span> <span class="o">&gt;</span> <span class="n">ymax</span>
 </span><span data-line="55">        <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span><span class="n">v</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">)</span>
-</span><span data-line="56">        <span class="ow">or</span> <span class="n">xmax</span> <span class="o">&gt;=</span> <span class="n">sizes</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span>
-</span><span data-line="57">        <span class="ow">or</span> <span class="n">ymax</span> <span class="o">&gt;=</span> <span class="n">sizes</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span>
+</span><span data-line="56">        <span class="ow">or</span> <span class="n">xmax</span> <span class="o">&gt;=</span> <span class="n">sizes</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span>
+</span><span data-line="57">        <span class="ow">or</span> <span class="n">ymax</span> <span class="o">&gt;=</span> <span class="n">sizes</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span>
 </span><span data-line="58">    <span class="p">):</span>
-</span><span data-line="59">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Inconsistent bounds: </span><span class="si">{</span><span class="n">bounds</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span data-line="59">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Inconsistent bounds: </span><span class="si">{</span><span class="n">bounds</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </span><span data-line="60">
 </span><span data-line="61">    <span class="n">grid</span> <span class="o">=</span> <span class="n">gis</span><span class="o">.</span><span class="n">get_grid</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">geography</span><span class="p">)</span>
 </span><span data-line="62">    <span class="n">lon_min</span><span class="p">,</span> <span class="n">lon_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">rlon</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">])</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">)</span>
@@ -252,8 +252,8 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=5c1e3c2a"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=4acd523c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/shibuya.js?v=50760d75"></script></body>
 </html>

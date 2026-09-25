@@ -19,7 +19,7 @@ import pandas as pd
 import xarray as xr
 
 # Local
-from . import data_source, icon_grid, mars, metadata
+from . import data_source, mars, metadata
 
 logger = logging.getLogger(__name__)
 

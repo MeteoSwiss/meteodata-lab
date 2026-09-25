@@ -99,3 +99,16 @@ def test_any_staggering(sample):
     }
 
     assert observed == expected
+
+
+def test_param_passthrough(sample):
+    observed = mars.Request(
+        "500028",
+        date="20200101",
+        time="0000",
+        number=0,
+        step=0,
+    ).to_fdb()
+    expected = sample
+
+    assert observed == expected

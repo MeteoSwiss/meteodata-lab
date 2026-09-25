@@ -78,7 +78,7 @@ def _get_hcoords(
     field: ekd.Field, geo_coords: GeoCoordsCbk | None
 ) -> tuple[dict[str, xr.DataArray], tuple[str, ...]]:
     hdims: tuple[str, ...] = ("y", "x")
-    if field.metadata("gridType") == "unstructured_grid": 
+    if field.metadata("gridType") == "unstructured_grid":
         hdims = ("cell",)
         if geo_coords is not None:
             grid_uuid = UUID(field.metadata("uuidOfHGrid"))

@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.grib_decoder - meteodata-lab main-6b6bf7b documentation</title><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>meteodatalab.grib_decoder - meteodata-lab main-e257364 documentation</title><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=ad592e98" />
@@ -160,7 +160,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="19"><span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 </span><span data-line="20">
 </span><span data-line="21"><span class="c1"># Local</span>
-</span><span data-line="22"><span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">data_source</span><span class="p">,</span> <span class="n">icon_grid</span><span class="p">,</span> <span class="n">mars</span><span class="p">,</span> <span class="n">metadata</span>
+</span><span data-line="22"><span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">data_source</span><span class="p">,</span> <span class="n">mars</span><span class="p">,</span> <span class="n">metadata</span>
 </span><span data-line="23">
 </span><span data-line="24"><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 </span><span data-line="25">
@@ -227,360 +227,353 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="77"><span class="k">def</span><span class="w"> </span><span class="nf">_get_hcoords</span><span class="p">(</span>
 </span><span data-line="78">    <span class="n">field</span><span class="p">:</span> <span class="n">ekd</span><span class="o">.</span><span class="n">Field</span><span class="p">,</span> <span class="n">geo_coords</span><span class="p">:</span> <span class="n">GeoCoordsCbk</span> <span class="o">|</span> <span class="kc">None</span>
 </span><span data-line="79"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
-</span><span data-line="80">    <span class="n">hdims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+</span><span data-line="80">    <span class="n">hdims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"y"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">)</span>
 </span><span data-line="81">    <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="s2">"gridType"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"unstructured_grid"</span><span class="p">:</span>
 </span><span data-line="82">        <span class="n">hdims</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"cell"</span><span class="p">,)</span>
-</span><span data-line="83">        <span class="n">grid_uuid</span> <span class="o">=</span> <span class="n">UUID</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="s2">"uuidOfHGrid"</span><span class="p">))</span>
-</span><span data-line="84">        <span class="k">if</span> <span class="n">geo_coords</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="85">            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-</span><span data-line="86">                <span class="s2">"No grid source provided when loading data with unstructured grid, "</span>
-</span><span data-line="87">                <span class="s2">"falling back to balfrin grid file locations."</span>
-</span><span data-line="88">            <span class="p">)</span>
-</span><span data-line="89">            <span class="n">hcoords</span> <span class="o">=</span> <span class="n">icon_grid</span><span class="o">.</span><span class="n">load_grid_from_balfrin</span><span class="p">()(</span><span class="n">grid_uuid</span><span class="p">)</span>
-</span><span data-line="90">            <span class="k">return</span> <span class="n">hcoords</span><span class="p">,</span> <span class="n">hdims</span>
-</span><span data-line="91">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="92">            <span class="k">return</span> <span class="n">geo_coords</span><span class="p">(</span><span class="n">grid_uuid</span><span class="p">),</span> <span class="n">hdims</span>
+</span><span data-line="83">        <span class="k">if</span> <span class="n">geo_coords</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="84">            <span class="n">grid_uuid</span> <span class="o">=</span> <span class="n">UUID</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="s2">"uuidOfHGrid"</span><span class="p">))</span>
+</span><span data-line="85">            <span class="k">return</span> <span class="n">geo_coords</span><span class="p">(</span><span class="n">grid_uuid</span><span class="p">),</span> <span class="n">hdims</span>
+</span><span data-line="86">
+</span><span data-line="87">    <span class="n">lats</span><span class="p">,</span> <span class="n">lons</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">geography</span><span class="o">.</span><span class="n">latlons</span><span class="p">()</span>
+</span><span data-line="88">    <span class="n">hcoords</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="89">        <span class="s2">"lat"</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="n">hdims</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">lats</span><span class="p">),</span>
+</span><span data-line="90">        <span class="s2">"lon"</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="n">hdims</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">lons</span><span class="p">),</span>
+</span><span data-line="91">    <span class="p">}</span>
+</span><span data-line="92">    <span class="k">return</span> <span class="n">hcoords</span><span class="p">,</span> <span class="n">hdims</span>
 </span><span data-line="93">
-</span><span data-line="94">    <span class="n">lats</span><span class="p">,</span> <span class="n">lons</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">geography</span><span class="o">.</span><span class="n">latlons</span><span class="p">()</span>
-</span><span data-line="95">    <span class="n">hcoords</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="96">        <span class="s2">"lat"</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s2">"y"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="n">lats</span><span class="p">),</span>
-</span><span data-line="97">        <span class="s2">"lon"</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s2">"y"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="n">lons</span><span class="p">),</span>
-</span><span data-line="98">    <span class="p">}</span>
-</span><span data-line="99">    <span class="n">hdims</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"y"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">)</span>
-</span><span data-line="100">    <span class="k">return</span> <span class="n">hcoords</span><span class="p">,</span> <span class="n">hdims</span>
+</span><span data-line="94">
+</span><span data-line="95"><span class="k">def</span><span class="w"> </span><span class="nf">_parse_datetime</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
+</span><span data-line="96">    <span class="k">return</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">date</span><span class="si">}{</span><span class="n">time</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"%Y%m</span><span class="si">%d</span><span class="s2">%H%M"</span><span class="p">)</span>
+</span><span data-line="97">
+</span><span data-line="98">
+</span><span data-line="99"><span class="k">def</span><span class="w"> </span><span class="nf">_to_timedelta</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">:</span>
+</span><span data-line="100">    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
 </span><span data-line="101">
 </span><span data-line="102">
-</span><span data-line="103"><span class="k">def</span><span class="w"> </span><span class="nf">_parse_datetime</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
-</span><span data-line="104">    <span class="k">return</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">date</span><span class="si">}{</span><span class="n">time</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"%Y%m</span><span class="si">%d</span><span class="s2">%H%M"</span><span class="p">)</span>
-</span><span data-line="105">
-</span><span data-line="106">
-</span><span data-line="107"><span class="k">def</span><span class="w"> </span><span class="nf">_to_timedelta</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">:</span>
-</span><span data-line="108">    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</span><span data-line="109">
-</span><span data-line="110">
-</span><span data-line="111"><span class="k">def</span><span class="w"> </span><span class="nf">_get_key</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">dims</span><span class="p">):</span>
-</span><span data-line="112">    <span class="n">step</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="s2">"step"</span><span class="p">)</span>
-</span><span data-line="113">    <span class="n">unit</span> <span class="o">=</span> <span class="s2">"h"</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-</span><span data-line="114">    <span class="n">extra</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="115">        <span class="s2">"metadata.ref_time"</span><span class="p">:</span> <span class="n">_parse_datetime</span><span class="p">(</span>
-</span><span data-line="116">            <span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="s2">"dataDate"</span><span class="p">),</span>
-</span><span data-line="117">            <span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="s2">"dataTime"</span><span class="p">),</span>
-</span><span data-line="118">        <span class="p">),</span>
-</span><span data-line="119">        <span class="s2">"metadata.step"</span><span class="p">:</span> <span class="n">_to_timedelta</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">unit</span><span class="p">),</span>
-</span><span data-line="120">    <span class="p">}</span>
-</span><span data-line="121">    <span class="n">dim_keys</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"metadata.</span><span class="si">{</span><span class="n">DIM_MAP</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dims</span><span class="p">)</span>
-</span><span data-line="122">    <span class="n">mapping</span> <span class="o">=</span> <span class="n">ChainGet</span><span class="p">(</span><span class="n">extra</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
-</span><span data-line="123">    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">mapping</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dim_keys</span><span class="p">)</span>
-</span><span data-line="124">
-</span><span data-line="125">
-</span><span data-line="126"><span class="nd">@dc</span><span class="o">.</span><span class="n">dataclass</span>
-</span><span data-line="127"><span class="k">class</span><span class="w"> </span><span class="nc">_FieldBuffer</span><span class="p">:</span>
-</span><span data-line="128">    <span class="n">is_ensemble</span><span class="p">:</span> <span class="n">dc</span><span class="o">.</span><span class="n">InitVar</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
-</span><span data-line="129">    <span class="n">dims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">DIM_MAP</span><span class="p">)</span>
-</span><span data-line="130">    <span class="n">hdims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"y"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">)</span>
-</span><span data-line="131">    <span class="n">hcoords</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
-</span><span data-line="132">    <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
-</span><span data-line="133">    <span class="n">values</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
-</span><span data-line="134">
-</span><span data-line="135">    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_ensemble</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
-</span><span data-line="136">        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_ensemble</span><span class="p">:</span>
-</span><span data-line="137">            <span class="bp">self</span><span class="o">.</span><span class="n">dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+</span><span data-line="103"><span class="k">def</span><span class="w"> </span><span class="nf">_get_key</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">dims</span><span class="p">):</span>
+</span><span data-line="104">    <span class="n">step</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="s2">"step"</span><span class="p">)</span>
+</span><span data-line="105">    <span class="n">unit</span> <span class="o">=</span> <span class="s2">"h"</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+</span><span data-line="106">    <span class="n">extra</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="107">        <span class="s2">"metadata.ref_time"</span><span class="p">:</span> <span class="n">_parse_datetime</span><span class="p">(</span>
+</span><span data-line="108">            <span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="s2">"dataDate"</span><span class="p">),</span>
+</span><span data-line="109">            <span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="s2">"dataTime"</span><span class="p">),</span>
+</span><span data-line="110">        <span class="p">),</span>
+</span><span data-line="111">        <span class="s2">"metadata.step"</span><span class="p">:</span> <span class="n">_to_timedelta</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">unit</span><span class="p">),</span>
+</span><span data-line="112">    <span class="p">}</span>
+</span><span data-line="113">    <span class="n">dim_keys</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"metadata.</span><span class="si">{</span><span class="n">DIM_MAP</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dims</span><span class="p">)</span>
+</span><span data-line="114">    <span class="n">mapping</span> <span class="o">=</span> <span class="n">ChainGet</span><span class="p">(</span><span class="n">extra</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+</span><span data-line="115">    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">mapping</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dim_keys</span><span class="p">)</span>
+</span><span data-line="116">
+</span><span data-line="117">
+</span><span data-line="118"><span class="nd">@dc</span><span class="o">.</span><span class="n">dataclass</span>
+</span><span data-line="119"><span class="k">class</span><span class="w"> </span><span class="nc">_FieldBuffer</span><span class="p">:</span>
+</span><span data-line="120">    <span class="n">is_ensemble</span><span class="p">:</span> <span class="n">dc</span><span class="o">.</span><span class="n">InitVar</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
+</span><span data-line="121">    <span class="n">dims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">DIM_MAP</span><span class="p">)</span>
+</span><span data-line="122">    <span class="n">hdims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"y"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">)</span>
+</span><span data-line="123">    <span class="n">hcoords</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+</span><span data-line="124">    <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+</span><span data-line="125">    <span class="n">values</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+</span><span data-line="126">
+</span><span data-line="127">    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_ensemble</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+</span><span data-line="128">        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_ensemble</span><span class="p">:</span>
+</span><span data-line="129">            <span class="bp">self</span><span class="o">.</span><span class="n">dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+</span><span data-line="130">
+</span><span data-line="131">    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">ekd</span><span class="o">.</span><span class="n">Field</span><span class="p">,</span> <span class="n">geo_coords</span><span class="p">:</span> <span class="n">GeoCoordsCbk</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="132">        <span class="n">key</span> <span class="o">=</span> <span class="n">_get_key</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+</span><span data-line="133">        <span class="n">name</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="n">NAME_KEY</span><span class="p">)</span>
+</span><span data-line="134">        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Received field for param: </span><span class="si">%s</span><span class="s2">, key: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+</span><span data-line="135">
+</span><span data-line="136">        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+</span><span data-line="137">            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">"Key collision for param: </span><span class="si">%s</span><span class="s2">, key: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
 </span><span data-line="138">
-</span><span data-line="139">    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">ekd</span><span class="o">.</span><span class="n">Field</span><span class="p">,</span> <span class="n">geo_coords</span><span class="p">:</span> <span class="n">GeoCoordsCbk</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="140">        <span class="n">key</span> <span class="o">=</span> <span class="n">_get_key</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
-</span><span data-line="141">        <span class="n">name</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="n">NAME_KEY</span><span class="p">)</span>
-</span><span data-line="142">        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Received field for param: </span><span class="si">%s</span><span class="s2">, key: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-</span><span data-line="143">
-</span><span data-line="144">        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
-</span><span data-line="145">            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">"Key collision for param: </span><span class="si">%s</span><span class="s2">, key: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+</span><span data-line="139">        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</span><span data-line="140">
+</span><span data-line="141">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">:</span>
+</span><span data-line="142">            <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="143">                <span class="s2">"message_b64"</span><span class="p">:</span> <span class="n">metadata</span><span class="o">.</span><span class="n">serialise_field</span><span class="p">(</span><span class="n">field</span><span class="p">),</span>
+</span><span data-line="144">                <span class="o">**</span><span class="n">metadata</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">field</span><span class="p">),</span>
+</span><span data-line="145">            <span class="p">}</span>
 </span><span data-line="146">
-</span><span data-line="147">        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-</span><span data-line="148">
-</span><span data-line="149">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">:</span>
-</span><span data-line="150">            <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="151">                <span class="s2">"message_b64"</span><span class="p">:</span> <span class="n">metadata</span><span class="o">.</span><span class="n">serialise_field</span><span class="p">(</span><span class="n">field</span><span class="p">),</span>
-</span><span data-line="152">                <span class="o">**</span><span class="n">metadata</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">field</span><span class="p">),</span>
-</span><span data-line="153">            <span class="p">}</span>
+</span><span data-line="147">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hcoords</span><span class="p">:</span>
+</span><span data-line="148">            <span class="bp">self</span><span class="o">.</span><span class="n">hcoords</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdims</span> <span class="o">=</span> <span class="n">_get_hcoords</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">geo_coords</span><span class="o">=</span><span class="n">geo_coords</span><span class="p">)</span>
+</span><span data-line="149">
+</span><span data-line="150">    <span class="k">def</span><span class="w"> </span><span class="nf">_gather_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="151">        <span class="n">coord_values</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</span><span data-line="152">        <span class="n">unique</span> <span class="o">=</span> <span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">values</span><span class="p">))</span> <span class="k">for</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">coord_values</span><span class="p">)</span>
+</span><span data-line="153">        <span class="n">coords</span> <span class="o">=</span> <span class="p">{</span><span class="n">dim</span><span class="p">:</span> <span class="n">c</span> <span class="k">for</span> <span class="n">dim</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">,</span> <span class="n">unique</span><span class="p">)}</span>
 </span><span data-line="154">
-</span><span data-line="155">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hcoords</span><span class="p">:</span>
-</span><span data-line="156">            <span class="bp">self</span><span class="o">.</span><span class="n">hcoords</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdims</span> <span class="o">=</span> <span class="n">_get_hcoords</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">geo_coords</span><span class="o">=</span><span class="n">geo_coords</span><span class="p">)</span>
-</span><span data-line="157">
-</span><span data-line="158">    <span class="k">def</span><span class="w"> </span><span class="nf">_gather_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="159">        <span class="n">coord_values</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-</span><span data-line="160">        <span class="n">unique</span> <span class="o">=</span> <span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">values</span><span class="p">))</span> <span class="k">for</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">coord_values</span><span class="p">)</span>
-</span><span data-line="161">        <span class="n">coords</span> <span class="o">=</span> <span class="p">{</span><span class="n">dim</span><span class="p">:</span> <span class="n">c</span> <span class="k">for</span> <span class="n">dim</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">,</span> <span class="n">unique</span><span class="p">)}</span>
-</span><span data-line="162">
-</span><span data-line="163">        <span class="k">if</span> <span class="n">missing</span> <span class="o">:=</span> <span class="p">[</span>
-</span><span data-line="164">            <span class="n">combination</span>
-</span><span data-line="165">            <span class="k">for</span> <span class="n">combination</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">coords</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-</span><span data-line="166">            <span class="k">if</span> <span class="n">combination</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span>
-</span><span data-line="167">        <span class="p">]:</span>
-</span><span data-line="168">            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Missing combinations: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">"</span>
-</span><span data-line="169">            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-</span><span data-line="170">            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</span><span data-line="155">        <span class="k">if</span> <span class="n">missing</span> <span class="o">:=</span> <span class="p">[</span>
+</span><span data-line="156">            <span class="n">combination</span>
+</span><span data-line="157">            <span class="k">for</span> <span class="n">combination</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">coords</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+</span><span data-line="158">            <span class="k">if</span> <span class="n">combination</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span>
+</span><span data-line="159">        <span class="p">]:</span>
+</span><span data-line="160">            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Missing combinations: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">"</span>
+</span><span data-line="161">            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</span><span data-line="162">            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</span><span data-line="163">
+</span><span data-line="164">        <span class="n">field_shape</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span><span class="o">.</span><span class="n">shape</span>
+</span><span data-line="165">        <span class="n">shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">coords</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">+</span> <span class="n">field_shape</span>
+</span><span data-line="166">        <span class="k">return</span> <span class="n">coords</span><span class="p">,</span> <span class="n">shape</span>
+</span><span data-line="167">
+</span><span data-line="168">    <span class="k">def</span><span class="w"> </span><span class="nf">to_xarray</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
+</span><span data-line="169">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+</span><span data-line="170">            <span class="k">raise</span> <span class="n">MissingData</span><span class="p">(</span><span class="s2">"No values."</span><span class="p">)</span>
 </span><span data-line="171">
-</span><span data-line="172">        <span class="n">field_shape</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span><span class="o">.</span><span class="n">shape</span>
-</span><span data-line="173">        <span class="n">shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">coords</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">+</span> <span class="n">field_shape</span>
-</span><span data-line="174">        <span class="k">return</span> <span class="n">coords</span><span class="p">,</span> <span class="n">shape</span>
-</span><span data-line="175">
-</span><span data-line="176">    <span class="k">def</span><span class="w"> </span><span class="nf">to_xarray</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
-</span><span data-line="177">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
-</span><span data-line="178">            <span class="k">raise</span> <span class="n">MissingData</span><span class="p">(</span><span class="s2">"No values."</span><span class="p">)</span>
-</span><span data-line="179">
-</span><span data-line="180">        <span class="n">coords</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gather_coords</span><span class="p">()</span>
-</span><span data-line="181">        <span class="n">ref_time</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="s2">"ref_time"</span><span class="p">],</span> <span class="n">dims</span><span class="o">=</span><span class="s2">"ref_time"</span><span class="p">)</span>
-</span><span data-line="182">        <span class="n">lead_time</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="s2">"lead_time"</span><span class="p">],</span> <span class="n">dims</span><span class="o">=</span><span class="s2">"lead_time"</span><span class="p">)</span>
-</span><span data-line="183">        <span class="n">tcoords</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"valid_time"</span><span class="p">:</span> <span class="n">ref_time</span> <span class="o">+</span> <span class="n">lead_time</span><span class="p">}</span>
-</span><span data-line="184">
-</span><span data-line="185">        <span class="n">array</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
-</span><span data-line="186">            <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-</span><span data-line="187">                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)]</span>
-</span><span data-line="188">            <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span>
-</span><span data-line="189">            <span class="n">coords</span><span class="o">=</span><span class="n">coords</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">hcoords</span> <span class="o">|</span> <span class="n">tcoords</span><span class="p">,</span>
-</span><span data-line="190">            <span class="n">dims</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdims</span><span class="p">,</span>
-</span><span data-line="191">            <span class="n">attrs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
-</span><span data-line="192">        <span class="p">)</span>
-</span><span data-line="193">
-</span><span data-line="194">        <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">vcoord_type</span> <span class="o">!=</span> <span class="s2">"surface"</span><span class="p">:</span>
-</span><span data-line="195">            <span class="k">return</span> <span class="n">array</span>
-</span><span data-line="196">
-</span><span data-line="197">        <span class="k">return</span> <span class="n">array</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="s2">"z"</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span data-line="198">
+</span><span data-line="172">        <span class="n">coords</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gather_coords</span><span class="p">()</span>
+</span><span data-line="173">        <span class="n">ref_time</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="s2">"ref_time"</span><span class="p">],</span> <span class="n">dims</span><span class="o">=</span><span class="s2">"ref_time"</span><span class="p">)</span>
+</span><span data-line="174">        <span class="n">lead_time</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="s2">"lead_time"</span><span class="p">],</span> <span class="n">dims</span><span class="o">=</span><span class="s2">"lead_time"</span><span class="p">)</span>
+</span><span data-line="175">        <span class="n">tcoords</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"valid_time"</span><span class="p">:</span> <span class="n">ref_time</span> <span class="o">+</span> <span class="n">lead_time</span><span class="p">}</span>
+</span><span data-line="176">
+</span><span data-line="177">        <span class="n">array</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
+</span><span data-line="178">            <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+</span><span data-line="179">                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)]</span>
+</span><span data-line="180">            <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span>
+</span><span data-line="181">            <span class="n">coords</span><span class="o">=</span><span class="n">coords</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">hcoords</span> <span class="o">|</span> <span class="n">tcoords</span><span class="p">,</span>
+</span><span data-line="182">            <span class="n">dims</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdims</span><span class="p">,</span>
+</span><span data-line="183">            <span class="n">attrs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+</span><span data-line="184">        <span class="p">)</span>
+</span><span data-line="185">
+</span><span data-line="186">        <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">vcoord_type</span> <span class="o">!=</span> <span class="s2">"surface"</span><span class="p">:</span>
+</span><span data-line="187">            <span class="k">return</span> <span class="n">array</span>
+</span><span data-line="188">
+</span><span data-line="189">        <span class="k">return</span> <span class="n">array</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="s2">"z"</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span data-line="190">
+</span><span data-line="191">
+</span><span data-line="192"><span class="k">def</span><span class="w"> </span><span class="nf">_load_buffer_map</span><span class="p">(</span>
+</span><span data-line="193">    <span class="n">source</span><span class="p">:</span> <span class="n">data_source</span><span class="o">.</span><span class="n">DataSource</span><span class="p">,</span>
+</span><span data-line="194">    <span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">,</span>
+</span><span data-line="195">    <span class="n">geo_coords</span><span class="p">:</span> <span class="n">GeoCoordsCbk</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="196"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">_FieldBuffer</span><span class="p">]:</span>
+</span><span data-line="197">    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Retrieving request: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+</span><span data-line="198">    <span class="n">fs</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 </span><span data-line="199">
-</span><span data-line="200"><span class="k">def</span><span class="w"> </span><span class="nf">_load_buffer_map</span><span class="p">(</span>
-</span><span data-line="201">    <span class="n">source</span><span class="p">:</span> <span class="n">data_source</span><span class="o">.</span><span class="n">DataSource</span><span class="p">,</span>
-</span><span data-line="202">    <span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">,</span>
-</span><span data-line="203">    <span class="n">geo_coords</span><span class="p">:</span> <span class="n">GeoCoordsCbk</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-</span><span data-line="204"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">_FieldBuffer</span><span class="p">]:</span>
-</span><span data-line="205">    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Retrieving request: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
-</span><span data-line="206">    <span class="n">fs</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-</span><span data-line="207">
-</span><span data-line="208">    <span class="n">buffer_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">_FieldBuffer</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span data-line="200">    <span class="n">buffer_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">_FieldBuffer</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span data-line="201">
+</span><span data-line="202">    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fs</span><span class="p">:</span>
+</span><span data-line="203">        <span class="n">name</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="n">NAME_KEY</span><span class="p">)</span>
+</span><span data-line="204">        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">buffer_map</span><span class="p">:</span>
+</span><span data-line="205">            <span class="n">buffer</span> <span class="o">=</span> <span class="n">buffer_map</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+</span><span data-line="206">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="207">            <span class="n">buffer</span> <span class="o">=</span> <span class="n">buffer_map</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">_FieldBuffer</span><span class="p">(</span><span class="n">_is_ensemble</span><span class="p">(</span><span class="n">field</span><span class="p">))</span>
+</span><span data-line="208">        <span class="n">buffer</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">geo_coords</span><span class="o">=</span><span class="n">geo_coords</span><span class="p">)</span>
 </span><span data-line="209">
-</span><span data-line="210">    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fs</span><span class="p">:</span>
-</span><span data-line="211">        <span class="n">name</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="n">NAME_KEY</span><span class="p">)</span>
-</span><span data-line="212">        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">buffer_map</span><span class="p">:</span>
-</span><span data-line="213">            <span class="n">buffer</span> <span class="o">=</span> <span class="n">buffer_map</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-</span><span data-line="214">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="215">            <span class="n">buffer</span> <span class="o">=</span> <span class="n">buffer_map</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">_FieldBuffer</span><span class="p">(</span><span class="n">_is_ensemble</span><span class="p">(</span><span class="n">field</span><span class="p">))</span>
-</span><span data-line="216">        <span class="n">buffer</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">geo_coords</span><span class="o">=</span><span class="n">geo_coords</span><span class="p">)</span>
-</span><span data-line="217">
-</span><span data-line="218">    <span class="k">return</span> <span class="n">buffer_map</span>
-</span><span data-line="219">
-</span><span data-line="220">
+</span><span data-line="210">    <span class="k">return</span> <span class="n">buffer_map</span>
+</span><span data-line="211">
+</span><span data-line="212">
 <div class="viewcode-block" id="load_single_param">
 <a class="viewcode-back" href="../../generated/meteodatalab.grib_decoder.html#meteodatalab.grib_decoder.load_single_param">[docs]</a>
-</span><span data-line="221"><span class="k">def</span><span class="w"> </span><span class="nf">load_single_param</span><span class="p">(</span>
-</span><span data-line="222">    <span class="n">source</span><span class="p">:</span> <span class="n">data_source</span><span class="o">.</span><span class="n">DataSource</span><span class="p">,</span>
-</span><span data-line="223">    <span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">,</span>
-</span><span data-line="224">    <span class="n">geo_coords</span><span class="p">:</span> <span class="n">GeoCoordsCbk</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span data-line="225"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
-</span><span data-line="226"><span class="w">    </span><span class="sd">"""Request data from a data source for a single parameter.</span>
-</span><span data-line="227">
-</span><span data-line="228"><span class="sd">    Parameters</span>
-</span><span data-line="229"><span class="sd">    ----------</span>
-</span><span data-line="230"><span class="sd">    source : data_source.DataSource</span>
-</span><span data-line="231"><span class="sd">        Source to request the data from.</span>
-</span><span data-line="232"><span class="sd">    request : str | tuple[str, str] | dict[str, Any] | meteodatalab.mars.Request</span>
-</span><span data-line="233"><span class="sd">        Request for data from the source in the mars language.</span>
-</span><span data-line="234"><span class="sd">    geo_coords: Callable[[UUID], dict[str, xr.DataArray]] | None</span>
-</span><span data-line="235"><span class="sd">        Callable that returns the horizontal coordinates</span>
-</span><span data-line="236"><span class="sd">        of the grid defined by the given UUID. The dimension must be "cell".</span>
+</span><span data-line="213"><span class="k">def</span><span class="w"> </span><span class="nf">load_single_param</span><span class="p">(</span>
+</span><span data-line="214">    <span class="n">source</span><span class="p">:</span> <span class="n">data_source</span><span class="o">.</span><span class="n">DataSource</span><span class="p">,</span>
+</span><span data-line="215">    <span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">,</span>
+</span><span data-line="216">    <span class="n">geo_coords</span><span class="p">:</span> <span class="n">GeoCoordsCbk</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="217"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
+</span><span data-line="218"><span class="w">    </span><span class="sd">"""Request data from a data source for a single parameter.</span>
+</span><span data-line="219">
+</span><span data-line="220"><span class="sd">    Parameters</span>
+</span><span data-line="221"><span class="sd">    ----------</span>
+</span><span data-line="222"><span class="sd">    source : data_source.DataSource</span>
+</span><span data-line="223"><span class="sd">        Source to request the data from.</span>
+</span><span data-line="224"><span class="sd">    request : str | tuple[str, str] | dict[str, Any] | meteodatalab.mars.Request</span>
+</span><span data-line="225"><span class="sd">        Request for data from the source in the mars language.</span>
+</span><span data-line="226"><span class="sd">    geo_coords: Callable[[UUID], dict[str, xr.DataArray]] | None</span>
+</span><span data-line="227"><span class="sd">        Callable that returns the horizontal coordinates</span>
+</span><span data-line="228"><span class="sd">        of the grid defined by the given UUID. The dimension must be "cell".</span>
+</span><span data-line="229"><span class="sd">        By default, the horizontal coordinates are extracted by eccodes.</span>
+</span><span data-line="230">
+</span><span data-line="231"><span class="sd">    Raises</span>
+</span><span data-line="232"><span class="sd">    ------</span>
+</span><span data-line="233"><span class="sd">    ValueError</span>
+</span><span data-line="234"><span class="sd">        if more than one param is present in the request.</span>
+</span><span data-line="235"><span class="sd">    RuntimeError</span>
+</span><span data-line="236"><span class="sd">        when all of the requested data is not returned from the data source.</span>
 </span><span data-line="237">
-</span><span data-line="238"><span class="sd">    Raises</span>
-</span><span data-line="239"><span class="sd">    ------</span>
-</span><span data-line="240"><span class="sd">    ValueError</span>
-</span><span data-line="241"><span class="sd">        if more than one param is present in the request.</span>
-</span><span data-line="242"><span class="sd">    RuntimeError</span>
-</span><span data-line="243"><span class="sd">        when all of the requested data is not returned from the data source.</span>
-</span><span data-line="244">
-</span><span data-line="245"><span class="sd">    Returns</span>
-</span><span data-line="246"><span class="sd">    -------</span>
-</span><span data-line="247"><span class="sd">    xarray.DataArray</span>
-</span><span data-line="248"><span class="sd">        A data array of the requested field.</span>
-</span><span data-line="249">
-</span><span data-line="250"><span class="sd">    """</span>
-</span><span data-line="251">    <span class="k">if</span> <span class="p">(</span>
-</span><span data-line="252">        <span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
-</span><span data-line="253">        <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="s2">"param"</span><span class="p">],</span> <span class="n">Sequence</span><span class="p">)</span>
-</span><span data-line="254">        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="s2">"param"</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span>
-</span><span data-line="255">    <span class="p">):</span>
-</span><span data-line="256">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Only one param is supported."</span><span class="p">)</span>
-</span><span data-line="257">
-</span><span data-line="258">    <span class="n">buffer_map</span> <span class="o">=</span> <span class="n">_load_buffer_map</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">geo_coords</span><span class="p">)</span>
-</span><span data-line="259">    <span class="p">[</span><span class="n">buffer</span><span class="p">]</span> <span class="o">=</span> <span class="n">buffer_map</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-</span><span data-line="260">    <span class="k">return</span> <span class="n">buffer</span><span class="o">.</span><span class="n">to_xarray</span><span class="p">()</span></div>
+</span><span data-line="238"><span class="sd">    Returns</span>
+</span><span data-line="239"><span class="sd">    -------</span>
+</span><span data-line="240"><span class="sd">    xarray.DataArray</span>
+</span><span data-line="241"><span class="sd">        A data array of the requested field.</span>
+</span><span data-line="242">
+</span><span data-line="243"><span class="sd">    """</span>
+</span><span data-line="244">    <span class="k">if</span> <span class="p">(</span>
+</span><span data-line="245">        <span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+</span><span data-line="246">        <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="s2">"param"</span><span class="p">],</span> <span class="n">Sequence</span><span class="p">)</span>
+</span><span data-line="247">        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="s2">"param"</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span>
+</span><span data-line="248">    <span class="p">):</span>
+</span><span data-line="249">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Only one param is supported."</span><span class="p">)</span>
+</span><span data-line="250">
+</span><span data-line="251">    <span class="n">buffer_map</span> <span class="o">=</span> <span class="n">_load_buffer_map</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">geo_coords</span><span class="p">)</span>
+</span><span data-line="252">    <span class="p">[</span><span class="n">buffer</span><span class="p">]</span> <span class="o">=</span> <span class="n">buffer_map</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+</span><span data-line="253">    <span class="k">return</span> <span class="n">buffer</span><span class="o">.</span><span class="n">to_xarray</span><span class="p">()</span></div>
 
-</span><span data-line="261">
-</span><span data-line="262">
+</span><span data-line="254">
+</span><span data-line="255">
 <div class="viewcode-block" id="load">
 <a class="viewcode-back" href="../../generated/meteodatalab.grib_decoder.html#meteodatalab.grib_decoder.load">[docs]</a>
-</span><span data-line="263"><span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span>
-</span><span data-line="264">    <span class="n">source</span><span class="p">:</span> <span class="n">data_source</span><span class="o">.</span><span class="n">DataSource</span><span class="p">,</span>
-</span><span data-line="265">    <span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">,</span>
-</span><span data-line="266">    <span class="n">geo_coords</span><span class="p">:</span> <span class="n">GeoCoordsCbk</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span data-line="267"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]:</span>
-</span><span data-line="268"><span class="w">    </span><span class="sd">"""Request data from a data source.</span>
-</span><span data-line="269">
-</span><span data-line="270"><span class="sd">    Parameters</span>
-</span><span data-line="271"><span class="sd">    ----------</span>
-</span><span data-line="272"><span class="sd">    source : data_source.DataSource</span>
-</span><span data-line="273"><span class="sd">        Source to request the data from.</span>
-</span><span data-line="274"><span class="sd">    request : str | tuple[str, str] | dict[str, Any] | meteodatalab.mars.Request</span>
-</span><span data-line="275"><span class="sd">        Request for data from the source in the mars language.</span>
-</span><span data-line="276"><span class="sd">    geo_coords: Callable[[UUID], dict[str, xr.DataArray]] | None</span>
-</span><span data-line="277"><span class="sd">        Callable that returns the horizontal coordinates</span>
-</span><span data-line="278"><span class="sd">        of the grid defined by the given UUID. The dimension must be "cell".</span>
-</span><span data-line="279">
-</span><span data-line="280"><span class="sd">    Raises</span>
-</span><span data-line="281"><span class="sd">    ------</span>
-</span><span data-line="282"><span class="sd">    RuntimeError</span>
-</span><span data-line="283"><span class="sd">        when all of the requested data is not returned from the data source.</span>
-</span><span data-line="284">
-</span><span data-line="285"><span class="sd">    Returns</span>
-</span><span data-line="286"><span class="sd">    -------</span>
-</span><span data-line="287"><span class="sd">    dict[str, xarray.DataArray]</span>
-</span><span data-line="288"><span class="sd">        A mapping of shortName to data arrays of the requested fields.</span>
-</span><span data-line="289">
-</span><span data-line="290"><span class="sd">    """</span>
-</span><span data-line="291">    <span class="n">buffer_map</span> <span class="o">=</span> <span class="n">_load_buffer_map</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">geo_coords</span><span class="o">=</span><span class="n">geo_coords</span><span class="p">)</span>
-</span><span data-line="292">    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span data-line="293">    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">buffer</span> <span class="ow">in</span> <span class="n">buffer_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-</span><span data-line="294">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="295">            <span class="n">result</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">buffer</span><span class="o">.</span><span class="n">to_xarray</span><span class="p">()</span>
-</span><span data-line="296">        <span class="k">except</span> <span class="n">MissingData</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span data-line="297">            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Missing data for param: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
-</span><span data-line="298">    <span class="k">return</span> <span class="n">result</span></div>
+</span><span data-line="256"><span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span>
+</span><span data-line="257">    <span class="n">source</span><span class="p">:</span> <span class="n">data_source</span><span class="o">.</span><span class="n">DataSource</span><span class="p">,</span>
+</span><span data-line="258">    <span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">,</span>
+</span><span data-line="259">    <span class="n">geo_coords</span><span class="p">:</span> <span class="n">GeoCoordsCbk</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="260"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]:</span>
+</span><span data-line="261"><span class="w">    </span><span class="sd">"""Request data from a data source.</span>
+</span><span data-line="262">
+</span><span data-line="263"><span class="sd">    Parameters</span>
+</span><span data-line="264"><span class="sd">    ----------</span>
+</span><span data-line="265"><span class="sd">    source : data_source.DataSource</span>
+</span><span data-line="266"><span class="sd">        Source to request the data from.</span>
+</span><span data-line="267"><span class="sd">    request : str | tuple[str, str] | dict[str, Any] | meteodatalab.mars.Request</span>
+</span><span data-line="268"><span class="sd">        Request for data from the source in the mars language.</span>
+</span><span data-line="269"><span class="sd">    geo_coords: Callable[[UUID], dict[str, xr.DataArray]] | None</span>
+</span><span data-line="270"><span class="sd">        Callable that returns the horizontal coordinates</span>
+</span><span data-line="271"><span class="sd">        of the grid defined by the given UUID. The dimension must be "cell".</span>
+</span><span data-line="272">
+</span><span data-line="273"><span class="sd">    Raises</span>
+</span><span data-line="274"><span class="sd">    ------</span>
+</span><span data-line="275"><span class="sd">    RuntimeError</span>
+</span><span data-line="276"><span class="sd">        when all of the requested data is not returned from the data source.</span>
+</span><span data-line="277">
+</span><span data-line="278"><span class="sd">    Returns</span>
+</span><span data-line="279"><span class="sd">    -------</span>
+</span><span data-line="280"><span class="sd">    dict[str, xarray.DataArray]</span>
+</span><span data-line="281"><span class="sd">        A mapping of shortName to data arrays of the requested fields.</span>
+</span><span data-line="282">
+</span><span data-line="283"><span class="sd">    """</span>
+</span><span data-line="284">    <span class="n">buffer_map</span> <span class="o">=</span> <span class="n">_load_buffer_map</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">geo_coords</span><span class="o">=</span><span class="n">geo_coords</span><span class="p">)</span>
+</span><span data-line="285">    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span data-line="286">    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">buffer</span> <span class="ow">in</span> <span class="n">buffer_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span data-line="287">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="288">            <span class="n">result</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">buffer</span><span class="o">.</span><span class="n">to_xarray</span><span class="p">()</span>
+</span><span data-line="289">        <span class="k">except</span> <span class="n">MissingData</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span data-line="290">            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Missing data for param: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+</span><span data-line="291">    <span class="k">return</span> <span class="n">result</span></div>
 
-</span><span data-line="299">
-</span><span data-line="300">
+</span><span data-line="292">
+</span><span data-line="293">
 <div class="viewcode-block" id="save">
 <a class="viewcode-back" href="../../generated/meteodatalab.grib_decoder.html#meteodatalab.grib_decoder.save">[docs]</a>
-</span><span data-line="301"><span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span>
-</span><span data-line="302">    <span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
-</span><span data-line="303">    <span class="n">file_handle</span><span class="p">:</span> <span class="n">io</span><span class="o">.</span><span class="n">BufferedWriter</span> <span class="o">|</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">,</span>
-</span><span data-line="304">    <span class="n">bits_per_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
-</span><span data-line="305"><span class="p">):</span>
-</span><span data-line="306"><span class="w">    </span><span class="sd">"""Write field to file in GRIB format.</span>
-</span><span data-line="307">
-</span><span data-line="308"><span class="sd">    Parameters</span>
-</span><span data-line="309"><span class="sd">    ----------</span>
-</span><span data-line="310"><span class="sd">    field : xarray.DataArray</span>
-</span><span data-line="311"><span class="sd">        Field to write into the output file.</span>
-</span><span data-line="312"><span class="sd">    file_handle : io.BufferedWriter</span>
-</span><span data-line="313"><span class="sd">        File handle for the output file.</span>
-</span><span data-line="314"><span class="sd">    bits_per_value : int, optional</span>
-</span><span data-line="315"><span class="sd">        Bits per value encoded in the output file. (Default: 16)</span>
-</span><span data-line="316">
-</span><span data-line="317"><span class="sd">    Raises</span>
-</span><span data-line="318"><span class="sd">    ------</span>
-</span><span data-line="319"><span class="sd">    ValueError</span>
-</span><span data-line="320"><span class="sd">        If the field does not have a message_b64 attribute.</span>
+</span><span data-line="294"><span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span>
+</span><span data-line="295">    <span class="n">field</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
+</span><span data-line="296">    <span class="n">file_handle</span><span class="p">:</span> <span class="n">io</span><span class="o">.</span><span class="n">BufferedWriter</span> <span class="o">|</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">,</span>
+</span><span data-line="297">    <span class="n">bits_per_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+</span><span data-line="298"><span class="p">):</span>
+</span><span data-line="299"><span class="w">    </span><span class="sd">"""Write field to file in GRIB format.</span>
+</span><span data-line="300">
+</span><span data-line="301"><span class="sd">    Parameters</span>
+</span><span data-line="302"><span class="sd">    ----------</span>
+</span><span data-line="303"><span class="sd">    field : xarray.DataArray</span>
+</span><span data-line="304"><span class="sd">        Field to write into the output file.</span>
+</span><span data-line="305"><span class="sd">    file_handle : io.BufferedWriter</span>
+</span><span data-line="306"><span class="sd">        File handle for the output file.</span>
+</span><span data-line="307"><span class="sd">    bits_per_value : int, optional</span>
+</span><span data-line="308"><span class="sd">        Bits per value encoded in the output file. (Default: 16)</span>
+</span><span data-line="309">
+</span><span data-line="310"><span class="sd">    Raises</span>
+</span><span data-line="311"><span class="sd">    ------</span>
+</span><span data-line="312"><span class="sd">    ValueError</span>
+</span><span data-line="313"><span class="sd">        If the field does not have a message_b64 attribute.</span>
+</span><span data-line="314">
+</span><span data-line="315"><span class="sd">    """</span>
+</span><span data-line="316">    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="s2">"message_b64"</span><span class="p">):</span>
+</span><span data-line="317">        <span class="n">msg</span> <span class="o">=</span> <span class="s2">"The message_b64 attribute is required to write to the GRIB format."</span>
+</span><span data-line="318">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</span><span data-line="319">
+</span><span data-line="320">    <span class="n">grib_field</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">deserialise_field</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">message_b64</span><span class="p">)</span>
 </span><span data-line="321">
-</span><span data-line="322"><span class="sd">    """</span>
-</span><span data-line="323">    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="s2">"message_b64"</span><span class="p">):</span>
-</span><span data-line="324">        <span class="n">msg</span> <span class="o">=</span> <span class="s2">"The message_b64 attribute is required to write to the GRIB format."</span>
-</span><span data-line="325">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-</span><span data-line="326">
-</span><span data-line="327">    <span class="n">grib_field</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">deserialise_field</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">message_b64</span><span class="p">)</span>
-</span><span data-line="328">
-</span><span data-line="329">    <span class="n">idx</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="330">        <span class="n">dim</span><span class="p">:</span> <span class="n">field</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-</span><span data-line="331">        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">dims</span>
-</span><span data-line="332">        <span class="k">if</span> <span class="p">(</span><span class="n">dim</span> <span class="o">:=</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">))</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="s2">"cell"</span><span class="p">}</span>
-</span><span data-line="333">    <span class="p">}</span>
+</span><span data-line="322">    <span class="n">idx</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="323">        <span class="n">dim</span><span class="p">:</span> <span class="n">field</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+</span><span data-line="324">        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">dims</span>
+</span><span data-line="325">        <span class="k">if</span> <span class="p">(</span><span class="n">dim</span> <span class="o">:=</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">))</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="s2">"cell"</span><span class="p">}</span>
+</span><span data-line="326">    <span class="p">}</span>
+</span><span data-line="327">
+</span><span data-line="328">    <span class="n">step_unit</span> <span class="o">=</span> <span class="n">UnitOfTime</span><span class="o">.</span><span class="n">MINUTE</span>
+</span><span data-line="329">    <span class="n">time_range_unit</span> <span class="o">=</span> <span class="n">grib_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"metadata.indicatorOfUnitForTimeRange"</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+</span><span data-line="330">    <span class="n">time_range</span> <span class="o">=</span> <span class="n">_to_timedelta</span><span class="p">(</span>
+</span><span data-line="331">        <span class="n">grib_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"metadata.lengthOfTimeRange"</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span data-line="332">        <span class="n">unit</span><span class="o">=</span><span class="n">UnitOfTime</span><span class="p">(</span><span class="n">time_range_unit</span><span class="p">)</span><span class="o">.</span><span class="n">unit</span><span class="p">,</span>
+</span><span data-line="333">    <span class="p">)</span>
 </span><span data-line="334">
-</span><span data-line="335">    <span class="n">step_unit</span> <span class="o">=</span> <span class="n">UnitOfTime</span><span class="o">.</span><span class="n">MINUTE</span>
-</span><span data-line="336">    <span class="n">time_range_unit</span> <span class="o">=</span> <span class="n">grib_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"metadata.indicatorOfUnitForTimeRange"</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
-</span><span data-line="337">    <span class="n">time_range</span> <span class="o">=</span> <span class="n">_to_timedelta</span><span class="p">(</span>
-</span><span data-line="338">        <span class="n">grib_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"metadata.lengthOfTimeRange"</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-</span><span data-line="339">        <span class="n">unit</span><span class="o">=</span><span class="n">UnitOfTime</span><span class="p">(</span><span class="n">time_range_unit</span><span class="p">)</span><span class="o">.</span><span class="n">unit</span><span class="p">,</span>
-</span><span data-line="340">    <span class="p">)</span>
-</span><span data-line="341">
-</span><span data-line="342">    <span class="k">if</span> <span class="n">grib_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"metadata.numberOfTimeRange"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="343">        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Unsupported value for numberOfTimeRange"</span><span class="p">)</span>
-</span><span data-line="344">
-</span><span data-line="345">    <span class="k">def</span><span class="w"> </span><span class="nf">to_grib</span><span class="p">(</span><span class="n">loc</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]):</span>
-</span><span data-line="346">        <span class="n">grib_loc</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="347">            <span class="n">DIM_MAP</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span> <span class="n">value</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-</span><span data-line="348">            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">loc</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-</span><span data-line="349">            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"ref_time"</span><span class="p">,</span> <span class="s2">"lead_time"</span><span class="p">}</span>
-</span><span data-line="350">        <span class="p">}</span>
-</span><span data-line="351">        <span class="n">step_end</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="n">loc</span><span class="p">[</span><span class="s2">"lead_time"</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="s2">"ns"</span><span class="p">)</span>
-</span><span data-line="352">        <span class="n">step_begin</span> <span class="o">=</span> <span class="n">step_end</span> <span class="o">-</span> <span class="n">time_range</span>
-</span><span data-line="353">        <span class="k">return</span> <span class="n">grib_loc</span> <span class="o">|</span> <span class="p">{</span>
-</span><span data-line="354">            <span class="s2">"indicatorOfUnitOfTimeRange"</span><span class="p">:</span> <span class="n">step_unit</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-</span><span data-line="355">            <span class="s2">"forecastTime"</span><span class="p">:</span> <span class="n">step_begin</span> <span class="o">/</span> <span class="n">_to_timedelta</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">step_unit</span><span class="o">.</span><span class="n">unit</span><span class="p">),</span>
-</span><span data-line="356">            <span class="s2">"dataDate"</span><span class="p">:</span> <span class="n">loc</span><span class="p">[</span><span class="s2">"ref_time"</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%Y%m</span><span class="si">%d</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-</span><span data-line="357">            <span class="s2">"dataTime"</span><span class="p">:</span> <span class="n">loc</span><span class="p">[</span><span class="s2">"ref_time"</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%H%M"</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-</span><span data-line="358">        <span class="p">}</span>
-</span><span data-line="359">
-</span><span data-line="360">    <span class="n">encoder</span> <span class="o">=</span> <span class="n">ekd</span><span class="o">.</span><span class="n">create_encoder</span><span class="p">(</span><span class="s2">"grib"</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="n">grib_field</span><span class="p">)</span>
-</span><span data-line="361">    <span class="k">for</span> <span class="n">idx_slice</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">idx</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
-</span><span data-line="362">        <span class="n">loc</span> <span class="o">=</span> <span class="p">{</span><span class="n">dim</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">dim</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">idx_slice</span><span class="p">)}</span>
-</span><span data-line="363">        <span class="n">encoded</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-</span><span data-line="364">            <span class="n">values</span><span class="o">=</span><span class="n">field</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
-</span><span data-line="365">            <span class="n">bitsPerValue</span><span class="o">=</span><span class="n">bits_per_value</span><span class="p">,</span>
-</span><span data-line="366">            <span class="o">**</span><span class="n">to_grib</span><span class="p">(</span><span class="n">loc</span><span class="p">),</span>
-</span><span data-line="367">        <span class="p">)</span>
-</span><span data-line="368">        <span class="n">encoded</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">file_handle</span><span class="p">)</span></div>
+</span><span data-line="335">    <span class="k">if</span> <span class="n">grib_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"metadata.numberOfTimeRange"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="336">        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Unsupported value for numberOfTimeRange"</span><span class="p">)</span>
+</span><span data-line="337">
+</span><span data-line="338">    <span class="k">def</span><span class="w"> </span><span class="nf">to_grib</span><span class="p">(</span><span class="n">loc</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">]):</span>
+</span><span data-line="339">        <span class="n">grib_loc</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="340">            <span class="n">DIM_MAP</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span> <span class="n">value</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+</span><span data-line="341">            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">loc</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+</span><span data-line="342">            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"ref_time"</span><span class="p">,</span> <span class="s2">"lead_time"</span><span class="p">}</span>
+</span><span data-line="343">        <span class="p">}</span>
+</span><span data-line="344">        <span class="n">step_end</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="n">loc</span><span class="p">[</span><span class="s2">"lead_time"</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="s2">"ns"</span><span class="p">)</span>
+</span><span data-line="345">        <span class="n">step_begin</span> <span class="o">=</span> <span class="n">step_end</span> <span class="o">-</span> <span class="n">time_range</span>
+</span><span data-line="346">        <span class="k">return</span> <span class="n">grib_loc</span> <span class="o">|</span> <span class="p">{</span>
+</span><span data-line="347">            <span class="s2">"indicatorOfUnitOfTimeRange"</span><span class="p">:</span> <span class="n">step_unit</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+</span><span data-line="348">            <span class="s2">"forecastTime"</span><span class="p">:</span> <span class="n">step_begin</span> <span class="o">/</span> <span class="n">_to_timedelta</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">step_unit</span><span class="o">.</span><span class="n">unit</span><span class="p">),</span>
+</span><span data-line="349">            <span class="s2">"dataDate"</span><span class="p">:</span> <span class="n">loc</span><span class="p">[</span><span class="s2">"ref_time"</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%Y%m</span><span class="si">%d</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+</span><span data-line="350">            <span class="s2">"dataTime"</span><span class="p">:</span> <span class="n">loc</span><span class="p">[</span><span class="s2">"ref_time"</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%H%M"</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+</span><span data-line="351">        <span class="p">}</span>
+</span><span data-line="352">
+</span><span data-line="353">    <span class="n">encoder</span> <span class="o">=</span> <span class="n">ekd</span><span class="o">.</span><span class="n">create_encoder</span><span class="p">(</span><span class="s2">"grib"</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="n">grib_field</span><span class="p">)</span>
+</span><span data-line="354">    <span class="k">for</span> <span class="n">idx_slice</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">idx</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+</span><span data-line="355">        <span class="n">loc</span> <span class="o">=</span> <span class="p">{</span><span class="n">dim</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">dim</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">idx_slice</span><span class="p">)}</span>
+</span><span data-line="356">        <span class="n">encoded</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+</span><span data-line="357">            <span class="n">values</span><span class="o">=</span><span class="n">field</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+</span><span data-line="358">            <span class="n">bitsPerValue</span><span class="o">=</span><span class="n">bits_per_value</span><span class="p">,</span>
+</span><span data-line="359">            <span class="o">**</span><span class="n">to_grib</span><span class="p">(</span><span class="n">loc</span><span class="p">),</span>
+</span><span data-line="360">        <span class="p">)</span>
+</span><span data-line="361">        <span class="n">encoded</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">file_handle</span><span class="p">)</span></div>
 
-</span><span data-line="369">
-</span><span data-line="370">
+</span><span data-line="362">
+</span><span data-line="363">
 <div class="viewcode-block" id="get_code_flag">
 <a class="viewcode-back" href="../../generated/meteodatalab.grib_decoder.html#meteodatalab.grib_decoder.get_code_flag">[docs]</a>
-</span><span data-line="371"><span class="k">def</span><span class="w"> </span><span class="nf">get_code_flag</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">indices</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
-</span><span data-line="372"><span class="w">    </span><span class="sd">"""Get the code flag value at the given indices.</span>
+</span><span data-line="364"><span class="k">def</span><span class="w"> </span><span class="nf">get_code_flag</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">indices</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
+</span><span data-line="365"><span class="w">    </span><span class="sd">"""Get the code flag value at the given indices.</span>
+</span><span data-line="366">
+</span><span data-line="367"><span class="sd">    Parameters</span>
+</span><span data-line="368"><span class="sd">    ----------</span>
+</span><span data-line="369"><span class="sd">    value : int</span>
+</span><span data-line="370"><span class="sd">        The code flag as an integer in the [0, 255] range.</span>
+</span><span data-line="371"><span class="sd">    indices : Sequence[int]</span>
+</span><span data-line="372"><span class="sd">        Indices at which to get the flag values. Left to right, 1-based.</span>
 </span><span data-line="373">
-</span><span data-line="374"><span class="sd">    Parameters</span>
-</span><span data-line="375"><span class="sd">    ----------</span>
-</span><span data-line="376"><span class="sd">    value : int</span>
-</span><span data-line="377"><span class="sd">        The code flag as an integer in the [0, 255] range.</span>
-</span><span data-line="378"><span class="sd">    indices : Sequence[int]</span>
-</span><span data-line="379"><span class="sd">        Indices at which to get the flag values. Left to right, 1-based.</span>
-</span><span data-line="380">
-</span><span data-line="381"><span class="sd">    Returns</span>
-</span><span data-line="382"><span class="sd">    -------</span>
-</span><span data-line="383"><span class="sd">    list[bool]</span>
-</span><span data-line="384"><span class="sd">        The code flag values at the given indices.</span>
-</span><span data-line="385">
-</span><span data-line="386"><span class="sd">    """</span>
-</span><span data-line="387">    <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">255</span><span class="p">:</span>
-</span><span data-line="388">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"value must be a single byte integer"</span><span class="p">)</span>
-</span><span data-line="389">
-</span><span data-line="390">    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="391">    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
-</span><span data-line="392">        <span class="k">if</span> <span class="ow">not</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">index</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">:</span>
-</span><span data-line="393">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"index must in range [1,8]"</span><span class="p">)</span>
-</span><span data-line="394">        <span class="n">shift</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">-</span> <span class="n">index</span>
-</span><span data-line="395">        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="n">shift</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">))</span>
-</span><span data-line="396">    <span class="k">return</span> <span class="n">result</span></div>
+</span><span data-line="374"><span class="sd">    Returns</span>
+</span><span data-line="375"><span class="sd">    -------</span>
+</span><span data-line="376"><span class="sd">    list[bool]</span>
+</span><span data-line="377"><span class="sd">        The code flag values at the given indices.</span>
+</span><span data-line="378">
+</span><span data-line="379"><span class="sd">    """</span>
+</span><span data-line="380">    <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">255</span><span class="p">:</span>
+</span><span data-line="381">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"value must be a single byte integer"</span><span class="p">)</span>
+</span><span data-line="382">
+</span><span data-line="383">    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="384">    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
+</span><span data-line="385">        <span class="k">if</span> <span class="ow">not</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">index</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">:</span>
+</span><span data-line="386">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"index must in range [1,8]"</span><span class="p">)</span>
+</span><span data-line="387">        <span class="n">shift</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">-</span> <span class="n">index</span>
+</span><span data-line="388">        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="n">shift</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">))</span>
+</span><span data-line="389">    <span class="k">return</span> <span class="n">result</span></div>
 
-</span><span data-line="397">
-</span><span data-line="398">
+</span><span data-line="390">
+</span><span data-line="391">
 <div class="viewcode-block" id="set_code_flag">
 <a class="viewcode-back" href="../../generated/meteodatalab.grib_decoder.html#meteodatalab.grib_decoder.set_code_flag">[docs]</a>
-</span><span data-line="399"><span class="k">def</span><span class="w"> </span><span class="nf">set_code_flag</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-</span><span data-line="400"><span class="w">    </span><span class="sd">"""Create code flag by setting bits at the given indices.</span>
-</span><span data-line="401">
-</span><span data-line="402"><span class="sd">    Parameters</span>
-</span><span data-line="403"><span class="sd">    ----------</span>
-</span><span data-line="404"><span class="sd">    indices : Sequence[int]</span>
-</span><span data-line="405"><span class="sd">        Indices at which to set the flag values. Left to right, 1-based.</span>
-</span><span data-line="406">
-</span><span data-line="407"><span class="sd">    Returns</span>
-</span><span data-line="408"><span class="sd">    -------</span>
-</span><span data-line="409"><span class="sd">    int</span>
-</span><span data-line="410"><span class="sd">        Code flag with bits set at the given indices.</span>
-</span><span data-line="411">
-</span><span data-line="412"><span class="sd">    """</span>
-</span><span data-line="413">    <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="414">    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
-</span><span data-line="415">        <span class="k">if</span> <span class="ow">not</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">index</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">:</span>
-</span><span data-line="416">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"index must in range [1,8]"</span><span class="p">)</span>
-</span><span data-line="417">        <span class="n">shift</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">-</span> <span class="n">index</span>
-</span><span data-line="418">        <span class="n">value</span> <span class="o">|=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span>
-</span><span data-line="419">    <span class="k">return</span> <span class="n">value</span></div>
+</span><span data-line="392"><span class="k">def</span><span class="w"> </span><span class="nf">set_code_flag</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span data-line="393"><span class="w">    </span><span class="sd">"""Create code flag by setting bits at the given indices.</span>
+</span><span data-line="394">
+</span><span data-line="395"><span class="sd">    Parameters</span>
+</span><span data-line="396"><span class="sd">    ----------</span>
+</span><span data-line="397"><span class="sd">    indices : Sequence[int]</span>
+</span><span data-line="398"><span class="sd">        Indices at which to set the flag values. Left to right, 1-based.</span>
+</span><span data-line="399">
+</span><span data-line="400"><span class="sd">    Returns</span>
+</span><span data-line="401"><span class="sd">    -------</span>
+</span><span data-line="402"><span class="sd">    int</span>
+</span><span data-line="403"><span class="sd">        Code flag with bits set at the given indices.</span>
+</span><span data-line="404">
+</span><span data-line="405"><span class="sd">    """</span>
+</span><span data-line="406">    <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="407">    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
+</span><span data-line="408">        <span class="k">if</span> <span class="ow">not</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">index</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">:</span>
+</span><span data-line="409">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"index must in range [1,8]"</span><span class="p">)</span>
+</span><span data-line="410">        <span class="n">shift</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">-</span> <span class="n">index</span>
+</span><span data-line="411">        <span class="n">value</span> <span class="o">|=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span>
+</span><span data-line="412">    <span class="k">return</span> <span class="n">value</span></div>
 
 </span></pre></div>
         </article><button class="back-to-top" type="button">
@@ -609,7 +602,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=4acd523c"></script>
+      <script src="../../_static/documentation_options.js?v=68ef17c4"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/shibuya.js?v=50760d75"></script></body>

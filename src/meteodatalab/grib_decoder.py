@@ -226,6 +226,7 @@ def load_single_param(
     geo_coords: Callable[[UUID], dict[str, xr.DataArray]] | None
         Callable that returns the horizontal coordinates
         of the grid defined by the given UUID. The dimension must be "cell".
+        By default, the horizontal coordinates are extracted by eccodes.
 
     Raises
     ------

@@ -73,6 +73,24 @@ def _load_mapping():
     return yaml.safe_load(mapping_path.open())
 
 
+def _param_lookup(param: str) -> int:
+    try:
+        return int(param)
+    except ValueError:
+        mapping = _load_mapping()
+        return mapping[param]["cosmo"]["paramId"]
+
+
+def _get_vert_stag(param: str) -> bool:
+    param_id = _param_lookup(param)
+    mapping = {
+        value["cosmo"]["paramId"]: value["cosmo"].get("vertStag", False)
+        for value in _load_mapping().values()
+        if "cosmo" in value
+    }
+    return mapping.get(param_id, False)
+
+
 N_LVL = {
     Model.COSMO_1E: 80,
     Model.COSMO_2E: 60,
@@ -121,18 +139,14 @@ class Request:
         )
 
     def _param_id(self):
-        mapping = _load_mapping()
         if isinstance(self.param, Iterable) and not isinstance(self.param, str):
-            return [mapping[param]["cosmo"]["paramId"] for param in self.param]
-        return mapping[self.param]["cosmo"]["paramId"]
+            return [_param_lookup(param) for param in self.param]
+        return _param_lookup(self.param)
 
     def _staggered(self):
-        mapping = _load_mapping()
         if isinstance(self.param, Iterable) and not isinstance(self.param, str):
-            return any(
-                mapping[param]["cosmo"].get("vertStag", False) for param in self.param
-            )
-        return mapping[self.param]["cosmo"].get("vertStag", False)
+            return any(_get_vert_stag(param) for param in self.param)
+        return _get_vert_stag(self.param)
 
     def to_fdb(self) -> dict[str, typing.Any]:
         if self.date is None or self.time is None:

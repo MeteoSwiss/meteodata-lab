@@ -78,18 +78,10 @@ def _get_hcoords(
     field: ekd.Field, geo_coords: GeoCoordsCbk | None
 ) -> tuple[dict[str, xr.DataArray], tuple[str, ...]]:
     hdims: tuple[str, ...]
-    if field.metadata("gridType") == "unstructured_grid":
+    if field.metadata("gridType") == "unstructured_grid" and geo_coords is not None:
         hdims = ("cell",)
         grid_uuid = UUID(field.metadata("uuidOfHGrid"))
-        if geo_coords is None:
-            logger.info(
-                "No grid source provided when loading data with unstructured grid, "
-                "falling back to balfrin grid file locations."
-            )
-            hcoords = icon_grid.load_grid_from_balfrin()(grid_uuid)
-            return hcoords, hdims
-        else:
-            return geo_coords(grid_uuid), hdims
+        return geo_coords(grid_uuid), hdims
 
     lats, lons = field.geography.latlons()
     hcoords = {

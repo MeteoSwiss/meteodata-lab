@@ -77,18 +77,18 @@ def _is_ensemble(field) -> bool:
 def _get_hcoords(
     field: ekd.Field, geo_coords: GeoCoordsCbk | None
 ) -> tuple[dict[str, xr.DataArray], tuple[str, ...]]:
-    hdims: tuple[str, ...]
-    if field.metadata("gridType") == "unstructured_grid" and geo_coords is not None:
+    hdims: tuple[str, ...] = ("y", "x")
+    if field.metadata("gridType") == "unstructured_grid": 
         hdims = ("cell",)
-        grid_uuid = UUID(field.metadata("uuidOfHGrid"))
-        return geo_coords(grid_uuid), hdims
+        if geo_coords is not None:
+            grid_uuid = UUID(field.metadata("uuidOfHGrid"))
+            return geo_coords(grid_uuid), hdims
 
     lats, lons = field.geography.latlons()
     hcoords = {
-        "lat": xr.DataArray(dims=("y", "x"), data=lats),
-        "lon": xr.DataArray(dims=("y", "x"), data=lons),
+        "lat": xr.DataArray(dims=hdims, data=lats),
+        "lon": xr.DataArray(dims=hdims, data=lons),
     }
-    hdims = ("y", "x")
     return hcoords, hdims
 
 

@@ -1,5 +1,11 @@
 # History
 
+## [0.8.2] (2026-09-25)
+
+### Changes
+- The `grib_decoder.load` function defaults to extracting the horizontal coordinates through eccodes
+- Add support for providing the param id directly in the `mars.Request` class
+
 ## [0.8.1] (2026-08-28)
 
 ### Changes
@@ -240,6 +246,7 @@ To be removed in version 0.6
 - Added ninjo_k2th product
 - Added GRIB data loader based on earthkit-data
 
+[0.8.2]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.8.1..v0.8.2
 [0.8.1]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.8.0..v0.8.1
 [0.8.0]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.2..v0.8.0
 [0.7.2]: https://github.com/MeteoSwiss/meteodata-lab/compare/v0.7.1..v0.7.2

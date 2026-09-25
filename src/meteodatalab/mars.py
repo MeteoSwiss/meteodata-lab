@@ -73,7 +73,7 @@ def _load_mapping():
     return yaml.safe_load(mapping_path.open())
 
 
-def _param_lookup(param: str):
+def _param_lookup(param: str) -> int:
     try:
         return int(param)
     except ValueError:
@@ -81,7 +81,7 @@ def _param_lookup(param: str):
         return mapping[param]["cosmo"]["paramId"]
 
 
-def _get_vert_stag(param: str):
+def _get_vert_stag(param: str) -> bool:
     param_id = _param_lookup(param)
     mapping = {
         value["cosmo"]["paramId"]: value["cosmo"].get("vertStag", False)

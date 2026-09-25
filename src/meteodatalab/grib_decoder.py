@@ -19,7 +19,7 @@ import pandas as pd
 import xarray as xr
 
 # Local
-from . import data_source, icon_grid, mars, metadata
+from . import data_source, mars, metadata
 
 logger = logging.getLogger(__name__)
 
@@ -77,26 +77,18 @@ def _is_ensemble(field) -> bool:
 def _get_hcoords(
     field: ekd.Field, geo_coords: GeoCoordsCbk | None
 ) -> tuple[dict[str, xr.DataArray], tuple[str, ...]]:
-    hdims: tuple[str, ...]
+    hdims: tuple[str, ...] = ("y", "x")
     if field.metadata("gridType") == "unstructured_grid":
         hdims = ("cell",)
-        grid_uuid = UUID(field.metadata("uuidOfHGrid"))
-        if geo_coords is None:
-            logger.info(
-                "No grid source provided when loading data with unstructured grid, "
-                "falling back to balfrin grid file locations."
-            )
-            hcoords = icon_grid.load_grid_from_balfrin()(grid_uuid)
-            return hcoords, hdims
-        else:
+        if geo_coords is not None:
+            grid_uuid = UUID(field.metadata("uuidOfHGrid"))
             return geo_coords(grid_uuid), hdims
 
     lats, lons = field.geography.latlons()
     hcoords = {
-        "lat": xr.DataArray(dims=("y", "x"), data=lats),
-        "lon": xr.DataArray(dims=("y", "x"), data=lons),
+        "lat": xr.DataArray(dims=hdims, data=lats),
+        "lon": xr.DataArray(dims=hdims, data=lons),
     }
-    hdims = ("y", "x")
     return hcoords, hdims
 
 
@@ -234,6 +226,7 @@ def load_single_param(
     geo_coords: Callable[[UUID], dict[str, xr.DataArray]] | None
         Callable that returns the horizontal coordinates
         of the grid defined by the given UUID. The dimension must be "cell".
+        By default, the horizontal coordinates are extracted by eccodes.
 
     Raises
     ------

@@ -19,7 +19,7 @@ def test_load(params, levtype, request_template, setup_fdb):
 
 
 @pytest.mark.data("iconremap")
-def test_load_icon_grid_balfrin_fallback(data_dir):
+def test_load_icon_grid_default(data_dir):
     datafiles = [str(data_dir / "ICON-CH1-EPS_lfff00000000_000")]
     source = data_source.FileDataSource(datafiles=datafiles)
     ds = grib_decoder.load(source, "T")

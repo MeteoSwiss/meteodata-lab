@@ -85,11 +85,10 @@ def _get_vert_stag(param: str):
     param_id = _param_lookup(param)
     mapping = {
         value["cosmo"]["paramId"]: value["cosmo"].get("vertStag", False)
-        for value in _load_mapping().values() if "cosmo" in value
+        for value in _load_mapping().values()
+        if "cosmo" in value
     }
     return mapping.get(param_id, False)
-
-
 
 
 N_LVL = {
@@ -146,9 +145,7 @@ class Request:
 
     def _staggered(self):
         if isinstance(self.param, Iterable) and not isinstance(self.param, str):
-            return any(
-                _get_vert_stag(param) for param in self.param
-            )
+            return any(_get_vert_stag(param) for param in self.param)
         return _get_vert_stag(self.param)
 
     def to_fdb(self) -> dict[str, typing.Any]:
